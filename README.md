@@ -38,7 +38,7 @@ pip install -e .  # or if you cloned the repo locally
 We offer a number of way to interact with MusicGen:
 1. You can play with MusicGen by running the jupyter notebook at [`demo.ipynb`](./demo.ipynb) locally, or use the provided [colab notebook](https://colab.research.google.com/drive/1fxGqfg96RBUvGxZ1XXN07s3DthrKUl4-?usp=sharing).
 2. You can use the gradio demo locally by running `python app.py`.
-3. Finally, a demo is also available on the [`facebook/MusicGen`  HugginFace Space](https://huggingface.co/spaces/facebook/MusicGen) (huge thanks to all the HF team for their support).
+3. Finally, a demo is also available on the [`facebook/MusicGen`  HuggingFace Space](https://huggingface.co/spaces/facebook/MusicGen) (huge thanks to all the HF team for their support).
 
 ## API
 
