@@ -11,7 +11,7 @@ import torch
 import gradio as gr
 from audiocraft.data.audio_utils import convert_audio
 from audiocraft.data.audio import audio_write
-from hf_loading import get_pretrained
+from audiocraft.models import MusicGen
 
 
 MODEL = None
@@ -19,7 +19,7 @@ MODEL = None
 
 def load_model():
     print("Loading model")
-    return get_pretrained("melody")
+    return MusicGen.get_pretrained("melody")
 
 
 def predict(texts, melodies):

@@ -8,7 +8,7 @@ LICENSE file in the root directory of this source tree.
 
 import torch
 import gradio as gr
-from hf_loading import get_pretrained
+from audiocraft.models import MusicGen
 
 
 MODEL = None
@@ -16,7 +16,7 @@ MODEL = None
 
 def load_model(version):
     print("Loading model", version)
-    return get_pretrained(version)
+    return MusicGen.get_pretrained(version)
 
 
 def predict(model, text, melody, duration, topk, topp, temperature, cfg_coef):
