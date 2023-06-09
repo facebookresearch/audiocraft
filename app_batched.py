@@ -74,6 +74,9 @@ with gr.Blocks() as demo:
         The model will extract the broad melody from the uploaded wav if provided.
         This will generate a 12s extract with the `melody` model.
 
+        **Warning:** Due to high demand, the demo might get stuck, in that case please refresh
+        the page! Normal processing time is ~30 seconds.
+
         For generating longer sequences (up to 30 seconds) and skipping queue, you can duplicate
         to full demo space, which contains more control and upgrade to GPU in the settings.
         <br/>
