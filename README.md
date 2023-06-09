@@ -8,7 +8,7 @@ Audiocraft is a PyTorch library for deep learning research on audio generation. 
 ## MusicGen
 
 Audiocraft provides the code and models for MusicGen, [a simple and controllable model for music generation][arxiv]. MusicGen is a single stage auto-regressive
-Transformer model trained over a 32kHz <a href="https://github.com/facebookresearch/encodec">EnCodec tokenizer</a> with 4 codebooks sampled at 50 Hz. Unlike existing methods like [MusicLM](https://arxiv.org/abs/2301.11325), MusicGen doesn't not require a self-supervised semantic representation, and it generates
+Transformer model trained over a 32kHz <a href="https://github.com/facebookresearch/encodec">EnCodec tokenizer</a> with 4 codebooks sampled at 50 Hz. Unlike existing methods like [MusicLM](https://arxiv.org/abs/2301.11325), MusicGen doesn't require a self-supervised semantic representation, and it generates
 all 4 codebooks in one pass. By introducing a small delay between the codebooks, we show we can predict
 them in parallel, thus having only 50 auto-regressive steps per second of audio.
 Check out our [sample page][musicgen_samples] or test the available demo!
