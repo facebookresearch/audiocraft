@@ -67,10 +67,10 @@ class MusicGen:
     @staticmethod
     def get_pretrained(name: str = 'melody', device='cuda'):
         """Return pretrained model, we provide four models:
-            - small (300M), text to music, # see: 
-        - medium (1.5B), text to music, # see: 
-        - melody (1.5B) text to music and text+melody to music, # see:
-        - large (3.3B), text to music, # see:
+        - small (300M), text to music, # see: https://huggingface.co/facebook/musicgen-small
+        - medium (1.5B), text to music, # see: https://huggingface.co/facebook/musicgen-medium
+        - melody (1.5B) text to music and text+melody to music, # see: https://huggingface.co/facebook/musicgen-melody
+        - large (3.3B), text to music, # see: https://huggingface.co/facebook/musicgen-large
         """
 
         if name == 'debug':
@@ -80,7 +80,10 @@ class MusicGen:
             return MusicGen(name, compression_model, lm)
 
         if name not in HF_MODEL_CHECKPOINTS_MAP:
-            raise ValueError(f"{name} is not a valid checkpoint name. Choose one of {', '.join(HF_MODEL_CHECKPOINTS_MAP.keys())}")
+            raise ValueError(
+                f"{name} is not a valid checkpoint name. "
+                f"Choose one of {', '.join(HF_MODEL_CHECKPOINTS_MAP.keys())}"
+            )
 
         cache_dir = os.environ.get('MUSICGEN_ROOT', None)
         compression_model = load_compression_model(name, device=device, cache_dir=cache_dir)
