@@ -129,7 +129,8 @@ with gr.Blocks() as demo:
         """
         ### More details
 
-        By typing a description of the music you want and an optional audio used for melody conditioning,
+        The model will generate a short music extract based on the description you provided.
+        You can generate up to 30 seconds of audio.
 
         We present 4 model variations:
         1. Melody -- a music generation model capable of generating music condition on text and melody inputs. **Note**, you can also use text only.
@@ -137,8 +138,12 @@ with gr.Blocks() as demo:
         3. Medium -- a 1.5B transformer decoder conditioned on text only.
         4. Large -- a 3.3B transformer decoder conditioned on text only (might OOM for the longest sequences.)
 
-        When the optional melody conditioning wav is provided, the model will extract
-        a broad melody and try to follow it in the generated samples.
+        When using `melody`, ou can optionaly provide a reference audio from
+        which a broad melody will be extracted. The model will then try to follow both the description and melody provided.
+
+        You can also use your own GPU or a Google Colab by following the instructions on our repo.
+        See [github.com/facebookresearch/audiocraft](https://github.com/facebookresearch/audiocraft)
+        for more details.
         """
     )
 

@@ -73,7 +73,7 @@ with gr.Blocks() as demo:
         <br/>
         <a href="https://huggingface.co/spaces/musicgen/MusicGen?duplicate=true" style="display: inline-block;margin-top: .5em;margin-right: .25em;" target="_blank">
         <img style="margin-bottom: 0em;display: inline;margin-top: -.25em;" src="https://bit.ly/3gLdBN6" alt="Duplicate Space"></a>
-        for longer sequences, more control and no queue</p>
+        for longer sequences, more control and no queue.</p>
         """
     )
     with gr.Row():
@@ -115,8 +115,11 @@ with gr.Blocks() as demo:
     )
     gr.Markdown("""
     ### More details
-    By typing a description of the music you want and an optional audio used for melody conditioning,
-    the model will extract the broad melody from the uploaded wav if provided and generate a 12s extract with the `melody` model.
+
+    The model will generate 12 seconds of audio based on the description you provided.
+    You can optionaly provide a reference audio from which a broad melody will be extracted.
+    The model will then try to follow both the description and melody provided.
+    All samples are generated with the `melody` model.
   
     You can also use your own GPU or a Google Colab by following the instructions on our repo.
 
