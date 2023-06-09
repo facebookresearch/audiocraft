@@ -109,6 +109,11 @@ with gr.Blocks() as demo:
                 "melody"
             ],
             [
+                "A cheerful country song with acoustic guitars",
+                "./assets/bolero_ravel.mp3",
+                "melody"
+            ],
+            [
                 "90s rock song with electric guitar and heavy drums",
                 None,
                 "medium"
