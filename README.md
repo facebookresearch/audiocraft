@@ -80,7 +80,7 @@ See [the model card page](./MODEL_CARD.md).
 
 #### Will the training code be released?
 
-Yes. We will soon release the training code for MusicLM and EnCodec.
+Yes. We will soon release the training code for MusicGen and EnCodec.
 
 
 ## Citation
