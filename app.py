@@ -66,6 +66,16 @@ with gr.Blocks() as demo:
         1. Melody -- a music generation model capable of generating music condition on text and melody inputs. **Note**, you can also use text only.
         2. Small -- a 300M transformer decoder conditioned on text only.
         3. Medium -- a 1.5B transformer decoder conditioned on text only.
+        4. Large -- a 3.3B transformer decoder conditioned on text only (might OOM for the longest sequences.)
+
+        When the optional melody conditioning wav is provided, the model will extract
+        a broad melody and try to follow it in the generated samples.
+
+        For skipping queue, you can duplicate this space, and upgrade to GPU in the settings.
+        <br/>
+        <a href="https://huggingface.co/spaces/musicgen/MusicGen?duplicate=true">
+        <img style="margin-top: 0em; margin-bottom: 0em" src="https://bit.ly/3gLdBN6" alt="Duplicate Space"></a>
+        </p>
 
         See [github.com/facebookresearch/audiocraft](https://github.com/facebookresearch/audiocraft)
         for more details.
@@ -79,7 +89,7 @@ with gr.Blocks() as demo:
             with gr.Row():
                 submit = gr.Button("Submit")
             with gr.Row():
-                model = gr.Radio(["melody", "medium", "small"], label="Model", value="melody", interactive=True)
+                model = gr.Radio(["melody", "medium", "small", "large"], label="Model", value="melody", interactive=True)
             with gr.Row():
                 duration = gr.Slider(minimum=1, maximum=30, value=10, label="Duration", interactive=True)
             with gr.Row():
@@ -107,7 +117,11 @@ with gr.Blocks() as demo:
                 "a light and cheerly EDM track, with syncopated drums, aery pads, and strong emotions",
                 "./assets/bach.mp3",
                 "melody"
-            ]
+            ],
+            [
+                "lofi slow bpm electro chill with organic samples",
+                "medium",
+            ],
         ],
         inputs=[text, melody, model],
         outputs=[output]
