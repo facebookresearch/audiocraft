@@ -120,6 +120,7 @@ with gr.Blocks() as demo:
             ],
             [
                 "lofi slow bpm electro chill with organic samples",
+                None,
                 "medium",
             ],
         ],

@@ -109,7 +109,7 @@ with gr.Blocks() as demo:
             [
                 "a light and cheerly EDM track, with syncopated drums, aery pads, and strong emotions bpm: 130",
                 "./assets/bach.mp3",
-            ]
+            ],
             [
                 "lofi slow bpm electro chill with organic samples",
                 None,
