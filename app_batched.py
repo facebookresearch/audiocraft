@@ -58,8 +58,8 @@ def predict(texts, melodies):
     for output in outputs:
         with NamedTemporaryFile("wb", suffix=".wav", delete=False) as file:
             audio_write(file.name, output, MODEL.sample_rate, strategy="loudness", add_suffix=False)
-            out_files.append([file.name])
-    return out_files
+            out_files.append(file.name)
+    return [out_files]
 
 
 with gr.Blocks() as demo:
