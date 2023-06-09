@@ -81,6 +81,8 @@ with gr.Blocks() as demo:
         <img style="margin-top: 0em; margin-bottom: 0em" src="https://bit.ly/3gLdBN6" alt="Duplicate Space"></a>
         </p>
 
+        You can also use your own GPU or a Google Colab by following the instructions on our repo.
+
         See [github.com/facebookresearch/audiocraft](https://github.com/facebookresearch/audiocraft)
         for more details.
         """
@@ -103,6 +105,10 @@ with gr.Blocks() as demo:
                 "./assets/bach.mp3",
             ],
             [
+                "A cheerful country song with acoustic guitars",
+                "./assets/bolero_ravel.mp3",
+            ],
+            [
                 "90s rock song with electric guitar and heavy drums",
                 None,
             ],
@@ -119,4 +125,4 @@ with gr.Blocks() as demo:
         outputs=[output]
     )
 
-demo.launch()
+demo.queue(max_size=15).launch()
