@@ -60,7 +60,6 @@ def predict(texts, melodies):
             audio_write(file.name, output, MODEL.sample_rate, strategy="loudness", add_suffix=False)
             waveform_video = gr.make_waveform(file.name)
             out_files.append(waveform_video)
-    print(out_files)
     return [out_files]
 
 
@@ -72,7 +71,7 @@ with gr.Blocks() as demo:
         This is the demo for [MusicGen](https://github.com/facebookresearch/audiocraft), a simple and controllable model for music generation
         presented at: ["Simple and Controllable Music Generation"](https://huggingface.co/papers/2306.05284).
         <br/>
-        <a href="https://huggingface.co/spaces/facebook/MusicGen?duplicate=true" style="display: inline-block;margin-top: .5em;margin-right: .25em;" target="_blank">
+        <a href="https://huggingface.co/spaces/musicgen/MusicGen?duplicate=true" style="display: inline-block;margin-top: .5em;margin-right: .25em;" target="_blank">
         <img style="margin-bottom: 0em;display: inline;margin-top: -.25em;" src="https://bit.ly/3gLdBN6" alt="Duplicate Space"></a>
         for longer sequences, more control and no queue</p>
         """
