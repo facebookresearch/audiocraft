@@ -17,7 +17,7 @@ import torch
 from .encodec import CompressionModel
 from .lm import LMModel
 from .builders import get_debug_compression_model, get_debug_lm_model
-from .loaders import load_compression_model, load_lm_model
+from .loaders import load_compression_model, load_lm_model, HF_MODEL_CHECKPOINTS_MAP
 from ..data.audio_utils import convert_audio
 from ..modules.conditioners import ConditioningAttributes, WavCondition
 from ..utils.autocast import TorchAutocast
@@ -67,10 +67,10 @@ class MusicGen:
     @staticmethod
     def get_pretrained(name: str = 'melody', device='cuda'):
         """Return pretrained model, we provide four models:
-        - small (300M), text to music,
-        - medium (1.5B), text to music,
-        - melody (1.5B) text to music and text+melody to music,
-        - large (3.3B), text to music.
+            - small (300M), text to music, # see: 
+        - medium (1.5B), text to music, # see: 
+        - melody (1.5B) text to music and text+melody to music, # see:
+        - large (3.3B), text to music, # see:
         """
 
         if name == 'debug':
@@ -79,21 +79,13 @@ class MusicGen:
             lm = get_debug_lm_model(device)
             return MusicGen(name, compression_model, lm)
 
-        if 'MUSICGEN_ROOT' in os.environ:
-            ROOT = os.environ['MUSICGEN_ROOT']
-            if not ROOT.endswith('/'):
-                ROOT += '/'
-        else:
-            ROOT = 'https://dl.fbaipublicfiles.com/audiocraft/musicgen/v0/'
-        compression_model = load_compression_model(ROOT + 'b0dbef54-37d256b525.th', device=device)
-        names = {
-            'small': 'ba7a97ba-830fe5771e',
-            'medium': 'aa73ae27-fbc9f401db',
-            'large': '9b6e835c-1f0cf17b5e',
-            'melody': 'f79af192-61305ffc49',
-        }
-        sig = names[name]
-        lm = load_lm_model(ROOT + f'{sig}.th', device=device)
+        if name not in HF_MODEL_CHECKPOINTS_MAP:
+            raise ValueError(f"{name} is not a valid checkpoint name. Choose one of {', '.join(HF_MODEL_CHECKPOINTS_MAP.keys())}")
+
+        cache_dir = os.environ.get('MUSICGEN_ROOT', None)
+        compression_model = load_compression_model(name, device=device, cache_dir=cache_dir)
+        lm = load_lm_model(name, device=device, cache_dir=cache_dir)
+
         return MusicGen(name, compression_model, lm)
 
     def set_generation_params(self, use_sampling: bool = True, top_k: int = 250,
