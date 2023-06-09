@@ -99,7 +99,7 @@ with gr.Blocks() as demo:
                 submit = gr.Button("Submit")
         with gr.Column():
             output = gr.Audio(label="Generated Music", type="filepath", format="wav")
-    submit.click(predict, inputs=[text, melody], outputs=[output], batch=True, max_batch_size=12)
+    submit.click(predict, inputs=[text, melody], outputs=[output], batch=True, max_batch_size=1)
     gr.Examples(
         fn=predict,
         examples=[
