@@ -58,8 +58,8 @@ def predict(texts, melodies):
     for output in outputs:
         with NamedTemporaryFile("wb", suffix=".wav", delete=False) as file:
             audio_write(file.name, output, MODEL.sample_rate, strategy="loudness", add_suffix=False)
-            out_files.append([file.name])
-    return out_files
+            out_files.append(file.name)
+    return [out_files]
 
 
 with gr.Blocks() as demo:
@@ -99,7 +99,7 @@ with gr.Blocks() as demo:
                 submit = gr.Button("Submit")
         with gr.Column():
             output = gr.Audio(label="Generated Music", type="filepath", format="wav")
-    submit.click(predict, inputs=[text, melody], outputs=[output], batch=True, max_batch_size=1)
+    submit.click(predict, inputs=[text, melody], outputs=[output], batch=True, max_batch_size=12)
     gr.Examples(
         fn=predict,
         examples=[
