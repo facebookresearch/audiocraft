@@ -1,3 +1,19 @@
+---
+title: "MusicGen"
+python_version: "3.9"
+tags:
+  - "music generation"
+  - "language models"
+  - "LLMs"
+app_file: "app_batched.py"
+emoji: 🎵
+colorFrom: white
+colorTo: blue
+sdk: gradio
+sdk_version: 3.34.0
+pinned: true
+license: "cc-by-nc-4.0"
+---
 # Audiocraft
 ![docs badge](https://github.com/facebookresearch/audiocraft/workflows/audiocraft_docs/badge.svg)
 ![linter badge](https://github.com/facebookresearch/audiocraft/workflows/audiocraft_linter/badge.svg)
