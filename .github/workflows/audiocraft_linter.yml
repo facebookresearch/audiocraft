@@ -1,0 +1,17 @@
+name: audiocraft_linter
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  run_linter:
+    name: Run linter
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/audiocraft_build
+      - run: |
+          . env/bin/activate
+          make linter

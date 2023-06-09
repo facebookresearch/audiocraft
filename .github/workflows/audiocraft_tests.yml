@@ -1,0 +1,17 @@
+name: audiocraft_tests
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  run_tests:
+    name: Run tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/audiocraft_build
+      - run: |
+          . env/bin/activate
+          make tests
