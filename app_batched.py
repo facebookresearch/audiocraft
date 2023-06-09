@@ -71,8 +71,15 @@ with gr.Blocks() as demo:
         presented at: "Simple and Controllable Music Generation".
 
         Enter the description of the music you want and an optional audio used for melody conditioning.
-        This will generate a 12s extract with the `melody` model. For generating longer sequences
-        (up to 30 seconds), use the Colab demo or your own GPU.
+        The model will extract the broad melody from the uploaded wav if provided.
+        This will generate a 12s extract with the `melody` model.
+
+        For generating longer sequences (up to 30 seconds) and skipping queue, you can duplicate
+        to full demo space, which contains more control and upgrade to GPU in the settings.
+        <br/>
+        <a href="https://huggingface.co/spaces/musicgen/MusicGen?duplicate=true">
+        <img style="margin-top: 0em; margin-bottom: 0em" src="https://bit.ly/3gLdBN6" alt="Duplicate Space"></a>
+        </p>
 
         See [github.com/facebookresearch/audiocraft](https://github.com/facebookresearch/audiocraft)
         for more details.
@@ -100,9 +107,13 @@ with gr.Blocks() as demo:
                 None,
             ],
             [
-                "a light and cheerly EDM track, with syncopated drums, aery pads, and strong emotions",
+                "a light and cheerly EDM track, with syncopated drums, aery pads, and strong emotions bpm: 130",
                 "./assets/bach.mp3",
             ]
+            [
+                "lofi slow bpm electro chill with organic samples",
+                None,
+            ],
         ],
         inputs=[text, melody],
         outputs=[output]

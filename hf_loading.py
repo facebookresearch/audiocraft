@@ -1,10 +1,9 @@
 """Utility for loading the models from HF."""
-import os
 from pathlib import Path
 import typing as tp
 
 from omegaconf import OmegaConf
-from huggingface_hub import hf_hub_download, login
+from huggingface_hub import hf_hub_download
 import torch
 
 from audiocraft.models import builders, MusicGen
@@ -15,8 +14,6 @@ MODEL_CHECKPOINTS_MAP = {
     "large": "facebook/musicgen-large",
     "melody": "facebook/musicgen-melody",
 }
-
-login(os.environ['ACCESS_TOKEN'])
 
 
 def _get_state_dict(file_or_url: tp.Union[Path, str],
