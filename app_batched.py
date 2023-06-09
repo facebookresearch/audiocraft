@@ -58,7 +58,9 @@ def predict(texts, melodies):
     for output in outputs:
         with NamedTemporaryFile("wb", suffix=".wav", delete=False) as file:
             audio_write(file.name, output, MODEL.sample_rate, strategy="loudness", add_suffix=False)
-            out_files.append(file.name)
+            waveform_video = gr.make_waveform(file.name)
+            out_files.append(waveform_video)
+    print(out_files)
     return [out_files]
 
 
@@ -67,35 +69,23 @@ with gr.Blocks() as demo:
         """
         # MusicGen
 
-        This is the demo for MusicGen, a simple and controllable model for music generation
-        presented at: "Simple and Controllable Music Generation".
-
-        Enter the description of the music you want and an optional audio used for melody conditioning.
-        The model will extract the broad melody from the uploaded wav if provided.
-        This will generate a 12s extract with the `melody` model.
-
-        For generating longer sequences (up to 30 seconds) and skipping queue, you can duplicate
-        to full demo space, which contains more control and upgrade to GPU in the settings.
+        This is the demo for [MusicGen](https://github.com/facebookresearch/audiocraft), a simple and controllable model for music generation
+        presented at: ["Simple and Controllable Music Generation"](https://huggingface.co/papers/2306.05284).
         <br/>
-        <a href="https://huggingface.co/spaces/musicgen/MusicGen?duplicate=true">
-        <img style="margin-top: 0em; margin-bottom: 0em" src="https://bit.ly/3gLdBN6" alt="Duplicate Space"></a>
-        </p>
-
-        You can also use your own GPU or a Google Colab by following the instructions on our repo.
-
-        See [github.com/facebookresearch/audiocraft](https://github.com/facebookresearch/audiocraft)
-        for more details.
+        <a href="https://huggingface.co/spaces/facebook/MusicGen?duplicate=true" style="display: inline-block;margin-top: .5em;margin-right: .25em;" target="_blank">
+        <img style="margin-bottom: 0em;display: inline;margin-top: -.25em;" src="https://bit.ly/3gLdBN6" alt="Duplicate Space"></a>
+        for longer sequences, more control and no queue</p>
         """
     )
     with gr.Row():
         with gr.Column():
             with gr.Row():
-                text = gr.Text(label="Input Text", interactive=True)
-                melody = gr.Audio(source="upload", type="numpy", label="Melody Condition (optional)", interactive=True)
+                text = gr.Text(label="Describe your music", lines=2, interactive=True)
+                melody = gr.Audio(source="upload", type="numpy", label="Condition on a melody (optional)", interactive=True)
             with gr.Row():
-                submit = gr.Button("Submit")
+                submit = gr.Button("Generate")
         with gr.Column():
-            output = gr.Audio(label="Generated Music", type="filepath", format="wav")
+            output = gr.Video(label="Generated Music")
     submit.click(predict, inputs=[text, melody], outputs=[output], batch=True, max_batch_size=12)
     gr.Examples(
         fn=predict,
@@ -124,5 +114,15 @@ with gr.Blocks() as demo:
         inputs=[text, melody],
         outputs=[output]
     )
+    gr.Markdown("""
+    ### More details
+    By typing a description of the music you want and an optional audio used for melody conditioning,
+    the model will extract the broad melody from the uploaded wav if provided and generate a 12s extract with the `melody` model.
+  
+    You can also use your own GPU or a Google Colab by following the instructions on our repo.
+
+    See [github.com/facebookresearch/audiocraft](https://github.com/facebookresearch/audiocraft)
+    for more details.
+    """)
 
 demo.queue(max_size=15).launch()
