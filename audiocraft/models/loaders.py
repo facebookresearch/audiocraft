@@ -20,7 +20,9 @@ of the returned model.
 """
 
 from pathlib import Path
+from huggingface_hub import hf_hub_download
 import typing as tp
+import os
 
 from omegaconf import OmegaConf
 import torch
@@ -28,18 +30,43 @@ import torch
 from . import builders
 
 
-def _get_state_dict(file_or_url: tp.Union[Path, str], device='cpu'):
+HF_MODEL_CHECKPOINTS_MAP = {
+    "small": "facebook/musicgen-small",
+    "medium": "facebook/musicgen-medium",
+    "large": "facebook/musicgen-large",
+    "melody": "facebook/musicgen-melody",
+}
+
+
+def _get_state_dict(
+    file_or_url_or_id: tp.Union[Path, str],
+    filename: tp.Optional[str] = None,
+    device='cpu',
+    cache_dir: tp.Optional[str] = None,
+):
     # Return the state dict either from a file or url
-    file_or_url = str(file_or_url)
-    assert isinstance(file_or_url, str)
-    if file_or_url.startswith('https://'):
-        return torch.hub.load_state_dict_from_url(file_or_url, map_location=device, check_hash=True)
+    file_or_url_or_id = str(file_or_url_or_id)
+    assert isinstance(file_or_url_or_id, str)
+
+    if os.path.isfile(file_or_url_or_id):
+        return torch.load(file_or_url_or_id, map_location=device)
+
+    elif file_or_url_or_id.startswith('https://'):
+        return torch.hub.load_state_dict_from_url(file_or_url_or_id, map_location=device, check_hash=True)
+
+    elif file_or_url_or_id in HF_MODEL_CHECKPOINTS_MAP:
+        assert filename is not None, "filename needs to be defined if using HF checkpoints"
+
+        repo_id = HF_MODEL_CHECKPOINTS_MAP[file_or_url_or_id]
+        file = hf_hub_download(repo_id=repo_id, filename=filename, cache_dir=cache_dir)
+        return torch.load(file, map_location=device)
+
     else:
-        return torch.load(file_or_url, device)
+        raise ValueError(f"{file_or_url_or_id} is not a valid name, path or link that can be loaded.")
 
 
-def load_compression_model(file_or_url: tp.Union[Path, str], device='cpu'):
-    pkg = _get_state_dict(file_or_url)
+def load_compression_model(file_or_url_or_id: tp.Union[Path, str], device='cpu', cache_dir: tp.Optional[str] = None):
+    pkg = _get_state_dict(file_or_url_or_id, filename="compression_state_dict.bin", cache_dir=cache_dir)
     cfg = OmegaConf.create(pkg['xp.cfg'])
     cfg.device = str(device)
     model = builders.get_compression_model(cfg)
@@ -48,8 +75,8 @@ def load_compression_model(file_or_url: tp.Union[Path, str], device='cpu'):
     return model
 
 
-def load_lm_model(file_or_url: tp.Union[Path, str], device='cpu'):
-    pkg = _get_state_dict(file_or_url)
+def load_lm_model(file_or_url_or_id: tp.Union[Path, str], device='cpu', cache_dir: tp.Optional[str] = None):
+    pkg = _get_state_dict(file_or_url_or_id, filename="state_dict.bin", cache_dir=cache_dir)
     cfg = OmegaConf.create(pkg['xp.cfg'])
     cfg.device = str(device)
     if cfg.device == 'cpu':

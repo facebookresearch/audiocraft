@@ -6,9 +6,12 @@ This source code is licensed under the license found in the
 LICENSE file in the root directory of this source tree.
 """
 
+from tempfile import NamedTemporaryFile
 import torch
 import gradio as gr
-from hf_loading import get_pretrained
+from audiocraft.models import MusicGen
+
+from audiocraft.data.audio import audio_write
 
 
 MODEL = None
@@ -16,7 +19,7 @@ MODEL = None
 
 def load_model(version):
     print("Loading model", version)
-    return get_pretrained(version)
+    return MusicGen.get_pretrained(version)
 
 
 def predict(model, text, melody, duration, topk, topp, temperature, cfg_coef):
@@ -51,8 +54,11 @@ def predict(model, text, melody, duration, topk, topp, temperature, cfg_coef):
     else:
         output = MODEL.generate(descriptions=[text], progress=False)
 
-    output = output.detach().cpu().numpy()
-    return MODEL.sample_rate, output
+    output = output.detach().cpu().float()[0]
+    with NamedTemporaryFile("wb", suffix=".wav", delete=False) as file:
+        audio_write(file.name, output, MODEL.sample_rate, strategy="loudness", add_suffix=False)
+        waveform_video = gr.make_waveform(file.name)
+    return waveform_video
 
 
 with gr.Blocks() as demo:
@@ -60,25 +66,12 @@ with gr.Blocks() as demo:
         """
         # MusicGen
 
-        This is the demo for MusicGen, a simple and controllable model for music generation presented at: "Simple and Controllable Music Generation".
-
-        Below we present 3 model variations:
-        1. Melody -- a music generation model capable of generating music condition on text and melody inputs. **Note**, you can also use text only.
-        2. Small -- a 300M transformer decoder conditioned on text only.
-        3. Medium -- a 1.5B transformer decoder conditioned on text only.
-        4. Large -- a 3.3B transformer decoder conditioned on text only (might OOM for the longest sequences.)
-
-        When the optional melody conditioning wav is provided, the model will extract
-        a broad melody and try to follow it in the generated samples.
-
-        For skipping queue, you can duplicate this space, and upgrade to GPU in the settings.
+        This is the demo for [MusicGen](https://github.com/facebookresearch/audiocraft), a simple and controllable model for music generation
+        presented at: ["Simple and Controllable Music Generation"](https://huggingface.co/papers/2306.05284).
         <br/>
-        <a href="https://huggingface.co/spaces/musicgen/MusicGen?duplicate=true">
-        <img style="margin-top: 0em; margin-bottom: 0em" src="https://bit.ly/3gLdBN6" alt="Duplicate Space"></a>
-        </p>
-
-        See [github.com/facebookresearch/audiocraft](https://github.com/facebookresearch/audiocraft)
-        for more details.
+        <a href="https://huggingface.co/spaces/musicgen/MusicGen?duplicate=true" style="display: inline-block;margin-top: .5em;margin-right: .25em;" target="_blank">
+        <img style="margin-bottom: 0em;display: inline;margin-top: -.25em;" src="https://bit.ly/3gLdBN6" alt="Duplicate Space"></a>
+        for longer sequences, more control and no queue.</p>
         """
     )
     with gr.Row():
@@ -98,7 +91,7 @@ with gr.Blocks() as demo:
                 temperature = gr.Number(label="Temperature", value=1.0, interactive=True)
                 cfg_coef = gr.Number(label="Classifier Free Guidance", value=3.0, interactive=True)
         with gr.Column():
-            output = gr.Audio(label="Generated Music", type="numpy")
+            output = gr.Video(label="Generated Music")
     submit.click(predict, inputs=[model, text, melody, duration, topk, topp, temperature, cfg_coef], outputs=[output])
     gr.Examples(
         fn=predict,
@@ -131,6 +124,22 @@ with gr.Blocks() as demo:
         ],
         inputs=[text, melody, model],
         outputs=[output]
+    )
+    gr.Markdown(
+        """
+        ### More details
+
+        By typing a description of the music you want and an optional audio used for melody conditioning,
+
+        We present 4 model variations:
+        1. Melody -- a music generation model capable of generating music condition on text and melody inputs. **Note**, you can also use text only.
+        2. Small -- a 300M transformer decoder conditioned on text only.
+        3. Medium -- a 1.5B transformer decoder conditioned on text only.
+        4. Large -- a 3.3B transformer decoder conditioned on text only (might OOM for the longest sequences.)
+
+        When the optional melody conditioning wav is provided, the model will extract
+        a broad melody and try to follow it in the generated samples.
+        """
     )
 
 demo.launch()

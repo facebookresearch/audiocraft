@@ -56,14 +56,20 @@ You can play with MusicGen by running the jupyter notebook at [`demo.ipynb`](./d
 ## API
 
 We provide a simple API and 4 pre-trained models. The pre trained models are:
-- `small`: 300M model, text to music only,
-- `medium`: 1.5B model, text to music only,
-- `melody`: 1.5B model, text to music and text+melody to music,
-- `large`: 3.3B model, text to music only.
+- `small`: 300M model, text to music only - [🤗 Hub](https://huggingface.co/facebook/musicgen-small)
+- `medium`: 1.5B model, text to music only - [🤗 Hub](https://huggingface.co/facebook/musicgen-medium)
+- `melody`: 1.5B model, text to music and text+melody to music - [🤗 Hub](https://huggingface.co/facebook/musicgen-melody)
+- `large`: 3.3B model, text to music only - [🤗 Hub](https://huggingface.co/facebook/musicgen-large)
 
 We observe the best trade-off between quality and compute with the `medium` or `melody` model.
 In order to use MusicGen locally **you must have a GPU**. We recommend 16GB of memory, but smaller
 GPUs will be able to generate short sequences, or longer sequences with the `small` model.
+
+**Note**: Please make sure to have [ffmpeg](https://ffmpeg.org/download.html) installed when using newer version of `torchaudio`.
+You can install it with:
+```
+apt get install ffmpeg
+```
 
 See after a quick example for using the API.
 
@@ -84,7 +90,7 @@ wav = model.generate_with_chroma(descriptions, melody[None].expand(3, -1, -1), s
 
 for idx, one_wav in enumerate(wav):
     # Will save under {idx}.wav, with loudness normalization at -14 db LUFS.
-    audio_write(f'{idx}', one_wav, model.sample_rate, strategy="loudness")
+    audio_write(f'{idx}', one_wav.cpu(), model.sample_rate, strategy="loudness")
 ```
 
 
