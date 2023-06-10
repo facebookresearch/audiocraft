@@ -22,6 +22,9 @@ Check out our [sample page][musicgen_samples] or test the available demo!
 <br>
 
 ## Installation
+
+Step by Step tutorial video : https://youtu.be/v-YpvPkhdO4
+
 Audiocraft requires Python 3.9, PyTorch 2.0.0, and a GPU with at least 16 GB of memory (for the medium-sized model). To install Audiocraft, you can run the following:
 
 ```shell
