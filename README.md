@@ -21,6 +21,8 @@ Check out our [sample page][musicgen_samples] or test the available demo!
 </a>
 <br>
 
+We use 20K hours of licensed music to train MUSICGEN. Specifically, we rely on an internal dataset of 10K high-quality music tracks, and on the ShutterStock and Pond5 music data.
+
 ## Installation
 Audiocraft requires Python 3.9, PyTorch 2.0.0, and a GPU with at least 16 GB of memory (for the medium-sized model). To install Audiocraft, you can run the following:
 
