@@ -55,7 +55,7 @@ GPUs will be able to generate short sequences, or longer sequences with the `sma
 **Note**: Please make sure to have [ffmpeg](https://ffmpeg.org/download.html) installed when using newer version of `torchaudio`.
 You can install it with:
 ```
-apt-get install ffmpeg
+sudo apt-get install ffmpeg
 ```
 
 See after a quick example for using the API.
