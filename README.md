@@ -8,7 +8,7 @@ Audiocraft is a PyTorch library for deep learning research on audio generation. 
 ## MusicGen
 
 Audiocraft provides the code and models for MusicGen, [a simple and controllable model for music generation][arxiv]. MusicGen is a single stage auto-regressive
-Transformer model trained over a 32kHz <a href="https://github.com/facebookresearch/encodec">EnCodec tokenizer</a> with 4 codebooks sampled at 50 Hz. Unlike existing methods like [MusicLM](https://arxiv.org/abs/2301.11325), MusicGen doesn't not require a self-supervised semantic representation, and it generates
+Transformer model trained over a 32kHz <a href="https://github.com/facebookresearch/encodec">EnCodec tokenizer</a> with 4 codebooks sampled at 50 Hz. Unlike existing methods like [MusicLM](https://arxiv.org/abs/2301.11325), MusicGen doesn't require a self-supervised semantic representation, and it generates
 all 4 codebooks in one pass. By introducing a small delay between the codebooks, we show we can predict
 them in parallel, thus having only 50 auto-regressive steps per second of audio.
 Check out our [sample page][musicgen_samples] or test the available demo!
@@ -20,6 +20,8 @@ Check out our [sample page][musicgen_samples] or test the available demo!
   <img src="https://huggingface.co/datasets/huggingface/badges/raw/main/open-in-hf-spaces-sm.svg" alt="Open in HugginFace"/>
 </a>
 <br>
+
+We use 20K hours of licensed music to train MusicGen. Specifically, we rely on an internal dataset of 10K high-quality music tracks, and on the ShutterStock and Pond5 music data.
 
 ## Installation
 Audiocraft requires Python 3.9, PyTorch 2.0.0, and a GPU with at least 16 GB of memory (for the medium-sized model). To install Audiocraft, you can run the following:
@@ -35,7 +37,11 @@ pip install -e .  # or if you cloned the repo locally
 ```
 
 ## Usage
-You can play with MusicGen by running the jupyter notebook at [`demo.ipynb`](./demo.ipynb) locally, or use the provided [colab notebook](https://colab.research.google.com/drive/1fxGqfg96RBUvGxZ1XXN07s3DthrKUl4-?usp=sharing). Finally, a demo is also available on the [`facebook/MusiGen`  HugginFace Space](https://huggingface.co/spaces/facebook/MusicGen) (huge thanks to all the HF team for their support).
+We offer a number of way to interact with MusicGen:
+1. You can play with MusicGen by running the jupyter notebook at [`demo.ipynb`](./demo.ipynb) locally, or use the provided [colab notebook](https://colab.research.google.com/drive/1fxGqfg96RBUvGxZ1XXN07s3DthrKUl4-?usp=sharing).
+2. You can use the gradio demo locally by running `python app.py`.
+3. A demo is also available on the [`facebook/MusicGen`  HuggingFace Space](https://huggingface.co/spaces/facebook/MusicGen) (huge thanks to all the HF team for their support).
+4. Finally, @camenduru did a great notebook that combines [the MusicGen Gradio demo with Google Colab](https://github.com/camenduru/MusicGen-colab)
 
 ## API
 
@@ -52,7 +58,7 @@ GPUs will be able to generate short sequences, or longer sequences with the `sma
 **Note**: Please make sure to have [ffmpeg](https://ffmpeg.org/download.html) installed when using newer version of `torchaudio`.
 You can install it with:
 ```
-apt get install ffmpeg
+apt-get install ffmpeg
 ```
 
 See after a quick example for using the API.
