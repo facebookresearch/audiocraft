@@ -1,0 +1,21 @@
+version: '3.9'
+
+services:
+  audio-craft:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+    - ./:/app
+    ports:
+    - '7860:7860'
+    restart: always
+    shm_size: '1g'
+    ulimits:
+      memlock: -1
+      stack: 67108864
+    deploy:
+      resources:
+        reservations:
+          devices:
+          - capabilities: [gpu]
