@@ -16,7 +16,7 @@ from audiocraft.data.audio import audio_write
 
 
 MODEL = None
-SHARE = int(os.environ.get('APP_SHARE'))
+SHARE = bool(os.environ.get('APP_SHARE'))
 SERVER_PORT = int(os.environ.get('APP_SERVER_PORT', 7860))
 
 
@@ -152,4 +152,4 @@ with gr.Blocks() as demo:
         """
     )
 
-demo.launch(share=SHARE, server_port=SERVER_PORT)
+demo.queue().launch(share=SHARE, server_port=SERVER_PORT, max_threads=1)

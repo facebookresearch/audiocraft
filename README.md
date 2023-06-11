@@ -80,7 +80,7 @@ wav = model.generate_with_chroma(descriptions, melody[None].expand(3, -1, -1), s
 
 for idx, one_wav in enumerate(wav):
     # Will save under {idx}.wav, with loudness normalization at -14 db LUFS.
-    audio_write(f'{idx}', one_wav.cpu(), model.sample_rate, strategy="loudness")
+    audio_write(f'{idx}', one_wav.cpu(), model.sample_rate, strategy="loudness", loudness_compressor=True)
 ```
 
 
