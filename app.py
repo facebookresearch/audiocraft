@@ -147,4 +147,4 @@ with gr.Blocks() as demo:
         """
     )
 
-demo.launch()
+demo.launch(server_name="0.0.0.0")
