@@ -6,6 +6,7 @@ This source code is licensed under the license found in the
 LICENSE file in the root directory of this source tree.
 """
 
+import os
 from tempfile import NamedTemporaryFile
 import torch
 import gradio as gr
@@ -15,6 +16,8 @@ from audiocraft.data.audio import audio_write
 
 
 MODEL = None
+SHARE = int(os.environ.get('APP_SHARE'))
+SERVER_PORT = int(os.environ.get('APP_SERVER_PORT', 7860))
 
 
 def load_model(version):
@@ -147,4 +150,4 @@ with gr.Blocks() as demo:
         """
     )
 
-demo.launch()
+demo.launch(share=SHARE, server_port=SERVER_PORT)

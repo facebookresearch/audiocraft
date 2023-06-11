@@ -54,8 +54,8 @@ def convert_audio(wav: torch.Tensor, from_rate: float,
     return wav
 
 
-def normalize_loudness(wav: torch.Tensor, sample_rate: int, loudness_headroom_db: float = 12,
-                       energy_floor: float = 2e-3):
+def normalize_loudness(wav: torch.Tensor, sample_rate: int, loudness_headroom_db: float = 14,
+                       loudness_compressor: bool = False, energy_floor: float = 2e-3):
     """Normalize an input signal to a user loudness in dB LKFS.
     Audio loudness is defined according to the ITU-R BS.1770-4 recommendation.
 
@@ -63,6 +63,7 @@ def normalize_loudness(wav: torch.Tensor, sample_rate: int, loudness_headroom_db
         wav (torch.Tensor): Input multichannel audio data.
         sample_rate (int): Sample rate.
         loudness_headroom_db (float): Target loudness of the output in dB LUFS.
+        loudness_compressor (bool): Uses tanh for soft clipping.
         energy_floor (float): anything below that RMS level will not be rescaled.
     Returns:
         output (torch.Tensor): Loudness normalized output data.
@@ -76,6 +77,8 @@ def normalize_loudness(wav: torch.Tensor, sample_rate: int, loudness_headroom_db
     delta_loudness = -loudness_headroom_db - input_loudness_db
     gain = 10.0 ** (delta_loudness / 20.0)
     output = gain * wav
+    if loudness_compressor:
+        output = torch.tanh(output)
     assert output.isfinite().all(), (input_loudness_db, wav.pow(2).mean().sqrt())
     return output
 
@@ -93,7 +96,8 @@ def _clip_wav(wav: torch.Tensor, log_clipping: bool = False, stem_name: tp.Optio
 def normalize_audio(wav: torch.Tensor, normalize: bool = True,
                     strategy: str = 'peak', peak_clip_headroom_db: float = 1,
                     rms_headroom_db: float = 18, loudness_headroom_db: float = 14,
-                    log_clipping: bool = False, sample_rate: tp.Optional[int] = None,
+                    loudness_compressor: bool = False, log_clipping: bool = False,
+                    sample_rate: tp.Optional[int] = None,
                     stem_name: tp.Optional[str] = None) -> torch.Tensor:
     """Normalize the audio according to the prescribed strategy (see after).
 
@@ -109,6 +113,7 @@ def normalize_audio(wav: torch.Tensor, normalize: bool = True,
         rms_headroom_db (float): Headroom in dB when doing 'rms' strategy. This must be much larger
             than the `peak_clip` one to avoid further clipping.
         loudness_headroom_db (float): Target loudness for loudness normalization.
+        loudness_compressor (bool): If True, uses tanh based soft clipping.
         log_clipping (bool): If True, basic logging on stderr when clipping still
             occurs despite strategy (only for 'rms').
         sample_rate (int): Sample rate for the audio data (required for loudness).
@@ -132,7 +137,7 @@ def normalize_audio(wav: torch.Tensor, normalize: bool = True,
         _clip_wav(wav, log_clipping=log_clipping, stem_name=stem_name)
     elif strategy == 'loudness':
         assert sample_rate is not None, "Loudness normalization requires sample rate."
-        wav = normalize_loudness(wav, sample_rate, loudness_headroom_db)
+        wav = normalize_loudness(wav, sample_rate, loudness_headroom_db, loudness_compressor)
         _clip_wav(wav, log_clipping=log_clipping, stem_name=stem_name)
     else:
         assert wav.abs().max() < 1
