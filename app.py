@@ -10,10 +10,12 @@ from tempfile import NamedTemporaryFile
 import argparse
 import torch
 import gradio as gr
+import os
 from audiocraft.models import MusicGen
 from audiocraft.data.audio import audio_write
 
 MODEL = None
+IS_SHARED_SPACE = "musicgen/MusicGen" in os.environ['SPACE_ID']
 
 
 def load_model(version):
@@ -67,15 +69,18 @@ def ui(**kwargs):
         gr.Markdown(
             """
             # MusicGen
-
-            This is the demo for [MusicGen](https://github.com/facebookresearch/audiocraft), a simple and controllable model for music generation
-            presented at: ["Simple and Controllable Music Generation"](https://huggingface.co/papers/2306.05284).
-            <br/>
-            <a href="https://huggingface.co/spaces/musicgen/MusicGen?duplicate=true" style="display: inline-block;margin-top: .5em;margin-right: .25em;" target="_blank">
-            <img style="margin-bottom: 0em;display: inline;margin-top: -.25em;" src="https://bit.ly/3gLdBN6" alt="Duplicate Space"></a>
-            for longer sequences, more control and no queue.</p>
+            This is your private demo for [MusicGen](https://github.com/facebookresearch/audiocraft), a simple and controllable model for music generation
+            presented at: ["Simple and Controllable Music Generation"](https://huggingface.co/papers/2306.05284)
             """
         )
+        if IS_SHARED_SPACE:
+            gr.Markdown("""
+                ⚠ This Space doesn't work in this shared UI ⚠
+
+                <a href="https://huggingface.co/spaces/musicgen/MusicGen?duplicate=true" style="display: inline-block;margin-top: .5em;margin-right: .25em;" target="_blank">
+                <img style="margin-bottom: 0em;display: inline;margin-top: -.25em;" src="https://bit.ly/3gLdBN6" alt="Duplicate Space"></a>
+                to use it privately, or use the <a href="https://huggingface.co/spaces/facebook/MusicGen">public demo</a>
+                """)
         with gr.Row():
             with gr.Column():
                 with gr.Row():
@@ -173,7 +178,6 @@ def ui(**kwargs):
 
 
 if __name__ == "__main__":
-    # torch.cuda.set_per_process_memory_fraction(0.48)
     parser = argparse.ArgumentParser()
     parser.add_argument(
         '--listen',
