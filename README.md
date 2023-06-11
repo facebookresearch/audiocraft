@@ -96,6 +96,11 @@ See [the model card page](./MODEL_CARD.md).
 Yes. We will soon release the training code for MusicGen and EnCodec.
 
 
+#### I need help on Windows
+
+@FurkanGozukara made a complete tutorial for [Audiocraft/MusicGen on Windows](https://youtu.be/v-YpvPkhdO4)
+
+
 ## Citation
 ```
 @article{copet2023simple,
