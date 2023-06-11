@@ -13,7 +13,6 @@ import gradio as gr
 from audiocraft.models import MusicGen
 from audiocraft.data.audio import audio_write
 
-
 MODEL = None
 
 
@@ -56,7 +55,9 @@ def predict(model, text, melody, duration, topk, topp, temperature, cfg_coef):
 
     output = output.detach().cpu().float()[0]
     with NamedTemporaryFile("wb", suffix=".wav", delete=False) as file:
-        audio_write(file.name, output, MODEL.sample_rate, strategy="loudness", add_suffix=False)
+        audio_write(
+            file.name, output, MODEL.sample_rate, strategy="loudness",
+            loudness_headroom_db=16, loudness_compressor=True, add_suffix=False)
         waveform_video = gr.make_waveform(file.name)
     return waveform_video
 
@@ -66,7 +67,7 @@ def ui(**kwargs):
         gr.Markdown(
             """
             # MusicGen
-    
+
             This is the demo for [MusicGen](https://github.com/facebookresearch/audiocraft), a simple and controllable model for music generation
             presented at: ["Simple and Controllable Music Generation"](https://huggingface.co/papers/2306.05284).
             <br/>
@@ -129,19 +130,19 @@ def ui(**kwargs):
         gr.Markdown(
             """
             ### More details
-    
+
             The model will generate a short music extract based on the description you provided.
             You can generate up to 30 seconds of audio.
-    
+
             We present 4 model variations:
             1. Melody -- a music generation model capable of generating music condition on text and melody inputs. **Note**, you can also use text only.
             2. Small -- a 300M transformer decoder conditioned on text only.
             3. Medium -- a 1.5B transformer decoder conditioned on text only.
             4. Large -- a 3.3B transformer decoder conditioned on text only (might OOM for the longest sequences.)
-    
+
             When using `melody`, ou can optionaly provide a reference audio from
             which a broad melody will be extracted. The model will then try to follow both the description and melody provided.
-    
+
             You can also use your own GPU or a Google Colab by following the instructions on our repo.
             See [github.com/facebookresearch/audiocraft](https://github.com/facebookresearch/audiocraft)
             for more details.
@@ -168,7 +169,8 @@ def ui(**kwargs):
         if share:
             launch_kwargs['share'] = share
 
-        interface.launch(**launch_kwargs)
+        interface.queue().launch(**launch_kwargs, max_threads=1)
+
 
 if __name__ == "__main__":
     # torch.cuda.set_per_process_memory_fraction(0.48)

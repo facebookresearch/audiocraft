@@ -57,7 +57,9 @@ def predict(texts, melodies):
     out_files = []
     for output in outputs:
         with NamedTemporaryFile("wb", suffix=".wav", delete=False) as file:
-            audio_write(file.name, output, MODEL.sample_rate, strategy="loudness", add_suffix=False)
+            audio_write(
+                file.name, output, MODEL.sample_rate, strategy="loudness",
+                loudness_headroom_db=16, loudness_compressor=True, add_suffix=False)
             waveform_video = gr.make_waveform(file.name)
             out_files.append(waveform_video)
     return [out_files]
