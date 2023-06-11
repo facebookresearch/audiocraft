@@ -15,7 +15,7 @@ from audiocraft.models import MusicGen
 from audiocraft.data.audio import audio_write
 
 MODEL = None
-IS_SHARED_SPACE = "musicgen/MusicGen" in os.environ.get('SPACE_ID')
+IS_SHARED_SPACE = "musicgen/MusicGen" in os.environ.get('SPACE_ID', '')
 
 
 def load_model(version):
