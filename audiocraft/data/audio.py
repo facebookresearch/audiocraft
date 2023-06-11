@@ -155,6 +155,7 @@ def audio_write(stem_name: tp.Union[str, Path],
                 format: str = 'wav', mp3_rate: int = 320, normalize: bool = True,
                 strategy: str = 'peak', peak_clip_headroom_db: float = 1,
                 rms_headroom_db: float = 18, loudness_headroom_db: float = 14,
+                loudness_compressor: bool = False,
                 log_clipping: bool = True, make_parent_dir: bool = True,
                 add_suffix: bool = True) -> Path:
     """Convenience function for saving audio to disk. Returns the filename the audio was written to.
@@ -173,7 +174,8 @@ def audio_write(stem_name: tp.Union[str, Path],
         rms_headroom_db (float): Headroom in dB when doing 'rms' strategy. This must be much larger
             than the `peak_clip` one to avoid further clipping.
         loudness_headroom_db (float): Target loudness for loudness normalization.
-        log_clipping (bool): If True, basic logging on stderr when clipping still
+        loudness_compressor (bool): Uses tanh for soft clipping when strategy is 'loudness'.
+         when strategy is 'loudness'log_clipping (bool): If True, basic logging on stderr when clipping still
             occurs despite strategy (only for 'rms').
         make_parent_dir (bool): Make parent directory if it doesn't exist.
     Returns:

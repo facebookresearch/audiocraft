@@ -9,6 +9,7 @@ from copy import deepcopy
 from dataclasses import dataclass, field
 from itertools import chain
 import logging
+import math
 import random
 import re
 import typing as tp
@@ -484,7 +485,7 @@ class ChromaStemConditioner(WaveformConditioner):
         **kwargs: Additional parameters for the chroma extractor.
     """
     def __init__(self, output_dim: int, sample_rate: int, n_chroma: int, radix2_exp: int,
-                 duration: float, match_len_on_eval: bool = False, eval_wavs: tp.Optional[str] = None,
+                 duration: float, match_len_on_eval: bool = True, eval_wavs: tp.Optional[str] = None,
                  n_eval_wavs: int = 0, device: tp.Union[torch.device, str] = "cpu", **kwargs):
         from demucs import pretrained
         super().__init__(dim=n_chroma, output_dim=output_dim, device=device)
@@ -535,7 +536,10 @@ class ChromaStemConditioner(WaveformConditioner):
                 chroma = chroma[:, :self.chroma_len]
                 logger.debug(f'chroma was truncated! ({t} -> {chroma.shape[1]})')
             elif t < self.chroma_len:
-                chroma = F.pad(chroma, (0, 0, 0, self.chroma_len - t))
+                # chroma = F.pad(chroma, (0, 0, 0, self.chroma_len - t))
+                n_repeat = int(math.ceil(self.chroma_len / t))
+                chroma = chroma.repeat(1, n_repeat, 1)
+                chroma = chroma[:, :self.chroma_len]
                 logger.debug(f'chroma was zero-padded! ({t} -> {chroma.shape[1]})')
         return chroma
 
