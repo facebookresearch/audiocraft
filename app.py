@@ -83,7 +83,7 @@ def predict(model, text, melody, duration, topk, topp, temperature, cfg_coef):
             'duration': duration,
         }, indent='  '))
     
-    return str(path_audio), str(path_video), str(path_settings)
+    return str(path_video), [str(path_audio), str(path_settings), str(path_video)]
 
 def ui(**kwargs):
     with gr.Blocks() as interface:
@@ -122,10 +122,9 @@ def ui(**kwargs):
                 with gr.Row():
                     output_video = gr.Video(label="Generated Music")
                 with gr.Row():
-                    output_audio = gr.File(label="Save Audio", interactive=False)
-                    output_params = gr.File(label="Save Params", interactive=False)
+                    output_files = gr.File(label="Save Generated Files", interactive=False)
         
-        submit.click(predict, inputs=[model, text, melody, duration, topk, topp, temperature, cfg_coef], outputs=[output_audio, output_video, output_params])
+        submit.click(predict, inputs=[model, text, melody, duration, topk, topp, temperature, cfg_coef], outputs=[output_video, output_files])
         
         gr.Examples(
             fn=predict,
@@ -157,7 +156,7 @@ def ui(**kwargs):
                 ],
             ],
             inputs=[text, melody, model],
-            outputs=[output_audio, output_video, output_params]
+            outputs=[output_video, output_files]
         )
         gr.Markdown(
             """
