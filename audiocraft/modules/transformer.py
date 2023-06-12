@@ -247,20 +247,20 @@ class StreamingMultiheadAttention(StreamingModule):
         # Complete the key/value pair using the streaming state.
         if self._streaming_state:
             pk = self._streaming_state['past_keys']
-            nk = torch.cat([pk, k], dim=1)
+            nk = torch.cat([pk, k], dim=2)
             if v is k:
                 nv = nk
             else:
                 pv = self._streaming_state['past_values']
-                nv = torch.cat([pv, v], dim=1)
+                nv = torch.cat([pv, v], dim=2)
         else:
             nk = k
             nv = v
 
-        assert nk.shape[1] == nv.shape[1]
+        assert nk.shape[2] == nv.shape[2]
         offset = 0
         if self.past_context is not None:
-            offset = max(0, nk.shape[1] - self.past_context)
+            offset = max(0, nk.shape[2] - self.past_context)
         if self._is_streaming:
             self._streaming_state['past_keys'] = nk[:, offset:]
             if v is not k:
@@ -270,6 +270,7 @@ class StreamingMultiheadAttention(StreamingModule):
             else:
                 self._streaming_state['offset'] = torch.tensor(0)
         return nk, nv
+
 
     def _apply_rope(self, query: torch.Tensor, key: torch.Tensor):
         # Apply rope embeddings to query and key tensors.
@@ -325,7 +326,7 @@ class StreamingMultiheadAttention(StreamingModule):
                     q = self.q_layer_norm(q)
                     k = self.k_layer_norm(k)
                 # q, k, v = [rearrange(x, "b t (h d) -> (b h) t d", h=self.num_heads) for x in [q, k, v]]
-                q, k, v = [rearrange(x, "b t (h d) -> b t h d", h=self.num_heads) for x in [q, k, v]]
+                q, k, v = [rearrange(x, "b t (h d) -> b h t d", h=self.num_heads) for x in [q, k, v]]
             else:
                 if not _is_profiled():
                     # profiling breaks that propertysomehow.
@@ -333,7 +334,7 @@ class StreamingMultiheadAttention(StreamingModule):
                     assert value is key, "specialized implementation"
                 projected = nn.functional.linear(query, self.in_proj_weight, self.in_proj_bias)
                 if self.kv_repeat == 1:
-                    packed = rearrange(projected, "b t (p h d) -> b t p h d", p=3, h=self.num_heads)
+                    packed = rearrange(projected, "b t (p h d) -> b h p t d", p=3, h=self.num_heads)
                     q, k, v = ops.unbind(packed, dim=2)
                 else:
                     embed_dim = self.embed_dim
@@ -355,6 +356,7 @@ class StreamingMultiheadAttention(StreamingModule):
                     k = self.k_layer_norm(k)
                     q, k = [rearrange(x, "b t (h d) -> b t h d", h=self.num_heads) for x in [q, k]]
                 if self.rope:
+                    assert False, "Not supported for now"
                     q, k = self._apply_rope(q, k)
                 k, v = self._complete_kv(k, v)
                 if self.kv_repeat > 1:
@@ -364,7 +366,8 @@ class StreamingMultiheadAttention(StreamingModule):
                 q, k, v = [x.float() for x in [q, k, v]]
             if self.memory_efficient:
                 p = self.dropout if self.training else 0
-                x = ops.memory_efficient_attention(q, k, v, attn_mask, p=p)
+                x = torch.nn.functional.scaled_dot_product_attention(
+                    q, k, v, is_causal=attn_mask is not None, dropout_p=p)
             else:
                 # We include the dot product as float32, for consistency
                 # with the other implementations that include that step
@@ -385,7 +388,7 @@ class StreamingMultiheadAttention(StreamingModule):
                 w = F.dropout(w, self.dropout, training=self.training).to(v)
                 x = torch.einsum("bhqk,bkhc->bqhc", w, v)
             x = x.to(dtype)
-            x = rearrange(x, "b t h d -> b t (h d)", h=self.num_heads)
+            x = rearrange(x, "b h t d -> b t (h d)", h=self.num_heads)
             x = self.out_proj(x)
         else:
             key, value = self._complete_kv(key, value)

@@ -13,6 +13,8 @@ Now repeating the conditioning periodically if it is too short.
 
 More options when launching Gradio app locally (thanks @ashleykleynhans).
 
+Testing out PyTorch 2.0 memory efficient attention.
+
 ## [0.0.1] - 2023-06-09
 
 Initial release, with model evaluation only.
