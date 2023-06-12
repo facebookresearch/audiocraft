@@ -80,10 +80,11 @@ class MusicGen:
             return MusicGen(name, compression_model, lm)
 
         if name not in HF_MODEL_CHECKPOINTS_MAP:
-            raise ValueError(
-                f"{name} is not a valid checkpoint name. "
-                f"Choose one of {', '.join(HF_MODEL_CHECKPOINTS_MAP.keys())}"
-            )
+            if not os.path.isfile(name) and not os.path.isdir(name):
+                raise ValueError(
+                    f"{name} is not a valid checkpoint name. "
+                    f"Choose one of {', '.join(HF_MODEL_CHECKPOINTS_MAP.keys())}"
+                )
 
         cache_dir = os.environ.get('MUSICGEN_ROOT', None)
         compression_model = load_compression_model(name, device=device, cache_dir=cache_dir)
