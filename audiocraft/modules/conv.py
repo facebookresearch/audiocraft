@@ -73,20 +73,18 @@ def pad1d(x: torch.Tensor, paddings: tp.Tuple[int, int], mode: str = 'constant',
     """Tiny wrapper around F.pad, just to allow for reflect padding on small input.
     If this is the case, we insert extra 0 padding to the right before the reflection happen.
     """
-    length = x.shape[-1]
     padding_left, padding_right = paddings
     assert padding_left >= 0 and padding_right >= 0, (padding_left, padding_right)
-    if mode == 'reflect':
-        max_pad = max(padding_left, padding_right)
-        extra_pad = 0
-        if length <= max_pad:
-            extra_pad = max_pad - length + 1
-            x = F.pad(x, (0, extra_pad))
-        padded = F.pad(x, paddings, mode, value)
-        end = padded.shape[-1] - extra_pad
-        return padded[..., :end]
-    else:
+    if mode != 'reflect':
         return F.pad(x, paddings, mode, value)
+    max_pad = max(padding_left, padding_right)
+    extra_pad = 0
+    length = x.shape[-1]
+    if length <= max_pad:
+        extra_pad = max_pad - length + 1
+        x = F.pad(x, (0, extra_pad))
+    padded = F.pad(x, paddings, mode, value)
+    return padded[..., :padded.shape[-1] - extra_pad]
 
 
 def unpad1d(x: torch.Tensor, paddings: tp.Tuple[int, int]):
@@ -235,11 +233,9 @@ class StreamableConvTranspose1d(nn.Module):
             # Trim the padding on the right according to the specified ratio
             # if trim_right_ratio = 1.0, trim everything from right
             padding_right = math.ceil(padding_total * self.trim_right_ratio)
-            padding_left = padding_total - padding_right
-            y = unpad1d(y, (padding_left, padding_right))
         else:
             # Asymmetric padding required for odd strides
             padding_right = padding_total // 2
-            padding_left = padding_total - padding_right
-            y = unpad1d(y, (padding_left, padding_right))
+        padding_left = padding_total - padding_right
+        y = unpad1d(y, (padding_left, padding_right))
         return y

@@ -56,13 +56,9 @@ def get_loader(dataset, num_samples: tp.Optional[int], batch_size: int,
     if num_samples is not None:
         dataset = random_subset(dataset, num_samples, seed)
 
-    dataloader = flashy.distrib.loader(
-        dataset,
-        batch_size=batch_size,
-        num_workers=num_workers,
-        **kwargs
+    return flashy.distrib.loader(
+        dataset, batch_size=batch_size, num_workers=num_workers, **kwargs
     )
-    return dataloader
 
 
 def get_dataset_from_loader(dataloader):
@@ -89,8 +85,7 @@ def multinomial(input: torch.Tensor, num_samples: int, replacement=False, *, gen
     """
     input_ = input.reshape(-1, input.shape[-1])
     output_ = torch.multinomial(input_, num_samples=num_samples, replacement=replacement, generator=generator)
-    output = output_.reshape(*list(input.shape[:-1]), -1)
-    return output
+    return output_.reshape(*list(input.shape[:-1]), -1)
 
 
 def sample_top_k(probs: torch.Tensor, k: int) -> torch.Tensor:
@@ -106,8 +101,7 @@ def sample_top_k(probs: torch.Tensor, k: int) -> torch.Tensor:
     min_value_top_k = top_k_value[..., [-1]]
     probs *= (probs >= min_value_top_k).float()
     probs.div_(probs.sum(dim=-1, keepdim=True))
-    next_token = multinomial(probs, num_samples=1)
-    return next_token
+    return multinomial(probs, num_samples=1)
 
 
 def sample_top_p(probs: torch.Tensor, p: float) -> torch.Tensor:

@@ -106,7 +106,7 @@ class StreamingModule(nn.Module):
                         del state[key]
 
         self._apply_named_streaming(_set)
-        assert len(state) == 0, list(state.keys())
+        assert not state, list(state.keys())
 
     def flush(self, x: tp.Optional[torch.Tensor] = None):
         """Flush any remaining outputs that were waiting for completion.
@@ -117,10 +117,7 @@ class StreamingModule(nn.Module):
         if a module before this one in the streaming pipeline has already
         spitted out a flushed out buffer.
         """
-        if x is None:
-            return None
-        else:
-            return self(x)
+        return None if x is None else self(x)
 
 
 class StreamingSequential(StreamingModule, nn.Sequential):

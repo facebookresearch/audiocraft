@@ -105,10 +105,7 @@ class LayerScale(nn.Module):
                        requires_grad=True, device=device, dtype=dtype))
 
     def forward(self, x: torch.Tensor):
-        if self.channel_last:
-            return self.scale * x
-        else:
-            return self.scale[:, None] * x
+        return self.scale * x if self.channel_last else self.scale[:, None] * x
 
 
 class StreamingMultiheadAttention(StreamingModule):
@@ -203,7 +200,7 @@ class StreamingMultiheadAttention(StreamingModule):
             keys = [n for n, _ in self.mha.named_parameters()]
             for key in keys:
                 if prefix + key in state_dict:
-                    state_dict[prefix + "mha." + key] = state_dict.pop(prefix + key)
+                    state_dict[f"{prefix}mha.{key}"] = state_dict.pop(prefix + key)
         super()._load_from_state_dict(state_dict, prefix, *args, **kwargs)
 
     def _get_mask(self, current_steps: int, device: torch.device, dtype: torch.dtype):
@@ -577,21 +574,21 @@ class StreamingTransformer(StreamingModule):
         self.weight_decay = weight_decay
         self.lr = lr
 
-        assert positional_embedding in ['sin', 'rope', 'sin_rope']
+        assert positional_embedding in {'sin', 'rope', 'sin_rope'}
         self.rope: tp.Optional[RotaryEmbedding] = None
-        if self.positional_embedding in ['rope', 'sin_rope']:
+        if self.positional_embedding in {'rope', 'sin_rope'}:
             assert _is_custom(custom, memory_efficient)
             self.rope = RotaryEmbedding(d_model // num_heads, max_period=max_period,
                                         xpos=xpos, scale=positional_scale, device=device)
 
         self.checkpointing = checkpointing
 
-        assert checkpointing in ['none', 'torch', 'xformers_default', 'xformers_mm']
+        assert checkpointing in {'none', 'torch', 'xformers_default', 'xformers_mm'}
         if self.checkpointing.startswith('xformers'):
             _verify_xformers_internal_compat()
 
         self.layers = nn.ModuleList()
-        for idx in range(num_layers):
+        for _ in range(num_layers):
             self.layers.append(
                 layer_class(
                     d_model=d_model, num_heads=num_heads, dim_feedforward=dim_feedforward,

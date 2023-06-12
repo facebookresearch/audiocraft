@@ -236,7 +236,7 @@ class LMModel(StreamingModule):
         """
         B, K, S = sequence.shape
         assert K == self.num_codebooks, 'Sequence shape must match the specified number of codebooks'
-        input_ = sum([self.emb[k](sequence[:, k]) for k in range(K)])
+        input_ = sum(self.emb[k](sequence[:, k]) for k in range(K))
         if condition_tensors is None:
             assert not self._is_streaming, "Conditions tensors should be precomputed when streaming."
             # apply dropout modules

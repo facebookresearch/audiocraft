@@ -22,7 +22,7 @@ def display_audio(samples: torch.Tensor, sample_rate: int):
             with shapes [B, C, T] or [C, T]
         sample_rate (int): sample rate audio should be displayed with.
     """
-    assert samples.dim() == 2 or samples.dim() == 3
+    assert samples.dim() in [2, 3]
 
     samples = samples.detach().cpu()
     if samples.dim() == 2:

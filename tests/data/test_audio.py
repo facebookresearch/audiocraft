@@ -165,10 +165,10 @@ class TestAvRead(TempDirMixin):
             wav = get_white_noise(ch, n_frames)
             path = self.get_temp_path(f'reference_b_{sample_rate}_{ch}.wav')
             save_wav(path, wav, sample_rate)
+            seek_duration = 1.
             for _ in range(100):
                 # seek will always load a partial segment
                 seek_time = random.uniform(0.5, 1.)
-                seek_duration = 1.
                 expected_num_frames = n_frames - int(seek_time * sample_rate)
                 read_wav, read_sr = _av_read(path, seek_time, seek_duration)
                 assert read_sr == sample_rate
@@ -227,13 +227,13 @@ class TestAudioWrite(TempDirMixin):
                 if format_ == "wav":
                     assert read_wav.shape == wav.shape
 
-                if format_ == "wav" and strategy in ["peak", "rms"]:
-                    rescaled_read_wav = read_wav / read_wav.abs().max() * wav.abs().max()
-                    # for a Gaussian, the typical max scale will be less than ~5x the std.
-                    # The error when writing to disk will ~ 1/2**15, and when rescaling, 5x that.
-                    # For RMS target, rescaling leaves more headroom by default, leading
-                    # to a 20x rescaling typically
-                    atol = (5 if strategy == "peak" else 20) / 2**15
-                    delta = (rescaled_read_wav - wav).abs().max()
-                    assert torch.allclose(wav, rescaled_read_wav, rtol=0, atol=atol), (delta, atol)
+                    if strategy in ["peak", "rms"]:
+                        rescaled_read_wav = read_wav / read_wav.abs().max() * wav.abs().max()
+                        # for a Gaussian, the typical max scale will be less than ~5x the std.
+                        # The error when writing to disk will ~ 1/2**15, and when rescaling, 5x that.
+                        # For RMS target, rescaling leaves more headroom by default, leading
+                        # to a 20x rescaling typically
+                        atol = (5 if strategy == "peak" else 20) / 2**15
+                        delta = (rescaled_read_wav - wav).abs().max()
+                        assert torch.allclose(wav, rescaled_read_wav, rtol=0, atol=atol), (delta, atol)
             formats = ["wav"]  # faster unit tests

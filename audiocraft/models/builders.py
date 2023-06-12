@@ -50,75 +50,72 @@ def get_quantizer(quantizer: str, cfg: omegaconf.DictConfig, dimension: int) -> 
 
 
 def get_encodec_autoencoder(encoder_name: str, cfg: omegaconf.DictConfig):
-    if encoder_name == 'seanet':
-        kwargs = dict_from_config(getattr(cfg, 'seanet'))
-        encoder_override_kwargs = kwargs.pop('encoder')
-        decoder_override_kwargs = kwargs.pop('decoder')
-        encoder_kwargs = {**kwargs, **encoder_override_kwargs}
-        decoder_kwargs = {**kwargs, **decoder_override_kwargs}
-        encoder = audiocraft.modules.SEANetEncoder(**encoder_kwargs)
-        decoder = audiocraft.modules.SEANetDecoder(**decoder_kwargs)
-        return encoder, decoder
-    else:
+    if encoder_name != 'seanet':
         raise KeyError(f'Unexpected compression model {cfg.compression_model}')
+    kwargs = dict_from_config(getattr(cfg, 'seanet'))
+    encoder_override_kwargs = kwargs.pop('encoder')
+    decoder_override_kwargs = kwargs.pop('decoder')
+    encoder_kwargs = {**kwargs, **encoder_override_kwargs}
+    decoder_kwargs = {**kwargs, **decoder_override_kwargs}
+    encoder = audiocraft.modules.SEANetEncoder(**encoder_kwargs)
+    decoder = audiocraft.modules.SEANetDecoder(**decoder_kwargs)
+    return encoder, decoder
 
 
 def get_compression_model(cfg: omegaconf.DictConfig) -> CompressionModel:
     """Instantiate a compression model.
     """
-    if cfg.compression_model == 'encodec':
-        kwargs = dict_from_config(getattr(cfg, 'encodec'))
-        encoder_name = kwargs.pop('autoencoder')
-        quantizer_name = kwargs.pop('quantizer')
-        encoder, decoder = get_encodec_autoencoder(encoder_name, cfg)
-        quantizer = get_quantizer(quantizer_name, cfg, encoder.dimension)
-        frame_rate = kwargs['sample_rate'] // encoder.hop_length
-        renormalize = kwargs.pop('renormalize', None)
-        renorm = kwargs.pop('renorm')
-        if renormalize is None:
-            renormalize = renorm is not None
-            warnings.warn("You are using a deprecated EnCodec model. Please migrate to new renormalization.")
-        return EncodecModel(encoder, decoder, quantizer,
-                            frame_rate=frame_rate, renormalize=renormalize, **kwargs).to(cfg.device)
-    else:
+    if cfg.compression_model != 'encodec':
         raise KeyError(f'Unexpected compression model {cfg.compression_model}')
+    kwargs = dict_from_config(getattr(cfg, 'encodec'))
+    encoder_name = kwargs.pop('autoencoder')
+    quantizer_name = kwargs.pop('quantizer')
+    encoder, decoder = get_encodec_autoencoder(encoder_name, cfg)
+    quantizer = get_quantizer(quantizer_name, cfg, encoder.dimension)
+    frame_rate = kwargs['sample_rate'] // encoder.hop_length
+    renormalize = kwargs.pop('renormalize', None)
+    renorm = kwargs.pop('renorm')
+    if renormalize is None:
+        renormalize = renorm is not None
+        warnings.warn("You are using a deprecated EnCodec model. Please migrate to new renormalization.")
+    return EncodecModel(encoder, decoder, quantizer,
+                        frame_rate=frame_rate, renormalize=renormalize, **kwargs).to(cfg.device)
 
 
 def get_lm_model(cfg: omegaconf.DictConfig) -> LMModel:
     """Instantiate a transformer LM.
     """
-    if cfg.lm_model == 'transformer_lm':
-        kwargs = dict_from_config(getattr(cfg, 'transformer_lm'))
-        n_q = kwargs['n_q']
-        q_modeling = kwargs.pop('q_modeling', None)
-        codebooks_pattern_cfg = getattr(cfg, 'codebooks_pattern')
-        attribute_dropout = dict_from_config(getattr(cfg, 'attribute_dropout'))
-        cls_free_guidance = dict_from_config(getattr(cfg, 'classifier_free_guidance'))
-        cfg_prob, cfg_coef = cls_free_guidance["training_dropout"], cls_free_guidance["inference_coef"]
-        fuser = get_condition_fuser(cfg)
-        condition_provider = get_conditioner_provider(kwargs["dim"], cfg).to(cfg.device)
-        if len(fuser.fuse2cond['cross']) > 0:  # enforce cross-att programatically
-            kwargs['cross_attention'] = True
-        if codebooks_pattern_cfg.modeling is None:
-            assert q_modeling is not None, \
-                'LM model should either have a codebook pattern defined or transformer_lm.q_modeling'
-            codebooks_pattern_cfg = omegaconf.OmegaConf.create(
-                {'modeling': q_modeling, 'delay': {'delays': list(range(n_q))}}
-            )
-        pattern_provider = get_codebooks_pattern_provider(n_q, codebooks_pattern_cfg)
-        return LMModel(
-            pattern_provider=pattern_provider,
-            condition_provider=condition_provider,
-            fuser=fuser,
-            cfg_dropout=cfg_prob,
-            cfg_coef=cfg_coef,
-            attribute_dropout=attribute_dropout,
-            dtype=getattr(torch, cfg.dtype),
-            device=cfg.device,
-            **kwargs
-        ).to(cfg.device)
-    else:
+    if cfg.lm_model != 'transformer_lm':
         raise KeyError(f'Unexpected LM model {cfg.lm_model}')
+    kwargs = dict_from_config(getattr(cfg, 'transformer_lm'))
+    n_q = kwargs['n_q']
+    q_modeling = kwargs.pop('q_modeling', None)
+    codebooks_pattern_cfg = getattr(cfg, 'codebooks_pattern')
+    attribute_dropout = dict_from_config(getattr(cfg, 'attribute_dropout'))
+    cls_free_guidance = dict_from_config(getattr(cfg, 'classifier_free_guidance'))
+    cfg_prob, cfg_coef = cls_free_guidance["training_dropout"], cls_free_guidance["inference_coef"]
+    fuser = get_condition_fuser(cfg)
+    condition_provider = get_conditioner_provider(kwargs["dim"], cfg).to(cfg.device)
+    if len(fuser.fuse2cond['cross']) > 0:  # enforce cross-att programatically
+        kwargs['cross_attention'] = True
+    if codebooks_pattern_cfg.modeling is None:
+        assert q_modeling is not None, \
+            'LM model should either have a codebook pattern defined or transformer_lm.q_modeling'
+        codebooks_pattern_cfg = omegaconf.OmegaConf.create(
+            {'modeling': q_modeling, 'delay': {'delays': list(range(n_q))}}
+        )
+    pattern_provider = get_codebooks_pattern_provider(n_q, codebooks_pattern_cfg)
+    return LMModel(
+        pattern_provider=pattern_provider,
+        condition_provider=condition_provider,
+        fuser=fuser,
+        cfg_dropout=cfg_prob,
+        cfg_coef=cfg_coef,
+        attribute_dropout=attribute_dropout,
+        dtype=getattr(torch, cfg.dtype),
+        device=cfg.device,
+        **kwargs
+    ).to(cfg.device)
 
 
 def get_conditioner_provider(output_dim: int, cfg: omegaconf.DictConfig) -> ConditioningProvider:
@@ -148,8 +145,9 @@ def get_conditioner_provider(output_dim: int, cfg: omegaconf.DictConfig) -> Cond
             )
         else:
             raise ValueError(f"unrecognized conditioning model: {model_type}")
-    conditioner = ConditioningProvider(conditioners, device=device, **condition_provider_args)
-    return conditioner
+    return ConditioningProvider(
+        conditioners, device=device, **condition_provider_args
+    )
 
 
 def get_condition_fuser(cfg: omegaconf.DictConfig) -> ConditionFuser:
@@ -159,8 +157,7 @@ def get_condition_fuser(cfg: omegaconf.DictConfig) -> ConditionFuser:
     fuser_methods = ["sum", "cross", "prepend", "input_interpolate"]
     fuse2cond = {k: fuser_cfg[k] for k in fuser_methods}
     kwargs = {k: v for k, v in fuser_cfg.items() if k not in fuser_methods}
-    fuser = ConditionFuser(fuse2cond=fuse2cond, **kwargs)
-    return fuser
+    return ConditionFuser(fuse2cond=fuse2cond, **kwargs)
 
 
 def get_codebooks_pattern_provider(n_q: int, cfg: omegaconf.DictConfig) -> CodebooksPatternProvider:

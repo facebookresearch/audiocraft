@@ -62,7 +62,7 @@ def _soundfile_info(filepath: tp.Union[str, Path]) -> AudioFileInfo:
 def audio_info(filepath: tp.Union[str, Path]) -> AudioFileInfo:
     # torchaudio no longer returns useful duration informations for some formats like mp3s.
     filepath = Path(filepath)
-    if filepath.suffix in ['.flac', '.ogg']:  # TODO: Validate .ogg can be safely read with av_info
+    if filepath.suffix in {'.flac', '.ogg'}:  # TODO: Validate .ogg can be safely read with av_info
         # ffmpeg has some weird issue with flac.
         return _soundfile_info(filepath)
     else:
@@ -126,7 +126,7 @@ def audio_read(filepath: tp.Union[str, Path], seek_time: float = 0.,
         Tuple[torch.Tensor, int]: Tuple containing audio data and sample rate.
     """
     fp = Path(filepath)
-    if fp.suffix in ['.flac', '.ogg']:  # TODO: check if we can safely use av_read for .ogg
+    if fp.suffix in {'.flac', '.ogg'}:  # TODO: check if we can safely use av_read for .ogg
         # There is some bug with ffmpeg and reading flac
         info = _soundfile_info(filepath)
         frames = -1 if duration <= 0 else int(duration * info.sample_rate)
@@ -137,8 +137,10 @@ def audio_read(filepath: tp.Union[str, Path], seek_time: float = 0.,
         if len(wav.shape) == 1:
             wav = torch.unsqueeze(wav, 0)
     elif (
-        fp.suffix in ['.wav', '.mp3'] and fp.suffix[1:] in ta.utils.sox_utils.list_read_formats()
-        and duration <= 0 and seek_time == 0
+        fp.suffix in {'.wav', '.mp3'}
+        and fp.suffix[1:] in ta.utils.sox_utils.list_read_formats()
+        and duration <= 0
+        and seek_time == 0
     ):
         # Torchaudio is faster if we load an entire file at once.
         wav, sr = ta.load(fp)
@@ -193,11 +195,11 @@ def audio_write(stem_name: tp.Union[str, Path],
     kwargs: dict = {}
     if format == 'mp3':
         suffix = '.mp3'
-        kwargs.update({"compression": mp3_rate})
+        kwargs["compression"] = mp3_rate
     elif format == 'wav':
         wav = i16_pcm(wav)
         suffix = '.wav'
-        kwargs.update({"encoding": "PCM_S", "bits_per_sample": 16})
+        kwargs |= {"encoding": "PCM_S", "bits_per_sample": 16}
     else:
         raise RuntimeError(f"Invalid format {format}. Only wav or mp3 are supported.")
     if not add_suffix:

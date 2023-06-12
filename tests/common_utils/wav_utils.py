@@ -12,13 +12,11 @@ import torchaudio
 
 
 def get_white_noise(chs: int = 1, num_frames: int = 1):
-    wav = torch.randn(chs, num_frames)
-    return wav
+    return torch.randn(chs, num_frames)
 
 
 def get_batch_white_noise(bs: int = 1, chs: int = 1, num_frames: int = 1):
-    wav = torch.randn(bs, chs, num_frames)
-    return wav
+    return torch.randn(bs, chs, num_frames)
 
 
 def save_wav(path: str, wav: torch.Tensor, sample_rate: int):

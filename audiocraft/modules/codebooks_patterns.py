@@ -103,9 +103,11 @@ class Pattern:
             assert q <= self.n_q, "provided number of codebooks is greater than the pattern's number of codebooks"
         coords = []
         for s, seq_codes in enumerate(self.layout):
-            for code in seq_codes:
-                if code.t == t and (q is None or code.q == q):
-                    coords.append((s, code))
+            coords.extend(
+                (s, code)
+                for code in seq_codes
+                if code.t == t and (q is None or code.q == q)
+            )
         return coords
 
     def get_steps_with_timestep(self, t: int, q: tp.Optional[int] = None) -> tp.List[int]:
@@ -453,7 +455,7 @@ class UnrolledPatternProvider(CodebooksPatternProvider):
     def _num_inner_steps(self):
         """Number of inner steps to unroll between timesteps in order to flatten the codebooks.
         """
-        return max([inner_step for inner_step in self._flattened_codebooks.keys()]) + 1
+        return max(list(self._flattened_codebooks.keys())) + 1
 
     def num_virtual_steps(self, timesteps: int) -> int:
         return timesteps * self._num_inner_steps + 1
