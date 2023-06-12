@@ -96,7 +96,7 @@ class MusicGen:
     def set_generation_params(self, use_sampling: bool = True, top_k: int = 250,
                               top_p: float = 0.0, temperature: float = 1.0,
                               duration: float = 30.0, cfg_coef: float = 3.0,
-                              two_step_cfg: bool = False):
+                              two_step_cfg: bool = False, extend_stride: float = 15):
         """Set the generation parameters for MusicGen.
 
         Args:
@@ -109,8 +109,13 @@ class MusicGen:
             two_step_cfg (bool, optional): If True, performs 2 forward for Classifier Free Guidance,
                 instead of batching together the two. This has some impact on how things
                 are padded but seems to have little impact in practice.
+            extend_stride: when doing extended generation (i.e. more than 30 seconds), by how much
+                should we extend the audio each time. Larger values will mean less context is
+                preserved, and shorter value will require extra computations.
         """
-        assert duration <= 30, "The MusicGen cannot generate more than 30 seconds"
+        # assert duration <= 30, "The MusicGen cannot generate more than 30 seconds"
+        assert extend_stride <= 25, "Keep at least 5 seconds of overlap!"
+        self.extend_stride = extend_stride
         self.generation_params = {
             'max_gen_len': int(duration * self.frame_rate),
             'use_sampling': use_sampling,
