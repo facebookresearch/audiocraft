@@ -30,9 +30,15 @@ class TestEncodecModel:
         decoder = SEANetDecoder(channels=channels, dimension=dim, n_filters=n_filters,
                                 n_residual_layers=n_residual_layers, ratios=ratios)
         quantizer = DummyQuantizer()
-        model = EncodecModel(encoder, decoder, quantizer, frame_rate=frame_rate,
-                             sample_rate=sample_rate, channels=channels, **kwargs)
-        return model
+        return EncodecModel(
+            encoder,
+            decoder,
+            quantizer,
+            frame_rate=frame_rate,
+            sample_rate=sample_rate,
+            channels=channels,
+            **kwargs
+        )
 
     def test_model(self):
         random.seed(1234)

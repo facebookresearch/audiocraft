@@ -122,15 +122,16 @@ class TestAudioDataset(TempDirMixin):
                               shuffle: bool = True,
                               return_info: bool = False):
         root_dir = self._create_audio_files(root_name, total_num_examples, durations, sample_rate, channels)
-        dataset = AudioDataset.from_path(root_dir,
-                                         minimal_meta=True,
-                                         segment_duration=segment_duration,
-                                         num_samples=num_examples,
-                                         sample_rate=sample_rate,
-                                         channels=channels,
-                                         shuffle=shuffle,
-                                         return_info=return_info)
-        return dataset
+        return AudioDataset.from_path(
+            root_dir,
+            minimal_meta=True,
+            segment_duration=segment_duration,
+            num_samples=num_examples,
+            sample_rate=sample_rate,
+            channels=channels,
+            shuffle=shuffle,
+            return_info=return_info,
+        )
 
     def test_dataset_full(self):
         total_examples = 10
@@ -273,7 +274,7 @@ class TestAudioDataset(TempDirMixin):
             batch_size=batch_size,
             num_workers=0
         )
-        for idx, batch in enumerate(dataloader):
+        for batch in dataloader:
             assert batch.shape[0] == batch_size
 
     @pytest.mark.parametrize("segment_duration", [1.0, None])
@@ -294,7 +295,7 @@ class TestAudioDataset(TempDirMixin):
             collate_fn=dataset.collater,
             num_workers=0
         )
-        for idx, batch in enumerate(dataloader):
+        for batch in dataloader:
             wav, infos = batch
             assert wav.shape[0] == batch_size
             assert len(infos) == batch_size

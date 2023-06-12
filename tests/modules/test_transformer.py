@@ -15,6 +15,7 @@ from audiocraft.modules.transformer import StreamingMultiheadAttention, Streamin
 def test_transformer_causal_streaming():
     torch.manual_seed(1234)
 
+    steps = 20
     for context, custom in product([None, 10], [False, True]):
         # Test that causality and receptive fields are properly handled.
         # looking at the gradients
@@ -22,7 +23,6 @@ def test_transformer_causal_streaming():
             16, 4, 1 if context else 2,
             causal=True, past_context=context, custom=custom,
             dropout=0.)
-        steps = 20
         for k in [0, 10, 15, 19]:
             x = torch.randn(4, steps, 16, requires_grad=True)
             y = tr(x)
@@ -208,9 +208,10 @@ def test_cross_attention_compat():
 
     # Now let's check that streaming is working properly.
     with cross_attn.streaming():
-        ys = []
-        for step in range(queries.shape[1]):
-            ys.append(cross_attn(queries[:, step: step + 1], keys, values)[0])
+        ys = [
+            cross_attn(queries[:, step : step + 1], keys, values)[0]
+            for step in range(queries.shape[1])
+        ]
     y_streaming = torch.cat(ys, dim=1)
     assert torch.allclose(y_streaming, y, atol=1e-7)
 

@@ -205,9 +205,7 @@ class WhiteSpaceTokenizer(Tokenizer):
 
         mask = length_to_mask(torch.IntTensor(lengths)).int()
         padded_output = pad_sequence(output, padding_value=self.pad_idx).int().t()
-        if return_text:
-            return padded_output, mask, texts  # type: ignore
-        return padded_output, mask
+        return (padded_output, mask, texts) if return_text else (padded_output, mask)
 
 
 class NoopTokenizer(Tokenizer):
@@ -919,7 +917,7 @@ class ConditionFuser(StreamingModule):
                  cross_attention_pos_emb_scale: float = 1.0):
         super().__init__()
         assert all(
-            [k in self.FUSING_METHODS for k in fuse2cond.keys()]
+            k in self.FUSING_METHODS for k in fuse2cond.keys()
         ), f"got invalid fuse method, allowed methods: {self.FUSING_MEHTODS}"
         self.cross_attention_pos_emb = cross_attention_pos_emb
         self.cross_attention_pos_emb_scale = cross_attention_pos_emb_scale

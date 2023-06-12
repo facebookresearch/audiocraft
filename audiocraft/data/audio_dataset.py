@@ -185,7 +185,7 @@ def find_audio_files(path: tp.Union[Path, str],
                 if resolve:
                     m = _resolve_audio_meta(m)
             except Exception as err:
-                print("Error with", str(file_path), err, file=sys.stderr)
+                print("Error with", file_path, err, file=sys.stderr)
                 continue
             meta.append(m)
             if progress:
@@ -389,11 +389,7 @@ class AudioDataset:
                 else:
                     break
 
-        if self.return_info:
-            # Returns the wav and additional information on the wave segment
-            return out, segment_info
-        else:
-            return out
+        return (out, segment_info) if self.return_info else out
 
     def collater(self, samples):
         """The collater function has to be provided to the dataloader
@@ -406,7 +402,7 @@ class AudioDataset:
         # In this case the audio reaching the collater is of variable length as segment_duration=None.
         to_pad = self.segment_duration is None and self.pad
         if to_pad:
-            max_len = max([wav.shape[-1] for wav, _ in samples])
+            max_len = max(wav.shape[-1] for wav, _ in samples)
 
             def _pad_wav(wav):
                 return F.pad(wav, (0, max_len - wav.shape[-1]))
