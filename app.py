@@ -5,18 +5,18 @@ All rights reserved.
 This source code is licensed under the license found in the
 LICENSE file in the root directory of this source tree.
 """
-
+import json
 from tempfile import NamedTemporaryFile
 import argparse
 import torch
 import gradio as gr
 import os
+import pathlib
 from audiocraft.models import MusicGen
 from audiocraft.data.audio import audio_write
 
 MODEL = None
 IS_SHARED_SPACE = "musicgen/MusicGen" in os.environ.get('SPACE_ID', '')
-
 
 def load_model(version):
     print("Loading model", version)
@@ -26,11 +26,13 @@ def load_model(version):
 def predict(model, text, melody, duration, topk, topp, temperature, cfg_coef):
     global MODEL
     topk = int(topk)
+    
     if MODEL is None or MODEL.name != model:
         MODEL = load_model(model)
 
     if duration > MODEL.lm.cfg.dataset.segment_duration:
         raise gr.Error("MusicGen currently supports durations of up to 30 seconds!")
+    
     MODEL.set_generation_params(
         use_sampling=True,
         top_k=topk,
@@ -56,13 +58,32 @@ def predict(model, text, melody, duration, topk, topp, temperature, cfg_coef):
         output = MODEL.generate(descriptions=[text], progress=False)
 
     output = output.detach().cpu().float()[0]
+    
     with NamedTemporaryFile("wb", suffix=".wav", delete=False) as file:
         audio_write(
             file.name, output, MODEL.sample_rate, strategy="loudness",
             loudness_headroom_db=16, loudness_compressor=True, add_suffix=False)
         waveform_video = gr.make_waveform(file.name)
-    return waveform_video
-
+    
+    path_audio = pathlib.Path(file.name).resolve()
+    path_video = pathlib.Path(waveform_video).resolve()
+    path_settings = path_audio.parent / f'{path_audio.stem}.json'
+    
+    with path_settings.open('w', encoding='utf-8') as settings_file:
+        settings_file.write(json.dumps({
+            'model': MODEL.name,
+            'sample_rate': MODEL.sample_rate,
+            'prompt': text,
+            'conditioning_melody': melody is not None,
+            'use_sampling': True,
+            'top_k': topk,
+            'top_p': topp,
+            'temperature': temperature,
+            'cfg_coef': cfg_coef,
+            'duration': duration,
+        }, indent='\t'))
+    
+    return str(path_audio), str(path_video), str(path_video), str(path_settings)
 
 def ui(**kwargs):
     with gr.Blocks() as interface:
@@ -98,8 +119,14 @@ def ui(**kwargs):
                     temperature = gr.Number(label="Temperature", value=1.0, interactive=True)
                     cfg_coef = gr.Number(label="Classifier Free Guidance", value=3.0, interactive=True)
             with gr.Column():
-                output = gr.Video(label="Generated Music")
-        submit.click(predict, inputs=[model, text, melody, duration, topk, topp, temperature, cfg_coef], outputs=[output])
+                with gr.Row():
+                    output_video = gr.Video(label="Generated Music")
+                with gr.Row():
+                    output_audio = gr.File(label="Save Audio", interactive=False)
+                    output_params = gr.File(label="Save Params", interactive=False)
+        
+        submit.click(predict, inputs=[model, text, melody, duration, topk, topp, temperature, cfg_coef], outputs=[output_audio, output_video, output_params])
+        
         gr.Examples(
             fn=predict,
             examples=[
@@ -130,7 +157,7 @@ def ui(**kwargs):
                 ],
             ],
             inputs=[text, melody, model],
-            outputs=[output]
+            outputs=[output_audio, output_video, output_params]
         )
         gr.Markdown(
             """
