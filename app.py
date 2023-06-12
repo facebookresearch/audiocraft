@@ -81,9 +81,9 @@ def predict(model, text, melody, duration, topk, topp, temperature, cfg_coef):
             'temperature': temperature,
             'cfg_coef': cfg_coef,
             'duration': duration,
-        }, indent='\t'))
+        }, indent='  '))
     
-    return str(path_audio), str(path_video), str(path_video), str(path_settings)
+    return str(path_audio), str(path_video), str(path_settings)
 
 def ui(**kwargs):
     with gr.Blocks() as interface:
