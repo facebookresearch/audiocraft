@@ -44,6 +44,11 @@ We offer a number of way to interact with MusicGen:
 4. Finally, you can run the [Gradio demo with a Colab GPU](https://colab.research.google.com/drive/1-Xe9NCdIs2sCUbiSmwHXozK6AAhMm7_i?usp=sharing),
 as adapted from [@camenduru Colab](https://github.com/camenduru/MusicGen-colab).
 
+#### Gradio Demo
+<a href="assets/ui_app_screenshot.png">
+	<img src="assets/ui_app_screenshot.png" width="640">
+</a>
+
 ## API
 
 We provide a simple API and 4 pre-trained models. The pre trained models are:
