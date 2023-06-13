@@ -299,7 +299,8 @@ class MusicGen:
             if prompt_tokens is not None:
                 all_tokens.append(prompt_tokens)
 
-            for time_offset in range(0, self.duration, self.extend_stride):
+            time_offset = 0
+            while time_offset < self.duration:
                 chunk_duration = min(self.duration - time_offset, self.max_duration)
                 max_gen_len = int(chunk_duration * self.frame_rate)
                 for attr, ref_wav in zip(attributes, ref_wavs):
@@ -323,6 +324,9 @@ class MusicGen:
                 else:
                     all_tokens.append(gen_tokens[:, :, prompt_tokens.shape[-1]:])
                 prompt_tokens = gen_tokens[:, :, stride_tokens]
+                current_gen_offset += stride_tokens
+                time_offset += self.extend_stride
+
             gen_tokens = torch.cat(all_tokens, dim=-1)
 
         # generate audio
