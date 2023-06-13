@@ -4,6 +4,9 @@
 # This source code is licensed under the license found in the
 # LICENSE file in the root directory of this source tree.
 
+# Updated to account for UI changes from https://github.com/rkfg/audiocraft/blob/long/app.py
+# also released under the MIT license.
+
 import argparse
 from concurrent.futures import ProcessPoolExecutor
 import os
@@ -22,8 +25,9 @@ from audiocraft.models import MusicGen
 
 MODEL = None  # Last used model
 IS_BATCHED = "facebook/MusicGen" in os.environ.get('SPACE_ID', '')
-MAX_BATCH_SIZE = 12
+MAX_BATCH_SIZE = 8
 BATCHED_DURATION = 15
+INTERRUPTING = False
 # We have to wrap subprocess call to clean a bit the log when using gr.make_waveform
 _old_call = sp.call
 
@@ -37,9 +41,13 @@ def _call_nostderr(*args, **kwargs):
 
 sp.call = _call_nostderr
 # Preallocating the pool of processes.
-pool = ProcessPoolExecutor(3)
+pool = ProcessPoolExecutor(4)
 pool.__enter__()
 
+
+def interrupt():
+    global INTERRUPTING
+    INTERRUPTING = True
 
 def make_waveform(*args, **kwargs):
     # Further remove some warnings.
@@ -59,9 +67,6 @@ def load_model(version='melody'):
 
 
 def _do_predictions(texts, melodies, duration, **gen_kwargs):
-    if duration > MODEL.lm.cfg.dataset.segment_duration:
-        raise gr.Error("MusicGen currently supports durations of up to 30 seconds!")
-
     MODEL.set_generation_params(duration=duration, **gen_kwargs)
     print("new batch", len(texts), texts, [None if m is None else (m[0], m[1].shape) for m in melodies])
     be = time.time()
@@ -84,10 +89,10 @@ def _do_predictions(texts, melodies, duration, **gen_kwargs):
             descriptions=texts,
             melody_wavs=processed_melodies,
             melody_sample_rate=target_sr,
-            progress=False
+            progress=True
         )
     else:
-        outputs = MODEL.generate(texts, progress=False)
+        outputs = MODEL.generate(texts, progress=True)
 
     outputs = outputs.detach().cpu().float()
     out_files = []
@@ -110,9 +115,16 @@ def predict_batched(texts, melodies):
     return [res]
 
 
-def predict_full(model, text, melody, duration, topk, topp, temperature, cfg_coef):
+def predict_full(model, text, melody, duration, topk, topp, temperature, cfg_coef, progress=gr.Progress()):
+    global INTERRUPTING
+    INTERRUPTING = False
     topk = int(topk)
     load_model(model)
+    def _progress(generated, to_generate):
+        progress((generated, to_generate))
+        if INTERRUPTING:
+            raise gr.Error("Interrupted.")
+    MODEL.set_custom_progress_callback(_progress)
 
     outs = _do_predictions(
         [text], [melody], duration,
@@ -136,6 +148,8 @@ def ui_full(launch_kwargs):
                     melody = gr.Audio(source="upload", type="numpy", label="Melody Condition (optional)", interactive=True)
                 with gr.Row():
                     submit = gr.Button("Submit")
+                    # Adapted from https://github.com/rkfg/audiocraft/blob/long/app.py, MIT license.
+                    _ = gr.Button("Interrupt").click(fn=interrupt, queue=False)
                 with gr.Row():
                     model = gr.Radio(["melody", "medium", "small", "large"], label="Model", value="melody", interactive=True)
                 with gr.Row():
@@ -190,7 +204,8 @@ def ui_full(launch_kwargs):
             This can take a long time, and the model might lose consistency. The model might also
             decide at arbitrary positions that the song ends.
 
-            **WARNING:** Choosing long durations will take a long time to generate (2min might take ~10min).
+            **WARNING:** Choosing long durations will take a long time to generate (2min might take ~10min). An overlap of 12 seconds
+            is kept with the previously generated chunk, and 18 "new" seconds are generated each time.
 
             We present 4 model variations:
             1. Melody -- a music generation model capable of generating music condition on text and melody inputs. **Note**, you can also use text only.
@@ -207,7 +222,7 @@ def ui_full(launch_kwargs):
             """
         )
 
-        interface.queue().launch(**launch_kwargs, max_threads=1)
+        interface.queue().launch(**launch_kwargs)
 
 
 def ui_batched(launch_kwargs):

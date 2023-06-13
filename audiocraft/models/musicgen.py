@@ -99,7 +99,7 @@ class MusicGen:
     def set_generation_params(self, use_sampling: bool = True, top_k: int = 250,
                               top_p: float = 0.0, temperature: float = 1.0,
                               duration: float = 30.0, cfg_coef: float = 3.0,
-                              two_step_cfg: bool = False, extend_stride: float = 15):
+                              two_step_cfg: bool = False, extend_stride: float = 18):
         """Set the generation parameters for MusicGen.
 
         Args:
@@ -129,6 +129,7 @@ class MusicGen:
         }
 
     def set_custom_progress_callback(self, progress_callback: tp.Optional[tp.Callable[[int, int], None]] = None):
+        """Override the default progress callback."""
         self._progress_callback = progress_callback
 
     def generate_unconditional(self, num_samples: int, progress: bool = False) -> torch.Tensor:
@@ -280,9 +281,11 @@ class MusicGen:
         def _progress_callback(generated_tokens: int, tokens_to_generate: int):
             generated_tokens += current_gen_offset
             if self._progress_callback is not None:
+                # Note that total_gen_len might be quite wrong depending on the
+                # codebook pattern used, but with delay it is almost accurate.
                 self._progress_callback(generated_tokens, total_gen_len)
             else:
-            print(f'{current_gen_offset + generated_tokens: 6d} / {total_gen_len: 6d}', end='\r')
+                print(f'{generated_tokens: 6d} / {total_gen_len: 6d}', end='\r')
 
         if prompt_tokens is not None:
             assert max_prompt_len >= prompt_tokens.shape[-1], \
@@ -326,6 +329,7 @@ class MusicGen:
                     # we wouldn't have the full wav.
                     initial_position = int(time_offset * self.sample_rate)
                     wav_target_length = int(self.max_duration * self.sample_rate)
+                    print(initial_position / self.sample_rate, wav_target_length / self.sample_rate)
                     positions = torch.arange(initial_position,
                                              initial_position + wav_target_length, device=self.device)
                     attr.wav['self_wav'] = WavCondition(
