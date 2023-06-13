@@ -299,11 +299,7 @@ if __name__ == "__main__":
     parser.add_argument(
         '--listen',
         type=str,
-<<<<<<< HEAD
-        default='0.0.0.0',
-=======
         default='0.0.0.0' if 'SPACE_ID' in os.environ else '127.0.0.1',
->>>>>>> longgen
         help='IP to listen on for connections to Gradio',
     )
     parser.add_argument(
