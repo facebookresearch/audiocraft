@@ -49,6 +49,7 @@ def interrupt():
     global INTERRUPTING
     INTERRUPTING = True
 
+
 def make_waveform(*args, **kwargs):
     # Further remove some warnings.
     be = time.time()
@@ -66,7 +67,7 @@ def load_model(version='melody'):
         MODEL = MusicGen.get_pretrained(version)
 
 
-def _do_predictions(texts, melodies, duration, **gen_kwargs):
+def _do_predictions(texts, melodies, duration, progress=False, **gen_kwargs):
     MODEL.set_generation_params(duration=duration, **gen_kwargs)
     print("new batch", len(texts), texts, [None if m is None else (m[0], m[1].shape) for m in melodies])
     be = time.time()
@@ -89,10 +90,10 @@ def _do_predictions(texts, melodies, duration, **gen_kwargs):
             descriptions=texts,
             melody_wavs=processed_melodies,
             melody_sample_rate=target_sr,
-            progress=True
+            progress=progress,
         )
     else:
-        outputs = MODEL.generate(texts, progress=True)
+        outputs = MODEL.generate(texts, progress=progress)
 
     outputs = outputs.detach().cpu().float()
     out_files = []
@@ -128,7 +129,7 @@ def predict_full(model, text, melody, duration, topk, topp, temperature, cfg_coe
     MODEL.set_custom_progress_callback(_progress)
 
     outs = _do_predictions(
-        [text], [melody], duration,
+        [text], [melody], duration, progress=True,
         top_k=topk, top_p=topp, temperature=temperature, cfg_coef=cfg_coef)
     return outs[0]
 
@@ -324,6 +325,8 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     launch_kwargs = {}
+    launch_kwargs['server_name'] = args.listen
+
     if args.username and args.password:
         launch_kwargs['auth'] = (args.username, args.password)
     if args.server_port:
