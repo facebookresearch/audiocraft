@@ -86,8 +86,8 @@ def test_streaming_api():
 
 
 def test_memory_efficient():
-    torch.manual_seed(1234)
     for backend in ['torch', 'xformers']:
+        torch.manual_seed(1234)
         set_efficient_attention_backend(backend)
 
         tr = StreamingTransformer(
