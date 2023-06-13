@@ -270,8 +270,7 @@ class MusicGen:
             torch.Tensor: Generated audio, of shape [B, C, T], T is defined by the generation params.
         """
         total_gen_len = int(self.duration * self.frame_rate)
-
-        current_gen_offset = 0
+        current_gen_offset: int = 0
 
         def _progress_callback(generated_tokens: int, tokens_to_generate: int):
             print(f'{current_gen_offset + generated_tokens: 6d} / {total_gen_len: 6d}', end='\r')
@@ -299,7 +298,7 @@ class MusicGen:
             if prompt_tokens is not None:
                 all_tokens.append(prompt_tokens)
 
-            time_offset = 0
+            time_offset = 0.
             while time_offset < self.duration:
                 chunk_duration = min(self.duration - time_offset, self.max_duration)
                 max_gen_len = int(chunk_duration * self.frame_rate)
@@ -308,12 +307,15 @@ class MusicGen:
                     if wav_length == 0:
                         continue
                     # We will extend the wav periodically if it not long enough.
-                    # we have to do it here before it is too late.
+                    # we have to do it here rather than in conditioners.py as otherwise
+                    # we wouldn't have the full wav.
                     initial_position = int(time_offset * self.sample_rate)
-                    wav_target_length = int(chunk_duration * self.sample_rate)
+                    wav_target_length = int(self.max_duration * self.sample_rate)
                     positions = torch.arange(initial_position,
                                              initial_position + wav_target_length, device=self.device)
-                    attr.wav['self_wav'] = ref_wav[:, positions % wav_length]
+                    attr.wav['self_wav'] = WavCondition(
+                        ref_wav[0][:, positions % wav_length],
+                        torch.full_like(ref_wav[1], wav_target_length))
                 with self.autocast:
                     gen_tokens = self.lm.generate(
                         prompt_tokens, attributes,
