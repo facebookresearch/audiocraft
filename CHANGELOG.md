@@ -15,6 +15,9 @@ More options when launching Gradio app locally (thanks @ashleykleynhans).
 
 Testing out PyTorch 2.0 memory efficient attention.
 
+Added extended generation (infinite length) by slowly moving the windows.
+Note that other implementations exist: https://github.com/camenduru/MusicGen-colab.
+
 ## [0.0.1] - 2023-06-09
 
 Initial release, with model evaluation only.

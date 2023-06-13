@@ -7,4 +7,4 @@
 # flake8: noqa
 from . import data, modules, models
 
-__version__ = '0.0.2a1'
+__version__ = '0.0.2a2'
