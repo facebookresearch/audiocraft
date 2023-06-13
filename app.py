@@ -25,7 +25,7 @@ from audiocraft.models import MusicGen
 
 MODEL = None  # Last used model
 IS_BATCHED = "facebook/MusicGen" in os.environ.get('SPACE_ID', '')
-MAX_BATCH_SIZE = 8
+MAX_BATCH_SIZE = 12
 BATCHED_DURATION = 15
 INTERRUPTING = False
 # We have to wrap subprocess call to clean a bit the log when using gr.make_waveform
