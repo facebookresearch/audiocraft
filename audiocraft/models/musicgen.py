@@ -115,7 +115,7 @@ class MusicGen:
                 should we extend the audio each time. Larger values will mean less context is
                 preserved, and shorter value will require extra computations.
         """
-        assert extend_stride <= self.max_duration - 5, "Keep at least 5 seconds of overlap!"
+        assert extend_stride < self.max_duration, "Cannot stride by more than max generation duration."
         self.extend_stride = extend_stride
         self.duration = duration
         self.generation_params = {
