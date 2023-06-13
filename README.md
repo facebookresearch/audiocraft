@@ -101,6 +101,10 @@ Yes. We will soon release the training code for MusicGen and EnCodec.
 
 @FurkanGozukara made a complete tutorial for [Audiocraft/MusicGen on Windows](https://youtu.be/v-YpvPkhdO4)
 
+#### I need help for running the demo on Colab
+
+Check [@camenduru tutorial on Youtube](https://www.youtube.com/watch?v=EGfxuTy9Eeo).
+
 
 ## Citation
 ```
