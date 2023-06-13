@@ -45,6 +45,7 @@ class MusicGen:
         self.device = next(iter(lm.parameters())).device
         self.generation_params: dict = {}
         self.set_generation_params(duration=15)  # 15 seconds by default
+        self._progress_callback: tp.Optional[tp.Callable[[int, int], None]] = None
         if self.device.type == 'cpu':
             self.autocast = TorchAutocast(enabled=False)
         else:
@@ -126,6 +127,9 @@ class MusicGen:
             'cfg_coef': cfg_coef,
             'two_step_cfg': two_step_cfg,
         }
+
+    def set_custom_progress_callback(self, progress_callback: tp.Optional[tp.Callable[[int, int], None]] = None):
+        self._progress_callback = progress_callback
 
     def generate_unconditional(self, num_samples: int, progress: bool = False) -> torch.Tensor:
         """Generate samples in an unconditional manner.
@@ -274,6 +278,10 @@ class MusicGen:
         current_gen_offset: int = 0
 
         def _progress_callback(generated_tokens: int, tokens_to_generate: int):
+            generated_tokens += current_gen_offset
+            if self._progress_callback is not None:
+                self._progress_callback(generated_tokens, total_gen_len)
+            else:
             print(f'{current_gen_offset + generated_tokens: 6d} / {total_gen_len: 6d}', end='\r')
 
         if prompt_tokens is not None:
@@ -296,11 +304,17 @@ class MusicGen:
             # melody conditioning etc.
             ref_wavs = [attr.wav['self_wav'] for attr in attributes]
             all_tokens = []
-            if prompt_tokens is not None:
+            if prompt_tokens is None:
+                prompt_length = 0
+            else:
                 all_tokens.append(prompt_tokens)
+                prompt_length = prompt_tokens.shape[-1]
 
-            time_offset = 0.
-            while time_offset < self.duration:
+
+            stride_tokens = int(self.frame_rate * self.extend_stride)
+
+            while current_gen_offset + prompt_length < total_gen_len:
+                time_offset = current_gen_offset / self.frame_rate
                 chunk_duration = min(self.duration - time_offset, self.max_duration)
                 max_gen_len = int(chunk_duration * self.frame_rate)
                 for attr, ref_wav in zip(attributes, ref_wavs):
@@ -321,14 +335,13 @@ class MusicGen:
                     gen_tokens = self.lm.generate(
                         prompt_tokens, attributes,
                         callback=callback, max_gen_len=max_gen_len, **self.generation_params)
-                stride_tokens = int(self.frame_rate * self.extend_stride)
                 if prompt_tokens is None:
                     all_tokens.append(gen_tokens)
                 else:
                     all_tokens.append(gen_tokens[:, :, prompt_tokens.shape[-1]:])
-                prompt_tokens = gen_tokens[:, :, stride_tokens]
+                prompt_tokens = gen_tokens[:, :, stride_tokens:]
+                prompt_length = prompt_tokens.shape[-1]
                 current_gen_offset += stride_tokens
-                time_offset += self.extend_stride
 
             gen_tokens = torch.cat(all_tokens, dim=-1)
 

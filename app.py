@@ -59,6 +59,9 @@ def load_model(version='melody'):
 
 
 def _do_predictions(texts, melodies, duration, **gen_kwargs):
+    if duration > MODEL.lm.cfg.dataset.segment_duration:
+        raise gr.Error("MusicGen currently supports durations of up to 30 seconds!")
+
     MODEL.set_generation_params(duration=duration, **gen_kwargs)
     print("new batch", len(texts), texts, [None if m is None else (m[0], m[1].shape) for m in melodies])
     be = time.time()
@@ -76,7 +79,7 @@ def _do_predictions(texts, melodies, duration, **gen_kwargs):
             melody = convert_audio(melody, sr, target_sr, target_ac)
             processed_melodies.append(melody)
 
-    if processed_melodies.any():
+    if any(m is not None for m in processed_melodies):
         outputs = MODEL.generate_with_chroma(
             descriptions=texts,
             melody_wavs=processed_melodies,
@@ -110,12 +113,10 @@ def predict_batched(texts, melodies):
 def predict_full(model, text, melody, duration, topk, topp, temperature, cfg_coef):
     topk = int(topk)
     load_model(model)
-    if duration > MODEL.lm.cfg.dataset.segment_duration:
-        raise gr.Error("MusicGen currently supports durations of up to 30 seconds!")
 
     outs = _do_predictions(
         [text], [melody], duration,
-        topk=topk, top_p=topp, temperature=temperature, cfg_coef=cfg_coef)
+        top_k=topk, top_p=topp, temperature=temperature, cfg_coef=cfg_coef)
     return outs[0]
 
 
@@ -138,7 +139,7 @@ def ui_full(launch_kwargs):
                 with gr.Row():
                     model = gr.Radio(["melody", "medium", "small", "large"], label="Model", value="melody", interactive=True)
                 with gr.Row():
-                    duration = gr.Slider(minimum=1, maximum=30, value=10, label="Duration", interactive=True)
+                    duration = gr.Slider(minimum=1, maximum=120, value=10, label="Duration", interactive=True)
                 with gr.Row():
                     topk = gr.Number(label="Top-k", value=250, interactive=True)
                     topp = gr.Number(label="Top-p", value=0, interactive=True)
@@ -184,7 +185,12 @@ def ui_full(launch_kwargs):
             ### More details
 
             The model will generate a short music extract based on the description you provided.
-            You can generate up to 30 seconds of audio.
+            The model can generate up to 30 seconds of audio in one pass. It is now possible
+            to extend the generation by feeding back the end of the previous chunk of audio.
+            This can take a long time, and the model might lose consistency. The model might also
+            decide at arbitrary positions that the song ends.
+
+            **WARNING:** Choosing long durations will take a long time to generate (2min might take ~10min).
 
             We present 4 model variations:
             1. Melody -- a music generation model capable of generating music condition on text and melody inputs. **Note**, you can also use text only.
