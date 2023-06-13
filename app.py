@@ -120,6 +120,7 @@ def predict_full(model, text, melody, duration, topk, topp, temperature, cfg_coe
     INTERRUPTING = False
     topk = int(topk)
     load_model(model)
+
     def _progress(generated, to_generate):
         progress((generated, to_generate))
         if INTERRUPTING:
@@ -234,7 +235,7 @@ def ui_batched(launch_kwargs):
             This is the demo for [MusicGen](https://github.com/facebookresearch/audiocraft), a simple and controllable model for music generation
             presented at: ["Simple and Controllable Music Generation"](https://huggingface.co/papers/2306.05284).
             <br/>
-            <a href="https://huggingface.co/spaces/musicgen/MusicGen?duplicate=true" style="display: inline-block;margin-top: .5em;margin-right: .25em;" target="_blank">
+            <a href="https://huggingface.co/spaces/facebook/MusicGen?duplicate=true" style="display: inline-block;margin-top: .5em;margin-right: .25em;" target="_blank">
             <img style="margin-bottom: 0em;display: inline;margin-top: -.25em;" src="https://bit.ly/3gLdBN6" alt="Duplicate Space"></a>
             for longer sequences, more control and no queue.</p>
             """
