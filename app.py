@@ -119,6 +119,13 @@ def predict_batched(texts, melodies):
 def predict_full(model, text, melody, duration, topk, topp, temperature, cfg_coef, progress=gr.Progress()):
     global INTERRUPTING
     INTERRUPTING = False
+    if temperature < 0:
+        raise gr.Error("Temperature must be >= 0.")
+    if topk < 0:
+        raise gr.Error("Topk must be non-negative.")
+    if topp < 0:
+        raise gr.Error("Topp must be non-negative.")
+
     topk = int(topk)
     load_model(model)
 
