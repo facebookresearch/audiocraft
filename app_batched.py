@@ -180,14 +180,15 @@ def ui(**kwargs):
             launch_kwargs['inbrowser'] = inbrowser
         if share:
             launch_kwargs['share'] = share
-        demo.queue(max_size=60).launch(**launch_kwargs)
+        demo.queue(max_size=8 * 4).launch(**launch_kwargs)
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
         '--listen',
         type=str,
-        default='127.0.0.1',
+        default='0.0.0.0',
         help='IP to listen on for connections to Gradio',
     )
     parser.add_argument(
@@ -219,4 +220,3 @@ if __name__ == "__main__":
         share=args.share,
         listen=args.listen
     )
-
