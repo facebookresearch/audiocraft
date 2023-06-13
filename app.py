@@ -25,6 +25,9 @@ from audiocraft.models import MusicGen
 
 MODEL = None  # Last used model
 IS_BATCHED = "facebook/MusicGen" in os.environ.get('SPACE_ID', '')
+if IS_BATCHED:
+    from assets.share_btn import community_icon_html, loading_icon_html, share_js, css
+
 MAX_BATCH_SIZE = 12
 BATCHED_DURATION = 15
 INTERRUPTING = False
@@ -113,7 +116,7 @@ def predict_batched(texts, melodies):
     texts = [text[:max_text_length] for text in texts]
     load_model('melody')
     res = _do_predictions(texts, melodies, BATCHED_DURATION)
-    return [res]
+    return [res, melodies]
 
 
 def predict_full(model, text, melody, duration, topk, topp, temperature, cfg_coef, progress=gr.Progress()):
@@ -235,7 +238,7 @@ def ui_full(launch_kwargs):
 
 
 def ui_batched(launch_kwargs):
-    with gr.Blocks() as demo:
+    with gr.Blocks(css=css) as demo:
         gr.Markdown(
             """
             # MusicGen
@@ -251,13 +254,23 @@ def ui_batched(launch_kwargs):
         with gr.Row():
             with gr.Column():
                 with gr.Row():
-                    text = gr.Text(label="Describe your music", lines=2, interactive=True)
+                    text = gr.Text(label="Describe your music", lines=2, interactive=True, elem_id="text-input")
                     melody = gr.Audio(source="upload", type="numpy", label="Condition on a melody (optional)", interactive=True)
                 with gr.Row():
                     submit = gr.Button("Generate")
             with gr.Column():
-                output = gr.Video(label="Generated Music")
-        submit.click(predict_batched, inputs=[text, melody], outputs=[output], batch=True, max_batch_size=MAX_BATCH_SIZE)
+                output = gr.Video(label="Generated Music", elem_id="generated-video")
+                output_melody = gr.Audio(label="Melody ", elem_id="melody-output", visible=False)
+                with gr.Row(visible=False) as share_row:
+                    with gr.Group(elem_id="share-btn-container"):
+                        gr.HTML(community_icon_html)
+                        gr.HTML(loading_icon_html)
+                        share_button = gr.Button(
+                            "Share to community", elem_id="share-btn")
+                        share_button.click(None, [], [], _js=share_js)
+        submit.click(fn=lambda x: gr.update(visible=False), inputs=None, outputs=[share_row], queue=False, show_progress=False
+                ).then(predict_batched, inputs=[text, melody], outputs=[output, output_melody], batch=True, max_batch_size=MAX_BATCH_SIZE
+                ).then(fn=lambda x: gr.update(visible=True), inputs=None, outputs=[share_row], queue=False, show_progress=False)
         gr.Examples(
             fn=predict_batched,
             examples=[
