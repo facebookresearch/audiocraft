@@ -48,3 +48,10 @@ class TestSEANetModel:
         wav = mg.generate(
             ['youpi', 'lapin dort'])
         assert list(wav.shape) == [2, 1, 64000]
+
+    def test_generate_long(self):
+        mg = self.get_musicgen()
+        mg.set_generation_params(duration=4.)
+        wav = mg.generate(
+            ['youpi', 'lapin dort'])
+        assert list(wav.shape) == [2, 1, 32000 * 4]

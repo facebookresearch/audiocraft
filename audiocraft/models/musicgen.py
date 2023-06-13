@@ -79,7 +79,7 @@ class MusicGen:
             # used only for unit tests
             compression_model = get_debug_compression_model(device)
             lm = get_debug_lm_model(device)
-            return MusicGen(name, compression_model, lm)
+            return MusicGen(name, compression_model, lm, max_duration=3.)
 
         if name not in HF_MODEL_CHECKPOINTS_MAP:
             raise ValueError(
@@ -270,13 +270,14 @@ class MusicGen:
             torch.Tensor: Generated audio, of shape [B, C, T], T is defined by the generation params.
         """
         total_gen_len = int(self.duration * self.frame_rate)
+        max_prompt_len = int(min(self.duration, self.max_duration) * self.frame_rate)
         current_gen_offset: int = 0
 
         def _progress_callback(generated_tokens: int, tokens_to_generate: int):
             print(f'{current_gen_offset + generated_tokens: 6d} / {total_gen_len: 6d}', end='\r')
 
         if prompt_tokens is not None:
-            assert self.generation_params['max_gen_len'] > prompt_tokens.shape[-1], \
+            assert max_prompt_len >= prompt_tokens.shape[-1], \
                 "Prompt is longer than audio to generate"
 
         callback = None
