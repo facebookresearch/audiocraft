@@ -68,7 +68,7 @@ class MusicGen:
         return self.compression_model.channels
 
     @staticmethod
-    def get_pretrained(name: str = 'melody', device='cuda'):
+    def get_pretrained(name: str = 'melody', device=None):
         """Return pretrained model, we provide four models:
         - small (300M), text to music, # see: https://huggingface.co/facebook/musicgen-small
         - medium (1.5B), text to music, # see: https://huggingface.co/facebook/musicgen-medium
@@ -76,11 +76,17 @@ class MusicGen:
         - large (3.3B), text to music, # see: https://huggingface.co/facebook/musicgen-large
         """
 
+        if device is None:
+            if torch.cuda.device_count():
+                device = 'cuda'
+            else:
+                device = 'cpu'
+
         if name == 'debug':
             # used only for unit tests
             compression_model = get_debug_compression_model(device)
             lm = get_debug_lm_model(device)
-            return MusicGen(name, compression_model, lm, max_duration=3.)
+            return MusicGen(name, compression_model, lm)
 
         if name not in HF_MODEL_CHECKPOINTS_MAP:
             raise ValueError(
@@ -312,7 +318,6 @@ class MusicGen:
             else:
                 all_tokens.append(prompt_tokens)
                 prompt_length = prompt_tokens.shape[-1]
-
 
             stride_tokens = int(self.frame_rate * self.extend_stride)
 

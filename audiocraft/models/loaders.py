@@ -80,8 +80,6 @@ def load_lm_model(file_or_url_or_id: tp.Union[Path, str], device='cpu', cache_di
     cfg = OmegaConf.create(pkg['xp.cfg'])
     cfg.device = str(device)
     if cfg.device == 'cpu':
-        cfg.transformer_lm.memory_efficient = False
-        cfg.transformer_lm.custom = True
         cfg.dtype = 'float32'
     else:
         cfg.dtype = 'float16'

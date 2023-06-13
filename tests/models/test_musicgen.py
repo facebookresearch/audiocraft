@@ -51,6 +51,7 @@ class TestSEANetModel:
 
     def test_generate_long(self):
         mg = self.get_musicgen()
+        mg.max_duration = 3.
         mg.set_generation_params(duration=4., stride_extend=2.)
         wav = mg.generate(
             ['youpi', 'lapin dort'])
