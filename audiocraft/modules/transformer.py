@@ -25,6 +25,22 @@ from xformers import ops
 from .rope import RotaryEmbedding
 from .streaming import StreamingModule
 
+_efficient_attention_backend: str = 'torch'
+
+
+def set_efficient_attention_backend(backend: str = 'torch'):
+    # Using torch by default, it seems a bit faster on older P100 GPUs (~20% faster).
+    global _efficient_attention_backend
+    assert _efficient_attention_backend in ['xformers', 'torch']
+    _efficient_attention_backend = backend
+
+
+def _get_attention_time_dimension() -> int:
+    if _efficient_attention_backend == 'torch':
+        return 2
+    else:
+        return 1
+
 
 def _is_profiled() -> bool:
     # Return true if we are currently running with a xformers profiler activated.
@@ -75,14 +91,22 @@ def create_sin_embedding(positions: torch.Tensor, dim: int, max_period: float = 
 
 def expand_repeated_kv(x: torch.Tensor, n_rep: int) -> torch.Tensor:
     """torch.repeat_interleave(x, dim=2, repeats=n_rep) from xlformers"""
-    bs, slen, n_kv_heads, head_dim = x.shape
     if n_rep == 1:
         return x
-    return (
-        x[:, :, :, None, :]
-        .expand(bs, slen, n_kv_heads, n_rep, head_dim)
-        .reshape(bs, slen, n_kv_heads * n_rep, head_dim)
-    )
+    if _efficient_attention_backend == 'torch':
+        bs, n_kv_heads, slen, head_dim = x.shape
+        return (
+            x[:, :, None, :, :]
+            .expand(bs, n_kv_heads, n_rep, slen, head_dim)
+            .reshape(bs, n_kv_heads * n_rep, slen, head_dim)
+        )
+    else:
+        bs, slen, n_kv_heads, head_dim = x.shape
+        return (
+            x[:, :, :, None, :]
+            .expand(bs, slen, n_kv_heads, n_rep, head_dim)
+            .reshape(bs, slen, n_kv_heads * n_rep, head_dim)
+        )
 
 
 class LayerScale(nn.Module):
@@ -210,6 +234,7 @@ class StreamingMultiheadAttention(StreamingModule):
         # Return a causal mask, accounting for potentially stored past keys/values
         # We actually return a bias for the attention score, as this has the same
         # convention both in the builtin MHA in Pytorch, and Xformers functions.
+        time_dim = _get_attention_time_dimension()
         if self.memory_efficient:
             from xformers.ops import LowerTriangularMask
             if current_steps == 1:
@@ -222,7 +247,7 @@ class StreamingMultiheadAttention(StreamingModule):
                 return LowerTriangularMask()
         if self._streaming_state:
             past_keys = self._streaming_state['past_keys']
-            past_steps = past_keys.shape[1]
+            past_steps = past_keys.shape[time_dim]
         else:
             past_steps = 0
 
@@ -239,6 +264,7 @@ class StreamingMultiheadAttention(StreamingModule):
             torch.full([], float('-inf'), device=device, dtype=dtype))
 
     def _complete_kv(self, k, v):
+        time_dim = _get_attention_time_dimension()
         if self.cross_attention:
             # With cross attention we assume all keys and values
             # are already available, and streaming is with respect
@@ -247,20 +273,20 @@ class StreamingMultiheadAttention(StreamingModule):
         # Complete the key/value pair using the streaming state.
         if self._streaming_state:
             pk = self._streaming_state['past_keys']
-            nk = torch.cat([pk, k], dim=1)
+            nk = torch.cat([pk, k], dim=time_dim)
             if v is k:
                 nv = nk
             else:
                 pv = self._streaming_state['past_values']
-                nv = torch.cat([pv, v], dim=1)
+                nv = torch.cat([pv, v], dim=time_dim)
         else:
             nk = k
             nv = v
 
-        assert nk.shape[1] == nv.shape[1]
+        assert nk.shape[time_dim] == nv.shape[time_dim]
         offset = 0
         if self.past_context is not None:
-            offset = max(0, nk.shape[1] - self.past_context)
+            offset = max(0, nk.shape[time_dim] - self.past_context)
         if self._is_streaming:
             self._streaming_state['past_keys'] = nk[:, offset:]
             if v is not k:
@@ -272,6 +298,8 @@ class StreamingMultiheadAttention(StreamingModule):
         return nk, nv
 
     def _apply_rope(self, query: torch.Tensor, key: torch.Tensor):
+        # TODO: fix and verify layout.
+        assert _efficient_attention_backend == 'xformers', 'Rope not supported with torch attn.'
         # Apply rope embeddings to query and key tensors.
         assert self.rope is not None
         if 'past_keys' in self._streaming_state:
@@ -292,6 +320,11 @@ class StreamingMultiheadAttention(StreamingModule):
         assert not is_causal, ("new param added in torch 2.0.1 not supported, "
                                "use the causal args in the constructor.")
 
+        time_dim = _get_attention_time_dimension()
+        if time_dim == 2:
+            layout = "b h t d"
+        else:
+            layout = "b t h d"
         dtype = query.dtype
         if self._is_streaming:
             assert self.causal or self.cross_attention, \
@@ -324,8 +357,7 @@ class StreamingMultiheadAttention(StreamingModule):
                 if self.qk_layer_norm is True:
                     q = self.q_layer_norm(q)
                     k = self.k_layer_norm(k)
-                # q, k, v = [rearrange(x, "b t (h d) -> (b h) t d", h=self.num_heads) for x in [q, k, v]]
-                q, k, v = [rearrange(x, "b t (h d) -> b t h d", h=self.num_heads) for x in [q, k, v]]
+                q, k, v = [rearrange(x, f"b t (h d) -> {layout}", h=self.num_heads) for x in [q, k, v]]
             else:
                 if not _is_profiled():
                     # profiling breaks that propertysomehow.
@@ -333,7 +365,11 @@ class StreamingMultiheadAttention(StreamingModule):
                     assert value is key, "specialized implementation"
                 projected = nn.functional.linear(query, self.in_proj_weight, self.in_proj_bias)
                 if self.kv_repeat == 1:
-                    packed = rearrange(projected, "b t (p h d) -> b t p h d", p=3, h=self.num_heads)
+                    if time_dim == 2:
+                        bound_layout = "b h p t d"
+                    else:
+                        bound_layout = "b t p h d"
+                    packed = rearrange(projected, f"b t (p h d) -> {bound_layout}", p=3, h=self.num_heads)
                     q, k, v = ops.unbind(packed, dim=2)
                 else:
                     embed_dim = self.embed_dim
@@ -344,16 +380,16 @@ class StreamingMultiheadAttention(StreamingModule):
                     end = start + per_head_dim * kv_heads
                     k = projected[:, :, start: end]
                     v = projected[:, :, end:]
-                    q = rearrange(q, "b t (h d) -> b t h d", h=self.num_heads)
-                    k = rearrange(k, "b t (h d) -> b t h d", h=kv_heads)
-                    v = rearrange(v, "b t (h d) -> b t h d", h=kv_heads)
+                    q = rearrange(q, f"b t (h d) -> {layout}", h=self.num_heads)
+                    k = rearrange(k, f"b t (h d) -> {layout}", h=kv_heads)
+                    v = rearrange(v, f"b t (h d) -> {layout}", h=kv_heads)
 
                 if self.qk_layer_norm is True:
                     assert self.kv_repeat == 1
-                    q, k = [rearrange(x, "b t h d -> b t (h d)") for x in [q, k]]
+                    q, k = [rearrange(x, f"{layout} -> b t (h d)") for x in [q, k]]
                     q = self.q_layer_norm(q)
                     k = self.k_layer_norm(k)
-                    q, k = [rearrange(x, "b t (h d) -> b t h d", h=self.num_heads) for x in [q, k]]
+                    q, k = [rearrange(x, f"b t (h d) -> {layout}", h=self.num_heads) for x in [q, k]]
                 if self.rope:
                     q, k = self._apply_rope(q, k)
                 k, v = self._complete_kv(k, v)
@@ -364,7 +400,11 @@ class StreamingMultiheadAttention(StreamingModule):
                 q, k, v = [x.float() for x in [q, k, v]]
             if self.memory_efficient:
                 p = self.dropout if self.training else 0
-                x = ops.memory_efficient_attention(q, k, v, attn_mask, p=p)
+                if _efficient_attention_backend == 'torch':
+                    x = torch.nn.functional.scaled_dot_product_attention(
+                        q, k, v, is_causal=attn_mask is not None, dropout_p=p)
+                else:
+                    x = ops.memory_efficient_attention(q, k, v, attn_mask, p=p)
             else:
                 # We include the dot product as float32, for consistency
                 # with the other implementations that include that step
@@ -374,18 +414,21 @@ class StreamingMultiheadAttention(StreamingModule):
                 # extend a bit the range of operations done in float32,
                 # although this should make no difference.
                 q = q / q.shape[-1] ** 0.5
+                key_layout = layout.replace('t', 'k')
+                query_layout = layout
                 if self._is_streaming and self.safe_streaming and q.device.type == 'cuda':
                     with torch.autocast(device_type=q.device.type, dtype=torch.float32):
-                        pre_w = torch.einsum("bqhc,bkhc->bhqk", q, k)
+                        pre_w = torch.einsum(f"{query_layout},{key_layout}-> b h t k", q, k)
                 else:
-                    pre_w = torch.einsum("bqhc,bkhc->bhqk", q, k)
+                    pre_w = torch.einsum(f"{query_layout},{key_layout}-> b h t k", q, k)
                 if attn_mask is not None:
                     pre_w = pre_w + attn_mask
                 w = torch.softmax(pre_w, dim=-1)
                 w = F.dropout(w, self.dropout, training=self.training).to(v)
-                x = torch.einsum("bhqk,bkhc->bqhc", w, v)
+                # Key and value have the same format.
+                x = torch.einsum(f"b h t k, {key_layout} -> {layout}", w, v)
             x = x.to(dtype)
-            x = rearrange(x, "b t h d -> b t (h d)", h=self.num_heads)
+            x = rearrange(x, f"{layout} -> b t (h d)", h=self.num_heads)
             x = self.out_proj(x)
         else:
             key, value = self._complete_kv(key, value)

@@ -9,7 +9,8 @@ from itertools import product
 import pytest
 import torch
 
-from audiocraft.modules.transformer import StreamingMultiheadAttention, StreamingTransformer
+from audiocraft.modules.transformer import (
+    StreamingMultiheadAttention, StreamingTransformer, set_efficient_attention_backend)
 
 
 def test_transformer_causal_streaming():
@@ -85,20 +86,23 @@ def test_streaming_api():
 
 
 def test_memory_efficient():
-    torch.manual_seed(1234)
-    tr = StreamingTransformer(
-        16, 4, 2, custom=True, dropout=0., layer_scale=0.1)
-    tr_mem_efficient = StreamingTransformer(
-        16, 4, 2, dropout=0., memory_efficient=True, layer_scale=0.1)
-    tr_mem_efficient.load_state_dict(tr.state_dict())
-    tr.eval()
-    steps = 12
-    x = torch.randn(3, steps, 16)
+    for backend in ['torch', 'xformers']:
+        torch.manual_seed(1234)
+        set_efficient_attention_backend(backend)
 
-    with torch.no_grad():
-        y = tr(x)
-        y2 = tr_mem_efficient(x)
-        assert torch.allclose(y, y2), (y - y2).norm()
+        tr = StreamingTransformer(
+            16, 4, 2, custom=True, dropout=0., layer_scale=0.1)
+        tr_mem_efficient = StreamingTransformer(
+            16, 4, 2, dropout=0., memory_efficient=True, layer_scale=0.1)
+        tr_mem_efficient.load_state_dict(tr.state_dict())
+        tr.eval()
+        steps = 12
+        x = torch.randn(3, steps, 16)
+
+        with torch.no_grad():
+            y = tr(x)
+            y2 = tr_mem_efficient(x)
+            assert torch.allclose(y, y2), ((y - y2).norm(), backend)
 
 
 def test_attention_as_float32():
@@ -128,31 +132,33 @@ def test_attention_as_float32():
 
 @torch.no_grad()
 def test_streaming_memory_efficient():
-    torch.manual_seed(1234)
-    tr = StreamingTransformer(16, 4, 2, causal=True, dropout=0., custom=True)
-    tr_mem_efficient = StreamingTransformer(
-        16, 4, 2, dropout=0., memory_efficient=True, causal=True)
-    tr.load_state_dict(tr_mem_efficient.state_dict())
-    tr.eval()
-    tr_mem_efficient.eval()
-    steps = 12
-    x = torch.randn(3, steps, 16)
+    for backend in ['torch', 'xformers']:
+        torch.manual_seed(1234)
+        set_efficient_attention_backend(backend)
+        tr = StreamingTransformer(16, 4, 2, causal=True, dropout=0., custom=True)
+        tr_mem_efficient = StreamingTransformer(
+            16, 4, 2, dropout=0., memory_efficient=True, causal=True)
+        tr.load_state_dict(tr_mem_efficient.state_dict())
+        tr.eval()
+        tr_mem_efficient.eval()
+        steps = 12
+        x = torch.randn(3, steps, 16)
 
-    ref = tr(x)
+        ref = tr(x)
 
-    with tr_mem_efficient.streaming():
-        outs = []
-        # frame_sizes = [2] + [1] * (steps - 2)
-        frame_sizes = [1] * steps
+        with tr_mem_efficient.streaming():
+            outs = []
+            # frame_sizes = [2] + [1] * (steps - 2)
+            frame_sizes = [1] * steps
 
-        for frame_size in frame_sizes:
-            frame = x[:, :frame_size]
-            x = x[:, frame_size:]
-            outs.append(tr_mem_efficient(frame))
+            for frame_size in frame_sizes:
+                frame = x[:, :frame_size]
+                x = x[:, frame_size:]
+                outs.append(tr_mem_efficient(frame))
 
-    out = torch.cat(outs, dim=1)
-    delta = torch.norm(out - ref) / torch.norm(out)
-    assert delta < 1e-6, delta
+        out = torch.cat(outs, dim=1)
+        delta = torch.norm(out - ref) / torch.norm(out)
+        assert delta < 1e-6, delta
 
 
 def test_cross_attention():
@@ -204,7 +210,7 @@ def test_cross_attention_compat():
 
     y = cross_attn(queries, keys, values)[0]
     y_ref = ref_attn(queries, keys, values)[0]
-    assert torch.allclose(y, y_ref, atol=1e-7)
+    assert torch.allclose(y, y_ref, atol=1e-7), (y - y_ref).norm() / y_ref.norm()
 
     # Now let's check that streaming is working properly.
     with cross_attn.streaming():

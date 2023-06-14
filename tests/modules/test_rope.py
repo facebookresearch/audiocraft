@@ -7,10 +7,11 @@
 import torch
 
 from audiocraft.modules.rope import RotaryEmbedding
-from audiocraft.modules.transformer import StreamingTransformer
+from audiocraft.modules.transformer import StreamingTransformer, set_efficient_attention_backend
 
 
 def test_rope():
+    set_efficient_attention_backend('xformers')
     B, T, H, C = 8, 75, 16, 128
 
     rope = RotaryEmbedding(dim=C)
@@ -23,6 +24,7 @@ def test_rope():
 
 
 def test_rope_io_dtypes():
+    set_efficient_attention_backend('xformers')
     B, T, H, C = 8, 75, 16, 128
 
     rope_32 = RotaryEmbedding(dim=C, dtype=torch.float32)
@@ -46,6 +48,7 @@ def test_rope_io_dtypes():
 
 
 def test_transformer_with_rope():
+    set_efficient_attention_backend('xformers')
     torch.manual_seed(1234)
     for pos in ['rope', 'sin_rope']:
         tr = StreamingTransformer(
@@ -61,6 +64,7 @@ def test_transformer_with_rope():
 
 @torch.no_grad()
 def test_rope_streaming():
+    set_efficient_attention_backend('xformers')
     torch.manual_seed(1234)
     tr = StreamingTransformer(
         16, 4, 2, causal=True, dropout=0.,
@@ -88,6 +92,7 @@ def test_rope_streaming():
 
 @torch.no_grad()
 def test_rope_streaming_past_context():
+    set_efficient_attention_backend('xformers')
     torch.manual_seed(1234)
 
     for context in [None, 10]:
@@ -117,6 +122,7 @@ def test_rope_streaming_past_context():
 
 
 def test_rope_memory_efficient():
+    set_efficient_attention_backend('xformers')
     torch.manual_seed(1234)
     tr = StreamingTransformer(
         16, 4, 2, custom=True, dropout=0., layer_scale=0.1,
@@ -137,6 +143,7 @@ def test_rope_memory_efficient():
 
 
 def test_rope_with_xpos():
+    set_efficient_attention_backend('xformers')
     B, T, H, C = 8, 75, 16, 128
 
     rope = RotaryEmbedding(dim=C, xpos=True)
@@ -149,6 +156,7 @@ def test_rope_with_xpos():
 
 
 def test_positional_scale():
+    set_efficient_attention_backend('xformers')
     B, T, H, C = 8, 75, 16, 128
 
     rope = RotaryEmbedding(dim=C, xpos=True, scale=0.0)

@@ -36,13 +36,16 @@ class MusicGen:
             used to map audio to invertible discrete representations.
         lm (LMModel): Language model over discrete representations.
     """
-    def __init__(self, name: str, compression_model: CompressionModel, lm: LMModel):
+    def __init__(self, name: str, compression_model: CompressionModel, lm: LMModel,
+                 max_duration: float = 30):
         self.name = name
         self.compression_model = compression_model
         self.lm = lm
+        self.max_duration = max_duration
         self.device = next(iter(lm.parameters())).device
         self.generation_params: dict = {}
         self.set_generation_params(duration=15)  # 15 seconds by default
+        self._progress_callback: tp.Optional[tp.Callable[[int, int], None]] = None
         if self.device.type == 'cpu':
             self.autocast = TorchAutocast(enabled=False)
         else:
@@ -65,13 +68,19 @@ class MusicGen:
         return self.compression_model.channels
 
     @staticmethod
-    def get_pretrained(name: str = 'melody', device='cuda'):
+    def get_pretrained(name: str = 'melody', device=None):
         """Return pretrained model, we provide four models:
         - small (300M), text to music, # see: https://huggingface.co/facebook/musicgen-small
         - medium (1.5B), text to music, # see: https://huggingface.co/facebook/musicgen-medium
         - melody (1.5B) text to music and text+melody to music, # see: https://huggingface.co/facebook/musicgen-melody
         - large (3.3B), text to music, # see: https://huggingface.co/facebook/musicgen-large
         """
+
+        if device is None:
+            if torch.cuda.device_count():
+                device = 'cuda'
+            else:
+                device = 'cpu'
 
         if name == 'debug':
             # used only for unit tests
@@ -96,7 +105,7 @@ class MusicGen:
     def set_generation_params(self, use_sampling: bool = True, top_k: int = 250,
                               top_p: float = 0.0, temperature: float = 1.0,
                               duration: float = 30.0, cfg_coef: float = 3.0,
-                              two_step_cfg: bool = False):
+                              two_step_cfg: bool = False, extend_stride: float = 18):
         """Set the generation parameters for MusicGen.
 
         Args:
@@ -109,10 +118,14 @@ class MusicGen:
             two_step_cfg (bool, optional): If True, performs 2 forward for Classifier Free Guidance,
                 instead of batching together the two. This has some impact on how things
                 are padded but seems to have little impact in practice.
+            extend_stride: when doing extended generation (i.e. more than 30 seconds), by how much
+                should we extend the audio each time. Larger values will mean less context is
+                preserved, and shorter value will require extra computations.
         """
-        assert duration <= 30, "The MusicGen cannot generate more than 30 seconds"
+        assert extend_stride < self.max_duration, "Cannot stride by more than max generation duration."
+        self.extend_stride = extend_stride
+        self.duration = duration
         self.generation_params = {
-            'max_gen_len': int(duration * self.frame_rate),
             'use_sampling': use_sampling,
             'temp': temperature,
             'top_k': top_k,
@@ -120,6 +133,10 @@ class MusicGen:
             'cfg_coef': cfg_coef,
             'two_step_cfg': two_step_cfg,
         }
+
+    def set_custom_progress_callback(self, progress_callback: tp.Optional[tp.Callable[[int, int], None]] = None):
+        """Override the default progress callback."""
+        self._progress_callback = progress_callback
 
     def generate_unconditional(self, num_samples: int, progress: bool = False) -> torch.Tensor:
         """Generate samples in an unconditional manner.
@@ -263,20 +280,79 @@ class MusicGen:
         Returns:
             torch.Tensor: Generated audio, of shape [B, C, T], T is defined by the generation params.
         """
+        total_gen_len = int(self.duration * self.frame_rate)
+        max_prompt_len = int(min(self.duration, self.max_duration) * self.frame_rate)
+        current_gen_offset: int = 0
+
         def _progress_callback(generated_tokens: int, tokens_to_generate: int):
-            print(f'{generated_tokens: 6d} / {tokens_to_generate: 6d}', end='\r')
+            generated_tokens += current_gen_offset
+            if self._progress_callback is not None:
+                # Note that total_gen_len might be quite wrong depending on the
+                # codebook pattern used, but with delay it is almost accurate.
+                self._progress_callback(generated_tokens, total_gen_len)
+            else:
+                print(f'{generated_tokens: 6d} / {total_gen_len: 6d}', end='\r')
 
         if prompt_tokens is not None:
-            assert self.generation_params['max_gen_len'] > prompt_tokens.shape[-1], \
+            assert max_prompt_len >= prompt_tokens.shape[-1], \
                 "Prompt is longer than audio to generate"
 
         callback = None
         if progress:
             callback = _progress_callback
 
-        # generate by sampling from LM
-        with self.autocast:
-            gen_tokens = self.lm.generate(prompt_tokens, attributes, callback=callback, **self.generation_params)
+        if self.duration <= self.max_duration:
+            # generate by sampling from LM, simple case.
+            with self.autocast:
+                gen_tokens = self.lm.generate(
+                    prompt_tokens, attributes,
+                    callback=callback, max_gen_len=total_gen_len, **self.generation_params)
+
+        else:
+            # now this gets a bit messier, we need to handle prompts,
+            # melody conditioning etc.
+            ref_wavs = [attr.wav['self_wav'] for attr in attributes]
+            all_tokens = []
+            if prompt_tokens is None:
+                prompt_length = 0
+            else:
+                all_tokens.append(prompt_tokens)
+                prompt_length = prompt_tokens.shape[-1]
+
+            stride_tokens = int(self.frame_rate * self.extend_stride)
+
+            while current_gen_offset + prompt_length < total_gen_len:
+                time_offset = current_gen_offset / self.frame_rate
+                chunk_duration = min(self.duration - time_offset, self.max_duration)
+                max_gen_len = int(chunk_duration * self.frame_rate)
+                for attr, ref_wav in zip(attributes, ref_wavs):
+                    wav_length = ref_wav.length.item()
+                    if wav_length == 0:
+                        continue
+                    # We will extend the wav periodically if it not long enough.
+                    # we have to do it here rather than in conditioners.py as otherwise
+                    # we wouldn't have the full wav.
+                    initial_position = int(time_offset * self.sample_rate)
+                    wav_target_length = int(self.max_duration * self.sample_rate)
+                    print(initial_position / self.sample_rate, wav_target_length / self.sample_rate)
+                    positions = torch.arange(initial_position,
+                                             initial_position + wav_target_length, device=self.device)
+                    attr.wav['self_wav'] = WavCondition(
+                        ref_wav[0][:, positions % wav_length],
+                        torch.full_like(ref_wav[1], wav_target_length))
+                with self.autocast:
+                    gen_tokens = self.lm.generate(
+                        prompt_tokens, attributes,
+                        callback=callback, max_gen_len=max_gen_len, **self.generation_params)
+                if prompt_tokens is None:
+                    all_tokens.append(gen_tokens)
+                else:
+                    all_tokens.append(gen_tokens[:, :, prompt_tokens.shape[-1]:])
+                prompt_tokens = gen_tokens[:, :, stride_tokens:]
+                prompt_length = prompt_tokens.shape[-1]
+                current_gen_offset += stride_tokens
+
+            gen_tokens = torch.cat(all_tokens, dim=-1)
 
         # generate audio
         assert gen_tokens.dim() == 3
