@@ -99,7 +99,6 @@ def predict(model, text, melody, sample, duration, topk, topp, temperature, cfg_
                 predict.last_progress_update = now
 
         if sample:
-            print("here")
             def normalize_audio(audio_data):
                 audio_data = audio_data.astype(np.float32)
                 max_value = np.max(np.abs(audio_data))
@@ -120,11 +119,9 @@ def predict(model, text, melody, sample, duration, topk, topp, temperature, cfg_
 
             sample_length = sampleM.shape[sampleM.dim() - 1] / 32000
             if output is None:
-                print("part1")
                 next_segment = sampleM
                 duration -= sample_length
             else:
-                print("part2")
                 if first_chunk is None and MODEL.name == "melody" and recondition:
                     first_chunk = output[:, :, 
                     :MODEL.lm.cfg.dataset.segment_duration*MODEL.sample_rate]
