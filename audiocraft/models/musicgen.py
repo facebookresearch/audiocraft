@@ -212,7 +212,9 @@ class MusicGen:
         prompt = convert_audio(prompt, prompt_sample_rate, self.sample_rate, self.audio_channels)
         if descriptions is None:
             descriptions = [None] * len(prompt)
-        attributes, prompt_tokens = self._prepare_tokens_and_attributes(descriptions, prompt)
+        if melody_wavs is not None:
+            melody_wavs = [melody_wavs]
+        attributes, prompt_tokens = self._prepare_tokens_and_attributes(descriptions, prompt, melody_wavs)
         assert prompt_tokens is not None
         return self._generate_tokens(attributes, prompt_tokens, progress)
 
