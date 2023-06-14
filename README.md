@@ -30,6 +30,7 @@ Audiocraft requires Python 3.9, PyTorch 2.0.0, and a GPU with at least 16 GB of 
 # Best to make sure you have torch installed first, in particular before installing xformers.
 # Don't run this if you already have PyTorch installed.
 pip install 'torch>=2.0'
+pip install -U xformers
 # Then proceed to one of the following
 pip install -U audiocraft  # stable release
 pip install -U git+https://git@github.com/facebookresearch/audiocraft#egg=audiocraft  # bleeding edge
