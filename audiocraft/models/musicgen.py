@@ -286,6 +286,8 @@ class MusicGen:
 
         def _progress_callback(generated_tokens: int, tokens_to_generate: int):
             generated_tokens += current_gen_offset
+            if current_gen_offset > 0:
+                generated_tokens += (self.max_duration - self.extend_stride) * self.frame_rate
             if self._progress_callback is not None:
                 # Note that total_gen_len might be quite wrong depending on the
                 # codebook pattern used, but with delay it is almost accurate.
@@ -359,3 +361,8 @@ class MusicGen:
         with torch.no_grad():
             gen_audio = self.compression_model.decode(gen_tokens, None)
         return gen_audio
+
+    def to(self, device: str):
+        self.compression_model.to(device)
+        self.lm.to(device)
+        return self

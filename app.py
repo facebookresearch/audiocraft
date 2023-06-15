@@ -7,6 +7,7 @@
 # Updated to account for UI changes from https://github.com/rkfg/audiocraft/blob/long/app.py
 # also released under the MIT license.
 
+import random
 import argparse
 from concurrent.futures import ProcessPoolExecutor
 import os
@@ -23,8 +24,12 @@ from audiocraft.data.audio import audio_write
 from audiocraft.models import MusicGen
 import subprocess, random, string
 
-
 MODEL = None  # Last used model
+MODELS = None
+IS_SHARED_SPACE = "musicgen/MusicGen" in os.environ.get('SPACE_ID', '')
+INTERRUPTED = False
+UNLOAD_MODEL = False
+MOVE_TO_CPU = False
 IS_BATCHED = "facebook/MusicGen" in os.environ.get('SPACE_ID', '')
 MAX_BATCH_SIZE = 12
 BATCHED_DURATION = 15
@@ -78,13 +83,31 @@ def make_waveform(*args, **kwargs):
 
 
 def load_model(version='melody'):
-    global MODEL
+    global MODEL, MODELS
     print("Loading model", version)
-    if MODEL is None or MODEL.name != version:
+    if MODELS is None:
         MODEL = MusicGen.get_pretrained(version)
+        return
+    else:
+        t1 = time.monotonic()
+        if MODEL is not None:
+            MODEL.to('cpu') # move to cache
+            print("Previous model moved to CPU in %.2fs" % (time.monotonic() - t1))
+            t1 = time.monotonic()
+        if MODELS.get(version) is None:
+            print("Loading model %s from disk" % version)
+            result = MusicGen.get_pretrained(version)
+            MODELS[version] = result
+            print("Model loaded in %.2fs" % (time.monotonic() - t1))
+            MODEL = result
+            return
+        result = MODELS[version].to('cuda')
+        print("Cached model loaded in %.2fs" % (time.monotonic() - t1))
+        MODEL = result
 
 
 def _do_predictions(texts, melodies, duration, progress=False, **gen_kwargs):
+    global MODEL
     MODEL.set_generation_params(duration=duration, **gen_kwargs)
     print("new batch", len(texts), texts, [None if m is None else (m[0], m[1].shape) for m in melodies])
     be = time.time()
@@ -122,6 +145,12 @@ def _do_predictions(texts, melodies, duration, progress=False, **gen_kwargs):
             out_files.append(pool.submit(make_waveform, file.name, bg_color="#21b0fe" , bars_color=('#fe218b', '#fed700'), fg_alpha=1.0, bar_count=75))
     res = [out_file.result() for out_file in out_files]
     print("batch finished", len(texts), time.time() - be)
+    if MOVE_TO_CPU:
+        MODEL.to('cpu')
+    if UNLOAD_MODEL:
+        MODEL = None
+    torch.cuda.empty_cache()
+    torch.cuda.ipc_collect()
     return res
 
 
@@ -133,7 +162,7 @@ def predict_batched(texts, melodies):
     return [res]
 
 
-def predict_full(model, text, melody, duration, topk, topp, temperature, cfg_coef, progress=gr.Progress()):
+def predict_full(model, text, melody, duration, topk, topp, temperature, cfg_coef, seed, overlap, progress=gr.Progress()):
     global INTERRUPTING
     INTERRUPTING = False
     if temperature < 0:
@@ -144,27 +173,39 @@ def predict_full(model, text, melody, duration, topk, topp, temperature, cfg_coe
         raise gr.Error("Topp must be non-negative.")
 
     topk = int(topk)
-    load_model(model)
+    if MODEL is None or MODEL.name != model:
+        load_model(model)
+    else:
+        if MOVE_TO_CPU:
+            MODEL.to('cuda')
 
+    if seed < 0:
+        seed = random.randint(0, 0xffff_ffff_ffff)
+    torch.manual_seed(seed)
+    predict_full.last_upd = time.monotonic()
     def _progress(generated, to_generate):
-        progress((generated, to_generate))
+        if time.monotonic() - predict_full.last_upd > 1:
+            progress((generated, to_generate))
+            predict_full.last_upd = time.monotonic()
         if INTERRUPTING:
             raise gr.Error("Interrupted.")
     MODEL.set_custom_progress_callback(_progress)
 
     outs = _do_predictions(
         [text], [melody], duration, progress=True,
-        top_k=topk, top_p=topp, temperature=temperature, cfg_coef=cfg_coef)
-    return outs[0]
+        top_k=topk, top_p=topp, temperature=temperature, cfg_coef=cfg_coef, extend_stride=MODEL.max_duration-overlap)
+    return outs[0], seed
 
 
 def ui_full(launch_kwargs):
-    with gr.Blocks() as interface:
+    with gr.Blocks(title='Audiocraft+') as interface:
         gr.Markdown(
             """
             # MusicGen
             This is your private demo for [MusicGen](https://github.com/facebookresearch/audiocraft), a simple and controllable model for music generation
-            presented at: ["Simple and Controllable Music Generation"](https://arxiv.org/abs/2306.05284)
+            presented at: ["Simple and Controllable Music Generation"](https://huggingface.co/papers/2306.05284)
+            This is an extended version of the original
+            Thanks to: Camenduru, rkfg and GrandaddyShmax
             """
         )
         with gr.Row():
@@ -173,21 +214,30 @@ def ui_full(launch_kwargs):
                     text = gr.Text(label="Input Text", interactive=True)
                     melody = gr.Audio(source="upload", type="numpy", label="Melody Condition (optional)", interactive=True)
                 with gr.Row():
-                    submit = gr.Button("Submit")
+                    submit = gr.Button("Generate", variant="primary")
                     # Adapted from https://github.com/rkfg/audiocraft/blob/long/app.py, MIT license.
                     _ = gr.Button("Interrupt").click(fn=interrupt, queue=False)
                 with gr.Row():
                     model = gr.Radio(["melody", "medium", "small", "large"], label="Model", value="melody", interactive=True)
                 with gr.Row():
-                    duration = gr.Slider(minimum=1, maximum=120, value=10, label="Duration", interactive=True)
+                    duration = gr.Slider(minimum=1, maximum=300, value=10, step=1, label="Duration", interactive=True)
+                with gr.Row():
+                    overlap = gr.Slider(minimum=1, maximum=29, value=12, step=1, label="Overlap", interactive=True)
                 with gr.Row():
                     topk = gr.Number(label="Top-k", value=250, interactive=True)
                     topp = gr.Number(label="Top-p", value=0, interactive=True)
                     temperature = gr.Number(label="Temperature", value=1.0, interactive=True)
-                    cfg_coef = gr.Number(label="Classifier Free Guidance", value=3.0, interactive=True)
-            with gr.Column():
+                    cfg_coef = gr.Number(label="Classifier Free Guidance", value=5.0, interactive=True)
+                with gr.Row():
+                    seed = gr.Number(label="Seed", value=-1, precision=0, interactive=True)
+                    gr.Button('\U0001f3b2\ufe0f').style(full_width=False).click(fn=lambda: -1, outputs=[seed], queue=False)
+                    reuse_seed = gr.Button('\u267b\ufe0f').style(full_width=False)
+            with gr.Column() as c:
                 output = gr.Video(label="Generated Music")
-        submit.click(predict_full, inputs=[model, text, melody, duration, topk, topp, temperature, cfg_coef], outputs=[output])
+                seed_used = gr.Number(label='Seed used', value=-1, interactive=False)
+
+        reuse_seed.click(fn=lambda x: x, inputs=[seed_used], outputs=[seed], queue=False)
+        submit.click(predict_full, inputs=[model, text, melody, duration, topk, topp, temperature, cfg_coef, seed, overlap], outputs=[output, seed_used])
         gr.Examples(
             fn=predict_full,
             examples=[
@@ -345,8 +395,23 @@ if __name__ == "__main__":
     parser.add_argument(
         '--share', action='store_true', help='Share the gradio UI'
     )
+    parser.add_argument(
+        '--unload_model', action='store_true', help='Unload the model after every generation to save GPU memory'
+    )
+
+    parser.add_argument(
+        '--unload_to_cpu', action='store_true', help='Move the model to main RAM after every generation to save GPU memory but reload faster than after full unload (see above)'
+    )
+
+    parser.add_argument(
+        '--cache', action='store_true', help='Cache models in RAM to quickly switch between them'
+    )
 
     args = parser.parse_args()
+    UNLOAD_MODEL = args.unload_model
+    MOVE_TO_CPU = args.unload_to_cpu
+    if args.cache:
+        MODELS = {}
 
     launch_kwargs = {}
     launch_kwargs['server_name'] = args.listen
