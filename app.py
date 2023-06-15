@@ -18,6 +18,7 @@ import warnings
 
 import torch
 import gradio as gr
+import numpy as np
 
 from audiocraft.data.audio_utils import convert_audio
 from audiocraft.data.audio import audio_write
@@ -105,11 +106,16 @@ def load_model(version='melody'):
         print("Cached model loaded in %.2fs" % (time.monotonic() - t1))
         MODEL = result
 
+def normalize_audio(audio_data):
+    audio_data = audio_data.astype(np.float32)
+    max_value = np.max(np.abs(audio_data))
+    audio_data /= max_value
+    return audio_data
 
-def _do_predictions(texts, melodies, duration, progress=False, **gen_kwargs):
+def _do_predictions(texts, melodies, sample, duration, progress=False, **gen_kwargs):
     global MODEL
     MODEL.set_generation_params(duration=duration, **gen_kwargs)
-    print("new batch", len(texts), texts, [None if m is None else (m[0], m[1].shape) for m in melodies])
+    print("new batch", len(texts), texts, [None if m is None else (m[0], m[1].shape) for m in melodies], [None if sample is None else (sample[0], sample[1].shape)])
     be = time.time()
     processed_melodies = []
     target_sr = 32000
@@ -124,8 +130,27 @@ def _do_predictions(texts, melodies, duration, progress=False, **gen_kwargs):
             melody = melody[..., :int(sr * duration)]
             melody = convert_audio(melody, sr, target_sr, target_ac)
             processed_melodies.append(melody)
+    
+    if sample is not None:
+        globalSR, sampleM = sample[0], sample[1]
+        sampleM = normalize_audio(sampleM)
+        sampleM = torch.from_numpy(sampleM).t()
+    
+        if sampleM.dim() > 1:
+            sampleM = convert_audio(sampleM, globalSR, target_sr, target_ac)
+        
+        sampleM = sampleM.to(MODEL.device).float().unsqueeze(0)
 
-    if any(m is not None for m in processed_melodies):
+        if sampleM.dim() == 2:
+            sampleM = sampleM[None]
+
+        outputs = MODEL.generate_continuation(
+            prompt=sampleM,
+            prompt_sample_rate=target_sr,
+            descriptions=texts,
+            progress=progress,
+        )
+    elif any(m is not None for m in processed_melodies):
         outputs = MODEL.generate_with_chroma(
             descriptions=texts,
             melody_wavs=processed_melodies,
@@ -162,7 +187,7 @@ def predict_batched(texts, melodies):
     return [res]
 
 
-def predict_full(model, text, melody, duration, topk, topp, temperature, cfg_coef, seed, overlap, progress=gr.Progress()):
+def predict_full(model, text, melody, sample, duration, topk, topp, temperature, cfg_coef, seed, overlap, progress=gr.Progress()):
     global INTERRUPTING
     INTERRUPTING = False
     if temperature < 0:
@@ -192,18 +217,19 @@ def predict_full(model, text, melody, duration, topk, topp, temperature, cfg_coe
     MODEL.set_custom_progress_callback(_progress)
 
     outs = _do_predictions(
-        [text], [melody], duration, progress=True,
+        [text], [melody], sample, duration, progress=True,
         top_k=topk, top_p=topp, temperature=temperature, cfg_coef=cfg_coef, extend_stride=MODEL.max_duration-overlap)
     return outs[0], seed
 
 
 def ui_full(launch_kwargs):
-    with gr.Blocks(title='Audiocraft+') as interface:
+    with gr.Blocks(title='MusicGen+') as interface:
         gr.Markdown(
             """
-            # MusicGen
+            # MusicGen+
             This is your private demo for [MusicGen](https://github.com/facebookresearch/audiocraft), a simple and controllable model for music generation
             presented at: ["Simple and Controllable Music Generation"](https://huggingface.co/papers/2306.05284)
+            
             This is an extended version of the original
             Thanks to: Camenduru, rkfg and GrandaddyShmax
             """
@@ -213,6 +239,7 @@ def ui_full(launch_kwargs):
                 with gr.Row():
                     text = gr.Text(label="Input Text", interactive=True)
                     melody = gr.Audio(source="upload", type="numpy", label="Melody Condition (optional)", interactive=True)
+                    sample = gr.Audio(source="upload", type="numpy", label="Music Sample (optional)", interactive=True)
                 with gr.Row():
                     submit = gr.Button("Generate", variant="primary")
                     # Adapted from https://github.com/rkfg/audiocraft/blob/long/app.py, MIT license.
@@ -237,7 +264,7 @@ def ui_full(launch_kwargs):
                 seed_used = gr.Number(label='Seed used', value=-1, interactive=False)
 
         reuse_seed.click(fn=lambda x: x, inputs=[seed_used], outputs=[seed], queue=False)
-        submit.click(predict_full, inputs=[model, text, melody, duration, topk, topp, temperature, cfg_coef, seed, overlap], outputs=[output, seed_used])
+        submit.click(predict_full, inputs=[model, text, melody, sample, duration, topk, topp, temperature, cfg_coef, seed, overlap], outputs=[output, seed_used])
         gr.Examples(
             fn=predict_full,
             examples=[
