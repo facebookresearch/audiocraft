@@ -21,6 +21,7 @@ import gradio as gr
 from audiocraft.data.audio_utils import convert_audio
 from audiocraft.data.audio import audio_write
 from audiocraft.models import MusicGen
+import subprocess, random, string
 
 
 MODEL = None  # Last used model
@@ -31,6 +32,20 @@ INTERRUPTING = False
 # We have to wrap subprocess call to clean a bit the log when using gr.make_waveform
 _old_call = sp.call
 
+def generate_random_string(length):
+    characters = string.ascii_letters + string.digits
+    return ''.join(random.choice(characters) for _ in range(length))
+
+def resize_video(input_path, output_path, target_width, target_height):
+    ffmpeg_cmd = [
+        'ffmpeg',
+        '-y',
+        '-i', input_path,
+        '-vf', f'scale={target_width}:{target_height}',
+        '-c:a', 'copy',
+        output_path
+    ]
+    subprocess.run(ffmpeg_cmd)
 
 def _call_nostderr(*args, **kwargs):
     # Avoid ffmpeg vomitting on the logs.
@@ -55,7 +70,9 @@ def make_waveform(*args, **kwargs):
     be = time.time()
     with warnings.catch_warnings():
         warnings.simplefilter('ignore')
-        out = gr.make_waveform(*args, **kwargs)
+        waveform_video = gr.make_waveform(*args, **kwargs)
+        out = f"{generate_random_string(12)}.mp4"
+        resize_video(waveform_video, out, 900, 300)
         print("Make a video took", time.time() - be)
         return out
 
@@ -102,7 +119,7 @@ def _do_predictions(texts, melodies, duration, progress=False, **gen_kwargs):
             audio_write(
                 file.name, output, MODEL.sample_rate, strategy="loudness",
                 loudness_headroom_db=16, loudness_compressor=True, add_suffix=False)
-            out_files.append(pool.submit(make_waveform, file.name))
+            out_files.append(pool.submit(make_waveform, file.name, bg_color="#21b0fe" , bars_color=('#fe218b', '#fed700'), fg_alpha=1.0, bar_count=75))
     res = [out_file.result() for out_file in out_files]
     print("batch finished", len(texts), time.time() - be)
     return res
@@ -147,7 +164,7 @@ def ui_full(launch_kwargs):
             """
             # MusicGen
             This is your private demo for [MusicGen](https://github.com/facebookresearch/audiocraft), a simple and controllable model for music generation
-            presented at: ["Simple and Controllable Music Generation"](https://huggingface.co/papers/2306.05284)
+            presented at: ["Simple and Controllable Music Generation"](https://arxiv.org/abs/2306.05284)
             """
         )
         with gr.Row():
