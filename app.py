@@ -226,7 +226,7 @@ def ui_full(launch_kwargs):
     with gr.Blocks(title='MusicGen+') as interface:
         gr.Markdown(
             """
-            # MusicGen+
+            # MusicGen+ Experimental Version
             This is your private demo for [MusicGen](https://github.com/facebookresearch/audiocraft), a simple and controllable model for music generation
             presented at: ["Simple and Controllable Music Generation"](https://huggingface.co/papers/2306.05284)
             
