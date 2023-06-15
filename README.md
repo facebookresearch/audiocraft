@@ -35,6 +35,14 @@ pip install -U audiocraft  # stable release
 pip install -U git+https://git@github.com/facebookresearch/audiocraft#egg=audiocraft  # bleeding edge
 pip install -e .  # or if you cloned the repo locally
 ```
+### docker
+```
+docker run -it -d -p 7860:7860 --gpus all initialencounter/audiocraft:latest bash -c "bash .start.sh"
+```
+or
+```
+docker run -it -d -p 7860:7860 --gpus all initialencounter/audiocraft:latest bash -c 'cd audiocraft;python3 app.py --listen "0.0.0.0" --server_port 7860'
+```
 
 ## Usage
 We offer a number of way to interact with MusicGen:
