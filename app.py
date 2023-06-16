@@ -136,17 +136,19 @@ def _do_predictions(texts, melodies, sample, duration, progress=False, **gen_kwa
         sampleM = normalize_audio(sampleM)
         sampleM = torch.from_numpy(sampleM).t()
     
-        if sampleM.dim() > 1:
-            sampleM = convert_audio(sampleM, globalSR, target_sr, target_ac)
+        #if sampleM.dim() > 1:
+        #    sampleM = convert_audio(sampleM, globalSR, target_sr, target_ac)
         
-        sampleM = sampleM.to(MODEL.device).float().unsqueeze(0)
-
-        if sampleM.dim() == 2:
-            sampleM = sampleM[None]
+        #sampleM = sampleM.to(MODEL.device).float().unsqueeze(0)
+        if sampleM.dim() == 1:
+            sampleM = sampleM.unsqueeze(0)
+        
+        #if sampleM.dim() == 2:
+        #    sampleM = sampleM[None]
 
         outputs = MODEL.generate_continuation(
             prompt=sampleM,
-            prompt_sample_rate=target_sr,
+            prompt_sample_rate=globalSR,
             descriptions=texts,
             progress=progress,
         )
