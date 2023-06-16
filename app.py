@@ -127,7 +127,7 @@ def _do_predictions(texts, melodies, sample, duration, progress=False, **gen_kwa
             cut_size = sample_length - maximum_size
             sampleP = sampleM[..., :int(globalSR * cut_size)]
             sampleM = sampleM[..., int(globalSR * cut_size):]
-        else:
+        if sample_length >= duration:
             duration = sample_length + 0.5
     global MODEL
     MODEL.set_generation_params(duration=(duration - cut_size), **gen_kwargs)
