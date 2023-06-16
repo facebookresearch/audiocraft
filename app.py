@@ -113,8 +113,24 @@ def normalize_audio(audio_data):
     return audio_data
 
 def _do_predictions(texts, melodies, sample, duration, progress=False, **gen_kwargs):
+    maximum_size = 29.5
+    cut_size = 0
+    sampleP = None
+    if sample is not None:
+        globalSR, sampleM = sample[0], sample[1]
+        sampleM = normalize_audio(sampleM)
+        sampleM = torch.from_numpy(sampleM).t()
+        if sampleM.dim() == 1:
+            sampleM = sampleM.unsqueeze(0)
+        sample_length = sampleM.shape[sampleM.dim() - 1] / globalSR
+        if sample_length > maximum_size:
+            cut_size = sample_length - maximum_size
+            sampleP = sampleM[..., :int(globalSR * cut_size)]
+            sampleM = sampleM[..., int(globalSR * cut_size):]
+        else:
+            duration = sample_length + 0.5
     global MODEL
-    MODEL.set_generation_params(duration=duration, **gen_kwargs)
+    MODEL.set_generation_params(duration=(duration - cut_size), **gen_kwargs)
     print("new batch", len(texts), texts, [None if m is None else (m[0], m[1].shape) for m in melodies], [None if sample is None else (sample[0], sample[1].shape)])
     be = time.time()
     processed_melodies = []
@@ -132,26 +148,25 @@ def _do_predictions(texts, melodies, sample, duration, progress=False, **gen_kwa
             processed_melodies.append(melody)
     
     if sample is not None:
-        globalSR, sampleM = sample[0], sample[1]
-        sampleM = normalize_audio(sampleM)
-        sampleM = torch.from_numpy(sampleM).t()
-    
-        #if sampleM.dim() > 1:
-        #    sampleM = convert_audio(sampleM, globalSR, target_sr, target_ac)
-        
-        #sampleM = sampleM.to(MODEL.device).float().unsqueeze(0)
-        if sampleM.dim() == 1:
-            sampleM = sampleM.unsqueeze(0)
-        
-        #if sampleM.dim() == 2:
-        #    sampleM = sampleM[None]
-
-        outputs = MODEL.generate_continuation(
-            prompt=sampleM,
-            prompt_sample_rate=globalSR,
-            descriptions=texts,
-            progress=progress,
-        )
+        if sampleP is None:
+            outputs = MODEL.generate_continuation(
+                prompt=sampleM,
+                prompt_sample_rate=globalSR,
+                descriptions=texts,
+                progress=progress,
+            )
+        else:
+            if sampleP.dim() > 1:
+                sampleP = convert_audio(sampleP, globalSR, target_sr, target_ac)
+            sampleP = sampleP.to(MODEL.device).float().unsqueeze(0)
+            outputs = MODEL.generate_continuation(
+                prompt=sampleM,
+                prompt_sample_rate=globalSR,
+                descriptions=texts,
+                progress=progress,
+            )
+            outputs = torch.cat([sampleP, outputs], 2)
+            
     elif any(m is not None for m in processed_melodies):
         outputs = MODEL.generate_with_chroma(
             descriptions=texts,
