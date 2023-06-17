@@ -112,7 +112,7 @@ def normalize_audio(audio_data):
     audio_data /= max_value
     return audio_data
 
-def _do_predictions(texts, melodies, sample, duration, progress=False, **gen_kwargs):
+def _do_predictions(texts, melodies, sample, duration, background, bar1, bar2, progress=False, **gen_kwargs):
     maximum_size = 29.5
     cut_size = 0
     sampleP = None
@@ -184,7 +184,7 @@ def _do_predictions(texts, melodies, sample, duration, progress=False, **gen_kwa
             audio_write(
                 file.name, output, MODEL.sample_rate, strategy="loudness",
                 loudness_headroom_db=16, loudness_compressor=True, add_suffix=False)
-            out_files.append(pool.submit(make_waveform, file.name, bg_color="#21b0fe" , bars_color=('#fe218b', '#fed700'), fg_alpha=1.0, bar_count=75))
+            out_files.append(pool.submit(make_waveform, file.name, bg_color=background , bars_color=(bar1, bar2), fg_alpha=1.0, bar_count=75))
     res = [out_file.result() for out_file in out_files]
     print("batch finished", len(texts), time.time() - be)
     if MOVE_TO_CPU:
@@ -204,7 +204,7 @@ def predict_batched(texts, melodies):
     return [res]
 
 
-def predict_full(model, text, melody, sample, duration, topk, topp, temperature, cfg_coef, seed, overlap, progress=gr.Progress()):
+def predict_full(model, text, melody, sample, duration, topk, topp, temperature, cfg_coef, seed, overlap, background, bar1, bar2, progress=gr.Progress()):
     global INTERRUPTING
     INTERRUPTING = False
     if temperature < 0:
@@ -234,7 +234,7 @@ def predict_full(model, text, melody, sample, duration, topk, topp, temperature,
     MODEL.set_custom_progress_callback(_progress)
 
     outs = _do_predictions(
-        [text], [melody], sample, duration, progress=True,
+        [text], [melody], sample, duration, background, bar1, bar2, progress=True,
         top_k=topk, top_p=topp, temperature=temperature, cfg_coef=cfg_coef, extend_stride=MODEL.max_duration-overlap)
     return outs[0], seed
 
@@ -247,8 +247,11 @@ def ui_full(launch_kwargs):
             This is your private demo for [MusicGen](https://github.com/facebookresearch/audiocraft), a simple and controllable model for music generation
             presented at: ["Simple and Controllable Music Generation"](https://huggingface.co/papers/2306.05284)
             
-            This is an extended version of the original
+            This is an extended version of the original MusicGen.
             Thanks to: Camenduru, rkfg and GrandaddyShmax
+
+            Experimental version uses different approach to music continuation than the stable version one,
+            and as a result it has better audio quality
             """
         )
         with gr.Row():
@@ -261,6 +264,10 @@ def ui_full(launch_kwargs):
                     submit = gr.Button("Generate", variant="primary")
                     # Adapted from https://github.com/rkfg/audiocraft/blob/long/app.py, MIT license.
                     _ = gr.Button("Interrupt").click(fn=interrupt, queue=False)
+                with gr.Row():
+                    background = gr.ColorPicker(value="#22A699", label="background color", interactive=True)
+                    bar1 = gr.ColorPicker(value="#F2BE22", label="bar color start", interactive=True)
+                    bar2 = gr.ColorPicker(value="#F29727", label="bar color end", interactive=True)
                 with gr.Row():
                     model = gr.Radio(["melody", "medium", "small", "large"], label="Model", value="melody", interactive=True)
                 with gr.Row():
@@ -279,9 +286,8 @@ def ui_full(launch_kwargs):
             with gr.Column() as c:
                 output = gr.Video(label="Generated Music")
                 seed_used = gr.Number(label='Seed used', value=-1, interactive=False)
-
         reuse_seed.click(fn=lambda x: x, inputs=[seed_used], outputs=[seed], queue=False)
-        submit.click(predict_full, inputs=[model, text, melody, sample, duration, topk, topp, temperature, cfg_coef, seed, overlap], outputs=[output, seed_used])
+        submit.click(predict_full, inputs=[model, text, melody, sample, duration, topk, topp, temperature, cfg_coef, seed, overlap, background, bar1, bar2], outputs=[output, seed_used])
         gr.Examples(
             fn=predict_full,
             examples=[
