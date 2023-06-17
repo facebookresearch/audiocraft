@@ -250,8 +250,8 @@ def ui_full(launch_kwargs):
             This is an extended version of the original MusicGen.
             Thanks to: Camenduru, rkfg and GrandaddyShmax
 
-            Experimental version uses different approach to music continuation than the stable version one,
-            and as a result it has better audio quality
+            Experimental version uses different approach to music continuation than the stable version,
+            as a result it has better audio quality
             """
         )
         with gr.Row():
