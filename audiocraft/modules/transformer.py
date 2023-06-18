@@ -153,7 +153,7 @@ class StreamingMultiheadAttention(StreamingModule):
         cross_attention: Should be true when used as a cross attention.
             All keys and values must be available at once, streaming is only for the queries.
             Cannot be used with `causal` or `rope` (as it wouldn't make sens to
-            intepret the time steps in the keys relative to those in the queries).
+            interpret the time steps in the keys relative to those in the queries).
         safe_streaming (bool): Bug fix, will go away with xformers update.
         qk_layer_norm (bool): Layer normalization applied to queries and keys before dot product.
         kv_repeat (int): If > 1, will repeat keys and queries multiple times (need to divide num_heads).
