@@ -769,7 +769,7 @@ class ConditioningProvider(nn.Module):
         This will return a dict matching conditioner names to their arbitrary tokenized representations.
 
         Args:
-            inputs (list[ConditioningAttribres]): List of ConditioningAttributes objects containing
+            inputs (list[ConditioningAttributes]): List of ConditioningAttributes objects containing
                 text and wav conditions.
         """
         assert all([type(x) == ConditioningAttributes for x in inputs]), \
@@ -864,7 +864,7 @@ class ConditioningProvider(nn.Module):
 
     def _collate_wavs(self, samples: tp.List[ConditioningAttributes]):
         """Generate a dict where the keys are attributes by which we fetch similar wavs,
-        and the values are Tensors of wavs according to said attribtues.
+        and the values are Tensors of wavs according to said attributes.
 
         *Note*: by the time the samples reach this function, each sample should have some waveform
         inside the "wav" attribute. It should be either:
