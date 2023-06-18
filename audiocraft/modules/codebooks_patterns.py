@@ -487,7 +487,7 @@ class UnrolledPatternProvider(CodebooksPatternProvider):
 
 
 class VALLEPattern(CodebooksPatternProvider):
-    """Almost VALL-E style pattern. We futher allow some delays for the
+    """Almost VALL-E style pattern. We further allow some delays for the
     codebooks other than the first one.
 
     Args:
