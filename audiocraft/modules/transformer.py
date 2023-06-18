@@ -713,7 +713,7 @@ class StreamingTransformer(StreamingModule):
         return group
 
 
-# special attention attention related function
+# special attention related function
 
 def _verify_xformers_memory_efficient_compat():
     try:
