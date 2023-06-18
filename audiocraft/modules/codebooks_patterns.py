@@ -295,7 +295,7 @@ class CodebooksPatternProvider(ABC):
         """Builds pattern with specific interleaving between codebooks.
 
         Args:
-            timesteps (int): Total numer of timesteps.
+            timesteps (int): Total number of timesteps.
         """
         raise NotImplementedError()
 
@@ -462,7 +462,7 @@ class UnrolledPatternProvider(CodebooksPatternProvider):
         """Builds pattern for delay across codebooks.
 
         Args:
-            timesteps (int): Total numer of timesteps.
+            timesteps (int): Total number of timesteps.
         """
         # the PatternLayout is built as a tuple of sequence position and list of coordinates
         # so that it can be reordered properly given the required delay between codebooks of given timesteps
