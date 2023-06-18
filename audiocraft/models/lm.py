@@ -183,7 +183,7 @@ class LMModel(StreamingModule):
             depthwise_init (Optional[str]): Depthwise initialization strategy. The following options are valid:
                 'current' where the depth corresponds to the current layer index or 'global' where the total number
                 of layer is used as depth. If not set, no depthwise initialization strategy is used.
-            zero_bias_init (bool): Whether to initalize bias to zero or not.
+            zero_bias_init (bool): Whether to initialize bias to zero or not.
         """
         assert depthwise_init is None or depthwise_init in ['current', 'global']
         assert depthwise_init is None or weight_init is not None, \
