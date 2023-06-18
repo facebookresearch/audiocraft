@@ -180,7 +180,7 @@ class LMModel(StreamingModule):
 
         Args:
             weight_init (Optional[str]): Weight initialization strategy. See ``get_init_fn`` for valid options.
-            depthwise_init (Optional[str]): Depwthwise initialization strategy. The following options are valid:
+            depthwise_init (Optional[str]): Depthwise initialization strategy. The following options are valid:
                 'current' where the depth corresponds to the current layer index or 'global' where the total number
                 of layer is used as depth. If not set, no depthwise initialization strategy is used.
             zero_bias_init (bool): Whether to initalize bias to zero or not.
