@@ -432,7 +432,7 @@ class LMModel(StreamingModule):
         # 1. it is about x2 faster than doing 2 forward passes
         # 2. avoid the streaming API treating the 2 passes as part of different time steps
         # We also support doing two different passes, in particular to ensure that
-        # the padding structure is exactly the same between train anf test.
+        # the padding structure is exactly the same between train and test.
         # With a batch size of 1, this can be slower though.
         cfg_conditions: CFGConditions
         two_step_cfg = self.two_step_cfg if two_step_cfg is None else two_step_cfg
