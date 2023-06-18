@@ -30,7 +30,7 @@ class ResidualVectorQuantizer(BaseQuantizer):
         orthogonal_reg_weight (float): Orthogonal regularization weights.
         orthogonal_reg_active_codes_only (bool): Apply orthogonal regularization only on active codes.
         orthogonal_reg_max_codes (optional int): Maximum number of codes to consider.
-            for orthogonal regulariation.
+            for orthogonal regularization.
     """
     def __init__(
         self,

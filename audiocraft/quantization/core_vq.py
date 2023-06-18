@@ -237,7 +237,7 @@ class VectorQuantization(nn.Module):
         orthogonal_reg_weight (float): Orthogonal regularization weights.
         orthogonal_reg_active_codes_only (bool): Apply orthogonal regularization only on active codes.
         orthogonal_reg_max_codes (optional int): Maximum number of codes to consider
-            for orthogonal regulariation.
+            for orthogonal regularization.
         threshold_ema_dead_code (int): Threshold for dead code expiration. Replace any codes
             that have an exponential moving average cluster size less than the specified threshold with
             randomly selected vector from the current batch.
