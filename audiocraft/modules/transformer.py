@@ -158,7 +158,7 @@ class StreamingMultiheadAttention(StreamingModule):
         qk_layer_norm (bool): Layer normalization applied to queries and keys before dot product.
         kv_repeat (int): If > 1, will repeat keys and queries multiple times (need to divide num_heads).
             This will lead to faster decoding time on A100 or other GPUs with tensorcore.
-        device (torch.device or None): Sevice on which to initialize.
+        device (torch.device or None): Service on which to initialize.
         dtype (torch.dtype or None): dtype to use.
     """
     def __init__(self, embed_dim: int, num_heads: int, dropout: float = 0.0, bias: bool = True,
