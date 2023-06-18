@@ -204,7 +204,7 @@ def predict_batched(texts, melodies):
     return [res]
 
 
-def predict_full(model, text, melody, sample, duration, topk, topp, temperature, cfg_coef, seed, overlap, background, bar1, bar2, progress=gr.Progress()):
+def predict_full(model, prompt_amount, p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, d0, d1, d2, d3, d4, d5, d6, d7, d8, d9, audio, mode, duration, topk, topp, temperature, cfg_coef, seed, overlap, background, bar1, bar2, progress=gr.Progress()):
     global INTERRUPTING
     INTERRUPTING = False
     if temperature < 0:
@@ -233,11 +233,30 @@ def predict_full(model, text, melody, sample, duration, topk, topp, temperature,
             raise gr.Error("Interrupted.")
     MODEL.set_custom_progress_callback(_progress)
 
+    melody = None
+    sample = None
+    if mode == "sample":
+        sample = audio
+    elif mode == "melody":
+        melody = audio
+    
+    text_cat = [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9]
+    drag_cat = [d0, d1, d2, d3, d4, d5, d6, d7, d8, d9]
+    texts = []
+    ind = 0
+    ind2 = 0
+    while ind < prompt_amount:
+        for ind2 in range(int(drag_cat[ind])):
+            texts.append(text_cat[ind])
+        ind2 = 0
+        ind = ind + 1
+
     outs = _do_predictions(
-        [text], [melody], sample, duration, background, bar1, bar2, progress=True,
+        [texts], [melody], sample, duration, background, bar1, bar2, progress=True,
         top_k=topk, top_p=topp, temperature=temperature, cfg_coef=cfg_coef, extend_stride=MODEL.max_duration-overlap)
     return outs[0], seed
 
+max_textboxes = 10
 
 def ui_full(launch_kwargs):
     with gr.Blocks(title='MusicGen+') as interface:
@@ -257,9 +276,26 @@ def ui_full(launch_kwargs):
         with gr.Row():
             with gr.Column():
                 with gr.Row():
-                    text = gr.Text(label="Input Text", interactive=True)
-                    melody = gr.Audio(source="upload", type="numpy", label="Melody Condition (optional)", interactive=True)
-                    sample = gr.Audio(source="upload", type="numpy", label="Music Sample (optional)", interactive=True)
+                    s = gr.Slider(1, max_textboxes, value=1, step=1, label="Prompt Segments:")
+                with gr.Column():
+                    textboxes = []
+                    prompts = []
+                    repeats = []
+                    with gr.Row():
+                        text0 = gr.Text(label="Input Text", interactive=True, scale=3)
+                        prompts.append(text0)
+                        drag0 = gr.Number(label="Drag", value=1, interactive=True, scale=1)
+                        repeats.append(drag0)
+                    for i in range(max_textboxes):
+                        with gr.Row(visible=False) as t:
+                            text = gr.Text(label="Input Text", interactive=True, scale=3)
+                            repeat = gr.Number(label="Repeat", minimum=1, value=1, interactive=True, scale=1)
+                        textboxes.append(t)
+                        prompts.append(text)
+                        repeats.append(repeat)
+                with gr.Row():
+                    mode = gr.Radio(["melody", "sample"], label="Input Audio Mode", value="sample", interactive=True)
+                    audio = gr.Audio(source="upload", type="numpy", label="Input Audio (optional)", interactive=True)
                 with gr.Row():
                     submit = gr.Button("Generate", variant="primary")
                     # Adapted from https://github.com/rkfg/audiocraft/blob/long/app.py, MIT license.
@@ -287,7 +323,11 @@ def ui_full(launch_kwargs):
                 output = gr.Video(label="Generated Music")
                 seed_used = gr.Number(label='Seed used', value=-1, interactive=False)
         reuse_seed.click(fn=lambda x: x, inputs=[seed_used], outputs=[seed], queue=False)
-        submit.click(predict_full, inputs=[model, text, melody, sample, duration, topk, topp, temperature, cfg_coef, seed, overlap, background, bar1, bar2], outputs=[output, seed_used])
+        submit.click(predict_full, inputs=[model, s, prompts[0], prompts[1], prompts[2], prompts[3], prompts[4], prompts[5], prompts[6], prompts[7], prompts[8], prompts[9], repeats[0], repeats[1], repeats[2], repeats[3], repeats[4], repeats[5], repeats[6], repeats[7], repeats[8], repeats[9], audio, mode, duration, topk, topp, temperature, cfg_coef, seed, overlap, background, bar1, bar2], outputs=[output, seed_used])
+        def variable_outputs(k):
+            k = int(k) - 1
+            return [gr.Textbox.update(visible=True)]*k + [gr.Textbox.update(visible=False)]*(max_textboxes-k)
+        s.change(variable_outputs, s, textboxes)
         gr.Examples(
             fn=predict_full,
             examples=[
@@ -317,7 +357,7 @@ def ui_full(launch_kwargs):
                     "medium",
                 ],
             ],
-            inputs=[text, melody, model],
+            inputs=[text0, audio, model],
             outputs=[output]
         )
         gr.Markdown(
