@@ -160,7 +160,7 @@ def i16_pcm(wav: torch.Tensor) -> torch.Tensor:
 
     ..Warning:: There exist many formula for doing this conversion. None are perfect
     due to the asymmetry of the int16 range. One either have possible clipping, DC offset,
-    or inconsistancies with f32_pcm. If the given wav doesn't have enough headroom,
+    or inconsistencies with f32_pcm. If the given wav doesn't have enough headroom,
     it is possible that `i16_pcm(f32_pcm)) != Identity`.
     """
     if wav.dtype.is_floating_point:
