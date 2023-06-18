@@ -422,7 +422,7 @@ class LMModel(StreamingModule):
             possible_num_samples.append(len(conditions))
         else:
             possible_num_samples.append(1)
-        assert [x == possible_num_samples[0] for x in possible_num_samples], "Inconsitent inputs shapes"
+        assert [x == possible_num_samples[0] for x in possible_num_samples], "Inconsistent inputs shapes"
         num_samples = possible_num_samples[0]
 
         # below we create set of conditions: one conditional and one unconditional
