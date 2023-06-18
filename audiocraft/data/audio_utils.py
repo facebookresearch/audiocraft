@@ -159,7 +159,7 @@ def i16_pcm(wav: torch.Tensor) -> torch.Tensor:
     """Convert audio to int 16 bits PCM format.
 
     ..Warning:: There exist many formula for doing this convertion. None are perfect
-    due to the asymetry of the int16 range. One either have possible clipping, DC offset,
+    due to the asymmetry of the int16 range. One either have possible clipping, DC offset,
     or inconsistancies with f32_pcm. If the given wav doesn't have enough headroom,
     it is possible that `i16_pcm(f32_pcm)) != Identity`.
     """
