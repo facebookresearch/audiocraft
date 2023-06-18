@@ -103,7 +103,7 @@ Yes. We will soon release the training code for MusicGen and EnCodec.
 
 #### I need help for running the demo on Colab
 
-Check [@camenduru tutorial on Youtube](https://www.youtube.com/watch?v=EGfxuTy9Eeo).
+Check [@camenduru tutorial on YouTube](https://www.youtube.com/watch?v=EGfxuTy9Eeo).
 
 
 ## Citation
