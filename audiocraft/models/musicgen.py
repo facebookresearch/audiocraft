@@ -280,6 +280,8 @@ class MusicGen:
         Returns:
             torch.Tensor: Generated audio, of shape [B, C, T], T is defined by the generation params.
         """
+        i = 0
+        prompt_list = attributes[0].text['description']
         total_gen_len = int(self.duration * self.frame_rate)
         max_prompt_len = int(min(self.duration, self.max_duration) * self.frame_rate)
         current_gen_offset: int = 0
@@ -306,6 +308,7 @@ class MusicGen:
         if self.duration <= self.max_duration:
             # generate by sampling from LM, simple case.
             with self.autocast:
+                attributes[0].text['description'] = prompt_list[0]
                 gen_tokens = self.lm.generate(
                     prompt_tokens, attributes,
                     callback=callback, max_gen_len=total_gen_len, **self.generation_params)
@@ -343,9 +346,13 @@ class MusicGen:
                         ref_wav[0][:, positions % wav_length],
                         torch.full_like(ref_wav[1], wav_target_length))
                 with self.autocast:
+                    if i >= len(prompt_list):
+                        i = len(prompt_list) - 1
+                    attributes[0].text['description'] = prompt_list[i]
                     gen_tokens = self.lm.generate(
                         prompt_tokens, attributes,
                         callback=callback, max_gen_len=max_gen_len, **self.generation_params)
+                    i = i + 1
                 if prompt_tokens is None:
                     all_tokens.append(gen_tokens)
                 else:
