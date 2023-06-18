@@ -412,7 +412,7 @@ class LMModel(StreamingModule):
         first_param = next(iter(self.parameters()))
         device = first_param.device
 
-        # Checking all input shapes are consistents.
+        # Checking all input shapes are consistent.
         possible_num_samples = []
         if num_samples is not None:
             possible_num_samples.append(num_samples)
