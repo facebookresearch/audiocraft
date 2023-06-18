@@ -97,7 +97,7 @@ def get_lm_model(cfg: omegaconf.DictConfig) -> LMModel:
         cfg_prob, cfg_coef = cls_free_guidance["training_dropout"], cls_free_guidance["inference_coef"]
         fuser = get_condition_fuser(cfg)
         condition_provider = get_conditioner_provider(kwargs["dim"], cfg).to(cfg.device)
-        if len(fuser.fuse2cond['cross']) > 0:  # enforce cross-att programatically
+        if len(fuser.fuse2cond['cross']) > 0:  # enforce cross-att programmatically
             kwargs['cross_attention'] = True
         if codebooks_pattern_cfg.modeling is None:
             assert q_modeling is not None, \
