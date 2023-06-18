@@ -146,7 +146,7 @@ class WhiteSpaceTokenizer(Tokenizer):
     [[78, 62, 31,  4, 78, 25, 19, 34],
     [59, 77,  0,  0,  0,  0,  0,  0]]
     """
-    PUNCTUATIONS = "?:!.,;"
+    PUNCTUATION = "?:!.,;"
 
     def __init__(self, n_bins: int, pad_idx: int = 0, language: str = "en_core_web_sm",
                  lemma: bool = True, stopwords: bool = True) -> None:
@@ -192,8 +192,8 @@ class WhiteSpaceTokenizer(Tokenizer):
             # remove stopwords
             if self.stopwords:
                 text = [w for w in text if not w.is_stop]  # type: ignore
-            # remove punctuations
-            text = [w for w in text if w.text not in self.PUNCTUATIONS]  # type: ignore
+            # remove punctuation
+            text = [w for w in text if w.text not in self.PUNCTUATION]  # type: ignore
             # lemmatize if needed
             text = [getattr(t, "lemma_" if self.lemma else "text") for t in text]  # type: ignore
 
