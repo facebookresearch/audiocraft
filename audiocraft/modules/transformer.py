@@ -111,7 +111,7 @@ def expand_repeated_kv(x: torch.Tensor, n_rep: int) -> torch.Tensor:
 
 class LayerScale(nn.Module):
     """Layer scale from [Touvron et al 2021] (https://arxiv.org/pdf/2103.17239.pdf).
-    This rescales diagonaly the residual outputs close to 0, with a learnt scale.
+    This rescales diagonally the residual outputs close to 0, with a learnt scale.
 
     Args:
         channels (int): Number of channels.
