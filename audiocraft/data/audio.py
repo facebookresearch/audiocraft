@@ -175,7 +175,7 @@ def audio_write(stem_name: tp.Union[str, Path],
             than the `peak_clip` one to avoid further clipping.
         loudness_headroom_db (float): Target loudness for loudness normalization.
         loudness_compressor (bool): Uses tanh for soft clipping when strategy is 'loudness'.
-         when strategy is 'loudness'log_clipping (bool): If True, basic logging on stderr when clipping still
+         when strategy is 'loudness' log_clipping (bool): If True, basic logging on stderr when clipping still
             occurs despite strategy (only for 'rms').
         make_parent_dir (bool): Make parent directory if it doesn't exist.
     Returns:
