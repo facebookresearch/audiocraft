@@ -16,7 +16,7 @@
 
 **License** Code is released under MIT, model weights are released under CC-BY-NC 4.0.
 
-**Where to send questions or comments about the model:** Questions and comments about MusicGen can be sent via the [Github repository](https://github.com/facebookresearch/audiocraft) of the project, or by opening an issue.
+**Where to send questions or comments about the model:** Questions and comments about MusicGen can be sent via the [GitHub repository](https://github.com/facebookresearch/audiocraft) of the project, or by opening an issue.
 
 ## Intended use
 **Primary intended use:** The primary use of MusicGen is research on AI-based music generation, including:
