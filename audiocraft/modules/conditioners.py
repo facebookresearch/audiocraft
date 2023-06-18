@@ -445,7 +445,7 @@ class WaveformConditioner(BaseConditioner):
         Args:
             input (WavCondition): Tuple of (waveform, lengths).
         Returns:
-            ConditionType: Dense vector representing the conditioning along with its' mask.
+            ConditionType: Dense vector representing the conditioning along with its mask.
         """
         wav, lengths, path = inputs
         with torch.no_grad():
@@ -605,7 +605,7 @@ class ChromaExtractor(nn.Module):
 def dropout_condition(sample: ConditioningAttributes, condition_type: str, condition: str):
     """Utility function for nullifying an attribute inside an ConditioningAttributes object.
     If the condition is of type "wav", then nullify it using "nullify_condition".
-    If the condition is of any other type, set its' value to None.
+    If the condition is of any other type, set its value to None.
     Works in-place.
     """
     if condition_type not in ["text", "wav"]:
