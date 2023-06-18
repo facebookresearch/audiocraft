@@ -875,7 +875,7 @@ class ConditioningProvider(nn.Module):
         Args:
             samples (tp.List[ConditioningAttributes]): List of ConditioningAttributes samples.
         Returns:
-            dict: A dicionary mapping an attribute name to wavs.
+            dict: A dictionary mapping an attribute name to wavs.
         """
         wavs = defaultdict(list)
         lens = defaultdict(list)
