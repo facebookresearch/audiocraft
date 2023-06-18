@@ -226,7 +226,7 @@ class LMModel(StreamingModule):
 
         Args:
             indices (torch.Tensor): indices of the codes to model.
-            conditions (list[ConditioningAttributes]): conditionings to use when modeling
+            conditions (list[ConditioningAttributes]): conditions to use when modeling
                 the given codes. Note that when evaluating multiple time with the same conditioning
                 you should pre-compute those and pass them as `condition_tensors`.
             condition_tensors (dict[str, ConditionType] or None): pre-computed conditioning
@@ -271,7 +271,7 @@ class LMModel(StreamingModule):
         Args:
             codes (torch.Tensor): Input codes of shape [B, K, T] with B the batch size,
                 K the number of codebooks and T the number of timesteps.
-            conditions (list[ConditioningAttributes]): conditionings to use when modeling
+            conditions (list[ConditioningAttributes]): conditions to use when modeling
                 the given codes. Note that when evaluating multiple time with the same conditioning
                 you should pre-compute those and pass them as `condition_tensors`.
             condition_tensors (dict[str, ConditionType] or None): pre-computed conditioning
