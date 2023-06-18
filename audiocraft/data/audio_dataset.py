@@ -338,7 +338,7 @@ class AudioDataset:
         return probabilities
 
     def sample_file(self, rng: torch.Generator) -> AudioMeta:
-        """Sample a given file from `self.meta`. Can be overriden in subclasses.
+        """Sample a given file from `self.meta`. Can be overridden in subclasses.
         This is only called if `segment_duration` is not None.
 
         You must use the provided random number generator `rng` for reproducibility.
