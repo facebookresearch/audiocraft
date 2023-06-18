@@ -106,7 +106,7 @@ class RotaryEmbedding(nn.Module):
     def rotate_qk(self, query: torch.Tensor, key: torch.Tensor, start: int = 0):
         """ Apply rope rotation to both query and key tensors.
         Supports streaming mode, in which query and key are not expected to have the same shape.
-        In streaming mode, key will be of legnth [P + C] with P the cached past timesteps, but
+        In streaming mode, key will be of length [P + C] with P the cached past timesteps, but
         query will be [C] (typically C == 1).
 
         Args:

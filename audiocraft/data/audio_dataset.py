@@ -423,7 +423,7 @@ class AudioDataset:
             if to_pad:
                 # Each wav could be of a different duration as they are not segmented.
                 for i in range(len(samples)):
-                    # Determines the total legth of the signal with padding, so we update here as we pad.
+                    # Determines the total length of the signal with padding, so we update here as we pad.
                     segment_infos[i].total_frames = max_len
                     wavs[i] = _pad_wav(wavs[i])
 
