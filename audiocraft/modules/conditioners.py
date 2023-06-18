@@ -920,7 +920,7 @@ class ConditionFuser(StreamingModule):
         super().__init__()
         assert all(
             [k in self.FUSING_METHODS for k in fuse2cond.keys()]
-        ), f"got invalid fuse method, allowed methods: {self.FUSING_MEHTODS}"
+        ), f"got invalid fuse method, allowed methods: {self.FUSING_METHODS}"
         self.cross_attention_pos_emb = cross_attention_pos_emb
         self.cross_attention_pos_emb_scale = cross_attention_pos_emb_scale
         self.fuse2cond: tp.Dict[str, tp.List[str]] = fuse2cond
