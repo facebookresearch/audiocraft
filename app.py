@@ -327,10 +327,10 @@ def ui_full(launch_kwargs):
                 with gr.Tab("Customization"):
                     with gr.Row():
                         with gr.Column():
-                            background = gr.ColorPicker(value="#22A699", label="background color", interactive=True)
-                            bar1 = gr.ColorPicker(value="#F2BE22", label="bar color start", interactive=True)
-                            bar2 = gr.ColorPicker(value="#F29727", label="bar color end", interactive=True)
-                        image = gr.Image(label="Background Image", shape=(768,512), type="filepath", interactive=True)
+                            background = gr.ColorPicker(value="#22A699", label="background color", interactive=True, scale=0)
+                            bar1 = gr.ColorPicker(value="#F2BE22", label="bar color start", interactive=True, scale=0)
+                            bar2 = gr.ColorPicker(value="#F29727", label="bar color end", interactive=True, scale=0)
+                        image = gr.Image(label="Background Image", shape=(768,512), type="filepath", interactive=True, scale=4)
                 with gr.Tab("Settings"):
                     with gr.Row():
                         model = gr.Radio(["melody", "small", "medium", "large", "custom"], label="Model", value="melody", interactive=True, scale=1)
