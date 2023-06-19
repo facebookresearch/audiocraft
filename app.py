@@ -82,7 +82,11 @@ def make_waveform(*args, **kwargs):
         warnings.simplefilter('ignore')
         waveform_video = gr.make_waveform(*args, **kwargs)
         out = f"{generate_random_string(12)}.mp4"
-        resize_video(waveform_video, out, 900, 300)
+        image = kwargs.get('bg_image', None)
+        if image is None:
+            resize_video(waveform_video, out, 900, 300)
+        else:
+            resize_video(waveform_video, out, 768, 512)
         print("Make a video took", time.time() - be)
         return out
 
@@ -120,7 +124,7 @@ def normalize_audio(audio_data):
     audio_data /= max_value
     return audio_data
 
-def _do_predictions(texts, melodies, sample, duration, background, bar1, bar2, progress=False, **gen_kwargs):
+def _do_predictions(texts, melodies, sample, duration, image, background, bar1, bar2, progress=False, **gen_kwargs):
     maximum_size = 29.5
     cut_size = 0
     sampleP = None
@@ -192,7 +196,7 @@ def _do_predictions(texts, melodies, sample, duration, background, bar1, bar2, p
             audio_write(
                 file.name, output, MODEL.sample_rate, strategy="loudness",
                 loudness_headroom_db=16, loudness_compressor=True, add_suffix=False)
-            out_files.append(pool.submit(make_waveform, file.name, bg_color=background , bars_color=(bar1, bar2), fg_alpha=1.0, bar_count=75))
+            out_files.append(pool.submit(make_waveform, file.name, bg_image=image, bg_color=background, bars_color=(bar1, bar2), fg_alpha=1.0, bar_count=75))
     res = [out_file.result() for out_file in out_files]
     print("batch finished", len(texts), time.time() - be)
     if MOVE_TO_CPU:
@@ -212,7 +216,7 @@ def predict_batched(texts, melodies):
     return [res]
 
 
-def predict_full(model, custom_model, base_model, prompt_amount, p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, d0, d1, d2, d3, d4, d5, d6, d7, d8, d9, audio, mode, duration, topk, topp, temperature, cfg_coef, seed, overlap, background, bar1, bar2, progress=gr.Progress()):
+def predict_full(model, custom_model, base_model, prompt_amount, p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, d0, d1, d2, d3, d4, d5, d6, d7, d8, d9, audio, mode, duration, topk, topp, temperature, cfg_coef, seed, overlap, image, background, bar1, bar2, progress=gr.Progress()):
     global INTERRUPTING
     INTERRUPTING = False
     if temperature < 0:
@@ -260,7 +264,7 @@ def predict_full(model, custom_model, base_model, prompt_amount, p0, p1, p2, p3,
         ind = ind + 1
 
     outs = _do_predictions(
-        [texts], [melody], sample, duration, background, bar1, bar2, progress=True,
+        [texts], [melody], sample, duration, image, background, bar1, bar2, progress=True,
         top_k=topk, top_p=topp, temperature=temperature, cfg_coef=cfg_coef, extend_stride=MODEL.max_duration-overlap)
     return outs[0], seed
 
@@ -273,7 +277,7 @@ def ui_full(launch_kwargs):
     with gr.Blocks(title='MusicGen+') as interface:
         gr.Markdown(
             """
-            # MusicGen+ Experimental Version
+            # MusicGen+ V1.2.1
             This is your private demo for [MusicGen](https://github.com/facebookresearch/audiocraft), a simple and controllable model for music generation
             presented at: ["Simple and Controllable Music Generation"](https://huggingface.co/papers/2306.05284)
             
@@ -286,59 +290,64 @@ def ui_full(launch_kwargs):
         )
         with gr.Row():
             with gr.Column():
-                with gr.Row():
-                    s = gr.Slider(1, max_textboxes, value=1, step=1, label="Prompt Segments:")
-                with gr.Column():
-                    textboxes = []
-                    prompts = []
-                    repeats = []
+                with gr.Tab("Generation"):
                     with gr.Row():
-                        text0 = gr.Text(label="Input Text", interactive=True, scale=3)
-                        prompts.append(text0)
-                        drag0 = gr.Number(label="Drag", value=1, interactive=True, scale=1)
-                        repeats.append(drag0)
-                    for i in range(max_textboxes):
-                        with gr.Row(visible=False) as t:
-                            text = gr.Text(label="Input Text", interactive=True, scale=3)
-                            repeat = gr.Number(label="Repeat", minimum=1, value=1, interactive=True, scale=1)
-                        textboxes.append(t)
-                        prompts.append(text)
-                        repeats.append(repeat)
-                with gr.Row():
-                    mode = gr.Radio(["melody", "sample"], label="Input Audio Mode", value="sample", interactive=True)
-                    audio = gr.Audio(source="upload", type="numpy", label="Input Audio (optional)", interactive=True)
-                with gr.Row():
-                    submit = gr.Button("Generate", variant="primary")
-                    # Adapted from https://github.com/rkfg/audiocraft/blob/long/app.py, MIT license.
-                    _ = gr.Button("Interrupt").click(fn=interrupt, queue=False)
-                with gr.Row():
-                    background = gr.ColorPicker(value="#22A699", label="background color", interactive=True)
-                    bar1 = gr.ColorPicker(value="#F2BE22", label="bar color start", interactive=True)
-                    bar2 = gr.ColorPicker(value="#F29727", label="bar color end", interactive=True)
-                with gr.Row():
-                    model = gr.Radio(["melody", "small", "medium", "large", "custom"], label="Model", value="melody", interactive=True, scale=1)
+                        s = gr.Slider(1, max_textboxes, value=1, step=1, label="Prompt Segments:")
                     with gr.Column():
-                        dropdown = gr.Dropdown(choices=get_available_models(), value=("No models found" if len(get_available_models()) < 1 else get_available_models()[0]), label='Custom Model (models folder)', elem_classes='slim-dropdown', interactive=True)
-                        ui.create_refresh_button(dropdown, lambda: None, lambda: {'choices': get_available_models()}, 'refresh-button')
-                        basemodel = gr.Radio(["small", "medium", "large"], label="Base Model", value="medium", interactive=True, scale=1)
-                with gr.Row():
-                    duration = gr.Slider(minimum=1, maximum=300, value=10, step=1, label="Duration", interactive=True)
-                with gr.Row():
-                    overlap = gr.Slider(minimum=1, maximum=29, value=12, step=1, label="Overlap", interactive=True)
-                with gr.Row():
-                    topk = gr.Number(label="Top-k", value=250, interactive=True)
-                    topp = gr.Number(label="Top-p", value=0, interactive=True)
-                    temperature = gr.Number(label="Temperature", value=1.0, interactive=True)
-                    cfg_coef = gr.Number(label="Classifier Free Guidance", value=5.0, interactive=True)
-                with gr.Row():
-                    seed = gr.Number(label="Seed", value=-1, precision=0, interactive=True)
-                    gr.Button('\U0001f3b2\ufe0f').style(full_width=False).click(fn=lambda: -1, outputs=[seed], queue=False)
-                    reuse_seed = gr.Button('\u267b\ufe0f').style(full_width=False)
+                        textboxes = []
+                        prompts = []
+                        repeats = []
+                        with gr.Row():
+                            text0 = gr.Text(label="Input Text", interactive=True, scale=3)
+                            prompts.append(text0)
+                            drag0 = gr.Number(label="Drag", value=1, interactive=True, scale=1)
+                            repeats.append(drag0)
+                        for i in range(max_textboxes):
+                            with gr.Row(visible=False) as t:
+                                text = gr.Text(label="Input Text", interactive=True, scale=3)
+                                repeat = gr.Number(label="Repeat", minimum=1, value=1, interactive=True, scale=1)
+                            textboxes.append(t)
+                            prompts.append(text)
+                            repeats.append(repeat)
+                    with gr.Row():
+                        mode = gr.Radio(["melody", "sample"], label="Input Audio Mode", value="sample", interactive=True)
+                        audio = gr.Audio(source="upload", type="numpy", label="Input Audio (optional)", interactive=True)
+                    with gr.Row():
+                        submit = gr.Button("Generate", variant="primary")
+                        # Adapted from https://github.com/rkfg/audiocraft/blob/long/app.py, MIT license.
+                        _ = gr.Button("Interrupt").click(fn=interrupt, queue=False)
+                    with gr.Row():
+                        duration = gr.Slider(minimum=1, maximum=300, value=10, step=1, label="Duration", interactive=True)
+                    with gr.Row():
+                        overlap = gr.Slider(minimum=1, maximum=29, value=12, step=1, label="Overlap", interactive=True)
+                    with gr.Row():
+                        seed = gr.Number(label="Seed", value=-1, precision=0, interactive=True)
+                        gr.Button('\U0001f3b2\ufe0f').style(full_width=False).click(fn=lambda: -1, outputs=[seed], queue=False)
+                        reuse_seed = gr.Button('\u267b\ufe0f').style(full_width=False)
+                with gr.Tab("Customization"):
+                    with gr.Row():
+                        with gr.Column():
+                            background = gr.ColorPicker(value="#22A699", label="background color", interactive=True)
+                            bar1 = gr.ColorPicker(value="#F2BE22", label="bar color start", interactive=True)
+                            bar2 = gr.ColorPicker(value="#F29727", label="bar color end", interactive=True)
+                        image = gr.Image(label="Background Image", shape=(768,512), type="filepath", interactive=True)
+                with gr.Tab("Settings"):
+                    with gr.Row():
+                        model = gr.Radio(["melody", "small", "medium", "large", "custom"], label="Model", value="melody", interactive=True, scale=1)
+                        with gr.Column():
+                            dropdown = gr.Dropdown(choices=get_available_models(), value=("No models found" if len(get_available_models()) < 1 else get_available_models()[0]), label='Custom Model (models folder)', elem_classes='slim-dropdown', interactive=True)
+                            ui.create_refresh_button(dropdown, lambda: None, lambda: {'choices': get_available_models()}, 'refresh-button')
+                            basemodel = gr.Radio(["small", "medium", "large"], label="Base Model", value="medium", interactive=True, scale=1)
+                    with gr.Row():
+                        topk = gr.Number(label="Top-k", value=250, interactive=True)
+                        topp = gr.Number(label="Top-p", value=0, interactive=True)
+                        temperature = gr.Number(label="Temperature", value=1.0, interactive=True)
+                        cfg_coef = gr.Number(label="Classifier Free Guidance", value=5.0, interactive=True)
             with gr.Column() as c:
-                output = gr.Video(label="Generated Music")
+                output = gr.Video(label="Generated Music", scale=0)
                 seed_used = gr.Number(label='Seed used', value=-1, interactive=False)
         reuse_seed.click(fn=lambda x: x, inputs=[seed_used], outputs=[seed], queue=False)
-        submit.click(predict_full, inputs=[model, dropdown, basemodel, s, prompts[0], prompts[1], prompts[2], prompts[3], prompts[4], prompts[5], prompts[6], prompts[7], prompts[8], prompts[9], repeats[0], repeats[1], repeats[2], repeats[3], repeats[4], repeats[5], repeats[6], repeats[7], repeats[8], repeats[9], audio, mode, duration, topk, topp, temperature, cfg_coef, seed, overlap, background, bar1, bar2], outputs=[output, seed_used])
+        submit.click(predict_full, inputs=[model, dropdown, basemodel, s, prompts[0], prompts[1], prompts[2], prompts[3], prompts[4], prompts[5], prompts[6], prompts[7], prompts[8], prompts[9], repeats[0], repeats[1], repeats[2], repeats[3], repeats[4], repeats[5], repeats[6], repeats[7], repeats[8], repeats[9], audio, mode, duration, topk, topp, temperature, cfg_coef, seed, overlap, image, background, bar1, bar2], outputs=[output, seed_used])
 
         def variable_outputs(k):
             k = int(k) - 1
