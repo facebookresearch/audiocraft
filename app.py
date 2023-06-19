@@ -15,6 +15,9 @@ import subprocess as sp
 from tempfile import NamedTemporaryFile
 import time
 import warnings
+import glob
+import re
+from pathlib import Path
 
 import torch
 import gradio as gr
@@ -23,6 +26,7 @@ import numpy as np
 from audiocraft.data.audio_utils import convert_audio
 from audiocraft.data.audio import audio_write
 from audiocraft.models import MusicGen
+from audiocraft.utils import ui
 import subprocess, random, string
 
 MODEL = None  # Last used model
@@ -83,11 +87,15 @@ def make_waveform(*args, **kwargs):
         return out
 
 
-def load_model(version='melody'):
+def load_model(version='melody', custom_model=None, base_model='medium'):
     global MODEL, MODELS
     print("Loading model", version)
     if MODELS is None:
-        MODEL = MusicGen.get_pretrained(version)
+        if version == 'custom':
+            MODEL = MusicGen.get_pretrained(base_model)
+            MODEL.lm.load_state_dict(torch.load(custom_model))
+        else:
+            MODEL = MusicGen.get_pretrained(version)
         return
     else:
         t1 = time.monotonic()
@@ -95,7 +103,7 @@ def load_model(version='melody'):
             MODEL.to('cpu') # move to cache
             print("Previous model moved to CPU in %.2fs" % (time.monotonic() - t1))
             t1 = time.monotonic()
-        if MODELS.get(version) is None:
+        if version != 'custom' and MODELS.get(version) is None:
             print("Loading model %s from disk" % version)
             result = MusicGen.get_pretrained(version)
             MODELS[version] = result
@@ -204,7 +212,7 @@ def predict_batched(texts, melodies):
     return [res]
 
 
-def predict_full(model, prompt_amount, p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, d0, d1, d2, d3, d4, d5, d6, d7, d8, d9, audio, mode, duration, topk, topp, temperature, cfg_coef, seed, overlap, background, bar1, bar2, progress=gr.Progress()):
+def predict_full(model, custom_model, base_model, prompt_amount, p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, d0, d1, d2, d3, d4, d5, d6, d7, d8, d9, audio, mode, duration, topk, topp, temperature, cfg_coef, seed, overlap, background, bar1, bar2, progress=gr.Progress()):
     global INTERRUPTING
     INTERRUPTING = False
     if temperature < 0:
@@ -216,7 +224,7 @@ def predict_full(model, prompt_amount, p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, d
 
     topk = int(topk)
     if MODEL is None or MODEL.name != model:
-        load_model(model)
+        load_model(model, custom_model, base_model)
     else:
         if MOVE_TO_CPU:
             MODEL.to('cuda')
@@ -258,6 +266,9 @@ def predict_full(model, prompt_amount, p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, d
 
 max_textboxes = 10
 
+def get_available_models():
+    return sorted([re.sub('.pt$', '', item.name) for item in list(Path('models/').glob('*')) if item.name.endswith('.pt')])
+
 def ui_full(launch_kwargs):
     with gr.Blocks(title='MusicGen+') as interface:
         gr.Markdown(
@@ -267,7 +278,7 @@ def ui_full(launch_kwargs):
             presented at: ["Simple and Controllable Music Generation"](https://huggingface.co/papers/2306.05284)
             
             This is an extended version of the original MusicGen.
-            Thanks to: Camenduru, rkfg and GrandaddyShmax
+            Thanks to: Camenduru, rkfg, oobabooga and GrandaddyShmax
 
             Experimental version uses different approach to music continuation than the stable version,
             as a result it has better audio quality
@@ -305,7 +316,11 @@ def ui_full(launch_kwargs):
                     bar1 = gr.ColorPicker(value="#F2BE22", label="bar color start", interactive=True)
                     bar2 = gr.ColorPicker(value="#F29727", label="bar color end", interactive=True)
                 with gr.Row():
-                    model = gr.Radio(["melody", "medium", "small", "large"], label="Model", value="melody", interactive=True)
+                    model = gr.Radio(["melody", "small", "medium", "large", "custom"], label="Model", value="melody", interactive=True, scale=1)
+                    with gr.Column():
+                        dropdown = gr.Dropdown(choices=get_available_models(), value=("No models found" if len(get_available_models()) < 1 else get_available_models()[0]), label='Custom Model (models folder)', elem_classes='slim-dropdown', interactive=True)
+                        ui.create_refresh_button(dropdown, lambda: None, lambda: {'choices': get_available_models()}, 'refresh-button')
+                        basemodel = gr.Radio(["small", "medium", "large"], label="Base Model", value="medium", interactive=True, scale=1)
                 with gr.Row():
                     duration = gr.Slider(minimum=1, maximum=300, value=10, step=1, label="Duration", interactive=True)
                 with gr.Row():
@@ -323,10 +338,12 @@ def ui_full(launch_kwargs):
                 output = gr.Video(label="Generated Music")
                 seed_used = gr.Number(label='Seed used', value=-1, interactive=False)
         reuse_seed.click(fn=lambda x: x, inputs=[seed_used], outputs=[seed], queue=False)
-        submit.click(predict_full, inputs=[model, s, prompts[0], prompts[1], prompts[2], prompts[3], prompts[4], prompts[5], prompts[6], prompts[7], prompts[8], prompts[9], repeats[0], repeats[1], repeats[2], repeats[3], repeats[4], repeats[5], repeats[6], repeats[7], repeats[8], repeats[9], audio, mode, duration, topk, topp, temperature, cfg_coef, seed, overlap, background, bar1, bar2], outputs=[output, seed_used])
+        submit.click(predict_full, inputs=[model, dropdown, basemodel, s, prompts[0], prompts[1], prompts[2], prompts[3], prompts[4], prompts[5], prompts[6], prompts[7], prompts[8], prompts[9], repeats[0], repeats[1], repeats[2], repeats[3], repeats[4], repeats[5], repeats[6], repeats[7], repeats[8], repeats[9], audio, mode, duration, topk, topp, temperature, cfg_coef, seed, overlap, background, bar1, bar2], outputs=[output, seed_used])
+
         def variable_outputs(k):
             k = int(k) - 1
             return [gr.Textbox.update(visible=True)]*k + [gr.Textbox.update(visible=False)]*(max_textboxes-k)
+
         s.change(variable_outputs, s, textboxes)
         gr.Examples(
             fn=predict_full,
