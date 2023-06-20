@@ -18,6 +18,7 @@ import warnings
 import glob
 import re
 from pathlib import Path
+from PIL import Image
 
 import torch
 import gradio as gr
@@ -80,13 +81,19 @@ def make_waveform(*args, **kwargs):
     be = time.time()
     with warnings.catch_warnings():
         warnings.simplefilter('ignore')
+        height = kwargs.pop('height')
+        width = kwargs.pop('width')
+        if height < 256:
+            height = 256
+        if width < 256:
+            width = 256
         waveform_video = gr.make_waveform(*args, **kwargs)
         out = f"{generate_random_string(12)}.mp4"
         image = kwargs.get('bg_image', None)
         if image is None:
             resize_video(waveform_video, out, 900, 300)
         else:
-            resize_video(waveform_video, out, 768, 512)
+            resize_video(waveform_video, out, width, height)
         print("Make a video took", time.time() - be)
         return out
 
@@ -124,7 +131,7 @@ def normalize_audio(audio_data):
     audio_data /= max_value
     return audio_data
 
-def _do_predictions(texts, melodies, sample, duration, image, background, bar1, bar2, progress=False, **gen_kwargs):
+def _do_predictions(texts, melodies, sample, duration, image, height, width, background, bar1, bar2, progress=False, **gen_kwargs):
     maximum_size = 29.5
     cut_size = 0
     sampleP = None
@@ -196,7 +203,7 @@ def _do_predictions(texts, melodies, sample, duration, image, background, bar1, 
             audio_write(
                 file.name, output, MODEL.sample_rate, strategy="loudness",
                 loudness_headroom_db=16, loudness_compressor=True, add_suffix=False)
-            out_files.append(pool.submit(make_waveform, file.name, bg_image=image, bg_color=background, bars_color=(bar1, bar2), fg_alpha=1.0, bar_count=75))
+            out_files.append(pool.submit(make_waveform, file.name, bg_image=image, bg_color=background, bars_color=(bar1, bar2), fg_alpha=1.0, bar_count=75, height=height, width=width))
     res = [out_file.result() for out_file in out_files]
     print("batch finished", len(texts), time.time() - be)
     if MOVE_TO_CPU:
@@ -216,7 +223,7 @@ def predict_batched(texts, melodies):
     return [res]
 
 
-def predict_full(model, custom_model, base_model, prompt_amount, p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, d0, d1, d2, d3, d4, d5, d6, d7, d8, d9, audio, mode, duration, topk, topp, temperature, cfg_coef, seed, overlap, image, background, bar1, bar2, progress=gr.Progress()):
+def predict_full(model, custom_model, base_model, prompt_amount, p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, d0, d1, d2, d3, d4, d5, d6, d7, d8, d9, audio, mode, duration, topk, topp, temperature, cfg_coef, seed, overlap, image, height, width, background, bar1, bar2, progress=gr.Progress()):
     global INTERRUPTING
     INTERRUPTING = False
     if temperature < 0:
@@ -264,7 +271,7 @@ def predict_full(model, custom_model, base_model, prompt_amount, p0, p1, p2, p3,
         ind = ind + 1
 
     outs = _do_predictions(
-        [texts], [melody], sample, duration, image, background, bar1, bar2, progress=True,
+        [texts], [melody], sample, duration, image, height, width, background, bar1, bar2, progress=True,
         top_k=topk, top_p=topp, temperature=temperature, cfg_coef=cfg_coef, extend_stride=MODEL.max_duration-overlap)
     return outs[0], seed
 
@@ -277,7 +284,7 @@ def ui_full(launch_kwargs):
     with gr.Blocks(title='MusicGen+') as interface:
         gr.Markdown(
             """
-            # MusicGen+ V1.2.2
+            # MusicGen+ V1.2.3
 
             Thanks to: facebookresearch, Camenduru, rkfg, oobabooga and GrandaddyShmax
             """
@@ -324,7 +331,11 @@ def ui_full(launch_kwargs):
                             background = gr.ColorPicker(value="#22A699", label="background color", interactive=True, scale=0)
                             bar1 = gr.ColorPicker(value="#F2BE22", label="bar color start", interactive=True, scale=0)
                             bar2 = gr.ColorPicker(value="#F29727", label="bar color end", interactive=True, scale=0)
-                        image = gr.Image(label="Background Image", shape=(768,512), type="filepath", interactive=True, scale=4)
+                        with gr.Column():
+                            image = gr.Image(label="Background Image", type="filepath", interactive=True, scale=4)
+                            with gr.Row():
+                                height = gr.Number(label="Height", value=512, interactive=True)
+                                width = gr.Number(label="Width", value=768, interactive=True)
                 with gr.Tab("Settings"):
                     with gr.Row():
                         model = gr.Radio(["melody", "small", "medium", "large", "custom"], label="Model", value="melody", interactive=True, scale=1)
@@ -410,6 +421,10 @@ def ui_full(launch_kwargs):
                         - **[Background Image (image)]:**  
                         Background image that you wish to be attached to the generated video along with the waveform.
 
+                        - **[Height and Width (numbers)]:**  
+                        Output video resolution, only works with image.  
+                        (minimum height and width is 256).
+                        
                         ---
 
                         ### Settings Tab:
@@ -449,6 +464,12 @@ def ui_full(launch_kwargs):
                     gr.Markdown(
                         """
                         ## Changelog:
+
+                        ### V1.2.3
+
+                        - Added option to change video size to fit the image you upload
+
+
 
                         ### V1.2.2
 
@@ -527,12 +548,25 @@ def ui_full(launch_kwargs):
                         """
                     )
         reuse_seed.click(fn=lambda x: x, inputs=[seed_used], outputs=[seed], queue=False)
-        submit.click(predict_full, inputs=[model, dropdown, basemodel, s, prompts[0], prompts[1], prompts[2], prompts[3], prompts[4], prompts[5], prompts[6], prompts[7], prompts[8], prompts[9], repeats[0], repeats[1], repeats[2], repeats[3], repeats[4], repeats[5], repeats[6], repeats[7], repeats[8], repeats[9], audio, mode, duration, topk, topp, temperature, cfg_coef, seed, overlap, image, background, bar1, bar2], outputs=[output, seed_used])
+        submit.click(predict_full, inputs=[model, dropdown, basemodel, s, prompts[0], prompts[1], prompts[2], prompts[3], prompts[4], prompts[5], prompts[6], prompts[7], prompts[8], prompts[9], repeats[0], repeats[1], repeats[2], repeats[3], repeats[4], repeats[5], repeats[6], repeats[7], repeats[8], repeats[9], audio, mode, duration, topk, topp, temperature, cfg_coef, seed, overlap, image, height, width, background, bar1, bar2], outputs=[output, seed_used])
 
         def variable_outputs(k):
             k = int(k) - 1
             return [gr.Textbox.update(visible=True)]*k + [gr.Textbox.update(visible=False)]*(max_textboxes-k)
+        def get_size(image):
+            if image is not None:
+                img = Image.open(image)
+                img_height = img.height
+                img_width = img.width
+                if (img_height%2) != 0:
+                    img_height = img_height + 1
+                if (img_width%2) != 0:
+                    img_width = img_width + 1
+                return img_height, img_width
+            else:
+                return 512, 768
 
+        image.change(get_size, image, outputs=[height, width])
         s.change(variable_outputs, s, textboxes)
         gr.Examples(
             fn=predict_full,
