@@ -294,7 +294,7 @@ def ui_full(launch_kwargs):
                         with gr.Row():
                             text0 = gr.Text(label="Input Text", interactive=True, scale=3)
                             prompts.append(text0)
-                            drag0 = gr.Number(label="Drag", value=1, interactive=True, scale=1)
+                            drag0 = gr.Number(label="Repeat", value=1, interactive=True, scale=1)
                             repeats.append(drag0)
                         for i in range(max_textboxes):
                             with gr.Row(visible=False) as t:
