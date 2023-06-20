@@ -277,15 +277,9 @@ def ui_full(launch_kwargs):
     with gr.Blocks(title='MusicGen+') as interface:
         gr.Markdown(
             """
-            # MusicGen+ V1.2.1
-            This is your private demo for [MusicGen](https://github.com/facebookresearch/audiocraft), a simple and controllable model for music generation
-            presented at: ["Simple and Controllable Music Generation"](https://huggingface.co/papers/2306.05284)
-            
-            This is an extended version of the original MusicGen.
-            Thanks to: Camenduru, rkfg, oobabooga and GrandaddyShmax
+            # MusicGen+ V1.2.2
 
-            Experimental version uses different approach to music continuation than the stable version,
-            as a result it has better audio quality
+            Thanks to: facebookresearch, Camenduru, rkfg, oobabooga and GrandaddyShmax
             """
         )
         with gr.Row():
@@ -344,8 +338,194 @@ def ui_full(launch_kwargs):
                         temperature = gr.Number(label="Temperature", value=1.0, interactive=True)
                         cfg_coef = gr.Number(label="Classifier Free Guidance", value=5.0, interactive=True)
             with gr.Column() as c:
-                output = gr.Video(label="Generated Music", scale=0)
-                seed_used = gr.Number(label='Seed used', value=-1, interactive=False)
+                with gr.Tab("Output"):
+                    output = gr.Video(label="Generated Music", scale=0)
+                    seed_used = gr.Number(label='Seed used', value=-1, interactive=False)
+                with gr.Tab("Wiki"):
+                    gr.Markdown(
+                        """
+                        ### Generation Tab:
+
+                        #### Multi-Prompt: 
+                        
+                        This feature allows you to control the music, adding variation to different time segments.  
+                        You have up to 10 prompt segments. the first prompt will always be 30s long  
+                        the other prompts will be [30s - overlap].  
+                        for example if the overlap is 10s, each prompt segment will be 20s.
+
+                        - **[Prompt Segments (number)]:**  
+                        Amount of unique prompt to generate throughout the music generation.
+
+                        - **[Prompt/Input Text (prompt)]:**  
+                        Here describe the music you wish the model to generate.
+
+                        - **[Repeat (number)]:**  
+                        Write how many times this prompt will repeat (instead of wasting another prompt segment on the same prompt).
+
+                        - **[Input Audio Mode (selection)]:**  
+                        `Melody` mode only works with the melody model: it conditions the music generation to reference the melody  
+                        `Sample` mode works with any model: it gives a music sample to the model to generate its continuation.
+
+                        - **[Input Audio (audio file)]:**  
+                        Input here the audio you wish to use with "melody" or "sample" mode.
+
+                        - **[Generate (button)]:**  
+                        Generates the music with the given settings and prompts.
+
+                        - **[Interrupt (button)]:**  
+                        Stops the music generation as soon as it can, providing an incomplete output.
+
+                        - **[Duration (number)]:**  
+                        How long you want the generated music to be (in seconds).
+
+                        - **[Overlap (number)]:**  
+                        How much each new segment will reference the previous segment (in seconds).  
+                        For example, if you choose 20s: Each new segment after the first one will reference the previous segment 20s  
+                        and will generate only 10s of new music. The model can only process 30s of music.
+
+                        - **[Seed (number)]:**  
+                        Your generated music id. If you wish to generate the exact same music,  
+                        place the exact seed with the exact prompts  
+                        (This way you can also extend specific song that was generated short).
+
+                        - **[Random Seed (button)]:**  
+                        Gives "-1" as a seed, which counts as a random seed.
+
+                        - **[Copy Previous Seed (button)]:**  
+                        Copies the seed from the output seed (if you don't feel like doing it manualy).
+
+                        ---
+
+                        ### Customization Tab:
+
+                        - **[Background Color (color)]:**  
+                        Works only if you don't upload image. Color of the background of the waveform.
+
+                        - **[Bar Color Start (color)]:**  
+                        First color of the waveform bars.
+
+                        - **[Bar Color End (color)]:**  
+                        Second color of the waveform bars.
+
+                        - **[Background Image (image)]:**  
+                        Background image that you wish to be attached to the generated video along with the waveform.
+
+                        ---
+
+                        ### Settings Tab:
+
+                        - **[Model (selection)]:**  
+                        Here you can choose which model you wish to use:  
+                        `melody` model is based on the medium model with a unique feature that lets you use melody conditioning  
+                        `small` model is trained on 300M parameters  
+                        `medium` model is trained on 1.5B parameters  
+                        `large` model is trained on 3.3B parameters  
+                        `custom` model runs the custom model that you provided.
+
+                        - **[Custom Model (selection)]:**  
+                        This dropdown will show you models that are placed in the `models` folder  
+                        you must select `custom` in the model options in order to use it.
+
+                        - **[Refresh (button)]:**  
+                        Refreshes the dropdown list for custom model.
+
+                        - **[Base Model (selection)]:**  
+                        Choose here the model that your custom model is based on.
+
+                        - **[Top-k (number)]:**  
+                        is a parameter used in text generation models, including music generation models. It determines the number of most likely next tokens to consider at each step of the generation process. The model ranks all possible tokens based on their predicted probabilities, and then selects the top-k tokens from the ranked list. The model then samples from this reduced set of tokens to determine the next token in the generated sequence. A smaller value of k results in a more focused and deterministic output, while a larger value of k allows for more diversity in the generated music.
+
+                        - **[Top-p (number)]:**  
+                        also known as nucleus sampling or probabilistic sampling, is another method used for token selection during text generation. Instead of specifying a fixed number like top-k, top-p considers the cumulative probability distribution of the ranked tokens. It selects the smallest possible set of tokens whose cumulative probability exceeds a certain threshold (usually denoted as p). The model then samples from this set to choose the next token. This approach ensures that the generated output maintains a balance between diversity and coherence, as it allows for a varying number of tokens to be considered based on their probabilities.
+                        
+                        - **[Temperature (number)]:**  
+                        is a parameter that controls the randomness of the generated output. It is applied during the sampling process, where a higher temperature value results in more random and diverse outputs, while a lower temperature value leads to more deterministic and focused outputs. In the context of music generation, a higher temperature can introduce more variability and creativity into the generated music, but it may also lead to less coherent or structured compositions. On the other hand, a lower temperature can produce more repetitive and predictable music.
+
+                        - **[Classifier Free Guidance (number)]:**  
+                        refers to a technique used in some music generation models where a separate classifier network is trained to provide guidance or control over the generated music. This classifier is trained on labeled data to recognize specific musical characteristics or styles. During the generation process, the output of the generator model is evaluated by the classifier, and the generator is encouraged to produce music that aligns with the desired characteristics or style. This approach allows for more fine-grained control over the generated music, enabling users to specify certain attributes they want the model to capture.
+                        """
+                    )
+                with gr.Tab("Changelog"):
+                    gr.Markdown(
+                        """
+                        ## Changelog:
+
+                        ### V1.2.2
+
+                        - Added Wiki, Changelog and About tabs
+
+
+
+                        ### V1.2.1
+
+                        - Added tabs and organized the entire interface
+
+                        - Added option to attach image to the output video
+
+                        - Added option to load fine-tuned models (Yet to be tested)
+
+
+
+                        ### V1.2.0
+
+                        - Added Multi-Prompt
+
+
+
+                        ### V1.1.3
+
+                        - Added customization options for generated waveform
+
+
+
+                        ### V1.1.2
+
+                        - Removed sample length limit: now you can input audio of any length as music sample
+
+
+
+                        ### V1.1.1
+
+                        - Improved music sample audio quality when using music continuation
+
+
+
+                        ### V1.1.0
+
+                        - Rebuilt the repo on top of the latest structure of the main MusicGen repo
+                        
+                        - Improved Music continuation feature
+
+
+
+                        ### V1.0.0 - Stable Version
+
+                        - Added Music continuation
+                        """
+                    )
+                with gr.Tab("About"):
+                    gr.Markdown(
+                        """
+                        This is your private demo for [MusicGen](https://github.com/facebookresearch/audiocraft), a simple and controllable model for music generation
+                        presented at: ["Simple and Controllable Music Generation"](https://huggingface.co/papers/2306.05284)
+                        
+                        ## MusicGen+ is an extended version of the original MusicGen by facebookresearch. 
+                        
+                        ### Repo: https://github.com/GrandaddyShmax/audiocraft_plus/tree/plus
+
+                        ---
+                        
+                        ### This project was possible thanks to:
+
+                        #### GrandaddyShmax - https://github.com/GrandaddyShmax
+
+                        #### Camenduru - https://github.com/camenduru
+
+                        #### rkfg - https://github.com/rkfg
+
+                        #### oobabooga - https://github.com/oobabooga
+                        """
+                    )
         reuse_seed.click(fn=lambda x: x, inputs=[seed_used], outputs=[seed], queue=False)
         submit.click(predict_full, inputs=[model, dropdown, basemodel, s, prompts[0], prompts[1], prompts[2], prompts[3], prompts[4], prompts[5], prompts[6], prompts[7], prompts[8], prompts[9], repeats[0], repeats[1], repeats[2], repeats[3], repeats[4], repeats[5], repeats[6], repeats[7], repeats[8], repeats[9], audio, mode, duration, topk, topp, temperature, cfg_coef, seed, overlap, image, background, bar1, bar2], outputs=[output, seed_used])
 
@@ -385,33 +565,6 @@ def ui_full(launch_kwargs):
             ],
             inputs=[text0, audio, model],
             outputs=[output]
-        )
-        gr.Markdown(
-            """
-            ### More details
-
-            The model will generate a short music extract based on the description you provided.
-            The model can generate up to 30 seconds of audio in one pass. It is now possible
-            to extend the generation by feeding back the end of the previous chunk of audio.
-            This can take a long time, and the model might lose consistency. The model might also
-            decide at arbitrary positions that the song ends.
-
-            **WARNING:** Choosing long durations will take a long time to generate (2min might take ~10min). An overlap of 12 seconds
-            is kept with the previously generated chunk, and 18 "new" seconds are generated each time.
-
-            We present 4 model variations:
-            1. Melody -- a music generation model capable of generating music condition on text and melody inputs. **Note**, you can also use text only.
-            2. Small -- a 300M transformer decoder conditioned on text only.
-            3. Medium -- a 1.5B transformer decoder conditioned on text only.
-            4. Large -- a 3.3B transformer decoder conditioned on text only (might OOM for the longest sequences.)
-
-            When using `melody`, ou can optionaly provide a reference audio from
-            which a broad melody will be extracted. The model will then try to follow both the description and melody provided.
-
-            You can also use your own GPU or a Google Colab by following the instructions on our repo.
-            See [github.com/facebookresearch/audiocraft](https://github.com/facebookresearch/audiocraft)
-            for more details.
-            """
         )
 
         interface.queue().launch(**launch_kwargs)
@@ -468,19 +621,6 @@ def ui_batched(launch_kwargs):
             inputs=[text, melody],
             outputs=[output]
         )
-        gr.Markdown("""
-        ### More details
-
-        The model will generate 12 seconds of audio based on the description you provided.
-        You can optionaly provide a reference audio from which a broad melody will be extracted.
-        The model will then try to follow both the description and melody provided.
-        All samples are generated with the `melody` model.
-
-        You can also use your own GPU or a Google Colab by following the instructions on our repo.
-
-        See [github.com/facebookresearch/audiocraft](https://github.com/facebookresearch/audiocraft)
-        for more details.
-        """)
 
         demo.queue(max_size=8 * 4).launch(**launch_kwargs)
 
