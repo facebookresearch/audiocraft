@@ -1,11 +1,13 @@
-# Audiocraft
+# Audiocraft Plus
 ![docs badge](https://github.com/facebookresearch/audiocraft/workflows/audiocraft_docs/badge.svg)
 ![linter badge](https://github.com/facebookresearch/audiocraft/workflows/audiocraft_linter/badge.svg)
 ![tests badge](https://github.com/facebookresearch/audiocraft/workflows/audiocraft_tests/badge.svg)
 
 Audiocraft is a PyTorch library for deep learning research on audio generation. At the moment, it contains the code for MusicGen, a state-of-the-art controllable text-to-music model.
 
-## MusicGen
+# MusicGen Plus
+
+MusicGen Plus is an extension based on the original MusicGen
 
 Audiocraft provides the code and models for MusicGen, [a simple and controllable model for music generation][arxiv]. MusicGen is a single stage auto-regressive
 Transformer model trained over a 32kHz <a href="https://github.com/facebookresearch/encodec">EnCodec tokenizer</a> with 4 codebooks sampled at 50 Hz. Unlike existing methods like [MusicLM](https://arxiv.org/abs/2301.11325), MusicGen doesn't require a self-supervised semantic representation, and it generates
@@ -13,10 +15,10 @@ all 4 codebooks in one pass. By introducing a small delay between the codebooks,
 them in parallel, thus having only 50 auto-regressive steps per second of audio.
 Check out our [sample page][musicgen_samples] or test the available demo!
 
-<a target="_blank" href="https://colab.research.google.com/drive/1-Xe9NCdIs2sCUbiSmwHXozK6AAhMm7_i?usp=sharing">
+<a target="_blank" href="https://colab.research.google.com/github/camenduru/MusicGen-colab/blob/main/MusicGen_ClownOfMadness_plus_colab.ipynb">
   <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
 </a>
-<a target="_blank" href="https://huggingface.co/spaces/facebook/MusicGen">
+<a target="_blank" href="https://huggingface.co/spaces/GrandaddyShmax/MusicGen_Plus">
   <img src="https://huggingface.co/datasets/huggingface/badges/raw/main/open-in-hf-spaces-sm.svg" alt="Open in HugginFace"/>
 </a>
 <br>
@@ -32,17 +34,16 @@ Audiocraft requires Python 3.9, PyTorch 2.0.0, and a GPU with at least 16 GB of 
 pip install 'torch>=2.0'
 # Then proceed to one of the following
 pip install -U audiocraft  # stable release
-pip install -U git+https://git@github.com/facebookresearch/audiocraft#egg=audiocraft  # bleeding edge
+pip install -U git+https://git@github.com/GrandaddyShmax/audiocraft_plus#egg=audiocraft  # bleeding edge
 pip install -e .  # or if you cloned the repo locally
 ```
 
 ## Usage
-We offer a number of way to interact with MusicGen:
-1. A demo is also available on the [`facebook/MusicGen`  HuggingFace Space](https://huggingface.co/spaces/facebook/MusicGen) (huge thanks to all the HF team for their support).
-2. You can run the extended demo on a Colab: [colab notebook](https://colab.research.google.com/drive/1fxGqfg96RBUvGxZ1XXN07s3DthrKUl4-?usp=sharing).
-3. You can use the gradio demo locally by running `python app.py`.
-4. You can play with MusicGen by running the jupyter notebook at [`demo.ipynb`](./demo.ipynb) locally (if you have a GPU).
-5. Finally, checkout [@camenduru Colab page](https://github.com/camenduru/MusicGen-colab) which is regularly
+We offer a number of way to interact with MusicGen Plus:
+1. MusicGen Plus is also available on the [`GrandaddyShmax/MusicGen_Plus`  HuggingFace Space](https://huggingface.co/spaces/GrandaddyShmax/MusicGen_Plus),
+2. You can run MusicGen Plus on a Colab: [colab notebook](https://colab.research.google.com/github/camenduru/MusicGen-colab/blob/main/MusicGen_ClownOfMadness_plus_colab.ipynb).
+3. You can use the gradio MusicGen Plus locally by running `python app.py`.
+4. Finally, checkout [@camenduru Colab page](https://github.com/camenduru/MusicGen-colab) which is regularly
   updated with contributions from @camenduru and the community.
 
 ## API
