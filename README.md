@@ -34,7 +34,7 @@ Audiocraft requires Python 3.9, PyTorch 2.0.0, and a GPU with at least 16 GB of 
 pip install 'torch>=2.0'
 # Then proceed to one of the following
 pip install -U audiocraft  # stable release
-pip install -U git+https://git@github.com/GrandaddyShmax/audiocraft_plus#egg=audiocraft  # bleeding edge
+pip install -U git+https://git@github.com/GrandaddyShmax/audiocraft_plus
 pip install -e .  # or if you cloned the repo locally
 ```
 
