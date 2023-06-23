@@ -5,9 +5,9 @@
 
 Audiocraft is a PyTorch library for deep learning research on audio generation. At the moment, it contains the code for MusicGen, a state-of-the-art controllable text-to-music model.
 
-# MusicGen Plus
+# MusicGen+
 
-MusicGen Plus is an extension based on the original MusicGen
+MusicGen+ is an extension based on the original MusicGen
 
 Audiocraft provides the code and models for MusicGen, [a simple and controllable model for music generation][arxiv]. MusicGen is a single stage auto-regressive
 Transformer model trained over a 32kHz <a href="https://github.com/facebookresearch/encodec">EnCodec tokenizer</a> with 4 codebooks sampled at 50 Hz. Unlike existing methods like [MusicLM](https://arxiv.org/abs/2301.11325), MusicGen doesn't require a self-supervised semantic representation, and it generates
@@ -39,10 +39,10 @@ pip install -e .  # or if you cloned the repo locally
 ```
 
 ## Usage
-We offer a number of way to interact with MusicGen Plus:
-1. MusicGen Plus is also available on the [`GrandaddyShmax/MusicGen_Plus`  HuggingFace Space](https://huggingface.co/spaces/GrandaddyShmax/MusicGen_Plus),
-2. You can run MusicGen Plus on a Colab: [colab notebook](https://colab.research.google.com/github/camenduru/MusicGen-colab/blob/main/MusicGen_ClownOfMadness_plus_colab.ipynb).
-3. You can use the gradio MusicGen Plus locally by running `python app.py`.
+We offer a number of way to interact with MusicGen+:
+1. MusicGen+ is also available on the [`GrandaddyShmax/MusicGen_Plus`  HuggingFace Space](https://huggingface.co/spaces/GrandaddyShmax/MusicGen_Plus),
+2. You can run MusicGen+ on a Colab: [colab notebook](https://colab.research.google.com/github/camenduru/MusicGen-colab/blob/main/MusicGen_ClownOfMadness_plus_colab.ipynb).
+3. You can use the gradio MusicGen+ locally by running `python app.py`.
 4. Finally, checkout [@camenduru Colab page](https://github.com/camenduru/MusicGen-colab) which is regularly
   updated with contributions from @camenduru and the community.
 
