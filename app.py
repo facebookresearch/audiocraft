@@ -386,7 +386,7 @@ def ui_full(launch_kwargs):
                         `Sample` mode works with any model: it gives a music sample to the model to generate its continuation.
 
                         - **[Input Type (selection)]:**  
-                        `File` mode allows you to upload an audio file to use as input
+                        `File` mode allows you to upload an audio file to use as input  
                         `Mic` mode allows you to use your microphone as input
 
                         - **[Input Audio (audio file)]:**  
