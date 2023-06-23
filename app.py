@@ -280,6 +280,12 @@ max_textboxes = 10
 def get_available_models():
     return sorted([re.sub('.pt$', '', item.name) for item in list(Path('models/').glob('*')) if item.name.endswith('.pt')])
 
+def toggle_audio_src(choice):
+    if choice == "mic":
+        return gr.update(source="microphone", value=None, label="Microphone")
+    else:
+        return gr.update(source="upload", value=None, label="File")
+
 def ui_full(launch_kwargs):
     with gr.Blocks(title='MusicGen+') as interface:
         gr.Markdown(
@@ -311,7 +317,9 @@ def ui_full(launch_kwargs):
                             prompts.append(text)
                             repeats.append(repeat)
                     with gr.Row():
-                        mode = gr.Radio(["melody", "sample"], label="Input Audio Mode", value="sample", interactive=True)
+                        with gr.Column():
+                            mode = gr.Radio(["melody", "sample"], label="Input Audio Mode (optional)", value="sample", interactive=True)
+                            input_type = gr.Radio(["file", "mic"], value="file", label="Input Type (optional)", interactive=True)
                         audio = gr.Audio(source="upload", type="numpy", label="Input Audio (optional)", interactive=True)
                     with gr.Row():
                         submit = gr.Button("Generate", variant="primary")
@@ -549,6 +557,7 @@ def ui_full(launch_kwargs):
                     )
         reuse_seed.click(fn=lambda x: x, inputs=[seed_used], outputs=[seed], queue=False)
         submit.click(predict_full, inputs=[model, dropdown, basemodel, s, prompts[0], prompts[1], prompts[2], prompts[3], prompts[4], prompts[5], prompts[6], prompts[7], prompts[8], prompts[9], repeats[0], repeats[1], repeats[2], repeats[3], repeats[4], repeats[5], repeats[6], repeats[7], repeats[8], repeats[9], audio, mode, duration, topk, topp, temperature, cfg_coef, seed, overlap, image, height, width, background, bar1, bar2], outputs=[output, seed_used])
+        input_type.change(toggle_audio_src, radio, [audio], queue=False, show_progress=False)
 
         def variable_outputs(k):
             k = int(k) - 1
@@ -622,12 +631,15 @@ def ui_batched(launch_kwargs):
             with gr.Column():
                 with gr.Row():
                     text = gr.Text(label="Describe your music", lines=2, interactive=True)
-                    melody = gr.Audio(source="upload", type="numpy", label="Condition on a melody (optional)", interactive=True)
+                    with gr.Column():
+                        radio = gr.Radio(["file", "mic"], value="file", label="Condition on a melody (optional) File or Mic")
+                        melody = gr.Audio(source="upload", type="numpy", label="File", interactive=True, elem_id="melody-input")
                 with gr.Row():
                     submit = gr.Button("Generate")
             with gr.Column():
                 output = gr.Video(label="Generated Music")
         submit.click(predict_batched, inputs=[text, melody], outputs=[output], batch=True, max_batch_size=MAX_BATCH_SIZE)
+        radio.change(toggle_audio_src, radio, [melody], queue=False, show_progress=False)
         gr.Examples(
             fn=predict_batched,
             examples=[
