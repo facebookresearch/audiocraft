@@ -557,7 +557,7 @@ def ui_full(launch_kwargs):
                     )
         reuse_seed.click(fn=lambda x: x, inputs=[seed_used], outputs=[seed], queue=False)
         submit.click(predict_full, inputs=[model, dropdown, basemodel, s, prompts[0], prompts[1], prompts[2], prompts[3], prompts[4], prompts[5], prompts[6], prompts[7], prompts[8], prompts[9], repeats[0], repeats[1], repeats[2], repeats[3], repeats[4], repeats[5], repeats[6], repeats[7], repeats[8], repeats[9], audio, mode, duration, topk, topp, temperature, cfg_coef, seed, overlap, image, height, width, background, bar1, bar2], outputs=[output, seed_used])
-        input_type.change(toggle_audio_src, radio, [audio], queue=False, show_progress=False)
+        input_type.change(toggle_audio_src, input_type, [audio], queue=False, show_progress=False)
 
         def variable_outputs(k):
             k = int(k) - 1
