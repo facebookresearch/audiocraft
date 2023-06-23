@@ -290,7 +290,7 @@ def ui_full(launch_kwargs):
     with gr.Blocks(title='MusicGen+') as interface:
         gr.Markdown(
             """
-            # MusicGen+ V1.2.3
+            # MusicGen+ V1.2.4
 
             Thanks to: facebookresearch, Camenduru, rkfg, oobabooga and GrandaddyShmax
             """
@@ -385,6 +385,10 @@ def ui_full(launch_kwargs):
                         `Melody` mode only works with the melody model: it conditions the music generation to reference the melody  
                         `Sample` mode works with any model: it gives a music sample to the model to generate its continuation.
 
+                        - **[Input Type (selection)]:**  
+                        `File` mode allows you to upload an audio file to use as input
+                        `Mic` mode allows you to use your microphone as input
+
                         - **[Input Audio (audio file)]:**  
                         Input here the audio you wish to use with "melody" or "sample" mode.
 
@@ -472,6 +476,12 @@ def ui_full(launch_kwargs):
                     gr.Markdown(
                         """
                         ## Changelog:
+
+                        ### V1.2.4
+
+                        - Added mic input (This comes from the main facebookresearch repo)
+
+
 
                         ### V1.2.3
 
