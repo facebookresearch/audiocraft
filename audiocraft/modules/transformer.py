@@ -111,7 +111,7 @@ def expand_repeated_kv(x: torch.Tensor, n_rep: int) -> torch.Tensor:
 
 class LayerScale(nn.Module):
     """Layer scale from [Touvron et al 2021] (https://arxiv.org/pdf/2103.17239.pdf).
-    This rescales diagonaly the residual outputs close to 0, with a learnt scale.
+    This rescales diagonally the residual outputs close to 0, with a learnt scale.
 
     Args:
         channels (int): Number of channels.
@@ -153,12 +153,12 @@ class StreamingMultiheadAttention(StreamingModule):
         cross_attention: Should be true when used as a cross attention.
             All keys and values must be available at once, streaming is only for the queries.
             Cannot be used with `causal` or `rope` (as it wouldn't make sens to
-            intepret the time steps in the keys relative to those in the queries).
+            interpret the time steps in the keys relative to those in the queries).
         safe_streaming (bool): Bug fix, will go away with xformers update.
         qk_layer_norm (bool): Layer normalization applied to queries and keys before dot product.
         kv_repeat (int): If > 1, will repeat keys and queries multiple times (need to divide num_heads).
             This will lead to faster decoding time on A100 or other GPUs with tensorcore.
-        device (torch.device or None): Sevice on which to initialize.
+        device (torch.device or None): Service on which to initialize.
         dtype (torch.dtype or None): dtype to use.
     """
     def __init__(self, embed_dim: int, num_heads: int, dropout: float = 0.0, bias: bool = True,
@@ -713,7 +713,7 @@ class StreamingTransformer(StreamingModule):
         return group
 
 
-# special attention attention related function
+# special attention related function
 
 def _verify_xformers_memory_efficient_compat():
     try:

@@ -80,7 +80,7 @@ class EncodecModel(CompressionModel):
         causal (bool): Whether to use a causal version of the model.
         renormalize (bool): Whether to renormalize the audio before running the model.
     """
-    # we need assignement to override the property in the abstract class,
+    # we need assignment to override the property in the abstract class,
     # I couldn't find a better way...
     frame_rate: int = 0
     sample_rate: int = 0

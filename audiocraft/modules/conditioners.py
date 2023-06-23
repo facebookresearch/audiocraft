@@ -146,7 +146,7 @@ class WhiteSpaceTokenizer(Tokenizer):
     [[78, 62, 31,  4, 78, 25, 19, 34],
     [59, 77,  0,  0,  0,  0,  0,  0]]
     """
-    PUNCTUATIONS = "?:!.,;"
+    PUNCTUATION = "?:!.,;"
 
     def __init__(self, n_bins: int, pad_idx: int = 0, language: str = "en_core_web_sm",
                  lemma: bool = True, stopwords: bool = True) -> None:
@@ -192,8 +192,8 @@ class WhiteSpaceTokenizer(Tokenizer):
             # remove stopwords
             if self.stopwords:
                 text = [w for w in text if not w.is_stop]  # type: ignore
-            # remove punctuations
-            text = [w for w in text if w.text not in self.PUNCTUATIONS]  # type: ignore
+            # remove punctuation
+            text = [w for w in text if w.text not in self.PUNCTUATION]  # type: ignore
             # lemmatize if needed
             text = [getattr(t, "lemma_" if self.lemma else "text") for t in text]  # type: ignore
 
@@ -445,7 +445,7 @@ class WaveformConditioner(BaseConditioner):
         Args:
             input (WavCondition): Tuple of (waveform, lengths).
         Returns:
-            ConditionType: Dense vector representing the conditioning along with its' mask.
+            ConditionType: Dense vector representing the conditioning along with its mask.
         """
         wav, lengths, path = inputs
         with torch.no_grad():
@@ -605,7 +605,7 @@ class ChromaExtractor(nn.Module):
 def dropout_condition(sample: ConditioningAttributes, condition_type: str, condition: str):
     """Utility function for nullifying an attribute inside an ConditioningAttributes object.
     If the condition is of type "wav", then nullify it using "nullify_condition".
-    If the condition is of any other type, set its' value to None.
+    If the condition is of any other type, set its value to None.
     Works in-place.
     """
     if condition_type not in ["text", "wav"]:
@@ -769,7 +769,7 @@ class ConditioningProvider(nn.Module):
         This will return a dict matching conditioner names to their arbitrary tokenized representations.
 
         Args:
-            inputs (list[ConditioningAttribres]): List of ConditioningAttributes objects containing
+            inputs (list[ConditioningAttributes]): List of ConditioningAttributes objects containing
                 text and wav conditions.
         """
         assert all([type(x) == ConditioningAttributes for x in inputs]), \
@@ -864,7 +864,7 @@ class ConditioningProvider(nn.Module):
 
     def _collate_wavs(self, samples: tp.List[ConditioningAttributes]):
         """Generate a dict where the keys are attributes by which we fetch similar wavs,
-        and the values are Tensors of wavs according to said attribtues.
+        and the values are Tensors of wavs according to said attributes.
 
         *Note*: by the time the samples reach this function, each sample should have some waveform
         inside the "wav" attribute. It should be either:
@@ -875,7 +875,7 @@ class ConditioningProvider(nn.Module):
         Args:
             samples (tp.List[ConditioningAttributes]): List of ConditioningAttributes samples.
         Returns:
-            dict: A dicionary mapping an attribute name to wavs.
+            dict: A dictionary mapping an attribute name to wavs.
         """
         wavs = defaultdict(list)
         lens = defaultdict(list)
@@ -920,7 +920,7 @@ class ConditionFuser(StreamingModule):
         super().__init__()
         assert all(
             [k in self.FUSING_METHODS for k in fuse2cond.keys()]
-        ), f"got invalid fuse method, allowed methods: {self.FUSING_MEHTODS}"
+        ), f"got invalid fuse method, allowed methods: {self.FUSING_METHODS}"
         self.cross_attention_pos_emb = cross_attention_pos_emb
         self.cross_attention_pos_emb_scale = cross_attention_pos_emb_scale
         self.fuse2cond: tp.Dict[str, tp.List[str]] = fuse2cond

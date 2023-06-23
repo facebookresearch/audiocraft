@@ -338,7 +338,7 @@ class AudioDataset:
         return probabilities
 
     def sample_file(self, rng: torch.Generator) -> AudioMeta:
-        """Sample a given file from `self.meta`. Can be overriden in subclasses.
+        """Sample a given file from `self.meta`. Can be overridden in subclasses.
         This is only called if `segment_duration` is not None.
 
         You must use the provided random number generator `rng` for reproducibility.
@@ -423,7 +423,7 @@ class AudioDataset:
             if to_pad:
                 # Each wav could be of a different duration as they are not segmented.
                 for i in range(len(samples)):
-                    # Determines the total legth of the signal with padding, so we update here as we pad.
+                    # Determines the total length of the signal with padding, so we update here as we pad.
                     segment_infos[i].total_frames = max_len
                     wavs[i] = _pad_wav(wavs[i])
 

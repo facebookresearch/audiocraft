@@ -33,7 +33,7 @@ _old_call = sp.call
 
 
 def _call_nostderr(*args, **kwargs):
-    # Avoid ffmpeg vomitting on the logs.
+    # Avoid ffmpeg vomiting on the logs.
     kwargs['stderr'] = sp.DEVNULL
     kwargs['stdout'] = sp.DEVNULL
     _old_call(*args, **kwargs)
@@ -230,7 +230,7 @@ def ui_full(launch_kwargs):
             3. Medium -- a 1.5B transformer decoder conditioned on text only.
             4. Large -- a 3.3B transformer decoder conditioned on text only (might OOM for the longest sequences.)
 
-            When using `melody`, ou can optionaly provide a reference audio from
+            When using `melody`, ou can optionally provide a reference audio from
             which a broad melody will be extracted. The model will then try to follow both the description and melody provided.
 
             You can also use your own GPU or a Google Colab by following the instructions on our repo.
@@ -300,7 +300,7 @@ def ui_batched(launch_kwargs):
         ### More details
 
         The model will generate 12 seconds of audio based on the description you provided.
-        You can optionaly provide a reference audio from which a broad melody will be extracted.
+        You can optionally provide a reference audio from which a broad melody will be extracted.
         The model will then try to follow both the description and melody provided.
         All samples are generated with the `melody` model.
 

@@ -180,10 +180,10 @@ class LMModel(StreamingModule):
 
         Args:
             weight_init (Optional[str]): Weight initialization strategy. See ``get_init_fn`` for valid options.
-            depthwise_init (Optional[str]): Depwthwise initialization strategy. The following options are valid:
+            depthwise_init (Optional[str]): Depthwise initialization strategy. The following options are valid:
                 'current' where the depth corresponds to the current layer index or 'global' where the total number
                 of layer is used as depth. If not set, no depthwise initialization strategy is used.
-            zero_bias_init (bool): Whether to initalize bias to zero or not.
+            zero_bias_init (bool): Whether to initialize bias to zero or not.
         """
         assert depthwise_init is None or depthwise_init in ['current', 'global']
         assert depthwise_init is None or weight_init is not None, \
@@ -226,7 +226,7 @@ class LMModel(StreamingModule):
 
         Args:
             indices (torch.Tensor): indices of the codes to model.
-            conditions (list[ConditioningAttributes]): conditionings to use when modeling
+            conditions (list[ConditioningAttributes]): conditions to use when modeling
                 the given codes. Note that when evaluating multiple time with the same conditioning
                 you should pre-compute those and pass them as `condition_tensors`.
             condition_tensors (dict[str, ConditionType] or None): pre-computed conditioning
@@ -271,7 +271,7 @@ class LMModel(StreamingModule):
         Args:
             codes (torch.Tensor): Input codes of shape [B, K, T] with B the batch size,
                 K the number of codebooks and T the number of timesteps.
-            conditions (list[ConditioningAttributes]): conditionings to use when modeling
+            conditions (list[ConditioningAttributes]): conditions to use when modeling
                 the given codes. Note that when evaluating multiple time with the same conditioning
                 you should pre-compute those and pass them as `condition_tensors`.
             condition_tensors (dict[str, ConditionType] or None): pre-computed conditioning
@@ -412,7 +412,7 @@ class LMModel(StreamingModule):
         first_param = next(iter(self.parameters()))
         device = first_param.device
 
-        # Checking all input shapes are consistents.
+        # Checking all input shapes are consistent.
         possible_num_samples = []
         if num_samples is not None:
             possible_num_samples.append(num_samples)
@@ -422,7 +422,7 @@ class LMModel(StreamingModule):
             possible_num_samples.append(len(conditions))
         else:
             possible_num_samples.append(1)
-        assert [x == possible_num_samples[0] for x in possible_num_samples], "Inconsitent inputs shapes"
+        assert [x == possible_num_samples[0] for x in possible_num_samples], "Inconsistent inputs shapes"
         num_samples = possible_num_samples[0]
 
         # below we create set of conditions: one conditional and one unconditional
@@ -432,7 +432,7 @@ class LMModel(StreamingModule):
         # 1. it is about x2 faster than doing 2 forward passes
         # 2. avoid the streaming API treating the 2 passes as part of different time steps
         # We also support doing two different passes, in particular to ensure that
-        # the padding structure is exactly the same between train anf test.
+        # the padding structure is exactly the same between train and test.
         # With a batch size of 1, this can be slower though.
         cfg_conditions: CFGConditions
         two_step_cfg = self.two_step_cfg if two_step_cfg is None else two_step_cfg
