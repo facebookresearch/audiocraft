@@ -9,7 +9,6 @@ from functools import partial
 import logging
 import math
 import typing as tp
-
 import torch
 from torch import nn
 
@@ -314,6 +313,7 @@ class LMModel(StreamingModule):
                            temp: float = 1.0,
                            top_k: int = 0,
                            top_p: float = 0.0,
+                           generator = None,
                            cfg_coef: tp.Optional[float] = None) -> torch.Tensor:
         """Sample next token from the model given a sequence and a set of conditions. The model supports
         multiple sampling strategies (greedy sampling, softmax, top-k, top-p...).
@@ -367,11 +367,11 @@ class LMModel(StreamingModule):
         if use_sampling and temp > 0.0:
             probs = torch.softmax(logits / temp, dim=-1)
             if top_p > 0.0:
-                next_token = utils.sample_top_p(probs, p=top_p)
+                next_token = utils.sample_top_p(probs, p=top_p, generator=generator)
             elif top_k > 0:
-                next_token = utils.sample_top_k(probs, k=top_k)
+                next_token = utils.sample_top_k(probs, k=top_k, generator=generator)
             else:
-                next_token = utils.multinomial(probs, num_samples=1)
+                next_token = utils.multinomial(probs, num_samples=1, generator=generator)
         else:
             next_token = torch.argmax(logits, dim=-1, keepdim=True)
 
@@ -381,6 +381,7 @@ class LMModel(StreamingModule):
     def generate(self,
                  prompt: tp.Optional[torch.Tensor] = None,
                  conditions: tp.List[ConditioningAttributes] = [],
+                 generator = None,
                  num_samples: tp.Optional[int] = None,
                  max_gen_len: int = 256,
                  use_sampling: bool = True,
@@ -461,7 +462,7 @@ class LMModel(StreamingModule):
         pattern = self.pattern_provider.get_pattern(max_gen_len)
         # this token is used as default value for codes that are not generated yet
         unknown_token = -1
-
+        
         # we generate codes up to the max_gen_len that will be mapped to the pattern sequence
         gen_codes = torch.full((B, K, max_gen_len), unknown_token, dtype=torch.long, device=device)
         # filling the gen_codes with the prompt if needed
@@ -489,7 +490,7 @@ class LMModel(StreamingModule):
                 # sample next token from the model, next token shape is [B, K, 1]
                 next_token = self._sample_next_token(
                     curr_sequence, cfg_conditions, unconditional_state, use_sampling, temp, top_k, top_p,
-                    cfg_coef=cfg_coef)
+                    cfg_coef=cfg_coef, generator=generator)
                 # ensure the tokens that should be masked are properly set to special_token_id
                 # as the model never output special_token_id
                 valid_mask = mask[..., offset:offset+1].expand(B, -1, -1)
