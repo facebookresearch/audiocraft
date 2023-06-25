@@ -140,7 +140,12 @@ def predict_full(model, text, melody, duration, topk, topp, temperature, cfg_coe
         top_k=topk, top_p=topp, temperature=temperature, cfg_coef=cfg_coef)
     return outs[0]
 
-
+def toggle_audio_src(choice):
+    if choice == "mic":
+        return gr.update(source="microphone", value=None, label="Microphone")
+    else:
+        return gr.update(source="upload", value=None, label="File")
+    
 def ui_full(launch_kwargs):
     with gr.Blocks() as interface:
         gr.Markdown(
@@ -154,7 +159,9 @@ def ui_full(launch_kwargs):
             with gr.Column():
                 with gr.Row():
                     text = gr.Text(label="Input Text", interactive=True)
-                    melody = gr.Audio(source="upload", type="numpy", label="Melody Condition (optional)", interactive=True)
+                    with gr.Column():
+                        radio = gr.Radio(["file", "mic"], value="file", label="Condition on a melody (optional) File or Mic")
+                        melody = gr.Audio(source="upload", type="numpy", label="File", interactive=True, elem_id="melody-input")
                 with gr.Row():
                     submit = gr.Button("Submit")
                     # Adapted from https://github.com/rkfg/audiocraft/blob/long/app.py, MIT license.
@@ -178,6 +185,7 @@ def ui_full(launch_kwargs):
         # if `melody` of `model` is selected, show the melody input
         model.change(on_change, model, melody)
         submit.click(predict_full, inputs=[model, text, melody, duration, topk, topp, temperature, cfg_coef], outputs=[output])
+        radio.change(toggle_audio_src, radio, [melody], queue=False, show_progress=False)
         gr.Examples(
             fn=predict_full,
             examples=[
@@ -259,12 +267,15 @@ def ui_batched(launch_kwargs):
             with gr.Column():
                 with gr.Row():
                     text = gr.Text(label="Describe your music", lines=2, interactive=True)
-                    melody = gr.Audio(source="upload", type="numpy", label="Condition on a melody (optional)", interactive=True)
+                    with gr.Column():
+                        radio = gr.Radio(["file", "mic"], value="file", label="Condition on a melody (optional) File or Mic")
+                        melody = gr.Audio(source="upload", type="numpy", label="File", interactive=True, elem_id="melody-input")
                 with gr.Row():
                     submit = gr.Button("Generate")
             with gr.Column():
                 output = gr.Video(label="Generated Music")
         submit.click(predict_batched, inputs=[text, melody], outputs=[output], batch=True, max_batch_size=MAX_BATCH_SIZE)
+        radio.change(toggle_audio_src, radio, [melody], queue=False, show_progress=False)
         gr.Examples(
             fn=predict_batched,
             examples=[
