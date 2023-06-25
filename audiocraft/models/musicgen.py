@@ -221,7 +221,7 @@ class MusicGen:
     @torch.no_grad()
     def _prepare_tokens_and_attributes(
             self,
-            descriptions: tp.Sequence[tp.Optional[str]],
+            descriptions: tp.Optional[str],
             prompt: tp.Optional[torch.Tensor],
             melody_wavs: tp.Optional[MelodyList] = None,
     ) -> tp.Tuple[tp.List[ConditioningAttributes], tp.Optional[torch.Tensor]]:
@@ -232,7 +232,7 @@ class MusicGen:
             melody_wavs (tp.Optional[torch.Tensor], optional): A batch of waveforms
                 used as melody conditioning. Defaults to None.
         """
-        attributes = [ConditioningAttributes(text={'description': description})]
+        attributes = [ConditioningAttributes(text={'description': descriptions})]
 
 
 
