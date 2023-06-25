@@ -236,7 +236,8 @@ class MusicGen:
         #    ConditioningAttributes(text={'description': description})
         #    for description in descriptions]
 
-        attributes = "[" + ", ".join(f'ConditioningAttributes(text={cond_attr})' for cond_attr in descriptions if any(cond_attr.values())) + "]"
+        attributes = [ConditioningAttributes(text=cond_attr) for cond_attr in descriptions if any(cond_attr.values())]
+
 
         
         if melody_wavs is None:
