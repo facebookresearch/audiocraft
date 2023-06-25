@@ -232,10 +232,13 @@ class MusicGen:
             melody_wavs (tp.Optional[torch.Tensor], optional): A batch of waveforms
                 used as melody conditioning. Defaults to None.
         """
-        attributes = [
-            ConditioningAttributes(text={'description': description})
-            for description in descriptions]
+        #attributes = [
+        #    ConditioningAttributes(text={'description': description})
+        #    for description in descriptions]
 
+        attributes = "[" + ", ".join(f'ConditioningAttributes(text={attr_dict})' for cond_attr in description if any(cond_attr.values())) + "]"
+
+        
         if melody_wavs is None:
             for attr in attributes:
                 attr.wav['self_wav'] = WavCondition(
