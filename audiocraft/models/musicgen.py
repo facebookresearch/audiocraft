@@ -236,7 +236,8 @@ class MusicGen:
         #    ConditioningAttributes(text={'description': description})
         #    for description in descriptions]
 
-        attributes = [ConditioningAttributes(text=cond_attr) for cond_attr in descriptions if any(cond_attr.values())]
+        attributes = [ConditioningAttributes(text={k: v for k, v in cond_attr.items() if v}) for cond_attr in descriptions]
+
 
 
         
