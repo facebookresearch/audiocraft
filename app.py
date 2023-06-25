@@ -175,7 +175,8 @@ def ui_full(launch_kwargs):
             visible = (model_value == "melody")
             return {melody: gr.update(visible=visible)}
 
-        model.change(on_change, model, melody)  # if `melody` of model is selected, show the melody input
+        # if `melody` of `model` is selected, show the melody input
+        model.change(on_change, model, melody)
         submit.click(predict_full, inputs=[model, text, melody, duration, topk, topp, temperature, cfg_coef], outputs=[output])
         gr.Examples(
             fn=predict_full,
