@@ -11,7 +11,7 @@ Audiocraft provides the code and models for MusicGen, [a simple and controllable
 Transformer model trained over a 32kHz <a href="https://github.com/facebookresearch/encodec">EnCodec tokenizer</a> with 4 codebooks sampled at 50 Hz. Unlike existing methods like [MusicLM](https://arxiv.org/abs/2301.11325), MusicGen doesn't require a self-supervised semantic representation, and it generates
 all 4 codebooks in one pass. By introducing a small delay between the codebooks, we show we can predict
 them in parallel, thus having only 50 auto-regressive steps per second of audio.
-Check out our [sample page][musicgen_samples] or test the available demo!
+Check out our [sample page][musicgen_samples], test our Hugging Face Spaces demo, or run MusicGen with Replicate's web UI or API.
 
 <a target="_blank" href="https://colab.research.google.com/drive/1-Xe9NCdIs2sCUbiSmwHXozK6AAhMm7_i?usp=sharing">
   <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
@@ -19,7 +19,11 @@ Check out our [sample page][musicgen_samples] or test the available demo!
 <a target="_blank" href="https://huggingface.co/spaces/facebook/MusicGen">
   <img src="https://huggingface.co/datasets/huggingface/badges/raw/main/open-in-hf-spaces-sm.svg" alt="Open in HugginFace"/>
 </a>
+<a target="_blank" href="https://replicate.com/joehoover/musicgen">
+  <img src="https://replicate.com/joehoover/musicgen/badge" alt="Run on Replicate"/>
+</a>
 <br>
+
 
 We use 20K hours of licensed music to train MusicGen. Specifically, we rely on an internal dataset of 10K high-quality music tracks, and on the ShutterStock and Pond5 music data.
 
@@ -42,9 +46,10 @@ We offer a number of way to interact with MusicGen:
 2. You can run the Gradio demo in Colab: [colab notebook](https://colab.research.google.com/drive/1fxGqfg96RBUvGxZ1XXN07s3DthrKUl4-?usp=sharing).
 3. You can use the gradio demo locally by running `python app.py`.
 4. You can play with MusicGen by running the jupyter notebook at [`demo.ipynb`](./demo.ipynb) locally (if you have a GPU).
-5. Finally, checkout [@camenduru Colab page](https://github.com/camenduru/MusicGen-colab) which is regularly
+5. Checkout [@camenduru Colab page](https://github.com/camenduru/MusicGen-colab) which is regularly
   updated with contributions from @camenduru and the community.
-
+6. MusicGen is also [hosted](https://replicate.com/joehoover/musicgen) on Replicate, where you can interact with the model via web UI or API.
+   
 ## API
 
 We provide a simple API and 4 pre-trained models. The pre trained models are:
