@@ -134,7 +134,7 @@ scipy.io.wavfile.write("musicgen_out.wav", rate=sampling_rate, data=audio_values
 ```
 
 For more details on using the MusicGen model for inference using the 🤗 Transformers library, refer to the 
-[MusicGen docs](https://huggingface.co/docs/transformers/model_doc/musicgen) or the hands-on 
+[MusicGen docs](https://huggingface.co/docs/transformers/main/en/model_doc/musicgen) or the hands-on 
 [Google Colab](https://colab.research.google.com/github/sanchit-gandhi/notebooks/blob/main/MusicGen.ipynb).
 
 ## Model Card
