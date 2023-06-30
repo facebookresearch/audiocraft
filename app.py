@@ -10,9 +10,11 @@
 import argparse
 from concurrent.futures import ProcessPoolExecutor
 import os
+from pathlib import Path
 import subprocess as sp
 from tempfile import NamedTemporaryFile
 import time
+import typing as tp
 import warnings
 
 import torch
@@ -48,6 +50,29 @@ pool.__enter__()
 def interrupt():
     global INTERRUPTING
     INTERRUPTING = True
+
+
+class FileCleaner:
+    def __init__(self, file_lifetime: float = 3600):
+        self.file_lifetime = file_lifetime
+        self.files = []
+
+    def add(self, path: tp.Union[str, Path]):
+        self._cleanup()
+        self.files.append((time.time(), Path(path)))
+
+    def _cleanup(self):
+        now = time.time()
+        for time_added, path in list(self.files):
+            if now - time_added > self.file_lifetime:
+                if path.exists():
+                    path.unlink()
+                self.files.pop(0)
+            else:
+                break
+
+
+file_cleaner = FileCleaner()
 
 
 def make_waveform(*args, **kwargs):
@@ -103,8 +128,12 @@ def _do_predictions(texts, melodies, duration, progress=False, **gen_kwargs):
                 file.name, output, MODEL.sample_rate, strategy="loudness",
                 loudness_headroom_db=16, loudness_compressor=True, add_suffix=False)
             out_files.append(pool.submit(make_waveform, file.name))
+            file_cleaner.add(file.name)
     res = [out_file.result() for out_file in out_files]
+    for file in res:
+        file_cleaner.add(file)
     print("batch finished", len(texts), time.time() - be)
+    print("Tempfiles currently stored: ", len(file_cleaner.files))
     return res
 
 
@@ -140,18 +169,21 @@ def predict_full(model, text, melody, duration, topk, topp, temperature, cfg_coe
         top_k=topk, top_p=topp, temperature=temperature, cfg_coef=cfg_coef)
     return outs[0]
 
+
 def toggle_audio_src(choice):
     if choice == "mic":
         return gr.update(source="microphone", value=None, label="Microphone")
     else:
         return gr.update(source="upload", value=None, label="File")
-    
+
+
 def ui_full(launch_kwargs):
     with gr.Blocks() as interface:
         gr.Markdown(
             """
             # MusicGen
-            This is your private demo for [MusicGen](https://github.com/facebookresearch/audiocraft), a simple and controllable model for music generation
+            This is your private demo for [MusicGen](https://github.com/facebookresearch/audiocraft),
+            a simple and controllable model for music generation
             presented at: ["Simple and Controllable Music Generation"](https://huggingface.co/papers/2306.05284)
             """
         )
@@ -160,14 +192,17 @@ def ui_full(launch_kwargs):
                 with gr.Row():
                     text = gr.Text(label="Input Text", interactive=True)
                     with gr.Column():
-                        radio = gr.Radio(["file", "mic"], value="file", label="Condition on a melody (optional) File or Mic")
-                        melody = gr.Audio(source="upload", type="numpy", label="File", interactive=True, elem_id="melody-input")
+                        radio = gr.Radio(["file", "mic"], value="file",
+                                         label="Condition on a melody (optional) File or Mic")
+                        melody = gr.Audio(source="upload", type="numpy", label="File",
+                                          interactive=True, elem_id="melody-input")
                 with gr.Row():
                     submit = gr.Button("Submit")
                     # Adapted from https://github.com/rkfg/audiocraft/blob/long/app.py, MIT license.
                     _ = gr.Button("Interrupt").click(fn=interrupt, queue=False)
                 with gr.Row():
-                    model = gr.Radio(["melody", "medium", "small", "large"], label="Model", value="melody", interactive=True)
+                    model = gr.Radio(["melody", "medium", "small", "large"],
+                                     label="Model", value="melody", interactive=True)
                 with gr.Row():
                     duration = gr.Slider(minimum=1, maximum=120, value=10, label="Duration", interactive=True)
                 with gr.Row():
@@ -184,8 +219,9 @@ def ui_full(launch_kwargs):
 
         # if `melody` of `model` is selected, show the melody input
         model.change(on_change, model, melody)
-        submit.click(
-            predict_full, inputs=[model, text, melody, duration, topk, topp, temperature, cfg_coef], outputs=[output])
+        submit.click(predict_full,
+                     inputs=[model, text, melody, duration, topk, topp, temperature, cfg_coef],
+                     outputs=[output])
         radio.change(toggle_audio_src, radio, [melody], queue=False, show_progress=False)
         gr.Examples(
             fn=predict_full,
@@ -229,17 +265,20 @@ def ui_full(launch_kwargs):
             This can take a long time, and the model might lose consistency. The model might also
             decide at arbitrary positions that the song ends.
 
-            **WARNING:** Choosing long durations will take a long time to generate (2min might take ~10min). An overlap of 12 seconds
-            is kept with the previously generated chunk, and 18 "new" seconds are generated each time.
+            **WARNING:** Choosing long durations will take a long time to generate (2min might take ~10min).
+            An overlap of 12 seconds is kept with the previously generated chunk, and 18 "new" seconds
+            are generated each time.
 
             We present 4 model variations:
-            1. Melody -- a music generation model capable of generating music condition on text and melody inputs. **Note**, you can also use text only.
+            1. Melody -- a music generation model capable of generating music condition
+                on text and melody inputs. **Note**, you can also use text only.
             2. Small -- a 300M transformer decoder conditioned on text only.
             3. Medium -- a 1.5B transformer decoder conditioned on text only.
             4. Large -- a 3.3B transformer decoder conditioned on text only (might OOM for the longest sequences.)
 
             When using `melody`, ou can optionaly provide a reference audio from
-            which a broad melody will be extracted. The model will then try to follow both the description and melody provided.
+            which a broad melody will be extracted. The model will then try to follow both
+            the description and melody provided.
 
             You can also use your own GPU or a Google Colab by following the instructions on our repo.
             See [github.com/facebookresearch/audiocraft](https://github.com/facebookresearch/audiocraft)
@@ -256,11 +295,14 @@ def ui_batched(launch_kwargs):
             """
             # MusicGen
 
-            This is the demo for [MusicGen](https://github.com/facebookresearch/audiocraft), a simple and controllable model for music generation
+            This is the demo for [MusicGen](https://github.com/facebookresearch/audiocraft),
+            a simple and controllable model for music generation
             presented at: ["Simple and Controllable Music Generation"](https://huggingface.co/papers/2306.05284).
             <br/>
-            <a href="https://huggingface.co/spaces/facebook/MusicGen?duplicate=true" style="display: inline-block;margin-top: .5em;margin-right: .25em;" target="_blank">
-            <img style="margin-bottom: 0em;display: inline;margin-top: -.25em;" src="https://bit.ly/3gLdBN6" alt="Duplicate Space"></a>
+            <a href="https://huggingface.co/spaces/facebook/MusicGen?duplicate=true"
+                style="display: inline-block;margin-top: .5em;margin-right: .25em;" target="_blank">
+            <img style="margin-bottom: 0em;display: inline;margin-top: -.25em;"
+                src="https://bit.ly/3gLdBN6" alt="Duplicate Space"></a>
             for longer sequences, more control and no queue.</p>
             """
         )
@@ -269,13 +311,16 @@ def ui_batched(launch_kwargs):
                 with gr.Row():
                     text = gr.Text(label="Describe your music", lines=2, interactive=True)
                     with gr.Column():
-                        radio = gr.Radio(["file", "mic"], value="file", label="Condition on a melody (optional) File or Mic")
-                        melody = gr.Audio(source="upload", type="numpy", label="File", interactive=True, elem_id="melody-input")
+                        radio = gr.Radio(["file", "mic"], value="file",
+                                         label="Condition on a melody (optional) File or Mic")
+                        melody = gr.Audio(source="upload", type="numpy", label="File",
+                                          interactive=True, elem_id="melody-input")
                 with gr.Row():
                     submit = gr.Button("Generate")
             with gr.Column():
                 output = gr.Video(label="Generated Music")
-        submit.click(predict_batched, inputs=[text, melody], outputs=[output], batch=True, max_batch_size=MAX_BATCH_SIZE)
+        submit.click(predict_batched, inputs=[text, melody],
+                     outputs=[output], batch=True, max_batch_size=MAX_BATCH_SIZE)
         radio.change(toggle_audio_src, radio, [melody], queue=False, show_progress=False)
         gr.Examples(
             fn=predict_batched,
