@@ -24,7 +24,7 @@
 - Research efforts, such as probing and better understanding the limitations of generative models to further improve the state of science
 - Generation of music guided by text or melody to understand current abilities of generative AI models by machine learning amateurs
 
-**Primary intended users:** The primary intended users of the model are researchers in audio, machine learning and artificial intelligence, as well as amateur seeking to better understand those models.
+**Primary intended users:** The primary intended users of the model are researchers in audio, machine learning and artificial intelligence, as well as amateurs seeking to better understand those models.
 
 **Out-of-scope use cases** The model should not be used on downstream applications without further risk evaluation and mitigation. The model should not be used to intentionally create or disseminate music pieces that create hostile or alienating environments for people. This includes generating music that people would foreseeably find disturbing, distressing, or offensive; or content that propagates historical or current stereotypes.
 
