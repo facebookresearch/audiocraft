@@ -19,8 +19,8 @@ Check out our [sample page][musicgen_samples] or test the available demo!
 <a target="_blank" href="https://huggingface.co/spaces/facebook/MusicGen">
   <img src="https://huggingface.co/datasets/huggingface/badges/raw/main/open-in-hf-spaces-sm.svg" alt="Open in HugginFace"/>
 </a>
-<a target="_blank" href="https://replicate.com/joehoover/musicgen">
-  <img src="https://replicate.com/joehoover/musicgen/badge" alt="Run on Replicate"/>
+<a target="_blank" href="https://replicate.com/facebookresearch/musicgen">
+  <img src="https://replicate.com/facebookresearch/musicgen/badge" alt="Run on Replicate"/>
 </a>
 <br>
 
@@ -48,7 +48,7 @@ We offer a number of way to interact with MusicGen:
 5. Checkout [@camenduru Colab page](https://github.com/camenduru/MusicGen-colab) which is regularly
   updated with contributions from @camenduru and the community.
 6. MusicGen is available in 🤗 Transformers from v4.31.0 onwards, see section [🤗 Transformers Usage](#-transformers-usage) below.
-7. Finally, MusicGen is also [hosted](https://replicate.com/joehoover/musicgen) on Replicate, where you can interact with the model via web UI or API.
+7. Finally, MusicGen is also [hosted](https://replicate.com/facebookresearch/musicgen) on Replicate, where you can interact with the model via web UI or API.
 
 
 ## API
