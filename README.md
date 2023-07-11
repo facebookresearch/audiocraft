@@ -47,9 +47,13 @@ We offer a number of way to interact with MusicGen:
 4. You can play with MusicGen by running the jupyter notebook at [`demo.ipynb`](./demo.ipynb) locally (if you have a GPU).
 5. Checkout [@camenduru Colab page](https://github.com/camenduru/MusicGen-colab) which is regularly
   updated with contributions from @camenduru and the community.
-6. MusicGen is available in 🤗 Transformers from v4.31.0 onwards, see section [🤗 Transformers Usage](#-transformers-usage) below.
-7. Finally, MusicGen is also [hosted](https://replicate.com/facebookresearch/musicgen) on Replicate, where you can interact with the model via web UI or API.
+<<<<<<< main
+6. Finally, MusicGen is available in 🤗 Transformers from v4.31.0 onwards, see section [🤗 Transformers Usage](#-transformers-usage) below.
+7. MusicGen is also [hosted](https://replicate.com/facebookresearch/musicgen) on Replicate, where you can interact with the model via web UI or API.
 
+=======
+6. Finally, MusicGen is available in 🤗 Transformers from v4.31.0 onwards, see section [🤗 Transformers Usage](#-transformers-usage) below.
+>>>>>>> main
 
 ## API
 
