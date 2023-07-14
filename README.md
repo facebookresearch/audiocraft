@@ -19,6 +19,9 @@ Check out our [sample page][musicgen_samples] or test the available demo!
 <a target="_blank" href="https://huggingface.co/spaces/facebook/MusicGen">
   <img src="https://huggingface.co/datasets/huggingface/badges/raw/main/open-in-hf-spaces-sm.svg" alt="Open in HugginFace"/>
 </a>
+<a target="_blank" href="https://replicate.com/facebookresearch/musicgen">
+  <img src="https://replicate.com/facebookresearch/musicgen/badge" alt="Run on Replicate"/>
+</a>
 <br>
 
 We use 20K hours of licensed music to train MusicGen. Specifically, we rely on an internal dataset of 10K high-quality music tracks, and on the ShutterStock and Pond5 music data.
@@ -44,7 +47,13 @@ We offer a number of way to interact with MusicGen:
 4. You can play with MusicGen by running the jupyter notebook at [`demo.ipynb`](./demo.ipynb) locally (if you have a GPU).
 5. Checkout [@camenduru Colab page](https://github.com/camenduru/MusicGen-colab) which is regularly
   updated with contributions from @camenduru and the community.
+<<<<<<< main
 6. Finally, MusicGen is available in 🤗 Transformers from v4.31.0 onwards, see section [🤗 Transformers Usage](#-transformers-usage) below.
+7. MusicGen is also [hosted](https://replicate.com/facebookresearch/musicgen) on Replicate, where you can interact with the model via web UI or API.
+
+=======
+6. Finally, MusicGen is available in 🤗 Transformers from v4.31.0 onwards, see section [🤗 Transformers Usage](#-transformers-usage) below.
+>>>>>>> main
 
 ## API
 
