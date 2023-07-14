@@ -150,7 +150,7 @@ class MusicGen:
         attributes, prompt_tokens = self._prepare_tokens_and_attributes(descriptions, None)
         return self._generate_tokens(attributes, prompt_tokens, progress)
 
-    def generate(self, descriptions: tp.List[str], progress: bool = False) -> torch.Tensor:
+    def generate(self, descriptions: tp.List[str], generator= None, progress: bool = False) -> torch.Tensor:
         """Generate samples conditioned on text.
 
         Args:
@@ -159,10 +159,10 @@ class MusicGen:
         """
         attributes, prompt_tokens = self._prepare_tokens_and_attributes(descriptions, None)
         assert prompt_tokens is None
-        return self._generate_tokens(attributes, prompt_tokens, progress)
+        return self._generate_tokens(attributes, prompt_tokens, progress, generator=generator)
 
     def generate_with_chroma(self, descriptions: tp.List[str], melody_wavs: MelodyType,
-                             melody_sample_rate: int, progress: bool = False) -> torch.Tensor:
+                             melody_sample_rate: int, generator = None, progress: bool = False) -> torch.Tensor:
         """Generate samples conditioned on text and melody.
 
         Args:
@@ -192,11 +192,11 @@ class MusicGen:
         attributes, prompt_tokens = self._prepare_tokens_and_attributes(descriptions=descriptions, prompt=None,
                                                                         melody_wavs=melody_wavs)
         assert prompt_tokens is None
-        return self._generate_tokens(attributes, prompt_tokens, progress)
+        return self._generate_tokens(attributes, prompt_tokens, progress, generator=generator)
 
     def generate_continuation(self, prompt: torch.Tensor, prompt_sample_rate: int,
                               descriptions: tp.Optional[tp.List[tp.Optional[str]]] = None,
-                              progress: bool = False) -> torch.Tensor:
+                              generator = None, progress: bool = False) -> torch.Tensor:
         """Generate samples conditioned on audio prompts.
 
         Args:
@@ -215,7 +215,8 @@ class MusicGen:
             descriptions = [None] * len(prompt)
         attributes, prompt_tokens = self._prepare_tokens_and_attributes(descriptions, prompt)
         assert prompt_tokens is not None
-        return self._generate_tokens(attributes, prompt_tokens, progress)
+        return self._generate_tokens(attributes, prompt_tokens, progress, generator=generator)
+
 
     @torch.no_grad()
     def _prepare_tokens_and_attributes(
@@ -225,7 +226,6 @@ class MusicGen:
             melody_wavs: tp.Optional[MelodyList] = None,
     ) -> tp.Tuple[tp.List[ConditioningAttributes], tp.Optional[torch.Tensor]]:
         """Prepare model inputs.
-
         Args:
             descriptions (tp.List[str]): A list of strings used as text conditioning.
             prompt (torch.Tensor): A batch of waveforms used for continuation.
@@ -270,10 +270,11 @@ class MusicGen:
             prompt_tokens = None
         return attributes, prompt_tokens
 
-    def _generate_tokens(self, attributes: tp.List[ConditioningAttributes],
-                         prompt_tokens: tp.Optional[torch.Tensor], progress: bool = False) -> torch.Tensor:
-        """Generate discrete audio tokens given audio prompt and/or conditions.
 
+    def _generate_tokens(self, attributes: tp.List[ConditioningAttributes],
+                        prompt_tokens: tp.Optional[torch.Tensor], progress: bool = False, generator=None) -> torch.Tensor:
+        """Generate discrete audio tokens given audio prompt and/or conditions.
+     
         Args:
             attributes (tp.List[ConditioningAttributes]): Conditions used for generation (text/melody).
             prompt_tokens (tp.Optional[torch.Tensor]): Audio prompt used for continuation.
@@ -281,6 +282,7 @@ class MusicGen:
         Returns:
             torch.Tensor: Generated audio, of shape [B, C, T], T is defined by the generation params.
         """
+                            
         total_gen_len = int(self.duration * self.frame_rate)
         max_prompt_len = int(min(self.duration, self.max_duration) * self.frame_rate)
         current_gen_offset: int = 0
@@ -302,13 +304,13 @@ class MusicGen:
         if progress:
             callback = _progress_callback
 
+        # generate by sampling from LM, simple case.
         if self.duration <= self.max_duration:
-            # generate by sampling from LM, simple case.
             with self.autocast:
                 gen_tokens = self.lm.generate(
                     prompt_tokens, attributes,
-                    callback=callback, max_gen_len=total_gen_len, **self.generation_params)
-
+                    callback=callback, max_gen_len=total_gen_len, generator=generator, **self.generation_params)
+    
         else:
             # now this gets a bit messier, we need to handle prompts,
             # melody conditioning etc.
@@ -341,10 +343,11 @@ class MusicGen:
                     attr.wav['self_wav'] = WavCondition(
                         ref_wav[0][:, positions % wav_length],
                         torch.full_like(ref_wav[1], wav_target_length))
+                # Handling prompt tokens and guide tokens separately for the lm.generate call
                 with self.autocast:
                     gen_tokens = self.lm.generate(
                         prompt_tokens, attributes,
-                        callback=callback, max_gen_len=max_gen_len, **self.generation_params)
+                        callback=callback, max_gen_len=max_gen_len, generator=generator, **self.generation_params)
                 if prompt_tokens is None:
                     all_tokens.append(gen_tokens)
                 else:
