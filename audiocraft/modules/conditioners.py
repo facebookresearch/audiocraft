@@ -57,9 +57,9 @@ def nullify_condition(condition: ConditionType, dim: int = 1):
         ConditionType: a tuple of null condition and mask
     """
     assert dim != 0, "dim cannot be the batch dimension!"
-    assert type(condition) == tuple and \
-        type(condition[0]) == Tensor and \
-        type(condition[1]) == Tensor, "'nullify_condition' got an unexpected input type!"
+    assert isinstance(condition, tuple) and \
+        isinstance(condition[0], Tensor) and \
+        isinstance(condition[1], Tensor), "'nullify_condition' got an unexpected input type!"
     cond, mask = condition
     B = cond.shape[0]
     last_dim = cond.dim() - 1
@@ -772,7 +772,7 @@ class ConditioningProvider(nn.Module):
             inputs (list[ConditioningAttribres]): List of ConditioningAttributes objects containing
                 text and wav conditions.
         """
-        assert all([type(x) == ConditioningAttributes for x in inputs]), \
+        assert all([isinstance(x, ConditioningAttributes) for x in inputs]), \
             "got unexpected types input for conditioner! should be tp.List[ConditioningAttributes]" \
             f" but types were {set([type(x) for x in inputs])}"
 
