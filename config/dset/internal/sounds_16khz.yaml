@@ -1,0 +1,12 @@
+# @package __global__
+
+# environmental sounds dataset compiling all datasets
+# with applied filters on tags
+datasource:
+  max_sample_rate: 16000
+  max_channels: 1
+
+  train: egs/sound/sounds_16khz/train
+  valid: egs/sound/sounds_16khz/valid
+  evaluate: egs/sound/sounds_16khz/test
+  generate: egs/sound/sounds_16khz/test # identical to evaluate

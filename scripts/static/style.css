@@ -1,0 +1,113 @@
+body {
+    background-color: #fbfbfb;
+    margin: 0;
+}
+
+select, input {
+    font-size: 1em;
+    max-width: 100%;
+}
+
+.xp_name {
+    font-family: monospace;
+}
+
+.simple_form {
+    background-color: #dddddd;
+    padding: 1em;
+    margin: 0.5em;
+}
+
+textarea {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+}
+
+.rating {
+    background-color: grey;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 8px;
+    padding-right: 8px;
+    margin-right: 2px;
+    cursor:pointer;
+}
+
+.rating_selected {
+    background-color: purple;
+}
+
+.content {
+    font-family: sans-serif;
+    background-color: #f6f6f6;
+    padding: 40px;
+    margin: 0 auto;
+    max-width: 1000px;
+}
+
+.track label {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+.track {
+    padding: 15px;
+    margin: 5px;
+    background-color: #c8c8c8;
+}
+
+.submit-big {
+    width:400px;
+    height:30px;
+    font-size: 20px;
+}
+
+.error {
+    color: red;
+}
+
+.ratings {
+    margin-left: 10px;
+}
+
+.important {
+    font-weight: bold;
+}
+
+.survey {
+    margin-bottom: 100px;
+}
+
+.success {
+    color: #25901b;
+    font-weight: bold;
+}
+.warning {
+    color: #8a1f19;
+    font-weight: bold;
+}
+.track>section {
+    display: flex;
+    align-items:  center;
+}
+
+.prompt {
+    display: flex;
+    align-items: center;
+}
+
+.track>section>div {
+    padding-left:  10px;
+}
+
+audio {
+    max-width: 280px;
+    max-height: 40px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.special {
+    font-weight: bold;
+    color: #2c2c2c;
+}
+

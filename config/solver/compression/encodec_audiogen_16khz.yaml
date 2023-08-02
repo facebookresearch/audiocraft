@@ -1,0 +1,10 @@
+# @package __global__
+
+defaults:
+  - compression/default
+  - /model: encodec/encodec_large_nq4_s320
+  - override /dset: audio/default
+  - _self_
+
+channels: 1
+sample_rate: 16000

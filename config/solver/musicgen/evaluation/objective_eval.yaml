@@ -1,0 +1,24 @@
+# @package __global__
+
+# Setup for execute only on musiccaps for audio generation
+# evaluation with objective metrics
+# execute_only=evaluate
+
+dataset:
+  max_audio_duration: null
+  # ensure the proper values are broadcasted here for evaluate
+  evaluate:
+    min_audio_duration: 1.  # some metrics requires a minimum audio length
+    max_audio_duration: null  # all samples from musiccaps should be < 20s
+    num_samples: null
+    segment_duration: null
+  generate:
+    min_audio_duration: 1.
+    max_audio_duration: null
+    num_samples: 500
+
+evaluate:
+  metrics:
+    fad: true
+    kld: true
+    text_consistency: true

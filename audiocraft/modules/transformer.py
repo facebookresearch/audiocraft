@@ -90,7 +90,7 @@ def create_sin_embedding(positions: torch.Tensor, dim: int, max_period: float = 
 
 
 def expand_repeated_kv(x: torch.Tensor, n_rep: int) -> torch.Tensor:
-    """torch.repeat_interleave(x, dim=2, repeats=n_rep) from xlformers"""
+    """torch.repeat_interleave(x, dim=2, repeats=n_rep) from xlformers."""
     if n_rep == 1:
         return x
     if _efficient_attention_backend == 'torch':
@@ -111,14 +111,14 @@ def expand_repeated_kv(x: torch.Tensor, n_rep: int) -> torch.Tensor:
 
 class LayerScale(nn.Module):
     """Layer scale from [Touvron et al 2021] (https://arxiv.org/pdf/2103.17239.pdf).
-    This rescales diagonaly the residual outputs close to 0, with a learnt scale.
+    This rescales diagonally the residual outputs close to 0, with a learnt scale.
 
     Args:
         channels (int): Number of channels.
         init (float): Initial scale.
         channel_last (bool): If True, expect `[*, C]` shaped tensors, otherwise, `[*, C, T]`.
-        device (torch.device or None): Device on which to initialize the module.
-        dtype (torch.dtype or None): dtype to use to initialize the module.
+        device (torch.device or str, optional): Device on which to initialize the module.
+        dtype (torch.dtype, optional): dtype to use to initialize the module.
     """
     def __init__(self, channels: int, init: float = 1e-4, channel_last: bool = True,
                  device=None, dtype=None):
@@ -144,22 +144,22 @@ class StreamingMultiheadAttention(StreamingModule):
         dropout (float): Dropout level.
         bias (bool): Use bias in projections.
         causal (bool): Causal mask applied automatically.
-        past_context (int or None): Receptive field for the causal mask, infinite if None.
+        past_context (int, optional): Receptive field for the causal mask, infinite if None.
         custom (bool): Use custom MHA implementation, for testing / benchmarking.
         memory_efficient (bool): Use xformers based memory efficient attention.
         attention_as_float32 (bool): Perform the attention as float32
             (especially important with memory_efficient as autocast won't do this automatically).
-        rope (`RotaryEmbedding` or None): Rope embedding to use.
+        rope (`RotaryEmbedding`, optional): Rope embedding to use.
         cross_attention: Should be true when used as a cross attention.
             All keys and values must be available at once, streaming is only for the queries.
             Cannot be used with `causal` or `rope` (as it wouldn't make sens to
-            intepret the time steps in the keys relative to those in the queries).
+            interpret the time steps in the keys relative to those in the queries).
         safe_streaming (bool): Bug fix, will go away with xformers update.
         qk_layer_norm (bool): Layer normalization applied to queries and keys before dot product.
         kv_repeat (int): If > 1, will repeat keys and queries multiple times (need to divide num_heads).
             This will lead to faster decoding time on A100 or other GPUs with tensorcore.
-        device (torch.device or None): Sevice on which to initialize.
-        dtype (torch.dtype or None): dtype to use.
+        device (torch.device, optional): Device on which to initialize.
+        dtype (torch.dtype, optional): dtype to use.
     """
     def __init__(self, embed_dim: int, num_heads: int, dropout: float = 0.0, bias: bool = True,
                  causal: bool = False, past_context: tp.Optional[int] = None, custom: bool = False,
@@ -241,7 +241,7 @@ class StreamingMultiheadAttention(StreamingModule):
                 # If we only have one step, then we do not need a mask.
                 return None
             elif 'past_keys' in self._streaming_state:
-                raise RuntimeError('Not supported at the moment')
+                raise RuntimeError("Not supported at the moment")
             else:
                 # Then we can safely use a lower triangular mask
                 return LowerTriangularMask()
@@ -299,7 +299,7 @@ class StreamingMultiheadAttention(StreamingModule):
 
     def _apply_rope(self, query: torch.Tensor, key: torch.Tensor):
         # TODO: fix and verify layout.
-        assert _efficient_attention_backend == 'xformers', 'Rope not supported with torch attn.'
+        assert _efficient_attention_backend == 'xformers', "Rope not supported with torch attn."
         # Apply rope embeddings to query and key tensors.
         assert self.rope is not None
         if 'past_keys' in self._streaming_state:
@@ -317,7 +317,7 @@ class StreamingMultiheadAttention(StreamingModule):
                 key_padding_mask=None, need_weights=False, attn_mask=None,
                 average_attn_weights=True, is_causal=False):
         assert attn_mask is None
-        assert not is_causal, ("new param added in torch 2.0.1 not supported, "
+        assert not is_causal, ("New param added in torch 2.0.1 not supported, "
                                "use the causal args in the constructor.")
 
         time_dim = _get_attention_time_dimension()
@@ -455,7 +455,7 @@ class StreamingTransformerLayer(nn.TransformerEncoderLayer):
         bias_ff (bool): Use bias for FF.
         bias_attn (bool): Use bias for MHA.
         causal (bool): Causal mask applied automatically.
-        past_context (int or None): Receptive field for the causal mask, infinite if None.
+        past_context (int, optional): Receptive field for the causal mask, infinite if None.
         custom (bool): Use custom MHA implementation, for testing / benchmarking.
         memory_efficient (bool): Use xformers based memory efficient attention.
         attention_as_float32 (bool): Perform the attention as float32
@@ -465,15 +465,15 @@ class StreamingTransformerLayer(nn.TransformerEncoderLayer):
         cross_attention (bool): If True, expect to get secondary input for cross-attention.
             Cross attention will use the default MHA, as it typically won't require
             special treatment.
-        layer_scale (float or None): If not None, LayerScale will be used with
+        layer_scale (float, optional): If not None, LayerScale will be used with
             the given value as initial scale.
-        rope (`RotaryEmbedding` or None): Rope embedding to use.
-        attention_dropout (float or None): If not None, separate the value of the dimension dropout
+        rope (`RotaryEmbedding`, optional): Rope embedding to use.
+        attention_dropout (float, optional): If not None, separate the value of the dimension dropout
             in FFN and of the attention dropout.
         kv_repeat (int): If > 1, will repeat keys and queries multiple times (need to divide num_heads).
             This will lead to faster decoding time on A100 or other GPUs with tensorcore.
-        device (torch.device or None): Device on which to initialize.
-        dtype (torch.dtype or None): dtype to use.
+        device (torch.device, optional): Device on which to initialize.
+        dtype (torch.dtype, optional): dtype to use.
         **kwargs: See `nn.TransformerEncoderLayer`.
     """
     def __init__(self, d_model: int, num_heads: int, dim_feedforward: int = 2048, dropout: float = 0.1,
@@ -576,30 +576,30 @@ class StreamingTransformer(StreamingModule):
         bias_ff (bool): Use bias for FF.
         bias_attn (bool): Use bias for MHA.
         causal (bool): Causal mask applied automatically.
-        past_context (int or None): Receptive field for the causal mask, infinite if None.
+        past_context (int, optional): Receptive field for the causal mask, infinite if None.
         custom (bool): Use custom MHA implementation, for testing / benchmarking.
         memory_efficient (bool): Use xformers based memory efficient attention.
         attention_as_float32 (bool): Perform the attention as float32
             (especially important with memory_efficient as autocast won't do this automatically).
         cross_attention (bool): If True, expect to get secondary input for cross-attention.
-        layer_scale (float or None): If not None, LayerScale will be used
+        layer_scale (float, optional): If not None, LayerScale will be used
             with the given value as initial scale.
         positional_embedding (str): Positional embedding strategy (sin, rope, or sin_rope).
         max_period (float): Maximum period of the time embedding.
         positional_scale (float): Scale of positional embedding, set to 0 to deactivate.
         xpos (bool): Apply xpos exponential decay to positional embedding (rope only).
-        lr (float or None): learning rate override through the `make_optim_group` API.
-        weight_decay (float or None): Weight_decay override through the `make_optim_group` API.
+        lr (float, optional): learning rate override through the `make_optim_group` API.
+        weight_decay (float, optional): Weight_decay override through the `make_optim_group` API.
         layer_class: (subclass of `StreamingTransformerLayer): class to use
-            to initialize the layers, allowing further customization outside of Audiocraft.
+            to initialize the layers, allowing further customization outside of AudioCraft.
         checkpointing (str): Checkpointing strategy to reduce memory usage.
             No checkpointing if set to 'none'. Per layer checkpointing using PyTorch
             if set to 'torch' (entire layer checkpointed, i.e. linears are evaluated twice,
             minimal memory usage, but maximal runtime). Finally, `xformers_default` provide
             a policy for opting-out some operations of the checkpointing like
             linear layers and attention, providing a middle ground between speed and memory.
-        device (torch.device or None): Device on which to initialize.
-        dtype (torch.dtype or None): dtype to use.
+        device (torch.device, optional): Device on which to initialize.
+        dtype (torch.dtype, optional): dtype to use.
         **kwargs: See `nn.TransformerEncoderLayer`.
     """
     def __init__(self, d_model: int, num_heads: int, num_layers: int, dim_feedforward: int = 2048,
@@ -713,7 +713,7 @@ class StreamingTransformer(StreamingModule):
         return group
 
 
-# special attention attention related function
+# special attention related function
 
 def _verify_xformers_memory_efficient_compat():
     try:

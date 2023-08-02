@@ -12,11 +12,11 @@
 
 **Paper or resources for more information:** More information can be found in the paper [Simple and Controllable Music Generation][arxiv].
 
-**Citation details** See [our paper][arxiv]
+**Citation details:** See [our paper][arxiv]
 
-**License** Code is released under MIT, model weights are released under CC-BY-NC 4.0.
+**License:** Code is released under MIT, model weights are released under CC-BY-NC 4.0.
 
-**Where to send questions or comments about the model:** Questions and comments about MusicGen can be sent via the [Github repository](https://github.com/facebookresearch/audiocraft) of the project, or by opening an issue.
+**Where to send questions or comments about the model:** Questions and comments about MusicGen can be sent via the [GitHub repository](https://github.com/facebookresearch/audiocraft) of the project, or by opening an issue.
 
 ## Intended use
 **Primary intended use:** The primary use of MusicGen is research on AI-based music generation, including:
@@ -26,7 +26,7 @@
 
 **Primary intended users:** The primary intended users of the model are researchers in audio, machine learning and artificial intelligence, as well as amateur seeking to better understand those models.
 
-**Out-of-scope use cases** The model should not be used on downstream applications without further risk evaluation and mitigation. The model should not be used to intentionally create or disseminate music pieces that create hostile or alienating environments for people. This includes generating music that people would foreseeably find disturbing, distressing, or offensive; or content that propagates historical or current stereotypes.
+**Out-of-scope use cases:** The model should not be used on downstream applications without further risk evaluation and mitigation. The model should not be used to intentionally create or disseminate music pieces that create hostile or alienating environments for people. This includes generating music that people would foreseeably find disturbing, distressing, or offensive; or content that propagates historical or current stereotypes.
 
 ## Metrics
 
@@ -54,15 +54,24 @@ The model was evaluated on the [MusicCaps benchmark](https://www.kaggle.com/data
 
 The model was trained on licensed data using the following sources: the [Meta Music Initiative Sound Collection](https://www.fb.com/sound),  [Shutterstock music collection](https://www.shutterstock.com/music) and the [Pond5 music collection](https://www.pond5.com/). See the paper for more details about the training set and corresponding preprocessing.
 
-## Quantitative analysis
+## Evaluation results
 
-More information can be found in the paper [Simple and Controllable Music Generation][arxiv], in the Experimental Setup section.
+Below are the objective metrics obtained on MusicCaps with the released model. Note that for the publicly released models, we had all the datasets go through a state-of-the-art music source separation method, namely using the open source [Hybrid Transformer for Music Source Separation](https://github.com/facebookresearch/demucs) (HT-Demucs), in order to keep only the instrumental part. This explains the difference in objective metrics with the models used in the paper.
+
+| Model | Frechet Audio Distance | KLD | Text Consistency | Chroma Cosine Similarity |
+|---|---|---|---|---|
+| facebook/musicgen-small  | 4.88 | 1.28 | 0.27 | - |
+| facebook/musicgen-medium | 5.14 | 1.24 | 0.28 | - |
+| facebook/musicgen-large  | 5.48 | 1.22 | 0.28 | - |
+| facebook/musicgen-melody | 4.93 | 1.26 | 0.27 | 0.44 |
+
+More information can be found in the paper [Simple and Controllable Music Generation][arxiv], in the Results section.
 
 ## Limitations and biases
 
 **Data:** The data sources used to train the model are created by music professionals and covered by legal agreements with the right holders. The model is trained on 20K hours of data, we believe that scaling the model on larger datasets can further improve the performance of the model.
 
-**Mitigations:** Vocals have been removed from the data source using corresponding tags, and then using using a state-of-the-art music source separation method, namely using the open source [Hybrid Transformer for Music Source Separation](https://github.com/facebookresearch/demucs) (HT-Demucs).
+**Mitigations:** Vocals have been removed from the data source using corresponding tags, and then using a state-of-the-art music source separation method, namely using the open source [Hybrid Transformer for Music Source Separation](https://github.com/facebookresearch/demucs) (HT-Demucs).
 
 **Limitations:**
 

@@ -1,0 +1,3 @@
+# @package __global__
+
+# overrides nothing because default is already transformer base (~ 60M params)

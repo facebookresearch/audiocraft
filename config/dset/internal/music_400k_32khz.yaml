@@ -1,0 +1,10 @@
+# @package __global__
+
+datasource:
+  max_sample_rate: 32000
+  max_channels: 1
+
+  train: egs/music/music_400k_32khz/train
+  valid: egs/music/music_400k_32khz/valid
+  evaluate: egs/music/music_400k_32khz/test
+  generate: egs/music/music_400k_32khz/test # identical to evaluate

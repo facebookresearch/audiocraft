@@ -173,7 +173,7 @@ def test_cross_attention():
         cross_x = torch.randn(2, 3, 16)
         y_ref = m(x)
         y_cross_zero = m_cross(x, cross_attention_src=0 * cross_x)
-        # With norm_first, the two should be exactly yhe same,
+        # With norm_first, the two should be exactly the same,
         # but with norm_first=False, we get 2 normalization in a row
         # and the epsilon value leads to a tiny change.
         atol = 0. if norm_first else 1e-6

@@ -1,0 +1,55 @@
+# @package __global__
+
+defaults:
+  - compression/default
+  - /model: encodec/encodec_base_causal
+  - override /dset: audio/example
+  - _self_
+
+channels: 1
+sample_rate: 16000
+
+# debug config uses just L1
+losses:
+  adv: 0.
+  feat: 0.
+  l1: 1.
+  mel: 0.
+  msspec: 0.
+# no balancer
+balancer:
+  balance_grads: false
+  ema_decay: 1.
+  total_norm: 1.
+  per_batch_item: false
+# no adversaries
+adversarial:
+  adversaries: []
+  adv_loss: hinge
+  feat_loss: l1
+
+# faster model for local dev
+seanet:
+  dimension: 16
+  n_filters: 4
+
+# very small dataset
+dataset:
+  batch_size: 8
+  num_workers: 10
+  num_samples: 100
+  segment_duration: 1
+  evaluate:
+    batch_size: 32
+  generate:
+    batch_size: 1
+    num_samples: 5
+    segment_duration: 10
+
+# limited training
+evaluate:
+  every: 5
+generate:
+  every: 5
+optim:
+  epochs: 50

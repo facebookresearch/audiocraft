@@ -1,0 +1,11 @@
+# @package __global__
+
+defaults:
+  - diffusion/default
+  - _self_
+
+
+sample_rate: 24000
+channels: 1
+compression_model_checkpoint: //pretrained/facebook/encodec_24khz
+n_q: 4  # num quantizers, 3kbps

@@ -57,8 +57,7 @@ class StreamingModule(nn.Module):
 
     @contextmanager
     def streaming(self):
-        """Context manager to enter streaming mode. Reset streaming state on exit.
-        """
+        """Context manager to enter streaming mode. Reset streaming state on exit."""
         self._set_streaming(True)
         try:
             yield
@@ -67,16 +66,14 @@ class StreamingModule(nn.Module):
             self.reset_streaming()
 
     def reset_streaming(self):
-        """Reset the streaming state.
-        """
+        """Reset the streaming state."""
         def _reset(name: str, module: StreamingModule):
             module._streaming_state.clear()
 
         self._apply_named_streaming(_reset)
 
     def get_streaming_state(self) -> State:
-        """Return the streaming state, including that of sub-modules.
-        """
+        """Return the streaming state, including that of sub-modules."""
         state: State = {}
 
         def _add(name: str, module: StreamingModule):
@@ -89,8 +86,7 @@ class StreamingModule(nn.Module):
         return state
 
     def set_streaming_state(self, state: State):
-        """Set the streaming state, including that of sub-modules.
-        """
+        """Set the streaming state, including that of sub-modules."""
         state = dict(state)
 
         def _set(name: str, module: StreamingModule):

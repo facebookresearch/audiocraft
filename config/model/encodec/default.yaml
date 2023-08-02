@@ -1,0 +1,54 @@
+# @package __global__
+
+compression_model: encodec
+
+encodec:
+  autoencoder: seanet
+  quantizer: rvq
+  sample_rate: ${sample_rate}
+  channels: ${channels}
+  causal: false
+  renormalize: false
+
+seanet:
+  dimension: 128
+  channels: ${channels}
+  causal: ${encodec.causal}
+  n_filters: 32
+  n_residual_layers: 1
+  ratios: [8, 5, 4, 2]
+  activation: ELU
+  activation_params: {"alpha": 1.}
+  norm: weight_norm
+  norm_params: {}
+  kernel_size: 7
+  residual_kernel_size: 3
+  last_kernel_size: 7
+  dilation_base: 2
+  pad_mode: constant
+  true_skip: true
+  compress: 2
+  lstm: 2
+  disable_norm_outer_blocks: 0
+  # Specific encoder or decoder params.
+  # You can also override any param for the encoder or decoder only
+  # by using Hydra `+param=` syntax, i.e.`
+  # `+seanet.decoder.n_filters=64`.
+  decoder:
+    trim_right_ratio: 1.0
+    final_activation: null
+    final_activation_params: null
+  encoder: {}
+
+rvq:
+  n_q: 8
+  q_dropout: false
+  bins: 1024
+  decay: 0.99
+  kmeans_init: true
+  kmeans_iters: 50
+  threshold_ema_dead_code: 2
+  orthogonal_reg_weight: 0.0
+  orthogonal_reg_active_codes_only: false
+
+no_quant: {}

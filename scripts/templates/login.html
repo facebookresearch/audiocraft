@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+
+<p>
+    You must identify yourself first! We use a highly secured protocol
+    where you just decide your username, and that's it. No password, no encryption,
+    just pure trust.
+</p>
+
+{% if error %}
+<p class="error">{{error}}</p>
+{% endif %}
+<form method="post" class="simple_form">
+    <label> Username
+        <input type="text" name="user">
+    </label>
+    <input type="submit" value="login">
+<form>
+
+{% endblock %}

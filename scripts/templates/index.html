@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+
+<p>
+    Welcome <span class="special">{{session['user']}}</span> to the internal MOS assistant for AudioCraft.
+    You can create custom surveys between your models, that you can
+    evaluate yourself, or with the help of your teammates, by simply
+    sharing a link!
+</p>
+
+{% for error in errors %}
+<p class="error">{{error}}</p>
+{% endfor %}
+<form method="post" action="{{url_for('index')}}" class="simple_form">
+    <div>
+        <label for="xps"> Space separated lists of XP SIGS or Grid names:
+        </label><br>
+        <textarea autofocus name="xps" rows="4" cols="30"></textarea>
+    </div>
+    <div>
+        <label> Blind study
+            <input type="checkbox" name="blind">
+        </label>
+    </div>
+    <input type="submit" value="Create study">
+<form>
+
+{% endblock %}

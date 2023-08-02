@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Survey #{{signature}}</h1>
+{% if success %}
+<p class="success"> Your ratings have been saved!
+You have been moved to the next random seed, if you want
+to keep rating more samples. </p>
+{% endif %}
+{% if already_filled %}
+<p class="warning"> You already rated those samples in the past,
+    filling this form will override your previous ratings.
+</p>
+{% endif %}
+<p>Welcome <span class='special'>{{session['user']}}</span> to the survey <span class='special'>#{{signature}}</span>.
+Go to <a href="{{url_for('results', signature=signature)}}">the result page</a> to check the results. Go to <a href="{{url_for('index')}}">the home page</a> to start a new survey.
+</p>
+
+{% for error in errors %}
+<p class="error">{{error}}</p>
+{% endfor %}
+
+{% if not blind %}
+<p>Base config is: <span class="xp_name">{{ref_name}}</span></p>
+<p>The following experiments are compared:</p>
+<ul>
+    {% for experiment in experiments %}
+    <li><span class='special'>{{experiment.xp.sig}}</span> ({{experiment.epoch}} epochs): <span class="xp_name">{{experiment.name}}</span></li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>This is a blind experiment, the order of all XPs is shuffled with every sample.</p>
+{% endif %}
+<p>The current random seed is {{seed}}. You can change it with the following form, and also update blind/non blind.
+</p>
+<form method="get" action="" class="simple_form">
+    <input type="number" name="seed" value="{{seed}}">
+    <label>Blind?
+    <input type="checkbox" name="blind" {% if blind %} checked {% endif %}> </label>
+    <label>Exclude unprompted?
+    <input type="checkbox" name="exclude_unprompted" {% if exclude_unprompted %} checked {% endif %}> </label>
+    <label>Exclude prompted?
+    <input type="checkbox" name="exclude_prompted" {% if exclude_prompted %} checked {% endif %}> </label>
+    <label>Max epoch?
+    <input type="text" name="max_epoch" value="{{max_epoch}}"> </label>
+    <input type="submit" value="Update">
+</form>
+
+<h2>Samples</h2>
+<div class="survey">
+<form method="post" action="{{url_for('survey', signature=signature, blind='true' if blind else 'false', exclude_prompted='true' if exclude_prompted else 'false', exclude_unprompted='true' if exclude_unprompted else 'false', seed=seed, max_epoch=max_epoch)}}" class="simple_form">
+{% for id in model_ids %}
+    <div class="track">
+    <h4>{{id}}</h4>
+    {% for model in models_by_id[id] %}
+        {% if loop.index == 1 and model.is_prompted %}
+            <section class="prompt">
+            <p>Prompt is </p>
+                <audio controls>
+                    <source src="{{url_for('audio', path=model.sample.prompt.path)}}" type="audio/mp3">
+                </audio>
+            <p>Ground truth is </p>
+                <audio controls>
+                    <source src="{{url_for('audio', path=model.sample.prompt.ground_truth_path)}}" type="audio/mp3">
+                </audio>
+            </section>
+        {% endif %}
+        {% for err in model['errors'] %}
+            <p class="error">{{err}}</p>
+        {% endfor %}
+        <section class="model">
+        {% if not blind %}
+            <p class="special">{{model.xp.sig}}:</p>
+        {% endif %}
+        <audio controls>
+                <source src="{{url_for('audio', path=model.sample.path)}}" type="audio/mp3">
+            Your browser does not support the audio element.
+        </audio>
+        <p>Rating:</p>
+        <section class="ratings" id="ratings-{{model.model_id}}">
+            {% for rating in ratings %}
+            <span class="rating rating_{{rating}} {% if rating == model.rating %}rating_selected{% endif %}"
+                    data-target="{{model.model_id}}" data-rating="{{rating}}" onclick="updateNote(this)">{{rating}}</span>
+            {% endfor %}
+            <input type="hidden" name="{{model.model_id}}" id="{{model.model_id}}" value="{{model.rating}}">
+        </section>
+        </p>
+        </section>
+    {% endfor %}
+        </div>
+        <hr>
+{% endfor %}
+    <button type="submit" class="submit-big">
+        Submit evaluations
+    </button>
+<form>
+</div>
+<script>
+function updateNote(node) {
+    var target = node.getAttribute('data-target');
+    var rating = node.getAttribute('data-rating');
+    var field = document.getElementById(target);
+    field.value = rating;
+    node.classList.add('rating_selected');
+
+    var parent = document.getElementById('ratings-' + target);
+    for (const other of parent.childNodes) {
+        if (other.tagName === 'SPAN' && other.classList.contains('rating_selected') && other !== node) {
+            other.classList.remove('rating_selected');
+        }
+    }
+}
+
+function setupCallback(elem, elems) {
+  elem.addEventListener("play", function () {
+    for (var other of elems) {
+      if (other !== elem) {
+        other.pause();
+        // other.currentTime = 0.;
+      }
+    }
+  });
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+  var elems = document.body.getElementsByTagName("audio");
+  for (var elem of elems) {
+    setupCallback(elem, elems);
+  }
+});
+</script>
+{% endblock %}

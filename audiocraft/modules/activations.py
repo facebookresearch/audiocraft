@@ -84,7 +84,7 @@ def get_activation_fn(
     If the supplied activation is not a string that is recognized, the activation is passed back.
 
     Args:
-        activation (Union[str, Callable[[Tensor], Tensor]]): Activation to check
+        activation (str, or Callable[[Tensor], Tensor]): Activation to check
     """
     if isinstance(activation, str):
         if activation == "reglu":

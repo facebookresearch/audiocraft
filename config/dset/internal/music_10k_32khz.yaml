@@ -1,0 +1,11 @@
+# @package __global__
+
+# high quality music dataset with no artist overlap between splits
+datasource:
+  max_sample_rate: 32000
+  max_channels: 1
+
+  train: egs/music/music_10k_32khz/train
+  valid: egs/music/music_10k_32khz/valid
+  evaluate: egs/music/music_10k_32khz/test
+  generate: egs/music/music_10k_32khz/test # identical to evaluate

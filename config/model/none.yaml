@@ -1,0 +1,4 @@
+# @package __global__
+
+# This file exist so that model is recognized as a config group
+# by Hydra, and Dora. A bit weird we might need a better fix someday.

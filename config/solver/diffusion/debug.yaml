@@ -1,0 +1,106 @@
+# @package __global__
+
+defaults:
+  - /solver/default
+  - /model: score/basic
+  - override /dset: audio/default
+  - _self_
+
+solver: diffusion
+
+sample_rate: 16000
+channels: 1
+compression_model_checkpoint: //sig/5091833e
+n_q: 2   # number of codebooks to keep
+
+dataset:
+  batch_size: 8
+  num_workers: 10
+  segment_duration: 1
+  train:
+    num_samples: 100
+  valid:
+    num_samples: 100
+  evaluate:
+    batch_size: 8
+    num_samples: 10
+  generate:
+    batch_size: 8
+    num_samples: 10
+    segment_duration: 10
+
+loss:
+  kind: mse
+  norm_power: 0.
+
+valid:
+  every: 1
+
+evaluate:
+  every: 5
+  num_workers: 5
+  metrics:
+    visqol: false
+    sisnr: false
+    rvm: true
+
+generate:
+  every: 5
+  num_workers: 5
+  audio:
+    sample_rate: ${sample_rate}
+
+checkpoint:
+  save_last: true
+  save_every: 25
+  keep_last: 10
+  keep_every_states: null
+
+
+optim:
+  epochs: 50
+  updates_per_epoch: 2000
+  lr: 2e-4
+  max_norm: 0
+  optimizer: adam
+  adam:
+    betas: [0.9, 0.999]
+    weight_decay: 0.
+  ema:
+    use: true         # whether to use EMA or not
+    updates: 1        # update at every step
+    device: ${device} # device for EMA, can be put on GPU if more frequent updates
+    decay: 0.99       # EMA decay value, if null, no EMA is used
+
+processor:
+  name: multi_band_processor
+  use: false
+  n_bands: 8
+  num_samples: 10_000
+  power_std: 1.
+
+resampling:
+  use: false
+  target_sr: 16000
+
+filter:
+  use: false
+  n_bands: 4
+  idx_band: 0
+  cutoffs: null
+
+schedule:
+  repartition: "power"
+  variable_step_batch: true
+  beta_t0: 1.0e-5
+  beta_t1: 2.9e-2
+  beta_exp: 7.5
+  num_steps: 1000
+  variance: 'beta'
+  clip: 5.
+  rescale: 1.
+  n_bands: null
+  noise_scale: 1.0
+
+metrics:
+  num_stage: 4

@@ -1,0 +1,5 @@
+# @package __global__
+
+dataset:
+  evaluate:
+    num_samples: 10000

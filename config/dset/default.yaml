@@ -1,0 +1,10 @@
+# @package __global__
+
+# WARNING: This is a base configuration file shared across ALL solvers in AudioCraft
+# Please don't update this file directly. Instead use distinct configuration files
+# to override the below configuration.
+datasource:
+  train: ???
+  valid: ???
+  evaluate: ???
+  generate: ???

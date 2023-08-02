@@ -35,7 +35,7 @@ wheels/
 .coverage
 
 # docs
-/docs
+/api_docs
 
 # dotenv
 .env
@@ -45,6 +45,13 @@ wheels/
 .venv
 venv/
 ENV/
+
+# egs with manifest files
+egs/*
+!egs/example
+# local datasets
+dataset/*
+!dataset/example
 
 # personal notebooks & scripts
 */local_scripts

@@ -1,0 +1,46 @@
+# @package __global__
+
+classifier_free_guidance:
+  training_dropout: 0.2
+  inference_coef: 3.0
+
+attribute_dropout:
+  args:
+    active_on_eval: false
+  text: {}
+  wav:
+    self_wav: 0.5
+
+fuser:
+  cross_attention_pos_emb: false
+  cross_attention_pos_emb_scale: 1
+  sum: []
+  prepend: [self_wav, description]
+  cross: []
+  input_interpolate: []
+
+conditioners:
+  self_wav:
+    model: chroma_stem
+    chroma_stem:
+      sample_rate: ${sample_rate}
+      n_chroma: 12
+      radix2_exp: 14
+      argmax: true
+      match_len_on_eval: false
+      eval_wavs: null
+      n_eval_wavs: 100
+      cache_path: null
+  description:
+    model: t5
+    t5:
+      name: t5-base
+      finetune: false
+      word_dropout: 0.2
+      normalize_text: false
+
+dataset:
+  train:
+    merge_text_p: 0.25
+    drop_desc_p: 0.5
+    drop_other_p: 0.5

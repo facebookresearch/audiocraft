@@ -1,0 +1,17 @@
+# @package _global_
+
+diffusion_unet:
+  hidden: 48
+  depth: 4
+  res_blocks: 1
+  norm_groups: 4
+  kernel: 8
+  stride: 4
+  growth: 4
+  max_channels: 10_000
+  dropout: 0.
+  emb_all_layers: true
+  bilstm: false
+  codec_dim: null
+  transformer: false
+  cross_attention: false

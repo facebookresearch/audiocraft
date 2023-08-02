@@ -1,0 +1,75 @@
+# WARNING: This is the base configuration file shared across ALL solvers in AudioCraft
+# Please don't update this file directly. Instead use distinct configuration files
+# to override the below configuration.
+defaults:
+  - _self_
+  - dset: default
+  - solver: default
+
+device: cuda
+dtype: float32
+autocast: false
+autocast_dtype: bfloat16
+seed: 2036
+show: false  # just show the model and its size and exit
+continue_from:  # continue from a given sig or path
+execute_only:  # can be set to generate/evaluate/valid to run that stage
+execute_inplace: false # don't enforce continue_from to be set
+                       # to enable inplace execution of the stage. This assume
+                       # that you know what you are doing and execute stage
+                       # preserving the original xp sig.
+benchmark_no_load: false  # if set to true, will repeat the same batch instead of loading them
+
+efficient_attention_backend: torch  # can be torch or xformers.
+num_threads: 1                      # called with torch.set_num_thread.
+mp_start_method: forkserver               # multiprocessing method (spawn, fork or fork_server).
+
+
+label:  # use this if you want twice the same exp, with a name.
+
+# logging parameters
+logging:
+  level: INFO
+  log_updates: 10
+  log_tensorboard: false
+  log_wandb: false
+tensorboard:
+  with_media_logging: false
+  name:  # optional name for the experiment
+  sub_dir:  # optional sub directory to store tensorboard data
+wandb:
+  with_media_logging: true
+  project:  # project name
+  name:  # optional name for the experiment
+  group:  # optional group
+
+# SLURM launcher configuration.
+slurm:
+  gpus: 4  # convenience parameter, number of GPUs to use.
+  mem_per_gpu: 40  # in GB, total mem is automatically scaled with `gpus`.
+  time: 3600
+  constraint:
+  partition:
+  comment:
+  setup: []
+  exclude: ''
+
+# dora parameters
+dora:
+  # Output folder for all artifacts of an experiment.
+  dir: /checkpoint/${oc.env:USER}/experiments/audiocraft/outputs
+  # The following entries will be ignored by dora when computing the unique XP signature.
+  # Note that slurm.* and dora.* are automatically ignored.
+  exclude: [
+    'device', 'wandb.*', 'tensorboard.*', 'logging.*',
+    'dataset.num_workers', 'eval.num_workers', 'special.*',
+    'metrics.visqol.bin', 'metrics.fad.bin',
+    'execute_only', 'execute_best', 'generate.every',
+    'optim.eager_sync', 'profiler.*', 'deadlock.*',
+    'efficient_attention_backend', 'num_threads', 'mp_start_method',
+  ]
+  use_rendezvous: false
+  # for grids, always run from a clean repo, allowing reliable runs and storing
+  # the exact commit. Your repo must be absolutely pristine clean.
+  # Local `dora run` are not impacted for easier debugging.
+  git_save: true

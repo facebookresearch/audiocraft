@@ -313,7 +313,7 @@ class TestAudioDataset(TempDirMixin):
         def _get_histogram(dataset, repetitions=20_000):
             counts = {file_meta.path: 0. for file_meta in meta}
             for _ in range(repetitions):
-                file_meta = dataset.sample_file(rng)
+                file_meta = dataset.sample_file(0, rng)
                 counts[file_meta.path] += 1
             return {name: count / repetitions for name, count in counts.items()}
 

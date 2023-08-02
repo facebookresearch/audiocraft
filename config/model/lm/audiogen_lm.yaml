@@ -1,0 +1,36 @@
+# @package __global__
+
+defaults:
+  - lm/default
+  - override /conditioner: text2sound
+  - override /model/lm/model_scale: small # prefer this group to set model scale instead of transformer_lm keys directly
+
+lm_model: transformer_lm
+
+codebooks_pattern:
+  modeling: delay
+  delay:
+    delays: [0, 1, 2, 3]
+    flatten_first: 0
+    empty_initial: 0
+  unroll:
+    flattening: [0, 1, 2, 3]
+    delays: [0, 0, 0, 0]
+  music_lm:
+    group_by: 2
+  valle:
+    delays: [0, 0, 0]
+
+transformer_lm:
+  n_q: 4
+  card: 2048
+  memory_efficient: true
+  bias_proj: false
+  bias_ff: false
+  bias_attn: false
+  norm_first: true
+  layer_scale: null
+  weight_init: gaussian
+  depthwise_init: current
+  zero_bias_init: true
+  attention_as_float32: false

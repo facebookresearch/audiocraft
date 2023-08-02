@@ -1,0 +1,19 @@
+# @package __global__
+
+# No conditioning
+
+classifier_free_guidance:
+  training_dropout: 0
+  inference_coef: 1
+
+attribute_dropout:
+  text: {}
+  wav: {}
+
+fuser:
+  sum: []
+  prepend: []
+  cross: []
+  input_interpolate: []
+
+conditioners: null

@@ -38,30 +38,25 @@ class BaseQuantizer(nn.Module):
         raise NotImplementedError()
 
     def encode(self, x: torch.Tensor) -> torch.Tensor:
-        """Encode a given input tensor with the specified sample rate at the given bandwidth.
-        """
+        """Encode a given input tensor with the specified sample rate at the given bandwidth."""
         raise NotImplementedError()
 
     def decode(self, codes: torch.Tensor) -> torch.Tensor:
-        """Decode the given codes to the quantized representation.
-        """
+        """Decode the given codes to the quantized representation."""
         raise NotImplementedError()
 
     @property
     def total_codebooks(self):
-        """Total number of codebooks.
-        """
+        """Total number of codebooks."""
         raise NotImplementedError()
 
     @property
     def num_codebooks(self):
-        """Number of active codebooks.
-        """
+        """Number of active codebooks."""
         raise NotImplementedError()
 
     def set_num_codebooks(self, n: int):
-        """Set the number of active codebooks.
-        """
+        """Set the number of active codebooks."""
         raise NotImplementedError()
 
 
@@ -91,17 +86,14 @@ class DummyQuantizer(BaseQuantizer):
 
     @property
     def total_codebooks(self):
-        """Total number of codebooks.
-        """
+        """Total number of codebooks."""
         return 1
 
     @property
     def num_codebooks(self):
-        """Total number of codebooks.
-        """
+        """Total number of codebooks."""
         return self.total_codebooks
 
     def set_num_codebooks(self, n: int):
-        """Set the number of active codebooks.
-        """
+        """Set the number of active codebooks."""
         raise AttributeError("Cannot override the number of codebooks for the dummy quantizer")

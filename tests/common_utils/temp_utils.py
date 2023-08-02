@@ -33,7 +33,7 @@ class TempDirMixin:
                 cls.temp_dir_ = None
             except PermissionError:
                 # On Windows there is a know issue with `shutil.rmtree`,
-                # which fails intermittenly.
+                # which fails intermittently.
                 # https://github.com/python/cpython/issues/74168
                 # Following the above thread, we ignore it.
                 pass

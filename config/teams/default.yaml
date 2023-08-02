@@ -1,0 +1,12 @@
+default:
+  dora_dir: /tmp/audiocraft_${oc.env:USER}
+  partitions:
+    global: debug
+    team: debug
+  reference_dir: /tmp
+darwin:  # if we detect we are on a Mac, then most likely we are doing unit testing etc.
+  dora_dir: /tmp/audiocraft_${oc.env:USER}
+  partitions:
+    global: debug
+    team: debug
+  reference_dir: /tmp

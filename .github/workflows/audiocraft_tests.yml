@@ -12,6 +12,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: ./.github/actions/audiocraft_build
-      - run: |
+      - name: Run unit tests
+        run: |
           . env/bin/activate
           make tests
+      - name: Run integration tests
+        run: |
+          . env/bin/activate
+          make tests_integ

@@ -46,8 +46,7 @@ def get_norm_module(module: nn.Module, causal: bool = False, norm: str = 'none',
 
 def get_extra_padding_for_conv1d(x: torch.Tensor, kernel_size: int, stride: int,
                                  padding_total: int = 0) -> int:
-    """See `pad_for_conv1d`.
-    """
+    """See `pad_for_conv1d`."""
     length = x.shape[-1]
     n_frames = (length - kernel_size + padding_total) / stride + 1
     ideal_length = (math.ceil(n_frames) - 1) * stride + (kernel_size - padding_total)
@@ -90,8 +89,7 @@ def pad1d(x: torch.Tensor, paddings: tp.Tuple[int, int], mode: str = 'constant',
 
 
 def unpad1d(x: torch.Tensor, paddings: tp.Tuple[int, int]):
-    """Remove padding from x, handling properly zero padding. Only for 1d!
-    """
+    """Remove padding from x, handling properly zero padding. Only for 1d!"""
     padding_left, padding_right = paddings
     assert padding_left >= 0 and padding_right >= 0, (padding_left, padding_right)
     assert (padding_left + padding_right) <= x.shape[-1]
@@ -176,8 +174,8 @@ class StreamableConv1d(nn.Module):
         super().__init__()
         # warn user on unusual setup between dilation and stride
         if stride > 1 and dilation > 1:
-            warnings.warn('StreamableConv1d has been initialized with stride > 1 and dilation > 1'
-                          f' (kernel_size={kernel_size} stride={stride}, dilation={dilation}).')
+            warnings.warn("StreamableConv1d has been initialized with stride > 1 and dilation > 1"
+                          f" (kernel_size={kernel_size} stride={stride}, dilation={dilation}).")
         self.conv = NormConv1d(in_channels, out_channels, kernel_size, stride,
                                dilation=dilation, groups=groups, bias=bias, causal=causal,
                                norm=norm, norm_kwargs=norm_kwargs)

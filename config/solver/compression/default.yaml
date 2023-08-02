@@ -1,0 +1,160 @@
+# @package __global__
+
+defaults:
+  - ../default
+  - override /dset: audio/default
+  - _self_
+
+solver: compression
+sample_rate: ???
+channels: ???
+
+# loss balancing
+losses:
+  adv: 4.
+  feat: 4.
+  l1: 0.1
+  mel: 0.
+  msspec: 2.
+  sisnr: 0.
+balancer:
+  balance_grads: true
+  ema_decay: 0.999
+  per_batch_item: true
+  total_norm: 1.
+
+adversarial:
+  every: 1
+  adversaries: [msstftd]
+  adv_loss: hinge
+  feat_loss: l1
+
+# losses hyperparameters
+l1: {}
+l2: {}
+mrstft:
+  factor_sc: .5
+  factor_mag: .5
+  normalized: false
+mel:
+  sample_rate: ${sample_rate}
+  n_fft: 1024
+  hop_length: 256
+  win_length: 1024
+  n_mels: 64
+  f_min: 64
+  f_max: null
+  normalized: false
+  floor_level: 1e-5
+sisnr:
+  sample_rate: ${sample_rate}
+  segment: 5.
+msspec:
+  sample_rate: ${sample_rate}
+  range_start: 6
+  range_end: 11
+  n_mels: 64
+  f_min: 64
+  f_max: null
+  normalized: true
+  alphas: false
+  floor_level: 1e-5
+
+# metrics
+metrics:
+  visqol:
+    mode: audio
+    bin: null  # path to visqol install
+    model: tcdaudio14_aacvopus_coresv_svrnsim_n.68_g.01_c1.model # visqol v3
+
+# adversaries hyperparameters
+msstftd:
+  in_channels: 1
+  out_channels: 1
+  filters: 32
+  norm: weight_norm
+  n_ffts: [1024, 2048, 512, 256, 128]
+  hop_lengths: [256, 512, 128, 64, 32]
+  win_lengths: [1024, 2048, 512, 256, 128]
+  activation: LeakyReLU
+  activation_params: {negative_slope: 0.3}
+msd:
+  in_channels: 1
+  out_channels: 1
+  scale_norms: [spectral_norm, weight_norm, weight_norm]
+  kernel_sizes: [5, 3]
+  filters: 16
+  max_filters: 1024
+  downsample_scales: [4, 4, 4, 4]
+  inner_kernel_sizes: null
+  groups: [4, 4, 4, 4]
+  strides: null
+  paddings: null
+  activation: LeakyReLU
+  activation_params: {negative_slope: 0.3}
+mpd:
+  in_channels: 1
+  out_channels: 1
+  periods: [2, 3, 5, 7, 11]
+  n_layers: 5
+  kernel_size: 5
+  stride: 3
+  filters: 8
+  filter_scales: 4
+  max_filters: 1024
+  activation: LeakyReLU
+  activation_params: {negative_slope: 0.3}
+  norm: weight_norm
+
+# data hyperparameters
+dataset:
+  batch_size: 64
+  num_workers: 10
+  segment_duration: 1
+  train:
+    num_samples: 500000
+  valid:
+    num_samples: 10000
+  evaluate:
+    batch_size: 32
+    num_samples: 10000
+  generate:
+    batch_size: 32
+    num_samples: 50
+    segment_duration: 10
+
+# solver hyperparameters
+evaluate:
+  every: 25
+  num_workers: 5
+  metrics:
+    visqol: false
+    sisnr: true
+generate:
+  every: 25
+  num_workers: 5
+  audio:
+    sample_rate: ${sample_rate}
+
+# checkpointing schedule
+checkpoint:
+  save_last: true
+  save_every: 25
+  keep_last: 10
+  keep_every_states: null
+
+# optimization hyperparameters
+optim:
+  epochs: 200
+  updates_per_epoch: 2000
+  lr: 3e-4
+  max_norm: 0.
+  optimizer: adam
+  adam:
+    betas: [0.5, 0.9]
+    weight_decay: 0.
+  ema:
+    use: true         # whether to use EMA or not
+    updates: 1        # update at every step
+    device: ${device} # device for EMA, can be put on GPU if more frequent updates
+    decay: 0.99       # EMA decay value, if null, no EMA is used

@@ -1,0 +1,8 @@
+# @package _global_
+# just used for debugging or when we just want to populate the cache
+# and do not care about training.
+
+transformer_lm:
+  dim: 64
+  num_heads: 2
+  num_layers: 2

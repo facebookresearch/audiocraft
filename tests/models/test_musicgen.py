@@ -10,7 +10,7 @@ import torch
 from audiocraft.models import MusicGen
 
 
-class TestSEANetModel:
+class TestMusicGenModel:
     def get_musicgen(self):
         mg = MusicGen.get_pretrained(name='debug', device='cpu')
         mg.set_generation_params(duration=2.0, extend_stride=2.)

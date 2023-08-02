@@ -1,0 +1,10 @@
+# @package __global__
+
+datasource:
+  max_sample_rate: ???
+  max_channels: ???
+
+  train: ???
+  valid: ???
+  evaluate: ???
+  generate: null

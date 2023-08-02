@@ -1,0 +1,24 @@
+# @package __global__
+
+classifier_free_guidance:
+  training_dropout: 0.1
+  inference_coef: 3.0
+
+attribute_dropout: {}
+
+fuser:
+  cross_attention_pos_emb: false
+  cross_attention_pos_emb_scale: 1
+  sum: []
+  prepend: []
+  cross: [description]
+  input_interpolate: []
+
+conditioners:
+  description:
+    model: t5
+    t5:
+      name: t5-large
+      finetune: false
+      word_dropout: 0.
+      normalize_text: false

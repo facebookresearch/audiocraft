@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.0.0] - 2023-08-02
+
+Major revision, added training code for EnCodec, AudioGen, MusicGen, and MultiBandDiffusion.
+Added pretrained model for AudioGen and MultiBandDiffusion.
+
 ## [0.0.2] - 2023-08-01
 
 Improved demo, fixed top p (thanks @jnordberg).

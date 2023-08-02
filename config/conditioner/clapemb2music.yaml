@@ -1,0 +1,44 @@
+# @package __global__
+
+classifier_free_guidance:
+  training_dropout: 0.3
+  inference_coef: 3.0
+
+attribute_dropout:
+  text: {}
+  wav: {}
+
+fuser:
+  cross_attention_pos_emb: false
+  cross_attention_pos_emb_scale: 1
+  sum: []
+  prepend: []
+  cross: [description]
+  input_interpolate: []
+
+conditioners:
+  description:
+    model: clap
+    clap:
+      checkpoint: //reference/clap/music_audioset_epoch_15_esc_90.14.pt
+      model_arch: 'HTSAT-base'
+      enable_fusion: false
+      sample_rate: 44100
+      max_audio_length: 10
+      audio_stride: 1
+      dim: 512
+      attribute: description
+      normalize: true
+      quantize: true  # use RVQ quantization
+      n_q: 12
+      bins: 1024
+      kmeans_iters: 50
+      text_p: 0.  # probability of using text embed at train time
+      cache_path: null
+
+dataset:
+  joint_embed_attributes: [description]
+  train:
+    merge_text_p: 0.25
+    drop_desc_p: 0.5
+    drop_other_p: 0.5

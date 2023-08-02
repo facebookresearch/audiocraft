@@ -3,18 +3,31 @@
 #
 # This source code is licensed under the license found in the
 # LICENSE file in the root directory of this source tree.
+"""Compression models or wrapper around existing models.
+Also defines the main interface that a model must follow to be usable as an audio tokenizer.
+"""
 
 from abc import ABC, abstractmethod
+import logging
+import math
+from pathlib import Path
 import typing as tp
 
-from einops import rearrange
+import numpy as np
 import torch
 from torch import nn
+from transformers import EncodecModel as HFEncodecModel
 
 from .. import quantization as qt
 
 
+logger = logging.getLogger()
+
+
 class CompressionModel(ABC, nn.Module):
+    """Base API for all compression model that aim at being used as audio tokenizers
+    with a language model.
+    """
 
     @abstractmethod
     def forward(self, x: torch.Tensor) -> qt.QuantizedResult:
@@ -22,12 +35,17 @@ class CompressionModel(ABC, nn.Module):
 
     @abstractmethod
     def encode(self, x: torch.Tensor) -> tp.Tuple[torch.Tensor, tp.Optional[torch.Tensor]]:
-        """See `EncodecModel.encode`"""
+        """See `EncodecModel.encode`."""
         ...
 
     @abstractmethod
     def decode(self, codes: torch.Tensor, scale: tp.Optional[torch.Tensor] = None):
-        """See `EncodecModel.decode`"""
+        """See `EncodecModel.decode`."""
+        ...
+
+    @abstractmethod
+    def decode_latent(self, codes: torch.Tensor):
+        """Decode from the discrete codes to continuous latent space."""
         ...
 
     @property
@@ -37,7 +55,7 @@ class CompressionModel(ABC, nn.Module):
 
     @property
     @abstractmethod
-    def frame_rate(self) -> int:
+    def frame_rate(self) -> float:
         ...
 
     @property
@@ -62,9 +80,45 @@ class CompressionModel(ABC, nn.Module):
 
     @abstractmethod
     def set_num_codebooks(self, n: int):
-        """Set the active number of codebooks used by the quantizer.
-        """
+        """Set the active number of codebooks used by the quantizer."""
         ...
+
+    @staticmethod
+    def get_pretrained(
+            name: str, device: tp.Union[torch.device, str] = 'cpu'
+            ) -> 'CompressionModel':
+        """Instantiate a CompressionModel from a given pretrained model.
+
+        Args:
+            name (Path or str): name of the pretrained model. See after.
+            device (torch.device or str): Device on which the model is loaded.
+
+        Pretrained models:
+            - dac_44khz (https://github.com/descriptinc/descript-audio-codec)
+            - dac_24khz (same)
+            - facebook/encodec_24khz (https://huggingface.co/facebook/encodec_24khz)
+            - facebook/encodec_32khz (https://huggingface.co/facebook/encodec_32khz)
+            - your own model on HugginFace. Export instructions to come...
+        """
+
+        from . import builders, loaders
+        model: CompressionModel
+        if name in ['dac_44khz', 'dac_24khz']:
+            model_type = name.split('_')[1]
+            logger.info("Getting pretrained compression model from DAC %s", model_type)
+            model = DAC(model_type)
+        elif name in ['debug_compression_model']:
+            logger.info("Getting pretrained compression model for debug")
+            model = builders.get_debug_compression_model()
+        elif Path(name).exists():
+            # We assume here if the paths exist that it is in fact an AC checkpoint
+            # that was exported using `audiocraft.utils.export` functions.
+            model = loaders.load_compression_model(name, device=device)
+        else:
+            logger.info("Getting pretrained compression model from HF %s", name)
+            hf_model = HFEncodecModel.from_pretrained(name)
+            model = HFEncodecCompressionModel(hf_model).to(device)
+        return model.to(device).eval()
 
 
 class EncodecModel(CompressionModel):
@@ -80,9 +134,9 @@ class EncodecModel(CompressionModel):
         causal (bool): Whether to use a causal version of the model.
         renormalize (bool): Whether to renormalize the audio before running the model.
     """
-    # we need assignement to override the property in the abstract class,
+    # we need assignment to override the property in the abstract class,
     # I couldn't find a better way...
-    frame_rate: int = 0
+    frame_rate: float = 0
     sample_rate: int = 0
     channels: int = 0
 
@@ -111,25 +165,21 @@ class EncodecModel(CompressionModel):
 
     @property
     def total_codebooks(self):
-        """Total number of quantizer codebooks available.
-        """
+        """Total number of quantizer codebooks available."""
         return self.quantizer.total_codebooks
 
     @property
     def num_codebooks(self):
-        """Active number of codebooks used by the quantizer.
-        """
+        """Active number of codebooks used by the quantizer."""
         return self.quantizer.num_codebooks
 
     def set_num_codebooks(self, n: int):
-        """Set the active number of codebooks used by the quantizer.
-        """
+        """Set the active number of codebooks used by the quantizer."""
         self.quantizer.set_num_codebooks(n)
 
     @property
     def cardinality(self):
-        """Cardinality of each codebook.
-        """
+        """Cardinality of each codebook."""
         return self.quantizer.bins
 
     def preprocess(self, x: torch.Tensor) -> tp.Tuple[torch.Tensor, tp.Optional[torch.Tensor]]:
@@ -176,7 +226,7 @@ class EncodecModel(CompressionModel):
             x (torch.Tensor): Float tensor of shape [B, C, T]
 
         Returns:
-            codes, scale (tp.Tuple[torch.Tensor, torch.Tensor]): Tuple composed of:
+            codes, scale (tuple of torch.Tensor, torch.Tensor): Tuple composed of:
                 codes a float tensor of shape [B, K, T] with K the number of codebooks used and T the timestep.
                 scale a float tensor containing the scale for audio renormalizealization.
         """
@@ -192,111 +242,151 @@ class EncodecModel(CompressionModel):
 
         Args:
             codes (torch.Tensor): Int tensor of shape [B, K, T]
-            scale (tp.Optional[torch.Tensor]): Float tensor containing the scale value.
+            scale (torch.Tensor, optional): Float tensor containing the scale value.
 
         Returns:
             out (torch.Tensor): Float tensor of shape [B, C, T], the reconstructed audio.
         """
-        emb = self.quantizer.decode(codes)
+        emb = self.decode_latent(codes)
         out = self.decoder(emb)
         out = self.postprocess(out, scale)
         # out contains extra padding added by the encoder and decoder
         return out
 
+    def decode_latent(self, codes: torch.Tensor):
+        """Decode from the discrete codes to continuous latent space."""
+        return self.quantizer.decode(codes)
 
-class FlattenedCompressionModel(CompressionModel):
-    """Wraps a CompressionModel and flatten its codebooks, e.g.
-    instead of returning [B, K, T], return [B, S, T * (K // S)] with
-    S the number of codebooks per step, and `K // S` the number of 'virtual steps'
-    for each real time step.
 
-    Args:
-        model (CompressionModel): compression model to wrap.
-        codebooks_per_step (int): number of codebooks to keep per step,
-            this must divide the number of codebooks provided by the wrapped model.
-        extend_cardinality (bool): if True, and for instance if codebooks_per_step = 1,
-            if each codebook has a cardinality N, then the first codebook will
-            use the range [0, N - 1], and the second [N, 2 N - 1] etc.
-            On decoding, this can lead to potentially invalid sequences.
-            Any invalid entry will be silently remapped to the proper range
-            with a modulo.
-    """
-    def __init__(self, model: CompressionModel, codebooks_per_step: int = 1,
-                 extend_cardinality: bool = True):
+class DAC(CompressionModel):
+    def __init__(self, model_type: str = "44khz"):
         super().__init__()
-        self.model = model
-        self.codebooks_per_step = codebooks_per_step
-        self.extend_cardinality = extend_cardinality
+        try:
+            import dac.utils
+        except ImportError:
+            raise RuntimeError("Could not import dac, make sure it is installed, "
+                               "please run `pip install descript-audio-codec`")
+        self.model = dac.utils.load_model(model_type=model_type)
+        self.n_quantizers = self.total_codebooks
+
+    def forward(self, x: torch.Tensor) -> qt.QuantizedResult:
+        # We don't support training with this.
+        raise NotImplementedError("Forward and training with DAC not supported.")
+
+    def encode(self, x: torch.Tensor) -> tp.Tuple[torch.Tensor, tp.Optional[torch.Tensor]]:
+        codes = self.model.encode(x, self.n_quantizers)[1]
+        return codes, None
+
+    def decode(self, codes: torch.Tensor, scale: tp.Optional[torch.Tensor] = None):
+        assert scale is None
+        z_q = self.decode_latent(codes)
+        return self.model.decode(z_q)
+
+    def decode_latent(self, codes: torch.Tensor):
+        """Decode from the discrete codes to continuous latent space."""
+        return self.model.quantizer.from_codes(codes)[0]
 
     @property
-    def total_codebooks(self):
-        return self.model.total_codebooks
+    def channels(self) -> int:
+        return 1
 
     @property
-    def num_codebooks(self):
-        """Active number of codebooks used by the quantizer.
-
-        ..Warning:: this reports the number of codebooks after the flattening
-        of the codebooks!
-        """
-        assert self.model.num_codebooks % self.codebooks_per_step == 0
-        return self.codebooks_per_step
-
-    def set_num_codebooks(self, n: int):
-        """Set the active number of codebooks used by the quantizer.
-
-        ..Warning:: this sets the number of codebooks **before** the flattening
-        of the codebooks.
-        """
-        assert n % self.codebooks_per_step == 0
-        self.model.set_num_codebooks(n)
-
-    @property
-    def num_virtual_steps(self) -> int:
-        """Return the number of virtual steps, e.g. one real step
-        will be split into that many steps.
-        """
-        return self.model.num_codebooks // self.codebooks_per_step
-
-    @property
-    def frame_rate(self) -> int:
-        return self.model.frame_rate * self.num_virtual_steps
+    def frame_rate(self) -> float:
+        return self.model.sample_rate / self.model.hop_length
 
     @property
     def sample_rate(self) -> int:
         return self.model.sample_rate
 
     @property
-    def channels(self) -> int:
-        return self.model.channels
+    def cardinality(self) -> int:
+        return self.model.codebook_size
 
     @property
-    def cardinality(self):
-        """Cardinality of each codebook.
+    def num_codebooks(self) -> int:
+        return self.n_quantizers
+
+    @property
+    def total_codebooks(self) -> int:
+        return self.model.n_codebooks
+
+    def set_num_codebooks(self, n: int):
+        """Set the active number of codebooks used by the quantizer.
         """
-        if self.extend_cardinality:
-            return self.model.cardinality * self.num_virtual_steps
-        else:
-            return self.model.cardinality
+        assert n >= 1
+        assert n <= self.total_codebooks
+        self.n_quantizers = n
+
+
+class HFEncodecCompressionModel(CompressionModel):
+    """Wrapper around HuggingFace Encodec.
+    """
+    def __init__(self, model: HFEncodecModel):
+        super().__init__()
+        self.model = model
+        bws = self.model.config.target_bandwidths
+        num_codebooks = [
+            bw * 1000 / (self.frame_rate * math.log2(self.cardinality))
+            for bw in bws
+        ]
+        deltas = [nc - int(nc) for nc in num_codebooks]
+        # Checking we didn't do some bad maths and we indeed have integers!
+        assert all(deltas) <= 1e-3, deltas
+        self.possible_num_codebooks = [int(nc) for nc in num_codebooks]
+        self.set_num_codebooks(max(self.possible_num_codebooks))
 
     def forward(self, x: torch.Tensor) -> qt.QuantizedResult:
-        raise NotImplementedError("Not supported, use encode and decode.")
+        # We don't support training with this.
+        raise NotImplementedError("Forward and training with HF EncodecModel not supported.")
 
     def encode(self, x: torch.Tensor) -> tp.Tuple[torch.Tensor, tp.Optional[torch.Tensor]]:
-        indices, scales = self.model.encode(x)
-        B, K, T = indices.shape
-        indices = rearrange(indices, 'b (k v) t -> b k t v', k=self.codebooks_per_step)
-        if self.extend_cardinality:
-            for virtual_step in range(1, self.num_virtual_steps):
-                indices[..., virtual_step] += self.model.cardinality * virtual_step
-        indices = rearrange(indices, 'b k t v -> b k (t v)')
-        return (indices, scales)
+        bandwidth_index = self.possible_num_codebooks.index(self.num_codebooks)
+        bandwidth = self.model.config.target_bandwidths[bandwidth_index]
+        res = self.model.encode(x, None, bandwidth)
+        assert len(res[0]) == 1
+        assert len(res[1]) == 1
+        return res[0][0], res[1][0]
 
     def decode(self, codes: torch.Tensor, scale: tp.Optional[torch.Tensor] = None):
-        B, K, T = codes.shape
-        assert T % self.num_virtual_steps == 0
-        codes = rearrange(codes, 'b k (t v) -> b (k v) t', v=self.num_virtual_steps)
-        # We silently ignore potential errors from the LM when
-        # using extend_cardinality.
-        codes = codes % self.model.cardinality
-        return self.model.decode(codes, scale)
+        if scale is None:
+            scales = [None]  # type: ignore
+        else:
+            scales = scale  # type: ignore
+        res = self.model.decode(codes[None], scales)
+        return res[0]
+
+    def decode_latent(self, codes: torch.Tensor):
+        """Decode from the discrete codes to continuous latent space."""
+        return self.model.quantizer.decode(codes.transpose(0, 1))
+
+    @property
+    def channels(self) -> int:
+        return self.model.config.audio_channels
+
+    @property
+    def frame_rate(self) -> float:
+        hop_length = int(np.prod(self.model.config.upsampling_ratios))
+        return self.sample_rate / hop_length
+
+    @property
+    def sample_rate(self) -> int:
+        return self.model.config.sampling_rate
+
+    @property
+    def cardinality(self) -> int:
+        return self.model.config.codebook_size
+
+    @property
+    def num_codebooks(self) -> int:
+        return self._num_codebooks
+
+    @property
+    def total_codebooks(self) -> int:
+        return max(self.possible_num_codebooks)
+
+    def set_num_codebooks(self, n: int):
+        """Set the active number of codebooks used by the quantizer.
+        """
+        if n not in self.possible_num_codebooks:
+            raise ValueError(f"Allowed values for num codebooks: {self.possible_num_codebooks}")
+        self._num_codebooks = n

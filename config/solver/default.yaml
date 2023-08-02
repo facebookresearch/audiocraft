@@ -1,0 +1,108 @@
+# @package __global__
+
+# WARNING: This is a base configuration file shared across ALL solvers in AudioCraft
+# Please don't update this file directly. Instead use distinct configuration files
+# to override the below configuration.
+solver: ???
+
+fsdp:
+  use: false  # should we use FSDP.
+  param_dtype: float16  # equivalent to autocast_dtype for FSDP.
+  reduce_dtype: float32  # gradient averaging dtype, float32 will give max stability.
+  buffer_dtype: float32  # dtype used for buffers, we don't have much buffers, so let's leave it.
+  sharding_strategy: shard_grad_op  # can be shard_grad_op or full_shard.
+                                    # full_shard will use less memory but slower ??
+  per_block: true  # If True, uses nested FSDP.
+
+profiler:
+  enabled: false
+
+deadlock:
+  use: false
+  timeout: 600
+
+dataset:
+  batch_size: ???
+  num_workers: 10
+  segment_duration: null
+  num_samples: null
+  return_info: false
+  shuffle: false
+  sample_on_duration: true
+  sample_on_weight: true
+  min_segment_ratio: 0.5
+  train:
+    num_samples: null
+    shuffle: true
+    shuffle_seed: 0  # if you want to sample the data differently.
+    permutation_on_files: false
+  valid:
+    num_samples: null
+  evaluate:
+    num_samples: null
+  generate:
+    num_samples: null
+    return_info: true
+
+checkpoint:
+  save_last: true
+  save_every: null
+  keep_last: null
+  keep_every_states: null
+
+generate:
+  every: null
+  path: 'samples'
+  audio:
+    format: 'mp3'
+    strategy: 'clip'
+    sample_rate: null
+  lm:
+    use_sampling: false
+    temp: 1.0
+    top_k: 0
+    top_p: 0.0
+evaluate:
+  every: null
+  num_workers: 5
+  truncate_audio: null
+  fixed_generation_duration: null  # in secs
+  metrics:
+    base: true  # run default evaluation (e.g. like train/valid stage)
+
+optim:
+  epochs: ???
+  updates_per_epoch: null
+  lr: ???
+  optimizer: ???
+  adam:
+    betas: [0.9, 0.999]
+    weight_decay: 0.
+  ema:
+    use: false  # whether to use EMA or not
+    updates: ${optim.updates_per_epoch}  # frequency of updates of the EMA
+    device: cpu  # device for EMA, can be put on GPU if more frequent updates
+    decay: 0.99  # EMA decay value, if null, no EMA is used
+
+schedule:
+  lr_scheduler: null
+  step:
+    step_size: null
+    gamma: null
+  exponential:
+    lr_decay: null
+  cosine:
+    warmup: null
+    lr_min_ratio: 0.0
+    cycle_length: 1.0
+  polynomial_decay:
+    warmup: null
+    zero_lr_warmup_steps: 0
+    end_lr: 0.0
+    power: 1
+  inverse_sqrt:
+    warmup: null
+    warmup_init_lr: 0.0
+  linear_warmup:
+    warmup: null
+    warmup_init_lr: 0.0

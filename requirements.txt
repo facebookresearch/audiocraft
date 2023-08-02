@@ -13,8 +13,10 @@ torch>=2.0.0
 torchaudio>=2.0.0
 huggingface_hub
 tqdm
-transformers
+transformers>=4.31.0  # need Encodec there.
 xformers
 demucs
 librosa
 gradio
+torchmetrics
+encodec

@@ -3,7 +3,8 @@
 #
 # This source code is licensed under the license found in the
 # LICENSE file in the root directory of this source tree.
-
+"""Various utilities for audio convertion (pcm format, sample rate and channels),
+and volume normalization."""
 import sys
 import typing as tp
 
@@ -47,8 +48,7 @@ def convert_audio_channels(wav: torch.Tensor, channels: int = 2) -> torch.Tensor
 
 def convert_audio(wav: torch.Tensor, from_rate: float,
                   to_rate: float, to_channels: int) -> torch.Tensor:
-    """Convert audio to new sample rate and number of audio channels.
-    """
+    """Convert audio to new sample rate and number of audio channels."""
     wav = julius.resample_frac(wav, int(from_rate), int(to_rate))
     wav = convert_audio_channels(wav, to_channels)
     return wav
@@ -66,7 +66,7 @@ def normalize_loudness(wav: torch.Tensor, sample_rate: int, loudness_headroom_db
         loudness_compressor (bool): Uses tanh for soft clipping.
         energy_floor (float): anything below that RMS level will not be rescaled.
     Returns:
-        output (torch.Tensor): Loudness normalized output data.
+        torch.Tensor: Loudness normalized output data.
     """
     energy = wav.pow(2).mean().sqrt().item()
     if energy < energy_floor:
@@ -117,7 +117,7 @@ def normalize_audio(wav: torch.Tensor, normalize: bool = True,
         log_clipping (bool): If True, basic logging on stderr when clipping still
             occurs despite strategy (only for 'rms').
         sample_rate (int): Sample rate for the audio data (required for loudness).
-        stem_name (Optional[str]): Stem name for clipping logging.
+        stem_name (str, optional): Stem name for clipping logging.
     Returns:
         torch.Tensor: Normalized audio.
     """
@@ -150,17 +150,19 @@ def f32_pcm(wav: torch.Tensor) -> torch.Tensor:
     """
     if wav.dtype.is_floating_point:
         return wav
-    else:
-        assert wav.dtype == torch.int16
+    elif wav.dtype == torch.int16:
         return wav.float() / 2**15
+    elif wav.dtype == torch.int32:
+        return wav.float() / 2**31
+    raise ValueError(f"Unsupported wav dtype: {wav.dtype}")
 
 
 def i16_pcm(wav: torch.Tensor) -> torch.Tensor:
     """Convert audio to int 16 bits PCM format.
 
-    ..Warning:: There exist many formula for doing this convertion. None are perfect
-    due to the asymetry of the int16 range. One either have possible clipping, DC offset,
-    or inconsistancies with f32_pcm. If the given wav doesn't have enough headroom,
+    ..Warning:: There exist many formula for doing this conversion. None are perfect
+    due to the asymmetry of the int16 range. One either have possible clipping, DC offset,
+    or inconsistencies with f32_pcm. If the given wav doesn't have enough headroom,
     it is possible that `i16_pcm(f32_pcm)) != Identity`.
     """
     if wav.dtype.is_floating_point:

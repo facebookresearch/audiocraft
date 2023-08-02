@@ -75,7 +75,7 @@ def kmeans(samples, num_clusters: int, num_iters: int = 10):
     return means, bins
 
 
-def orthgonal_loss_fn(t):
+def orthogonal_loss_fn(t):
     # eq (2) from https://arxiv.org/abs/2112.00384
     n = t.shape[0]
     normed_codes = l2norm(t)
@@ -237,7 +237,7 @@ class VectorQuantization(nn.Module):
         orthogonal_reg_weight (float): Orthogonal regularization weights.
         orthogonal_reg_active_codes_only (bool): Apply orthogonal regularization only on active codes.
         orthogonal_reg_max_codes (optional int): Maximum number of codes to consider
-            for orthogonal regulariation.
+            for orthogonal regularization.
         threshold_ema_dead_code (int): Threshold for dead code expiration. Replace any codes
             that have an exponential moving average cluster size less than the specified threshold with
             randomly selected vector from the current batch.
@@ -340,7 +340,7 @@ class VectorQuantization(nn.Module):
                     rand_ids = torch.randperm(num_codes, device=device)[:self.orthogonal_reg_max_codes]
                     codebook = codebook[rand_ids]
 
-                orthogonal_reg_loss = orthgonal_loss_fn(codebook)
+                orthogonal_reg_loss = orthogonal_loss_fn(codebook)
                 loss = loss + orthogonal_reg_loss * self.orthogonal_reg_weight
 
         quantize = self.project_out(quantize)

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1>Results for survey #{{signature}}</h1>
+<p>Checkout <a href="{{url_for('survey', signature=signature)}}">the survey page</a> for details on the models.</p>
+<p>The following users voted:
+	{% for user in users %}
+		<span class="special">{{user}}</span>
+	{% endfor %}
+
+{% for model in models %}
+<h3>{{model['sig']}} ({{model['samples']}} samples)</h3>
+<p>Ratings: {{model['mean_rating']}} ± {{model['std_rating']}}</p>
+
+{% endfor %}
+
+{% endblock %}

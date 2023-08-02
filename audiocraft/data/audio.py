@@ -78,7 +78,7 @@ def _av_read(filepath: tp.Union[str, Path], seek_time: float = 0, duration: floa
         seek_time (float): Time at which to start reading in the file.
         duration (float): Duration to read from the file. If set to -1, the whole file is read.
     Returns:
-        Tuple[torch.Tensor, int]: Tuple containing audio data and sample rate
+        tuple of torch.Tensor, int: Tuple containing audio data and sample rate
     """
     _init_av()
     with av.open(str(filepath)) as af:
@@ -123,7 +123,7 @@ def audio_read(filepath: tp.Union[str, Path], seek_time: float = 0.,
         duration (float): Duration to read from the file. If set to -1, the whole file is read.
         pad (bool): Pad output audio if not reaching expected duration.
     Returns:
-        Tuple[torch.Tensor, int]: Tuple containing audio data and sample rate.
+        tuple of torch.Tensor, int: Tuple containing audio data and sample rate.
     """
     fp = Path(filepath)
     if fp.suffix in ['.flac', '.ogg']:  # TODO: check if we can safely use av_read for .ogg
@@ -175,7 +175,7 @@ def audio_write(stem_name: tp.Union[str, Path],
             than the `peak_clip` one to avoid further clipping.
         loudness_headroom_db (float): Target loudness for loudness normalization.
         loudness_compressor (bool): Uses tanh for soft clipping when strategy is 'loudness'.
-         when strategy is 'loudness'log_clipping (bool): If True, basic logging on stderr when clipping still
+         when strategy is 'loudness' log_clipping (bool): If True, basic logging on stderr when clipping still
             occurs despite strategy (only for 'rms').
         make_parent_dir (bool): Make parent directory if it doesn't exist.
     Returns:
@@ -188,8 +188,9 @@ def audio_write(stem_name: tp.Union[str, Path],
         raise ValueError("Input wav should be at most 2 dimension.")
     assert wav.isfinite().all()
     wav = normalize_audio(wav, normalize, strategy, peak_clip_headroom_db,
-                          rms_headroom_db, loudness_headroom_db, log_clipping=log_clipping,
-                          sample_rate=sample_rate, stem_name=str(stem_name))
+                          rms_headroom_db, loudness_headroom_db, loudness_compressor,
+                          log_clipping=log_clipping, sample_rate=sample_rate,
+                          stem_name=str(stem_name))
     kwargs: dict = {}
     if format == 'mp3':
         suffix = '.mp3'

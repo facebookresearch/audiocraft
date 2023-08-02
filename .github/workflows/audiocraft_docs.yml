@@ -23,9 +23,9 @@ jobs:
       - name: Make docs
         run: |
           . env/bin/activate
-          make docs
-          git add -f docs
-          git commit -m docs
+          make api_docs
+          git add -f api_docs
+          git commit -m api_docs
 
       - name: Push branch
         run: |

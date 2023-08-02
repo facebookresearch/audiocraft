@@ -1,0 +1,11 @@
+# @package __global__
+
+defaults:
+  - encodec/default
+
+encodec:
+  causal: true
+
+rvq:
+  n_q: 32
+  q_dropout: true

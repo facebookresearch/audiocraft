@@ -3,12 +3,16 @@
 #
 # This source code is licensed under the license found in the
 # LICENSE file in the root directory of this source tree.
-
+"""AudioDataset support. In order to handle a larger number of files
+without having to scan again the folders, we precompute some metadata
+(filename, sample rate, duration), and use that to efficiently sample audio segments.
+"""
 import argparse
 import copy
 from concurrent.futures import ThreadPoolExecutor, Future
 from dataclasses import dataclass, fields
 from contextlib import ExitStack
+from functools import lru_cache
 import gzip
 import json
 import logging
@@ -81,9 +85,12 @@ class AudioMeta(BaseInfo):
 class SegmentInfo(BaseInfo):
     meta: AudioMeta
     seek_time: float
-    n_frames: int  # actual number of frames without padding
+    # The following values are given once the audio is processed, e.g.
+    # at the target sample rate and target number of channels.
+    n_frames: int      # actual number of frames without padding
     total_frames: int  # total number of frames, padding included
-    sample_rate: int  # actual sample rate
+    sample_rate: int   # actual sample rate
+    channels: int      # number of audio channels.
 
 
 DEFAULT_EXTS = ['.wav', '.mp3', '.flac', '.ogg', '.m4a']
@@ -114,8 +121,8 @@ def _resolve_audio_meta(m: AudioMeta, fast: bool = True) -> AudioMeta:
 
     Args:
         m (AudioMeta): Audio meta to resolve.
-        fast (bool): If True, uses a really fast check for determining if a file is already absolute or not.
-            Only valid on Linux/Mac.
+        fast (bool): If True, uses a really fast check for determining if a file
+            is already absolute or not. Only valid on Linux/Mac.
     Returns:
         AudioMeta: Audio meta with resolved path.
     """
@@ -151,7 +158,7 @@ def find_audio_files(path: tp.Union[Path, str],
         progress (bool): Whether to log progress on audio files collection.
         workers (int): number of parallel workers, if 0, use only the current thread.
     Returns:
-        List[AudioMeta]: List of audio file path and its metadata.
+        list of AudioMeta: List of audio file path and its metadata.
     """
     audio_files = []
     futures: tp.List[Future] = []
@@ -203,7 +210,7 @@ def load_audio_meta(path: tp.Union[str, Path],
         resolve (bool): Whether to resolve the path from AudioMeta (default=True).
         fast (bool): activates some tricks to make things faster.
     Returns:
-        List[AudioMeta]: List of audio file path and its total duration.
+        list of AudioMeta: List of audio file path and its total duration.
     """
     open_fn = gzip.open if str(path).lower().endswith('.gz') else open
     with open_fn(path, 'rb') as fp:  # type: ignore
@@ -250,9 +257,14 @@ class AudioDataset:
     allows to return a tuple containing the torch Tensor and additional metadata on the segment and the
     original audio meta.
 
+    Note that you can call `start_epoch(epoch)` in order to get
+    a deterministic "randomization" for `shuffle=True`.
+    For a given epoch and dataset index, this will always return the same extract.
+    You can get back some diversity by setting the `shuffle_seed` param.
+
     Args:
-        meta (tp.List[AudioMeta]): List of audio files metadata.
-        segment_duration (float): Optional segment duration of audio to load.
+        meta (list of AudioMeta): List of audio files metadata.
+        segment_duration (float, optional): Optional segment duration of audio to load.
             If not specified, the dataset will load the full audio segment from the file.
         shuffle (bool): Set to `True` to have the data reshuffled at every epoch.
         sample_rate (int): Target sample rate of the loaded audio samples.
@@ -266,10 +278,19 @@ class AudioDataset:
             is shorter than the desired segment.
         max_read_retry (int): Maximum number of retries to sample an audio segment from the dataset.
         return_info (bool): Whether to return the wav only or return wav along with segment info and metadata.
-        min_audio_duration (tp.Optional[float], optional): Minimum audio file duration, in seconds, if provided
+        min_audio_duration (float, optional): Minimum audio file duration, in seconds, if provided
             audio shorter than this will be filtered out.
-        max_audio_duration (tp.Optional[float], optional): Maximal audio file duration in seconds, if provided
+        max_audio_duration (float, optional): Maximal audio file duration in seconds, if provided
             audio longer than this will be filtered out.
+        shuffle_seed (int): can be used to further randomize
+        load_wav (bool): if False, skip loading the wav but returns a tensor of 0
+            with the expected segment_duration (which must be provided if load_wav is False).
+        permutation_on_files (bool): only if `sample_on_weight` and `sample_on_duration`
+            are False. Will ensure a permutation on files when going through the dataset.
+            In that case the epoch number must be provided in order for the model
+            to continue the permutation across epochs. In that case, it is assumed
+            that `num_samples = total_batch_size * num_updates_per_epoch`, with
+            `total_batch_size` the overall batch size accounting for all gpus.
     """
     def __init__(self,
                  meta: tp.List[AudioMeta],
@@ -285,16 +306,14 @@ class AudioDataset:
                  max_read_retry: int = 10,
                  return_info: bool = False,
                  min_audio_duration: tp.Optional[float] = None,
-                 max_audio_duration: tp.Optional[float] = None
+                 max_audio_duration: tp.Optional[float] = None,
+                 shuffle_seed: int = 0,
+                 load_wav: bool = True,
+                 permutation_on_files: bool = False,
                  ):
-        assert len(meta) > 0, 'No audio meta provided to AudioDataset. Please check loading of audio meta.'
+        assert len(meta) > 0, "No audio meta provided to AudioDataset. Please check loading of audio meta."
         assert segment_duration is None or segment_duration > 0
         assert segment_duration is None or min_segment_ratio >= 0
-        logging.debug(f'sample_on_duration: {sample_on_duration}')
-        logging.debug(f'sample_on_weight: {sample_on_weight}')
-        logging.debug(f'pad: {pad}')
-        logging.debug(f'min_segment_ratio: {min_segment_ratio}')
-
         self.segment_duration = segment_duration
         self.min_segment_ratio = min_segment_ratio
         self.max_audio_duration = max_audio_duration
@@ -317,13 +336,25 @@ class AudioDataset:
         self.sampling_probabilities = self._get_sampling_probabilities()
         self.max_read_retry = max_read_retry
         self.return_info = return_info
+        self.shuffle_seed = shuffle_seed
+        self.current_epoch: tp.Optional[int] = None
+        self.load_wav = load_wav
+        if not load_wav:
+            assert segment_duration is not None
+        self.permutation_on_files = permutation_on_files
+        if permutation_on_files:
+            assert not self.sample_on_duration
+            assert not self.sample_on_weight
+            assert self.shuffle
+
+    def start_epoch(self, epoch: int):
+        self.current_epoch = epoch
 
     def __len__(self):
         return self.num_samples
 
     def _get_sampling_probabilities(self, normalized: bool = True):
-        """Return the sampling probabilities for each file inside `self.meta`.
-        """
+        """Return the sampling probabilities for each file inside `self.meta`."""
         scores: tp.List[float] = []
         for file_meta in self.meta:
             score = 1.
@@ -337,18 +368,47 @@ class AudioDataset:
             probabilities /= probabilities.sum()
         return probabilities
 
-    def sample_file(self, rng: torch.Generator) -> AudioMeta:
-        """Sample a given file from `self.meta`. Can be overriden in subclasses.
+    @staticmethod
+    @lru_cache(16)
+    def _get_file_permutation(num_files: int, permutation_index: int, base_seed: int):
+        # Used to keep the most recent files permutation in memory implicitely.
+        # will work unless someone is using a lot of Datasets in parallel.
+        rng = torch.Generator()
+        rng.manual_seed(base_seed + permutation_index)
+        return torch.randperm(num_files, generator=rng)
+
+    def sample_file(self, index: int, rng: torch.Generator) -> AudioMeta:
+        """Sample a given file from `self.meta`. Can be overridden in subclasses.
         This is only called if `segment_duration` is not None.
 
         You must use the provided random number generator `rng` for reproducibility.
+        You can further make use of the index accessed.
         """
+        if self.permutation_on_files:
+            assert self.current_epoch is not None
+            total_index = self.current_epoch * len(self) + index
+            permutation_index = total_index // len(self.meta)
+            relative_index = total_index % len(self.meta)
+            permutation = AudioDataset._get_file_permutation(
+                len(self.meta), permutation_index, self.shuffle_seed)
+            file_index = permutation[relative_index]
+            return self.meta[file_index]
+
         if not self.sample_on_weight and not self.sample_on_duration:
             file_index = int(torch.randint(len(self.sampling_probabilities), (1,), generator=rng).item())
         else:
             file_index = int(torch.multinomial(self.sampling_probabilities, 1, generator=rng).item())
 
         return self.meta[file_index]
+
+    def _audio_read(self, path: str, seek_time: float = 0, duration: float = -1):
+        # Override this method in subclass if needed.
+        if self.load_wav:
+            return audio_read(path, seek_time, duration, pad=False)
+        else:
+            assert self.segment_duration is not None
+            n_frames = int(self.sample_rate * self.segment_duration)
+            return torch.zeros(self.channels, n_frames), self.sample_rate
 
     def __getitem__(self, index: int) -> tp.Union[torch.Tensor, tp.Tuple[torch.Tensor, SegmentInfo]]:
         if self.segment_duration is None:
@@ -357,18 +417,22 @@ class AudioDataset:
             out = convert_audio(out, sr, self.sample_rate, self.channels)
             n_frames = out.shape[-1]
             segment_info = SegmentInfo(file_meta, seek_time=0., n_frames=n_frames, total_frames=n_frames,
-                                       sample_rate=self.sample_rate)
+                                       sample_rate=self.sample_rate, channels=out.shape[0])
         else:
             rng = torch.Generator()
             if self.shuffle:
-                # We use index, plus extra randomness
-                rng.manual_seed(index + self.num_samples * random.randint(0, 2**24))
+                # We use index, plus extra randomness, either totally random if we don't know the epoch.
+                # otherwise we make use of the epoch number and optional shuffle_seed.
+                if self.current_epoch is None:
+                    rng.manual_seed(index + self.num_samples * random.randint(0, 2**24))
+                else:
+                    rng.manual_seed(index + self.num_samples * (self.current_epoch + self.shuffle_seed))
             else:
                 # We only use index
                 rng.manual_seed(index)
 
             for retry in range(self.max_read_retry):
-                file_meta = self.sample_file(rng)
+                file_meta = self.sample_file(index, rng)
                 # We add some variance in the file position even if audio file is smaller than segment
                 # without ending up with empty segments
                 max_seek = max(0, file_meta.duration - self.segment_duration * self.min_segment_ratio)
@@ -381,7 +445,7 @@ class AudioDataset:
                     if self.pad:
                         out = F.pad(out, (0, target_frames - n_frames))
                     segment_info = SegmentInfo(file_meta, seek_time, n_frames=n_frames, total_frames=target_frames,
-                                               sample_rate=self.sample_rate)
+                                               sample_rate=self.sample_rate, channels=out.shape[0])
                 except Exception as exc:
                     logger.warning("Error opening file %s: %r", file_meta.path, exc)
                     if retry == self.max_read_retry - 1:
@@ -423,7 +487,7 @@ class AudioDataset:
             if to_pad:
                 # Each wav could be of a different duration as they are not segmented.
                 for i in range(len(samples)):
-                    # Determines the total legth of the signal with padding, so we update here as we pad.
+                    # Determines the total length of the signal with padding, so we update here as we pad.
                     segment_infos[i].total_frames = max_len
                     wavs[i] = _pad_wav(wavs[i])
 
@@ -436,9 +500,7 @@ class AudioDataset:
             return torch.stack(samples)
 
     def _filter_duration(self, meta: tp.List[AudioMeta]) -> tp.List[AudioMeta]:
-        """Filters out audio files with short durations.
-        Removes from meta files that have durations that will not allow to samples examples from them.
-        """
+        """Filters out audio files with audio durations that will not allow to sample examples from them."""
         orig_len = len(meta)
 
         # Filter data that is too short.

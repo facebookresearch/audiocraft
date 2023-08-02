@@ -122,7 +122,7 @@ class Pattern:
         Args:
             timesteps (int): Maximum number of timesteps steps to consider.
             keep_only_valid_steps (bool): Restrict the pattern layout to match only valid steps.
-            device (Union[torch.device, str]): Device for created tensors.
+            device (torch.device or str): Device for created tensors.
         Returns:
             indexes (torch.Tensor): Indexes corresponding to the sequence, of shape [K, S].
             mask (torch.Tensor): Mask corresponding to indexes that matches valid indexes, of shape [K, S].
@@ -189,9 +189,9 @@ class Pattern:
             keep_only_valid_steps (bool): Build a sequence from the pattern up to valid (= fully defined) steps.
                 Steps that are beyond valid steps will be replaced by the special_token in that case.
             is_model_output (bool): Whether to keep the sequence item corresponding to initial special token or not.
-            device (Union[torch.device, str]): Device for created tensors.
+            device (torch.device or str): Device for created tensors.
         Returns:
-            torch.Tensor: Indexes for reconstructing the output, of shape [K, T].
+            indexes (torch.Tensor): Indexes for reconstructing the output, of shape [K, T].
             mask (torch.Tensor): Mask corresponding to indexes that matches valid indexes of shape [K, T].
         """
         ref_layout = self.valid_layout if keep_only_valid_steps else self.layout
@@ -295,7 +295,7 @@ class CodebooksPatternProvider(ABC):
         """Builds pattern with specific interleaving between codebooks.
 
         Args:
-            timesteps (int): Total numer of timesteps.
+            timesteps (int): Total number of timesteps.
         """
         raise NotImplementedError()
 
@@ -318,7 +318,7 @@ class DelayedPatternProvider(CodebooksPatternProvider):
 
     Args:
         n_q (int): Number of codebooks.
-        delays (Optional[List[int]]): Delay for each of the codebooks.
+        delays (list of int, optional): Delay for each of the codebooks.
             If delays not defined, each codebook is delayed by 1 compared to the previous one.
         flatten_first (int): Flatten the first N timesteps.
         empty_initial (int): Prepend with N empty list of coordinates.
@@ -406,10 +406,10 @@ class UnrolledPatternProvider(CodebooksPatternProvider):
 
     Args:
         n_q (int): Number of codebooks.
-        flattening (Optional[List[int]]): Flattening schema over the codebooks. If not defined,
+        flattening (list of int, optional): Flattening schema over the codebooks. If not defined,
             the codebooks will be flattened to 1 codebook per step, meaning that the sequence will
             have n_q extra steps for each timestep.
-        delays (Optional[List[int]]): Delay for each of the codebooks. If not defined,
+        delays (list of int, optional): Delay for each of the codebooks. If not defined,
             no delay is added and therefore will default to [0] * ``n_q``.
             Note that two codebooks that will be flattened to the same inner step
             should have the same delay, otherwise the pattern is considered as invalid.
@@ -462,7 +462,7 @@ class UnrolledPatternProvider(CodebooksPatternProvider):
         """Builds pattern for delay across codebooks.
 
         Args:
-            timesteps (int): Total numer of timesteps.
+            timesteps (int): Total number of timesteps.
         """
         # the PatternLayout is built as a tuple of sequence position and list of coordinates
         # so that it can be reordered properly given the required delay between codebooks of given timesteps
@@ -487,12 +487,12 @@ class UnrolledPatternProvider(CodebooksPatternProvider):
 
 
 class VALLEPattern(CodebooksPatternProvider):
-    """Almost VALL-E style pattern. We futher allow some delays for the
-    codebooks other than the first one.
+    """Almost VALL-E style pattern.
+    We further allow some delays for the codebooks other than the first one.
 
     Args:
         n_q (int): Number of codebooks.
-        delays (Optional[List[int]]): Delay for each of the codebooks.
+        delays (list of int, optional): Delay for each of the codebooks.
             If delays not defined, each codebook is delayed by 1 compared to the previous one.
     """
     def __init__(self, n_q: int, delays: tp.Optional[tp.List[int]] = None):

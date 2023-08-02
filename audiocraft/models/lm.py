@@ -41,7 +41,7 @@ def get_init_fn(method: str, input_dim: int, init_depth: tp.Optional[int] = None
         method (str): Method name for init function. Valid options are:
             'gaussian', 'uniform'.
         input_dim (int): Input dimension of the initialized module.
-        init_depth (Optional[int]): Optional init depth value used to rescale
+        init_depth (int, optional): Optional init depth value used to rescale
             the standard deviation if defined.
     """
     # Compute std
@@ -70,7 +70,7 @@ def init_layer(m: nn.Module,
     Args:
         m (nn.Module): Module to initialize.
         method (str): Method name for the init function.
-        init_depth (Optional[int]): Optional init depth value used to rescale
+        init_depth (int, optional): Optional init depth value used to rescale
             the standard deviation if defined.
         zero_bias_init (bool): Whether to initialize the bias to 0 or not.
     """
@@ -130,10 +130,10 @@ class LMModel(StreamingModule):
         hidden_scale (int): Scale for hidden feed forward dimension of the transformer encoder.
         norm (str): Normalization method.
         norm_first (bool): Use pre-norm instead of post-norm.
-        emb_lr (Optional[float]): Embedding-specific learning rate.
+        emb_lr (float, optional): Embedding-specific learning rate.
         bias_proj (bool): Use bias for output projections.
-        weight_init (Optional[str]): Method for weight initialization.
-        depthwise_init (Optional[str]): Method for depthwise weight initialization.
+        weight_init (str, optional): Method for weight initialization.
+        depthwise_init (str, optional): Method for depthwise weight initialization.
         zero_bias_init (bool): If true and bias in Linears, initialize bias to zeros.
         cfg_dropout (float): Classifier-free guidance dropout.
         cfg_coef (float): Classifier-free guidance coefficient.
@@ -179,11 +179,11 @@ class LMModel(StreamingModule):
         """Initialization of the transformer module weights.
 
         Args:
-            weight_init (Optional[str]): Weight initialization strategy. See ``get_init_fn`` for valid options.
-            depthwise_init (Optional[str]): Depwthwise initialization strategy. The following options are valid:
+            weight_init (str, optional): Weight initialization strategy. See ``get_init_fn`` for valid options.
+            depthwise_init (str, optional): Depthwise initialization strategy. The following options are valid:
                 'current' where the depth corresponds to the current layer index or 'global' where the total number
                 of layer is used as depth. If not set, no depthwise initialization strategy is used.
-            zero_bias_init (bool): Whether to initalize bias to zero or not.
+            zero_bias_init (bool): Whether to initialize bias to zero or not.
         """
         assert depthwise_init is None or depthwise_init in ['current', 'global']
         assert depthwise_init is None or weight_init is not None, \
@@ -225,17 +225,17 @@ class LMModel(StreamingModule):
         S the sequence steps, return the logits with shape [B, card, K, S].
 
         Args:
-            indices (torch.Tensor): indices of the codes to model.
-            conditions (list[ConditioningAttributes]): conditionings to use when modeling
+            indices (torch.Tensor): Indices of the codes to model.
+            conditions (list of ConditioningAttributes): Conditions to use when modeling
                 the given codes. Note that when evaluating multiple time with the same conditioning
                 you should pre-compute those and pass them as `condition_tensors`.
-            condition_tensors (dict[str, ConditionType] or None): pre-computed conditioning
+            condition_tensors (dict[str, ConditionType], optional): Pre-computed conditioning
                 tensors, see `conditions`.
         Returns:
             torch.Tensor: Logits.
         """
         B, K, S = sequence.shape
-        assert K == self.num_codebooks, 'Sequence shape must match the specified number of codebooks'
+        assert K == self.num_codebooks, "Sequence shape must match the specified number of codebooks"
         input_ = sum([self.emb[k](sequence[:, k]) for k in range(K)])
         if condition_tensors is None:
             assert not self._is_streaming, "Conditions tensors should be precomputed when streaming."
@@ -271,10 +271,10 @@ class LMModel(StreamingModule):
         Args:
             codes (torch.Tensor): Input codes of shape [B, K, T] with B the batch size,
                 K the number of codebooks and T the number of timesteps.
-            conditions (list[ConditioningAttributes]): conditionings to use when modeling
+            conditions (list of ConditioningAttributes): conditionings to use when modeling
                 the given codes. Note that when evaluating multiple time with the same conditioning
                 you should pre-compute those and pass them as `condition_tensors`.
-            condition_tensors (dict[str, ConditionType] or None): pre-computed conditioning
+            condition_tensors (dict[str, ConditionType], optional): pre-computed conditioning
                 tensors, see `conditions`.
         Returns:
             LMOutput: Language model outputs
@@ -322,13 +322,13 @@ class LMModel(StreamingModule):
             sequence (torch.Tensor): Current sequence of shape [B, K, S]
                 with K corresponding to the number of codebooks and S the number of sequence steps.
                 S = 1 in streaming mode, except for the first step that contains a bigger prompt.
-            condition_tensors (Dict[str, ConditionType): Set of conditions. If CFG is used,
+            condition_tensors (dict[str, ConditionType): Set of conditions. If CFG is used,
                 should be twice the batch size, being the concatenation of the conditions + null conditions.
             use_sampling (bool): Whether to use a sampling strategy or not.
             temp (float): Sampling temperature.
             top_k (int): K for "top-k" sampling.
             top_p (float): P for "top-p" sampling.
-            cfg_coef (float): classifier free guidance coefficient
+            cfg_coef (float, optional): classifier free guidance coefficient
         Returns:
             next_token (torch.Tensor): Next token tensor of shape [B, K, 1].
         """
@@ -336,7 +336,7 @@ class LMModel(StreamingModule):
         cfg_coef = self.cfg_coef if cfg_coef is None else cfg_coef
         model = self if self._fsdp is None else self._fsdp
         if self.two_step_cfg and cfg_conditions != {}:
-            assert isinstance(cfg_conditions, tuple)
+            assert isinstance(cfg_conditions, tuple), type(cfg_conditions)
             condition_tensors, null_condition_tensors = cfg_conditions
             cond_logits = model(sequence, conditions=[], condition_tensors=condition_tensors)
             state = self.get_streaming_state()
@@ -388,7 +388,7 @@ class LMModel(StreamingModule):
                  top_k: int = 250,
                  top_p: float = 0.0,
                  cfg_coef: tp.Optional[float] = None,
-                 two_step_cfg: bool = False,
+                 two_step_cfg: tp.Optional[bool] = None,
                  remove_prompts: bool = False,
                  check: bool = False,
                  callback: tp.Optional[tp.Callable[[int, int], None]] = None) -> torch.Tensor:
@@ -396,15 +396,19 @@ class LMModel(StreamingModule):
         be perform in a greedy fashion or using sampling with top K and top P strategies.
 
         Args:
-            prompt (Optional[torch.Tensor]): Prompt tokens of shape [B, K, T].
-            conditions_tensors (Dict[str, torch.Tensor]): Set of conditions or None.
-            num_samples (int or None): Number of samples to generate when no prompt and no conditions are given.
+            prompt (torch.Tensor, optional): Prompt tokens of shape [B, K, T].
+            conditions_tensors (list of ConditioningAttributes, optional): List of conditions.
+            num_samples (int, optional): Number of samples to generate when no prompt and no conditions are given.
             max_gen_len (int): Maximum generation length.
             use_sampling (bool): Whether to use a sampling strategy or not.
             temp (float): Sampling temperature.
             top_k (int): K for "top-k" sampling.
             top_p (float): P for "top-p" sampling.
+            cfg_coeff (float, optional): Classifier-free guidance coefficient.
+            two_step_cfg (bool, optional): Whether to perform classifier-free guidance with two steps generation.
             remove_prompts (bool): Whether to remove prompts from generation or not.
+            check (bool): Whether to apply further checks on generated sequence.
+            callback (Callback, optional): Callback function to report generation progress.
         Returns:
             torch.Tensor: Generated tokens.
         """
@@ -412,7 +416,7 @@ class LMModel(StreamingModule):
         first_param = next(iter(self.parameters()))
         device = first_param.device
 
-        # Checking all input shapes are consistents.
+        # Checking all input shapes are consistent.
         possible_num_samples = []
         if num_samples is not None:
             possible_num_samples.append(num_samples)
@@ -422,7 +426,7 @@ class LMModel(StreamingModule):
             possible_num_samples.append(len(conditions))
         else:
             possible_num_samples.append(1)
-        assert [x == possible_num_samples[0] for x in possible_num_samples], "Inconsitent inputs shapes"
+        assert [x == possible_num_samples[0] for x in possible_num_samples], "Inconsistent inputs shapes"
         num_samples = possible_num_samples[0]
 
         # below we create set of conditions: one conditional and one unconditional
@@ -432,7 +436,7 @@ class LMModel(StreamingModule):
         # 1. it is about x2 faster than doing 2 forward passes
         # 2. avoid the streaming API treating the 2 passes as part of different time steps
         # We also support doing two different passes, in particular to ensure that
-        # the padding structure is exactly the same between train anf test.
+        # the padding structure is exactly the same between train and test.
         # With a batch size of 1, this can be slower though.
         cfg_conditions: CFGConditions
         two_step_cfg = self.two_step_cfg if two_step_cfg is None else two_step_cfg
