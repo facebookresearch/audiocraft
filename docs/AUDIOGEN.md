@@ -42,9 +42,8 @@ from audiocraft.models import AudioGen
 from audiocraft.data.audio import audio_write
 
 model = AudioGen.get_pretrained('facebook/audiogen-medium')
-model.set_generation_params(duration=5)  # generate 8 seconds.
-wav = model.generate_unconditional(4)    # generates 4 unconditional audio samples
-descriptions = ['dog barking', 'sirene of an emergency vehicule', 'footsteps in a corridor']
+model.set_generation_params(duration=5)  # generate 5 seconds.
+descriptions = ['dog barking', 'sirene of an emergency vehicle', 'footsteps in a corridor']
 wav = model.generate(descriptions)  # generates 3 samples.
 
 for idx, one_wav in enumerate(wav):
