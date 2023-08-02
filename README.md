@@ -32,8 +32,8 @@ conda install 'ffmpeg<5' -c  conda-forge
 At the moment, AudioCraft contains the training code and inference code for:
 * [MusicGen](./docs/MUSICGEN.md): A state-of-the-art controllable text-to-music model.
 * [AudioGen](./docs/AUDIOGEN.md): A state-of-the-art text-to-sound model.
-*  [EnCodec](./docs/ENCODEC.md), a state-of-the-art high fidelity neural audio codec.
-* [Multi Band Diffusion](./docs/MBD.md): EnCodec compatible decoder using diffusion.
+* [EnCodec](./docs/ENCODEC.md): A state-of-the-art high fidelity neural audio codec.
+* [Multi Band Diffusion](./docs/MBD.md): An EnCodec compatible decoder using diffusion.
 
 ## Training code
 
