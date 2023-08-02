@@ -2,7 +2,7 @@ aws:
   dora_dir: /fsx-audio-craft-llm/${oc.env:USER}/experiments/audiocraft/outputs
   partitions:
     global: learnlab
-    team: codegen
+    team: learnlab
   reference_dir: /fsx-audio-craft-llm/shared/audiocraft/reference
   dataset_mappers:
     "^/checkpoint/[a-z]+": "/fsx-audio-craft-llm"
@@ -11,7 +11,7 @@ fair:
   partitions:
     global: learnlab
     team: learnlab
-  reference_dir: /large_experiments/audiocraft/audiocraft_magma/reference
+  reference_dir: /large_experiments/audiocraft/reference
   dataset_mappers:
     "^/datasets01/datasets01": "/datasets01"
 darwin:
