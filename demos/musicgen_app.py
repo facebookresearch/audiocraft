@@ -16,6 +16,9 @@ from tempfile import NamedTemporaryFile
 import time
 import typing as tp
 import warnings
+import shutil
+import platform
+import sys
 
 import torch
 import gradio as gr
@@ -24,6 +27,32 @@ from audiocraft.data.audio_utils import convert_audio
 from audiocraft.data.audio import audio_write
 from audiocraft.models import MusicGen, MultiBandDiffusion
 
+
+folder_symbol = '\U0001f4c2'  # 📂
+
+
+# Get the current file's directory name
+current_file_dir = os.path.dirname(__file__)
+
+# Get the absolute path of one level up (parent directory)
+root_dir = os.path.abspath(os.path.join(current_file_dir, os.pardir))
+
+models_dir = os.path.join(root_dir, 'models')
+output_dir = os.path.join(root_dir, 'output')
+
+# Set cache dir
+os.environ['AUDIOCRAFT_CACHE_DIR'] = models_dir
+torch.hub.set_dir(models_dir)
+
+# Check if the directory exists
+if not os.path.exists(models_dir):
+    # Create the directory if it doesn't exist
+    os.makedirs(models_dir)
+
+# Check if the directory exists
+if not os.path.exists(output_dir):
+    # Create the directory if it doesn't exist
+    os.makedirs(output_dir)
 
 MODEL = None  # Last used model
 IS_BATCHED = "facebook/MusicGen" in os.environ.get('SPACE_ID', '')
@@ -146,6 +175,13 @@ def _do_predictions(texts, melodies, duration, progress=False, **gen_kwargs):
         file_cleaner.add(video)
     print("batch finished", len(texts), time.time() - be)
     print("Tempfiles currently stored: ", len(file_cleaner.files))
+
+    # Save wav to output dir
+    for i, wav in enumerate(out_wavs):
+        source_file = wav
+        destination_file = os.path.join(output_dir, f'{int(time.time())}-{str(i+1).zfill(2)}.wav')
+        shutil.copy(source_file, destination_file)
+
     return out_videos, out_wavs
 
 
@@ -204,6 +240,30 @@ def toggle_diffusion(choice):
         return [gr.update(visible=False)] * 2
 
 
+def open_folder(f):
+    if not os.path.exists(f):
+        print(f'Folder "{f}" does not exist. After you create an image, the folder will be created.')
+        return
+    elif not os.path.isdir(f):
+        print(f"""
+WARNING
+An open_folder request was made with an argument that is not a folder.
+This could be an error or a malicious attempt to run code on your computer.
+Requested path was: {f}
+""", file=sys.stderr)
+        return
+
+    path = os.path.normpath(f)
+    if platform.system() == "Windows":
+        os.startfile(path)
+    elif platform.system() == "Darwin":
+        sp.Popen(["open", path])
+    elif "microsoft-standard-WSL2" in platform.uname().release:
+        sp.Popen(["wsl-open", path])
+    else:
+        sp.Popen(["xdg-open", path])
+
+
 def ui_full(launch_kwargs):
     with gr.Blocks() as interface:
         gr.Markdown(
@@ -246,6 +306,15 @@ def ui_full(launch_kwargs):
                 audio_output = gr.Audio(label="Generated Music (wav)", type='filepath')
                 diffusion_output = gr.Video(label="MultiBand Diffusion Decoder")
                 audio_diffusion = gr.Audio(label="MultiBand Diffusion Decoder (wav)", type='filepath')
+                    
+                with gr.Row():
+                    open_folder_button = gr.Button(folder_symbol)
+
+                open_folder_button.click(
+                    fn=lambda: open_folder(output_dir),
+                    inputs=[],
+                    outputs=[],
+                )
         submit.click(toggle_diffusion, decoder, [diffusion_output, audio_diffusion], queue=False,
                      show_progress=False).then(predict_full, inputs=[model, decoder, text, melody, duration, topk, topp,
                                                                      temperature, cfg_coef],
