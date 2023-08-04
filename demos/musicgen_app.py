@@ -320,7 +320,7 @@ def ui_full(launch_kwargs):
             1. Use the default GAN based compression model
             2. Use MultiBand Diffusion from (paper linknano )
 
-            When using `facebook/musicgen-melody`, ou can optionally provide a reference audio from
+            When using `facebook/musicgen-melody`, you can optionally provide a reference audio from
             which a broad melody will be extracted. The model will then try to follow both
             the description and melody provided.
 
