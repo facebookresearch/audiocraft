@@ -156,6 +156,7 @@ def predict_full(model, decoder, text, duration, topk, topp, temperature, cfg_co
     if USE_DIFFUSION:
         return videos[0], wavs[0], videos[1], wavs[1]
     return videos[0], wavs[0], None, None
+    return videos[0], wavs[0]
 
 
 
@@ -186,8 +187,7 @@ def ui_full(launch_kwargs):
                 with gr.Row():
                     model = gr.Radio(["facebook/audiogen-medium"], label="Model", value="facebook/audiogen-medium", interactive=True)
                 with gr.Row():
-                    decoder = gr.Radio(["Default", "MultiBand_Diffusion"],
-                                       label="Decoder", value="Default", interactive=True)
+                    decoder = gr.Radio(["Default"], label="Decoder", value="Default", interactive=False)
                 with gr.Row():
                     duration = gr.Slider(minimum=1, maximum=120, value=10, label="Duration", interactive=True)
                 with gr.Row():
@@ -198,12 +198,7 @@ def ui_full(launch_kwargs):
             with gr.Column():
                 output = gr.Video(label="Generated Music")
                 audio_output = gr.Audio(label="Generated Music (wav)", type='filepath')
-                diffusion_output = gr.Video(label="MultiBand Diffusion Decoder")
-                audio_diffusion = gr.Audio(label="MultiBand Diffusion Decoder (wav)", type='filepath')
-        submit.click(toggle_diffusion, decoder, [diffusion_output, audio_diffusion], queue=False,
-                     show_progress=False).then(predict_full, inputs=[model, decoder, text, duration, topk, topp,
-                                                                     temperature, cfg_coef],
-                                               outputs=[output, audio_output, diffusion_output, audio_diffusion])
+        submit.click(predict_full, inputs=[model, decoder, text, duration, topk, topp, temperature, cfg_coef], outputs=[output, audio_output])
 
         interface.queue().launch(**launch_kwargs)
 
