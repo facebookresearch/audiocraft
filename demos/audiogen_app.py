@@ -173,7 +173,7 @@ def ui_full(launch_kwargs):
             """
             # AudioGen
             This is your private demo for [AudioGen](https://github.com/facebookresearch/audiocraft/blob/main/docs/AUDIOGEN.md),
-            a simple and controllable model for music generation
+            a simple and controllable model for audio generation
             """
         )
         with gr.Row():
@@ -196,8 +196,8 @@ def ui_full(launch_kwargs):
                     temperature = gr.Number(label="Temperature", value=1.0, interactive=True)
                     cfg_coef = gr.Number(label="Classifier Free Guidance", value=3.0, interactive=True)
             with gr.Column():
-                output = gr.Video(label="Generated Music")
-                audio_output = gr.Audio(label="Generated Music (wav)", type='filepath')
+                output = gr.Video(label="Generated Audio")
+                audio_output = gr.Audio(label="Generated Audio (wav)", type='filepath')
         submit.click(predict_full, inputs=[model, decoder, text, duration, topk, topp, temperature, cfg_coef], outputs=[output, audio_output])
 
         interface.queue().launch(**launch_kwargs)
