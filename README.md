@@ -6,11 +6,28 @@
 AudioCraft is a PyTorch library for deep learning research on audio generation. AudioCraft contains inference and training code
 for two state-of-the-art AI generative models producing high-quality audio: AudioGen and MusicGen.
 
+## Differences between original repository
+* Download all models to models directory
+* Automatically save all output files to output directory
+* Add run.bat for Windows users which will set the correct ffmpeg path
 
 ## Installation
 AudioCraft requires Python 3.9, PyTorch 2.0.0. To install AudioCraft, you can run the following:
 
 ```shell
+# Clone the repository
+git clone https://github.com/lifeisboringsoprogramming/audiocraft.git
+
+# Create virtual environment
+cd audiocraft
+python -m venv venv
+
+# Activate virtual environment
+# On windows
+.\venv\Scripts\activate.bat
+# On Linux
+source .\venv\bin\activate
+
 # Best to make sure you have torch installed first, in particular before installing xformers.
 # Don't run this if you already have PyTorch installed.
 pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
@@ -18,6 +35,14 @@ pip3 install torch torchvision torchaudio --index-url https://download.pytorch.o
 pip install -e .  # or if you cloned the repo locally (mandatory if you want to train).
 ```
 
+### Windows
+Download pre-built `ffmpeg`
+```
+https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-win64-gpl-shared.zip
+```
+Put it under `.\venv` folder inside `audiocraft`
+
+### Linux
 We also recommend having `ffmpeg` installed, either through your system or Anaconda:
 ```bash
 sudo apt-get install ffmpeg
