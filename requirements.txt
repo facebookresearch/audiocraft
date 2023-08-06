@@ -1,4 +1,5 @@
 # please make sure you have already a pytorch install that is cuda enabled!
+accelerate==0.20.3
 av
 einops
 flashy>=0.0.1
@@ -13,6 +14,7 @@ torch>=2.0.0
 torchaudio>=2.0.0
 huggingface_hub
 tqdm
+pytest
 transformers>=4.31.0  # need Encodec there.
 xformers
 demucs
