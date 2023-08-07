@@ -1,4 +1,8 @@
 @echo off
 set PATH=.\venv\bin;%PATH%
 
-python demos\musicgen_app.py
+:activate_venv
+set PYTHON="venv\Scripts\Python.exe"
+echo venv %PYTHON%
+
+%PYTHON% demos\musicgen_app.py
