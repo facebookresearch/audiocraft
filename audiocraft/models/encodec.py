@@ -268,6 +268,7 @@ class DAC(CompressionModel):
                                "please run `pip install descript-audio-codec`")
         self.model = dac.utils.load_model(model_type=model_type)
         self.n_quantizers = self.total_codebooks
+        self.model.eval()
 
     def forward(self, x: torch.Tensor) -> qt.QuantizedResult:
         # We don't support training with this.
