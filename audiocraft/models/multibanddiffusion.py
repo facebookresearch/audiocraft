@@ -104,7 +104,7 @@ class MultiBandDiffusion:
         codec_model.set_num_codebooks(n_q)
         codec_model = codec_model.to(device)
         path = 'facebook/multiband-diffusion'
-        filename = 'mbd_comp_{n_q}.pt'
+        filename = f'mbd_comp_{n_q}.pt'
         models, processors, cfgs = load_diffusion_models(path, filename=filename, device=device)
         DPs = []
         for i in range(len(models)):
