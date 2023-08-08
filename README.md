@@ -1,3 +1,5 @@
+<img src="images/ui.png">
+
 # AudioCraft
 ![docs badge](https://github.com/facebookresearch/audiocraft/workflows/audiocraft_docs/badge.svg)
 ![linter badge](https://github.com/facebookresearch/audiocraft/workflows/audiocraft_linter/badge.svg)
@@ -10,7 +12,14 @@ for two state-of-the-art AI generative models producing high-quality audio: Audi
 * Download all models to models directory
 * Automatically save all output files to output directory
 * Add button to open output folder in the explorer
+* Add batch count option to control how many predictions to make
+* Move the submit and interrupt button to the right
 * Add run.bat for Windows users which will set the correct ffmpeg path
+
+## Tutorial
+There is a video to show how to use it
+
+[![Meta Audiocraft text 2 music with Stable Diffusion Prompts](https://img.youtube.com/vi/hijGoM9COXY/sddefault.jpg)](https://www.youtube.com/watch?v=hijGoM9COXY)
 
 ## Installation
 AudioCraft requires Python 3.9, PyTorch 2.0.0. To install AudioCraft, you can run the following:
