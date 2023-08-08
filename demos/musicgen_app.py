@@ -193,7 +193,7 @@ def predict_batched(texts, melodies):
     return res
 
 
-def predict_full(model, decoder, text, melody, duration, topk, topp, temperature, cfg_coef, progress=gr.Progress()):
+def predict_full(model, decoder, text, melody, duration, topk, topp, temperature, cfg_coef, batch_count=1, progress=gr.Progress()):
     global INTERRUPTING
     global USE_DIFFUSION
     INTERRUPTING = False
@@ -218,9 +218,10 @@ def predict_full(model, decoder, text, melody, duration, topk, topp, temperature
             raise gr.Error("Interrupted.")
     MODEL.set_custom_progress_callback(_progress)
 
-    videos, wavs = _do_predictions(
-        [text], [melody], duration, progress=True,
-        top_k=topk, top_p=topp, temperature=temperature, cfg_coef=cfg_coef)
+    for _  in range(batch_count):
+        videos, wavs = _do_predictions(
+            [text], [melody], duration, progress=True,
+            top_k=topk, top_p=topp, temperature=temperature, cfg_coef=cfg_coef)
     if USE_DIFFUSION:
         return videos[0], wavs[0], videos[1], wavs[1]
     return videos[0], wavs[0], None, None
@@ -272,8 +273,14 @@ def ui_full(launch_kwargs):
             This is your private demo for [MusicGen](https://github.com/facebookresearch/audiocraft),
             a simple and controllable model for music generation
             presented at: ["Simple and Controllable Music Generation"](https://huggingface.co/papers/2306.05284)
+
+            This is a forked version.
+            See [github.com/lifeisboringsoprogramming/audiocraft](https://github.com/lifeisboringsoprogramming/audiocraft)
+            for more details
             """
         )
+        gr.HTML(value="<p style='font-size: 1.0em; margin-bottom: 0.7em'>Watch 📺 <b><a style=\"color: red\" href=\"https://youtu.be/hijGoM9COXY\">video</a></b> for detailed explanation 🔍 ☕️ Please consider supporting me in Patreon <b><a style=\"color: red\" href=\"https://www.patreon.com/lifeisboringsoprogramming\">here</a></b> 🍻</p>")
+
         with gr.Row():
             with gr.Column():
                 with gr.Row():
@@ -284,16 +291,14 @@ def ui_full(launch_kwargs):
                         melody = gr.Audio(source="upload", type="numpy", label="File",
                                           interactive=True, elem_id="melody-input")
                 with gr.Row():
-                    submit = gr.Button("Submit")
-                    # Adapted from https://github.com/rkfg/audiocraft/blob/long/app.py, MIT license.
-                    _ = gr.Button("Interrupt").click(fn=interrupt, queue=False)
-                with gr.Row():
                     model = gr.Radio(["facebook/musicgen-melody", "facebook/musicgen-medium", "facebook/musicgen-small",
                                       "facebook/musicgen-large"],
                                      label="Model", value="facebook/musicgen-melody", interactive=True)
                 with gr.Row():
                     decoder = gr.Radio(["Default", "MultiBand_Diffusion"],
                                        label="Decoder", value="Default", interactive=True)
+                with gr.Row():
+                    batch_count = gr.Slider(minimum=1, maximum=100, value=1, label="Batch count (will be saved in the output folder)", step=1, interactive=True)
                 with gr.Row():
                     duration = gr.Slider(minimum=1, maximum=120, value=10, label="Duration", interactive=True)
                 with gr.Row():
@@ -302,6 +307,11 @@ def ui_full(launch_kwargs):
                     temperature = gr.Number(label="Temperature", value=1.0, interactive=True)
                     cfg_coef = gr.Number(label="Classifier Free Guidance", value=3.0, interactive=True)
             with gr.Column():
+                with gr.Row():
+                    submit = gr.Button("Submit", variant="primary")
+                    # Adapted from https://github.com/rkfg/audiocraft/blob/long/app.py, MIT license.
+                    _ = gr.Button("Interrupt").click(fn=interrupt, queue=False)
+
                 output = gr.Video(label="Generated Music")
                 audio_output = gr.Audio(label="Generated Music (wav)", type='filepath')
                 diffusion_output = gr.Video(label="MultiBand Diffusion Decoder")
@@ -317,7 +327,7 @@ def ui_full(launch_kwargs):
                 )
         submit.click(toggle_diffusion, decoder, [diffusion_output, audio_diffusion], queue=False,
                      show_progress=False).then(predict_full, inputs=[model, decoder, text, melody, duration, topk, topp,
-                                                                     temperature, cfg_coef],
+                                                                     temperature, cfg_coef, batch_count],
                                                outputs=[output, audio_output, diffusion_output, audio_diffusion])
         radio.change(toggle_audio_src, radio, [melody], queue=False, show_progress=False)
 
