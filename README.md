@@ -113,3 +113,15 @@ For the general framework of AudioCraft, please cite the following.
 
 When referring to a specific model, please cite as mentioned in the model specific README, e.g
 [./docs/MUSICGEN.md](./docs/MUSICGEN.md), [./docs/AUDIOGEN.md](./docs/AUDIOGEN.md), etc.
+
+
+## YouTube Channel
+Please subscribe to my YouTube channel, thank you very much. 
+
+[https://bit.ly/3odzTKX](https://bit.ly/3odzTKX)
+
+## Patreon
+☕️ Please consider to support me in Patreon 🍻
+
+[https://www.patreon.com/lifeisboringsoprogramming](https://www.patreon.com/lifeisboringsoprogramming)
+
