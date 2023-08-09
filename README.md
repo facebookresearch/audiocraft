@@ -9,6 +9,7 @@ AudioCraft is a PyTorch library for deep learning research on audio generation. 
 for two state-of-the-art AI generative models producing high-quality audio: AudioGen and MusicGen.
 
 ## Differences between original repository
+* Add audiogen model
 * Download all models to models directory
 * Automatically save all output files to output directory
 * Add button to open output folder in the explorer
