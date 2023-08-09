@@ -25,7 +25,7 @@ import gradio as gr
 
 from audiocraft.data.audio_utils import convert_audio
 from audiocraft.data.audio import audio_write
-from audiocraft.models import MusicGen, MultiBandDiffusion
+from audiocraft.models import MusicGen, MultiBandDiffusion, AudioGen
 
 
 folder_symbol = '\U0001f4c2'  # 📂
@@ -119,7 +119,10 @@ def load_model(version='facebook/musicgen-melody'):
     global MODEL
     print("Loading model", version)
     if MODEL is None or MODEL.name != version:
-        MODEL = MusicGen.get_pretrained(version)
+        if version == 'facebook/audiogen-medium':
+            MODEL = AudioGen.get_pretrained(version)
+        else:
+            MODEL = MusicGen.get_pretrained(version)
 
 
 def load_diffusion():
@@ -155,7 +158,10 @@ def _do_predictions(texts, melodies, duration, progress=False, **gen_kwargs):
             return_tokens=USE_DIFFUSION
         )
     else:
-        outputs = MODEL.generate(texts, progress=progress, return_tokens=USE_DIFFUSION)
+        if MODEL.name == 'facebook/audiogen-medium':
+            outputs = MODEL.generate(texts, progress=progress)
+        else:
+            outputs = MODEL.generate(texts, progress=progress, return_tokens=USE_DIFFUSION)
     if USE_DIFFUSION:
         outputs_diffusion = MBD.tokens_to_wav(outputs[1])
         outputs = torch.cat([outputs[0], outputs_diffusion], dim=0)
@@ -234,6 +240,16 @@ def toggle_audio_src(choice):
         return gr.update(source="upload", value=None, label="File")
 
 
+def toggle_model(model):
+    if model == 'facebook/musicgen-melody':
+        return [gr.update(interactive=True), gr.update(interactive=True), gr.update(interactive=True)]
+    else:
+        if model == 'facebook/audiogen-medium':
+            return [gr.update(value='Default', interactive=False), gr.update(interactive=False), gr.update(value=None, interactive=False)]
+        else:
+            return [gr.update(interactive=True), gr.update(interactive=False), gr.update(value=None, interactive=False)]
+
+
 def toggle_diffusion(choice):
     if choice == "MultiBand_Diffusion":
         return [gr.update(visible=True)] * 2
@@ -292,7 +308,7 @@ def ui_full(launch_kwargs):
                                           interactive=True, elem_id="melody-input")
                 with gr.Row():
                     model = gr.Radio(["facebook/musicgen-melody", "facebook/musicgen-medium", "facebook/musicgen-small",
-                                      "facebook/musicgen-large"],
+                                      "facebook/musicgen-large", "facebook/audiogen-medium"],
                                      label="Model", value="facebook/musicgen-melody", interactive=True)
                 with gr.Row():
                     decoder = gr.Radio(["Default", "MultiBand_Diffusion"],
@@ -330,6 +346,7 @@ def ui_full(launch_kwargs):
                                                                      temperature, cfg_coef, batch_count],
                                                outputs=[output, audio_output, diffusion_output, audio_diffusion])
         radio.change(toggle_audio_src, radio, [melody], queue=False, show_progress=False)
+        model.change(toggle_model, model, [decoder, radio, melody], queue=False, show_progress=False)
 
         gr.Examples(
             fn=predict_full,
