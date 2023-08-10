@@ -58,7 +58,7 @@ Below are the objective metrics obtained with the released model on AudioCaps (c
 
 | Model | Frechet Audio Distance | KLD | Text consistency |
 |---|---|---|---|
-| facebook/audiogen-medium | 1.77 | 1.41 | 0.299 |
+| facebook/audiogen-medium | 1.77 | 1.58 | 0.30 |
 
 More information can be found in the paper [AudioGen: Textually Guided Audio Generation][audiogen], in the Experiments section.
 
