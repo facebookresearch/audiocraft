@@ -60,10 +60,10 @@ Below are the objective metrics obtained on MusicCaps with the released model. N
 
 | Model | Frechet Audio Distance | KLD | Text Consistency | Chroma Cosine Similarity |
 |---|---|---|---|---|
-| facebook/musicgen-small  | 4.88 | 1.28 | 0.27 | - |
-| facebook/musicgen-medium | 5.14 | 1.24 | 0.28 | - |
-| facebook/musicgen-large  | 5.48 | 1.22 | 0.28 | - |
-| facebook/musicgen-melody | 4.93 | 1.26 | 0.27 | 0.44 |
+| facebook/musicgen-small  | 4.88 | 1.42 | 0.27 | - |
+| facebook/musicgen-medium | 5.14 | 1.38 | 0.28 | - |
+| facebook/musicgen-large  | 5.48 | 1.37 | 0.28 | - |
+| facebook/musicgen-melody | 4.93 | 1.41 | 0.27 | 0.44 |
 
 More information can be found in the paper [Simple and Controllable Music Generation][arxiv], in the Results section.
 
