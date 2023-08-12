@@ -61,7 +61,7 @@ from audiocraft.data.audio import audio_read, audio_write
 
 bandwidth = 3.0  # 1.5, 3.0, 6.0
 mbd = MultiBandDiffusion.get_mbd_24khz(bw=bandwidth)
-encodec = EncodecModel.get_encodec_24khz()
+encodec = EncodecModel.encodec_model_24khz()
 
 somepath = ''
 wav, sr = audio_read(somepath)
