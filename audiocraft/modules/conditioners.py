@@ -389,7 +389,7 @@ class T5Conditioner(TextConditioner):
 
     def __init__(self, name: str, output_dim: int, finetune: bool, device: str,
                  autocast_dtype: tp.Optional[str] = 'float32', word_dropout: float = 0.,
-                 normalize_text: bool = False):
+                 normalize_text: bool = False, cache_dir: str = None):
         assert name in self.MODELS, f"Unrecognized t5 model name (should in {self.MODELS})"
         super().__init__(self.MODELS_DIMS[name], output_dim)
         self.device = device
@@ -412,8 +412,8 @@ class T5Conditioner(TextConditioner):
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
             try:
-                self.t5_tokenizer = T5Tokenizer.from_pretrained(name)
-                t5 = T5EncoderModel.from_pretrained(name).train(mode=finetune)
+                self.t5_tokenizer = T5Tokenizer.from_pretrained(name, cache_dir=cache_dir)
+                t5 = T5EncoderModel.from_pretrained(name, cache_dir=cache_dir).train(mode=finetune)
             finally:
                 logging.disable(previous_level)
         if finetune:

@@ -85,7 +85,7 @@ class MusicGen:
         return self.compression_model.channels
 
     @staticmethod
-    def get_pretrained(name: str = 'facebook/musicgen-melody', device=None):
+    def get_pretrained(name: str = 'facebook/musicgen-melody', device=None, cache_dir=None):
         """Return pretrained model, we provide four models:
         - facebook/musicgen-small (300M), text to music,
           # see: https://huggingface.co/facebook/musicgen-small
@@ -113,9 +113,8 @@ class MusicGen:
                 "MusicGen pretrained model relying on deprecated checkpoint mapping. " +
                 f"Please use full pre-trained id instead: facebook/musicgen-{name}")
             name = _HF_MODEL_CHECKPOINTS_MAP[name]
-
-        lm = load_lm_model(name, device=device)
-        compression_model = load_compression_model(name, device=device)
+        lm = load_lm_model(name, device=device, cache_dir=cache_dir)
+        compression_model = load_compression_model(name, device=device, cache_dir=cache_dir)
         if 'self_wav' in lm.condition_provider.conditioners:
             lm.condition_provider.conditioners['self_wav'].match_len_on_eval = True
 

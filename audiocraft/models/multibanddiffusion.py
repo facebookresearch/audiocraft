@@ -64,14 +64,14 @@ class MultiBandDiffusion:
         return self.codec_model.sample_rate
 
     @staticmethod
-    def get_mbd_musicgen(device=None):
+    def get_mbd_musicgen(device=None, cache_dir:str = None):
         """Load our diffusion models trained for MusicGen."""
         if device is None:
             device = 'cuda' if torch.cuda.is_available() else 'cpu'
         path = 'https://dl.fbaipublicfiles.com/encodec/Diffusion/mbd_musicgen_32khz.th'
         name = 'facebook/musicgen-small'
-        codec_model = load_compression_model(name, device=device)
-        models, processors, cfgs = load_diffusion_models(path, device=device)
+        codec_model = load_compression_model(name, device=device, cache_dir=cache_dir)
+        models, processors, cfgs = load_diffusion_models(path, device=device, cache_dir=cache_dir)
         DPs = []
         for i in range(len(models)):
             schedule = NoiseSchedule(**cfgs[i].schedule, sample_processor=processors[i], device=device)

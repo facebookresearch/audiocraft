@@ -55,7 +55,7 @@ def _get_state_dict(
         return torch.load(file, map_location=device)
 
     elif file_or_url_or_id.startswith('https://'):
-        return torch.hub.load_state_dict_from_url(file_or_url_or_id, map_location=device, check_hash=True)
+        return torch.hub.load_state_dict_from_url(file_or_url_or_id, map_location=device, check_hash=True, model_dir=cache_dir)
 
     else:
         assert filename is not None, "filename needs to be defined if using HF checkpoints"
@@ -108,7 +108,7 @@ def load_lm_model(file_or_url_or_id: tp.Union[Path, str], device='cpu', cache_di
     _delete_param(cfg, 'conditioners.self_wav.chroma_stem.cache_path')
     _delete_param(cfg, 'conditioners.args.merge_text_conditions_p')
     _delete_param(cfg, 'conditioners.args.drop_desc_p')
-    model = builders.get_lm_model(cfg)
+    model = builders.get_lm_model(cfg, cache_dir=cache_dir)
     model.load_state_dict(pkg['best_state'])
     model.eval()
     model.cfg = cfg

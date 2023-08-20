@@ -83,7 +83,7 @@ def get_compression_model(cfg: omegaconf.DictConfig) -> CompressionModel:
         raise KeyError(f"Unexpected compression model {cfg.compression_model}")
 
 
-def get_lm_model(cfg: omegaconf.DictConfig) -> LMModel:
+def get_lm_model(cfg: omegaconf.DictConfig, cache_dir: str = None) -> LMModel:
     """Instantiate a transformer LM."""
     if cfg.lm_model == 'transformer_lm':
         kwargs = dict_from_config(getattr(cfg, 'transformer_lm'))
@@ -94,7 +94,7 @@ def get_lm_model(cfg: omegaconf.DictConfig) -> LMModel:
         cls_free_guidance = dict_from_config(getattr(cfg, 'classifier_free_guidance'))
         cfg_prob, cfg_coef = cls_free_guidance['training_dropout'], cls_free_guidance['inference_coef']
         fuser = get_condition_fuser(cfg)
-        condition_provider = get_conditioner_provider(kwargs["dim"], cfg).to(cfg.device)
+        condition_provider = get_conditioner_provider(kwargs["dim"], cfg, cache_dir=cache_dir).to(cfg.device)
         if len(fuser.fuse2cond['cross']) > 0:  # enforce cross-att programmatically
             kwargs['cross_attention'] = True
         if codebooks_pattern_cfg.modeling is None:
@@ -119,7 +119,7 @@ def get_lm_model(cfg: omegaconf.DictConfig) -> LMModel:
         raise KeyError(f"Unexpected LM model {cfg.lm_model}")
 
 
-def get_conditioner_provider(output_dim: int, cfg: omegaconf.DictConfig) -> ConditioningProvider:
+def get_conditioner_provider(output_dim: int, cfg: omegaconf.DictConfig, cache_dir: str = None) -> ConditioningProvider:
     """Instantiate a conditioning model."""
     device = cfg.device
     duration = cfg.dataset.segment_duration
@@ -129,12 +129,11 @@ def get_conditioner_provider(output_dim: int, cfg: omegaconf.DictConfig) -> Cond
     condition_provider_args = dict_cfg.pop('args', {})
     condition_provider_args.pop('merge_text_conditions_p', None)
     condition_provider_args.pop('drop_desc_p', None)
-
     for cond, cond_cfg in dict_cfg.items():
         model_type = cond_cfg['model']
         model_args = cond_cfg[model_type]
         if model_type == 't5':
-            conditioners[str(cond)] = T5Conditioner(output_dim=output_dim, device=device, **model_args)
+            conditioners[str(cond)] = T5Conditioner(output_dim=output_dim, device=device, cache_dir=cache_dir, **model_args)
         elif model_type == 'lut':
             conditioners[str(cond)] = LUTConditioner(output_dim=output_dim, **model_args)
         elif model_type == 'chroma_stem':
