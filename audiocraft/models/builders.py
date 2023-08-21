@@ -141,6 +141,7 @@ def get_conditioner_provider(output_dim: int, cfg: omegaconf.DictConfig, cache_d
                 output_dim=output_dim,
                 duration=duration,
                 device=device,
+                cache_dir=cache_dir,
                 **model_args
             )
         elif model_type == 'clap':

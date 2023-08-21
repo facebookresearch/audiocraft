@@ -25,6 +25,7 @@ from torch import nn
 import torch.nn.functional as F
 from torch.nn.utils.rnn import pad_sequence
 
+from .demucs_custom import get_demucs_model
 from .chroma import ChromaExtractor
 from .streaming import StreamingModule
 from .transformer import create_sin_embedding
@@ -526,19 +527,19 @@ class ChromaStemConditioner(WaveformConditioner):
             Defaults to None.
         n_eval_wavs (int, optional): limits the number of waveforms used for conditioning. Defaults to 0.
         device (tp.Union[torch.device, str], optional): Device for the conditioner.
+        cache_dir: Optional directory to cache downloaded models.
         **kwargs: Additional parameters for the chroma extractor.
     """
     def __init__(self, output_dim: int, sample_rate: int, n_chroma: int, radix2_exp: int,
                  duration: float, match_len_on_eval: bool = True, eval_wavs: tp.Optional[str] = None,
                  n_eval_wavs: int = 0, cache_path: tp.Optional[tp.Union[str, Path]] = None,
-                 device: tp.Union[torch.device, str] = 'cpu', **kwargs):
-        from demucs import pretrained
+                 device: tp.Union[torch.device, str] = 'cpu', cache_dir: str = None, **kwargs):
         super().__init__(dim=n_chroma, output_dim=output_dim, device=device)
         self.autocast = TorchAutocast(enabled=device != 'cpu', device_type=self.device, dtype=torch.float32)
         self.sample_rate = sample_rate
         self.match_len_on_eval = match_len_on_eval
         self.duration = duration
-        self.__dict__['demucs'] = pretrained.get_model('htdemucs').to(device)
+        self.__dict__['demucs'] = get_demucs_model('htdemucs', cache_dir=cache_dir).to(device)
         stem_sources: list = self.demucs.sources  # type: ignore
         self.stem_indices = torch.LongTensor([stem_sources.index('vocals'), stem_sources.index('other')]).to(device)
         self.chroma = ChromaExtractor(sample_rate=sample_rate, n_chroma=n_chroma,
