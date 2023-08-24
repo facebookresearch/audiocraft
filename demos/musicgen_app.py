@@ -24,6 +24,21 @@ from audiocraft.data.audio_utils import convert_audio
 from audiocraft.data.audio import audio_write
 from audiocraft.models import MusicGen, MultiBandDiffusion
 
+from pathlib import Path
+import os
+
+
+ROOT = Path(__file__).parent.parent
+
+print("Root path: ", ROOT)
+
+OUTPUTS_PATH = ROOT / "outputs"
+MODELS_PATH = ROOT / "models"
+
+# make sure they exist
+os.makedirs(OUTPUTS_PATH, exist_ok=True)
+os.makedirs(MODELS_PATH, exist_ok=True)
+
 
 MODEL = None  # Last used model
 IS_BATCHED = "facebook/MusicGen" in os.environ.get('SPACE_ID', '')
@@ -87,11 +102,11 @@ def make_waveform(*args, **kwargs):
         return out
 
 
-def load_model(version='facebook/musicgen-melody'):
+def load_model(version='facebook/musicgen-melody', cache_dir=MODELS_PATH):
     global MODEL
     print("Loading model", version)
     if MODEL is None or MODEL.name != version:
-        MODEL = MusicGen.get_pretrained(version)
+        MODEL = MusicGen.get_pretrained(version, cache_dir=cache_dir)
 
 
 def load_diffusion():
