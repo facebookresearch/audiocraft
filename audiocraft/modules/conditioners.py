@@ -15,6 +15,7 @@ import random
 import re
 import typing as tp
 import warnings
+import os
 
 import einops
 from num2words import num2words
@@ -409,11 +410,13 @@ class T5Conditioner(TextConditioner):
         # thanks https://gist.github.com/simon-weber/7853144
         previous_level = logging.root.manager.disable
         logging.disable(logging.ERROR)
+        
+        cache_dir = os.environ.get('AUDIOCRAFT_CACHE_DIR', None)
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
             try:
-                self.t5_tokenizer = T5Tokenizer.from_pretrained(name)
-                t5 = T5EncoderModel.from_pretrained(name).train(mode=finetune)
+                self.t5_tokenizer = T5Tokenizer.from_pretrained(name, cache_dir=cache_dir)
+                t5 = T5EncoderModel.from_pretrained(name, cache_dir=cache_dir).train(mode=finetune)
             finally:
                 logging.disable(previous_level)
         if finetune:
