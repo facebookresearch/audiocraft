@@ -410,7 +410,6 @@ class T5Conditioner(TextConditioner):
         # thanks https://gist.github.com/simon-weber/7853144
         previous_level = logging.root.manager.disable
         logging.disable(logging.ERROR)
-        
         cache_dir = os.environ.get('AUDIOCRAFT_CACHE_DIR', None)
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
