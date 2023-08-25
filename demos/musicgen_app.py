@@ -32,11 +32,7 @@ ROOT = Path(__file__).parent.parent
 
 print("Root path: ", ROOT)
 
-OUTPUTS_PATH = ROOT / "outputs"
 MODELS_PATH = ROOT / "models"
-
-# make sure they exist
-os.makedirs(OUTPUTS_PATH, exist_ok=True)
 os.makedirs(MODELS_PATH, exist_ok=True)
 
 
