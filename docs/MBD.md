@@ -2,7 +2,7 @@
 
 AudioCraft provides the code and models for MultiBand Diffusion, [From Discrete Tokens to High Fidelity Audio using MultiBand Diffusion][arxiv].
 MultiBand diffusion is a collection of 4 models that can decode tokens from
-<a href="https://github.com/facebookresearch/encodec">EnCodec tokenizer</a> into waveform audio.
+<a href="https://github.com/facebookresearch/encodec">EnCodec tokenizer</a> into waveform audio. You can listen to some examples on the <a href="https://ai.honu.io/papers/mbd/">sample page</a>.
 
 <a target="_blank" href="https://colab.research.google.com/drive/1JlTOjB-G0A2Hz3h8PK63vLZk4xdCI5QB?usp=sharing">
   <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
@@ -61,7 +61,7 @@ from audiocraft.data.audio import audio_read, audio_write
 
 bandwidth = 3.0  # 1.5, 3.0, 6.0
 mbd = MultiBandDiffusion.get_mbd_24khz(bw=bandwidth)
-encodec = EncodecModel.get_encodec_24khz()
+encodec = EncodecModel.encodec_model_24khz()
 
 somepath = ''
 wav, sr = audio_read(somepath)

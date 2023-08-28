@@ -22,3 +22,8 @@ evaluate:
     fad: true
     kld: true
     text_consistency: true
+
+metrics:
+  kld:
+    passt:
+      pretrained_length: 10  # similarly to reported results in AudioGen paper

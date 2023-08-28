@@ -20,3 +20,4 @@ librosa
 gradio
 torchmetrics
 encodec
+protobuf

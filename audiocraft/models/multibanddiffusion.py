@@ -75,7 +75,7 @@ class MultiBandDiffusion:
         models, processors, cfgs = load_diffusion_models(path, filename=filename, device=device)
         DPs = []
         for i in range(len(models)):
-            schedule = NoiseSchedule(**cfgs[i].schedule, sample_processor=processors[i])
+            schedule = NoiseSchedule(**cfgs[i].schedule, sample_processor=processors[i], device=device)
             DPs.append(DiffusionProcess(model=models[i], noise_schedule=schedule))
         return MultiBandDiffusion(DPs=DPs, codec_model=codec_model)
 
@@ -108,7 +108,7 @@ class MultiBandDiffusion:
         models, processors, cfgs = load_diffusion_models(path, filename=filename, device=device)
         DPs = []
         for i in range(len(models)):
-            schedule = NoiseSchedule(**cfgs[i].schedule, sample_processor=processors[i])
+            schedule = NoiseSchedule(**cfgs[i].schedule, sample_processor=processors[i], device=device)
             DPs.append(DiffusionProcess(model=models[i], noise_schedule=schedule))
         return MultiBandDiffusion(DPs=DPs, codec_model=codec_model)
 
