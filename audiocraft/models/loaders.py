@@ -115,12 +115,17 @@ def load_lm_model(file_or_url_or_id: tp.Union[Path, str], device='cpu', cache_di
     return model
 
 
-def load_mbd_ckpt(file_or_url_or_id: tp.Union[Path, str], cache_dir: tp.Optional[str] = None):
-    return _get_state_dict(file_or_url_or_id, filename="all_in_one.pt", cache_dir=cache_dir)
+def load_mbd_ckpt(file_or_url_or_id: tp.Union[Path, str],
+                  filename: tp.Optional[str] = None,
+                  cache_dir: tp.Optional[str] = None):
+    return _get_state_dict(file_or_url_or_id, filename=filename, cache_dir=cache_dir)
 
 
-def load_diffusion_models(file_or_url_or_id: tp.Union[Path, str], device='cpu', cache_dir: tp.Optional[str] = None):
-    pkg = load_mbd_ckpt(file_or_url_or_id, cache_dir=cache_dir)
+def load_diffusion_models(file_or_url_or_id: tp.Union[Path, str],
+                          device='cpu',
+                          filename: tp.Optional[str] = None,
+                          cache_dir: tp.Optional[str] = None):
+    pkg = load_mbd_ckpt(file_or_url_or_id, filename=filename, cache_dir=cache_dir)
     models = []
     processors = []
     cfgs = []

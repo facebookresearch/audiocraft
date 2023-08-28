@@ -68,10 +68,11 @@ class MultiBandDiffusion:
         """Load our diffusion models trained for MusicGen."""
         if device is None:
             device = 'cuda' if torch.cuda.is_available() else 'cpu'
-        path = 'https://dl.fbaipublicfiles.com/encodec/Diffusion/mbd_musicgen_32khz.th'
+        path = 'facebook/multiband-diffusion'
+        filename = 'mbd_musicgen_32khz.th'
         name = 'facebook/musicgen-small'
         codec_model = load_compression_model(name, device=device)
-        models, processors, cfgs = load_diffusion_models(path, device=device)
+        models, processors, cfgs = load_diffusion_models(path, filename=filename, device=device)
         DPs = []
         for i in range(len(models)):
             schedule = NoiseSchedule(**cfgs[i].schedule, sample_processor=processors[i], device=device)
@@ -102,8 +103,9 @@ class MultiBandDiffusion:
             '//pretrained/facebook/encodec_24khz', device=device)
         codec_model.set_num_codebooks(n_q)
         codec_model = codec_model.to(device)
-        path = f'https://dl.fbaipublicfiles.com/encodec/Diffusion/mbd_comp_{n_q}.pt'
-        models, processors, cfgs = load_diffusion_models(path, device=device)
+        path = 'facebook/multiband-diffusion'
+        filename = f'mbd_comp_{n_q}.pt'
+        models, processors, cfgs = load_diffusion_models(path, filename=filename, device=device)
         DPs = []
         for i in range(len(models)):
             schedule = NoiseSchedule(**cfgs[i].schedule, sample_processor=processors[i], device=device)
