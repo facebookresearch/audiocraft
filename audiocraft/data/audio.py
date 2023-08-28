@@ -162,6 +162,8 @@ def audio_write(stem_name: tp.Union[str, Path],
 
     Args:
         stem_name (str or Path): Filename without extension which will be added automatically.
+        wav (torch.Tensor): Audio data to save.
+        sample_rate (int): Sample rate of audio data.
         format (str): Either "wav" or "mp3".
         mp3_rate (int): kbps when using mp3s.
         normalize (bool): if `True` (default), normalizes according to the prescribed
