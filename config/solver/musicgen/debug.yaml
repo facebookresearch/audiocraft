@@ -15,6 +15,12 @@ transformer_lm:
   n_q: 4
   card: 400
 
+conditioners:
+  description:
+    model: t5
+    t5:
+      name: t5-small
+
 codebooks_pattern:
   modeling: parallel
 
