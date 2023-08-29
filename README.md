@@ -24,7 +24,7 @@ We also recommend having `ffmpeg` installed, either through your system or Anaco
 ```bash
 sudo apt-get install ffmpeg
 # Or if you are using Anaconda or Miniconda
-conda install 'ffmpeg<5' -c  conda-forge
+conda install "ffmpeg<5" -c conda-forge
 ```
 
 ## Models
