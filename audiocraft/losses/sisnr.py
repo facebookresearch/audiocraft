@@ -41,6 +41,11 @@ class SISNR(nn.Module):
 
     Input should be [B, C, T], output is scalar.
 
+    ..Warning:: This function returns the opposite of the SI-SNR (e.g. `-1 * regular_SI_SNR`).
+        Consequently, lower scores are better in terms of reconstruction quality,
+        in particular, it should be negative if training goes well. This done this way so
+        that this module can also be used as a loss function for training model.
+
     Args:
         sample_rate (int): Sample rate.
         segment (float or None): Evaluate on chunks of that many seconds. If None, evaluate on
