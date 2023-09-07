@@ -41,6 +41,9 @@ class SISNR(nn.Module):
 
     Input should be [B, C, T], output is scalar.
 
+    ..Warning:: We report here minus SISNR, so negative values are better. This is so that
+        this can be naturally used as a loss!
+
     Args:
         sample_rate (int): Sample rate.
         segment (float or None): Evaluate on chunks of that many seconds. If None, evaluate on

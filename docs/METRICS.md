@@ -16,6 +16,8 @@ We provide an implementation of the Scale-Invariant Signal-to-Noise Ratio in PyT
 No specific requirement is needed for this metric. Please activate the metric at the
 evaluation stage with the appropriate flag:
 
+**Warning:** As we also allow SISNR to be used as a training loss, we actually report minus the SISNR, e.g. negative values are best.
+
 ```shell
 dora run <...> evaluate.metrics.sisnr=true
 ```
