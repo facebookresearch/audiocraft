@@ -311,7 +311,7 @@ class LMModel(StreamingModule):
                            cfg_conditions: CFGConditions,
                            unconditional_state: State,
                            use_sampling: bool = False,
-                           temp: float = 1.0,
+                           temperature: float = 1.0,
                            top_k: int = 0,
                            top_p: float = 0.0,
                            cfg_coef: tp.Optional[float] = None) -> torch.Tensor:
@@ -325,7 +325,7 @@ class LMModel(StreamingModule):
             condition_tensors (dict[str, ConditionType): Set of conditions. If CFG is used,
                 should be twice the batch size, being the concatenation of the conditions + null conditions.
             use_sampling (bool): Whether to use a sampling strategy or not.
-            temp (float): Sampling temperature.
+            temperature (float): Sampling temperature.
             top_k (int): K for "top-k" sampling.
             top_p (float): P for "top-p" sampling.
             cfg_coef (float, optional): classifier free guidance coefficient
@@ -363,9 +363,9 @@ class LMModel(StreamingModule):
         logits = logits.permute(0, 1, 3, 2)  # [B, K, card, T]
         logits = logits[..., -1]  # [B x K x card]
 
-        # Apply softmax for sampling if temp > 0. Else, do greedy sampling to avoid zero division error.
-        if use_sampling and temp > 0.0:
-            probs = torch.softmax(logits / temp, dim=-1)
+        # Apply softmax for sampling if temperature > 0. Else, do greedy sampling to avoid zero division error.
+        if use_sampling and temperature > 0.0:
+            probs = torch.softmax(logits / temperature, dim=-1)
             if top_p > 0.0:
                 next_token = utils.sample_top_p(probs, p=top_p)
             elif top_k > 0:
@@ -384,7 +384,7 @@ class LMModel(StreamingModule):
                  num_samples: tp.Optional[int] = None,
                  max_gen_len: int = 256,
                  use_sampling: bool = True,
-                 temp: float = 1.0,
+                 temperature: float = 1.0,
                  top_k: int = 250,
                  top_p: float = 0.0,
                  cfg_coef: tp.Optional[float] = None,
@@ -401,7 +401,7 @@ class LMModel(StreamingModule):
             num_samples (int, optional): Number of samples to generate when no prompt and no conditions are given.
             max_gen_len (int): Maximum generation length.
             use_sampling (bool): Whether to use a sampling strategy or not.
-            temp (float): Sampling temperature.
+            temperature (float): Sampling temperature.
             top_k (int): K for "top-k" sampling.
             top_p (float): P for "top-p" sampling.
             cfg_coeff (float, optional): Classifier-free guidance coefficient.
@@ -492,7 +492,7 @@ class LMModel(StreamingModule):
                     assert not (curr_sequence == unknown_token).any()
                 # sample next token from the model, next token shape is [B, K, 1]
                 next_token = self._sample_next_token(
-                    curr_sequence, cfg_conditions, unconditional_state, use_sampling, temp, top_k, top_p,
+                    curr_sequence, cfg_conditions, unconditional_state, use_sampling, temperature, top_k, top_p,
                     cfg_coef=cfg_coef)
                 # ensure the tokens that should be masked are properly set to special_token_id
                 # as the model never output special_token_id

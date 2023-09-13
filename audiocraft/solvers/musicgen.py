@@ -39,7 +39,7 @@ class MusicGenSolver(base.StandardSolver):
         # easier access to sampling parameters
         self.generation_params = {
             'use_sampling': self.cfg.generate.lm.use_sampling,
-            'temp': self.cfg.generate.lm.temp,
+            'temperature': self.cfg.generate.lm.temperature,
             'top_k': self.cfg.generate.lm.top_k,
             'top_p': self.cfg.generate.lm.top_p,
         }

@@ -119,7 +119,7 @@ class AudioGen:
         self.duration = duration
         self.generation_params = {
             'use_sampling': use_sampling,
-            'temp': temperature,
+            'temperature': temperature,
             'top_k': top_k,
             'top_p': top_p,
             'cfg_coef': cfg_coef,

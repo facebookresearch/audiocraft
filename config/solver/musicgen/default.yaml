@@ -84,7 +84,7 @@ generate:
     remove_prompts: false
     # generation params
     use_sampling: false
-    temp: 1.0
+    temperature: 1.0
     top_k: 0
     top_p: 0.0
 evaluate:
