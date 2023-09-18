@@ -162,7 +162,7 @@ Please find some example grids to train MusicGen at
 # text-to-music
 dora grid musicgen.musicgen_base_32khz --dry_run --init
 # melody-guided music generation
-dora grid musicgen.musicgen_melody_base_32khz --dry_run --init
+dora grid musicgen.musicgen_melody_32khz --dry_run --init
 # Remove the `--dry_run --init` flags to actually schedule the jobs once everything is setup.
 ```
 
