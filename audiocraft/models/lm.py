@@ -225,7 +225,7 @@ class LMModel(StreamingModule):
         S the sequence steps, return the logits with shape [B, card, K, S].
 
         Args:
-            indices (torch.Tensor): Indices of the codes to model.
+            sequence (torch.Tensor): Indices of the codes to model.
             conditions (list of ConditioningAttributes): Conditions to use when modeling
                 the given codes. Note that when evaluating multiple time with the same conditioning
                 you should pre-compute those and pass them as `condition_tensors`.
