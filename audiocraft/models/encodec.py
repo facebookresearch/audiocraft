@@ -98,7 +98,7 @@ class CompressionModel(ABC, nn.Module):
             - dac_24khz (same)
             - facebook/encodec_24khz (https://huggingface.co/facebook/encodec_24khz)
             - facebook/encodec_32khz (https://huggingface.co/facebook/encodec_32khz)
-            - your own model on HugginFace. Export instructions to come...
+            - your own model on Hugging Face. Export instructions to come...
         """
 
         from . import builders, loaders
