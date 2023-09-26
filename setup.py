@@ -46,7 +46,7 @@ setup(
     python_requires=REQUIRES_PYTHON,
     install_requires=REQUIRED,
     extras_require={
-        'dev': ['coverage', 'flake8', 'mypy', 'pdoc3', 'pytest'],
+        'dev': ['coverage', 'ruff==0.0.291', 'mypy', 'pdoc3', 'pytest'],
     },
     packages=find_packages(),
     package_data={'audiocraft': ['py.typed']},

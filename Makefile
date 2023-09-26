@@ -17,8 +17,8 @@ install:
 	pip install -U -e '.[dev]'
 
 linter:
-	flake8 audiocraft && mypy audiocraft
-	flake8 tests && mypy tests
+	ruff audiocraft && mypy audiocraft
+	ruff tests && mypy tests
 
 tests:
 	coverage run -m pytest tests
