@@ -6,7 +6,6 @@
 """Loss related classes and functions. In particular the loss balancer from
 EnCodec, and the usual spectral losses."""
 
-# flake8: noqa
 from .balancer import Balancer
 from .sisnr import SISNR
 from .stftloss import (
@@ -19,3 +18,14 @@ from .specloss import (
     MelSpectrogramL1Loss,
     MultiScaleMelSpectrogramLoss,
 )
+
+__all__ = [
+    'Balancer',
+    'LogSTFTMagnitudeLoss',
+    'MRSTFTLoss',
+    'MelSpectrogramL1Loss',
+    'MultiScaleMelSpectrogramLoss',
+    'SISNR',
+    'STFTLoss',
+    'SpectralConvergenceLoss',
+]

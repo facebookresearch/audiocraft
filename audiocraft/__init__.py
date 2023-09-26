@@ -20,7 +20,13 @@ At the moment we provide the training code for:
     improves the perceived quality and reduces the artifacts coming from adversarial decoders.
 """
 
-# flake8: noqa
+
 from . import data, modules, models
 
 __version__ = '1.0.0'
+
+__all__ = [
+    'data',
+    'models',
+    'modules',
+]

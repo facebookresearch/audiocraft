@@ -6,7 +6,7 @@
 """
 Models for EnCodec, AudioGen, MusicGen, as well as the generic LMModel.
 """
-# flake8: noqa
+
 from . import builders, loaders
 from .encodec import (
     CompressionModel, EncodecModel, DAC,
@@ -16,3 +16,18 @@ from .lm import LMModel
 from .multibanddiffusion import MultiBandDiffusion
 from .musicgen import MusicGen
 from .unet import DiffusionUnet
+
+__all__ = [
+    'AudioGen',
+    'CompressionModel',
+    'DAC',
+    'DiffusionUnet',
+    'EncodecModel',
+    'HFEncodecCompressionModel',
+    'HFEncodecModel',
+    'LMModel',
+    'MultiBandDiffusion',
+    'MusicGen',
+    'builders',
+    'loaders',
+]

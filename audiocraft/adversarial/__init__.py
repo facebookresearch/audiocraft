@@ -5,7 +5,6 @@
 # LICENSE file in the root directory of this source tree.
 """Adversarial losses and discriminator architectures."""
 
-# flake8: noqa
 from .discriminators import (
     MultiPeriodDiscriminator,
     MultiScaleDiscriminator,
@@ -20,3 +19,16 @@ from .losses import (
     FeatLossType,
     FeatureMatchingLoss
 )
+
+__all__ = [
+    'AdvLossType',
+    'AdversarialLoss',
+    'FeatLossType',
+    'FeatureMatchingLoss',
+    'MultiPeriodDiscriminator',
+    'MultiScaleDiscriminator',
+    'MultiScaleSTFTDiscriminator',
+    'get_adv_criterion',
+    'get_fake_criterion',
+    'get_real_criterion',
+]
