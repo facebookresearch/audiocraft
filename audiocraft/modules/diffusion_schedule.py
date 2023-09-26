@@ -161,7 +161,7 @@ class NoiseSchedule:
         """Return 'alpha_bar', either for a given step, or as a tensor with its value for each step."""
         if step is None:
             return (1 - self.betas).cumprod(dim=-1)  # works for simgle and multi bands
-        if type(step) is int:
+        if isinstance(step, int):
             return (1 - self.betas[:step + 1]).prod()
         else:
             return (1 - self.betas).cumprod(dim=0)[step].view(-1, 1, 1)

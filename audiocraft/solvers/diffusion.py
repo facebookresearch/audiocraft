@@ -32,7 +32,7 @@ class PerStageMetrics:
         self.num_stages = num_stages
 
     def __call__(self, losses: dict, step: tp.Union[int, torch.Tensor]):
-        if type(step) is int:
+        if isinstance(step, int):
             stage = int((step / self.num_steps) * self.num_stages)
             return {f"{name}_{stage}": loss for name, loss in losses.items()}
         elif type(step) is torch.Tensor:
