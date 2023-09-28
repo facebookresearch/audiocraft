@@ -393,7 +393,7 @@ class LMModel(StreamingModule):
                  check: bool = False,
                  callback: tp.Optional[tp.Callable[[int, int], None]] = None) -> torch.Tensor:
         """Generate tokens sampling from the model given a prompt or unconditionally. Generation can
-        be perform in a greedy fashion or using sampling with top K and top P strategies.
+        be performed in a greedy fashion or using sampling with top K and top P strategies.
 
         Args:
             prompt (torch.Tensor, optional): Prompt tokens of shape [B, K, T].
