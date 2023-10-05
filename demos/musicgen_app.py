@@ -72,6 +72,13 @@ class FileCleaner:
                 self.files.pop(0)
             else:
                 break
+                
+    def delete_all(self):
+        # delete regardless of file's life time
+        for _, path in list(self.files):
+            if path.exists():
+                path.unlink()
+        self.files = []
 
 
 file_cleaner = FileCleaner()
@@ -91,6 +98,10 @@ def load_model(version='facebook/musicgen-melody'):
     global MODEL
     print("Loading model", version)
     if MODEL is None or MODEL.name != version:
+        # Clear PyTorch CUDA cache and delete model
+        del MODEL
+        torch.cuda.empty_cache()
+        
         MODEL = MusicGen.get_pretrained(version)
 
 
@@ -102,6 +113,9 @@ def load_diffusion():
 
 
 def _do_predictions(texts, melodies, duration, progress=False, **gen_kwargs):
+    # get rid of temp files
+    file_cleaner.delete_all()
+    
     MODEL.set_generation_params(duration=duration, **gen_kwargs)
     print("new batch", len(texts), texts, [None if m is None else (m[0], m[1].shape) for m in melodies])
     be = time.time()
