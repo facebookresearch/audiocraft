@@ -18,7 +18,6 @@ import numpy as np
 import soundfile
 import torch
 from torch.nn import functional as F
-import torchaudio as ta
 
 import av
 import subprocess as sp
