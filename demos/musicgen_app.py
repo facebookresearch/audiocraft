@@ -73,14 +73,6 @@ class FileCleaner:
             else:
                 break
                 
-    def delete_all(self):
-        # delete regardless of file's life time
-        for _, path in list(self.files):
-            if path.exists():
-                path.unlink()
-        self.files = []
-
-
 file_cleaner = FileCleaner()
 
 
@@ -113,9 +105,7 @@ def load_diffusion():
 
 
 def _do_predictions(texts, melodies, duration, progress=False, **gen_kwargs):
-    # get rid of temp files
-    file_cleaner.delete_all()
-    
+   
     MODEL.set_generation_params(duration=duration, **gen_kwargs)
     print("new batch", len(texts), texts, [None if m is None else (m[0], m[1].shape) for m in melodies])
     be = time.time()
