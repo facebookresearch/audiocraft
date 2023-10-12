@@ -199,7 +199,7 @@ Once this configuration is created and used for running experiments, you should 
 
 Note that as we are using Dora as our experiment manager, all our experiment tracking is based on
 signatures computed from delta between configurations.
-**One must therefore ensure backward compatibilty of the configuration at all time.**
+**One must therefore ensure backward compatibility of the configuration at all time.**
 See [Dora's README](https://github.com/facebookresearch/dora) and the
 [section below introduction Dora](#running-experiments-with-dora).
 
