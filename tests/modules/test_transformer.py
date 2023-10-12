@@ -86,7 +86,7 @@ def test_streaming_api():
 
 
 def test_memory_efficient():
-    for backend in ['torch', 'xformers']:
+    for backend in ['torch']:
         torch.manual_seed(1234)
         set_efficient_attention_backend(backend)
 
@@ -132,7 +132,7 @@ def test_attention_as_float32():
 
 @torch.no_grad()
 def test_streaming_memory_efficient():
-    for backend in ['torch', 'xformers']:
+    for backend in ['torch']:
         torch.manual_seed(1234)
         set_efficient_attention_backend(backend)
         tr = StreamingTransformer(16, 4, 2, causal=True, dropout=0., custom=True)

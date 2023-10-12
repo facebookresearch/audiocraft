@@ -5,19 +5,15 @@
 # LICENSE file in the root directory of this source tree.
 
 import logging
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
 import torch
 import torch.optim
 import torch.distributed as dist
 
-if TYPE_CHECKING:
-    from torch.optim.optimizer import _params_t
-else:
-    _params_t = Any
-
 
 logger = logging.getLogger(__name__)
+_params_t = Any
 
 
 def to_real(x):

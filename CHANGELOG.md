@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+
+## [1.0.1] - TBD
+
+Not using torchaudio anymore when writing audio files, relying instead directly on the commandline ffmpeg. Also not using it anymore for reading audio files, for similar reasons.
+
 ## [1.0.0] - 2023-09-07
 
 Major revision, added training code for EnCodec, AudioGen, MusicGen, and MultiBandDiffusion.
