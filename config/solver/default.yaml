@@ -31,6 +31,7 @@ dataset:
   sample_on_duration: true
   sample_on_weight: true
   min_segment_ratio: 0.5
+  energy_filter: 0.0
   train:
     num_samples: null
     shuffle: true

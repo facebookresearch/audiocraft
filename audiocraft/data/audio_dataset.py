@@ -291,6 +291,7 @@ class AudioDataset:
             to continue the permutation across epochs. In that case, it is assumed
             that `num_samples = total_batch_size * num_updates_per_epoch`, with
             `total_batch_size` the overall batch size accounting for all gpus.
+        energy_filter (float): if > 0, will filter out segments with rms below this threshold.
     """
     def __init__(self,
                  meta: tp.List[AudioMeta],
@@ -310,6 +311,7 @@ class AudioDataset:
                  shuffle_seed: int = 0,
                  load_wav: bool = True,
                  permutation_on_files: bool = False,
+                 energy_filter: float = 0.0,
                  ):
         assert len(meta) > 0, "No audio meta provided to AudioDataset. Please check loading of audio meta."
         assert segment_duration is None or segment_duration > 0
@@ -346,6 +348,7 @@ class AudioDataset:
             assert not self.sample_on_duration
             assert not self.sample_on_weight
             assert self.shuffle
+        self.energy_filter = energy_filter
 
     def start_epoch(self, epoch: int):
         self.current_epoch = epoch
@@ -440,24 +443,30 @@ class AudioDataset:
                 try:
                     out, sr = audio_read(file_meta.path, seek_time, self.segment_duration, pad=False)
                     out = convert_audio(out, sr, self.sample_rate, self.channels)
-                    n_frames = out.shape[-1]
-                    target_frames = int(self.segment_duration * self.sample_rate)
-                    if self.pad:
-                        out = F.pad(out, (0, target_frames - n_frames))
-                    segment_info = SegmentInfo(file_meta, seek_time, n_frames=n_frames, total_frames=target_frames,
-                                               sample_rate=self.sample_rate, channels=out.shape[0])
                 except Exception as exc:
                     logger.warning("Error opening file %s: %r", file_meta.path, exc)
                     if retry == self.max_read_retry - 1:
                         raise
-                else:
-                    break
 
-        if self.return_info:
-            # Returns the wav and additional information on the wave segment
-            return out, segment_info
-        else:
-            return out
+                energy = torch.sqrt(torch.mean(out ** 2))
+                if energy < self.energy_threshold:
+                    logger.warning("Segment from file %s is silent.", file_meta.path)
+                    if retry == self.max_read_retry - 1:
+                        raise Exception("Segment is silent.")
+                    continue
+
+                n_frames = out.shape[-1]
+                target_frames = int(self.segment_duration * self.sample_rate)
+                if self.pad:
+                    out = F.pad(out, (0, target_frames - n_frames))
+
+                if self.return_info:
+                    segment_info = SegmentInfo(file_meta, seek_time, n_frames=n_frames, total_frames=target_frames,
+                                               sample_rate=self.sample_rate, channels=out.shape[0])
+                    # Returns the wav and additional information on the wave segment
+                    return out, segment_info
+                else:
+                    return out
 
     def collater(self, samples):
         """The collater function has to be provided to the dataloader
