@@ -80,7 +80,7 @@ class MultiBandDiffusion:
         return MultiBandDiffusion(DPs=DPs, codec_model=codec_model)
 
     @staticmethod
-    def get_mbd_24khz(bw: float = 3.0, pretrained: bool = True,
+    def get_mbd_24khz(bw: float = 3.0,
                       device: tp.Optional[tp.Union[torch.device, str]] = None,
                       n_q: tp.Optional[int] = None):
         """Get the pretrained Models for MultibandDiffusion.
@@ -111,8 +111,6 @@ class MultiBandDiffusion:
             schedule = NoiseSchedule(**cfgs[i].schedule, sample_processor=processors[i], device=device)
             DPs.append(DiffusionProcess(model=models[i], noise_schedule=schedule))
         return MultiBandDiffusion(DPs=DPs, codec_model=codec_model)
-
-        return MultiBandDiffusion(DPs, codec_model)
 
     @torch.no_grad()
     def get_condition(self, wav: torch.Tensor, sample_rate: int) -> torch.Tensor:
