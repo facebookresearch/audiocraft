@@ -45,7 +45,7 @@ The ConditionProvider prepares and provides conditions given a dictionary of con
 Conditioners are specified as a dictionary of attributes and the corresponding conditioner
 providing the processing logic for the given attribute.
 
-Similarly to the conditioners, the condition provider works in two steps to avoid sychronization points:
+Similarly to the conditioners, the condition provider works in two steps to avoid synchronization points:
 * A `tokenize` method that takes a list of conditioning attributes for the batch,
 and run all tokenize steps for the set of conditioners.
 * A `forward` method that takes the output of the tokenize step and run all the forward steps
@@ -143,4 +143,4 @@ not to expect all conditioning signals to be provided at once.
 Conditioners that require some heavy computation on the waveform can be cached, in particular
 the `ChromaStemConditioner` or `CLAPEmbeddingConditioner`. You just need to provide the
 `cache_path` parameter to them. We recommend running dummy jobs for filling up the cache quickly.
-An example is provied in the [musicgen.musicgen_melody_32khz grid](../audiocraft/grids/musicgen/musicgen_melody_32khz.py).
+An example is provided in the [musicgen.musicgen_melody_32khz grid](../audiocraft/grids/musicgen/musicgen_melody_32khz.py).
