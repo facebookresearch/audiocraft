@@ -447,6 +447,7 @@ class AudioDataset:
                     logger.warning("Error opening file %s: %r", file_meta.path, exc)
                     if retry == self.max_read_retry - 1:
                         raise
+                    continue
 
                 energy = torch.sqrt(torch.mean(out ** 2))
                 if energy < self.energy_threshold:
