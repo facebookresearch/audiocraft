@@ -1,0 +1,28 @@
+attributes:
+  - name: title
+    type: str
+    default: ""
+  - name: artist
+    type: str
+    default: ""
+  - name: key
+    type: str
+    default: ""
+  - name: bpm
+    type: float
+    default: null
+  - name: genre
+    type: str
+    default: ""
+  - name: moods
+    type: list
+    default: []
+  - name: keywords
+    type: list
+    default: []
+  - name: description
+    type: str
+    default: ""
+  - name: instrument
+    type: str
+    default: ""

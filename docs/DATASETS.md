@@ -73,6 +73,19 @@ The MusicDataset is an AudioDataset with additional metadata. The MusicDataset e
 the additional metadata to be stored in a JSON file that has the same path as the corresponding
 audio file, but with a `.json` extension.
 
+#### MusicInfo
+The JSON metadata from the training set is parsed into a class called MusicInfo, which defines the shape of the information
+passed into the MusicDataset object. The MusicInfo class can be configured in `config/dset/music_info_config.yaml`. The class attributes are defined by their name, type, and their default value as follows:
+```shell
+-name: ATTR_NAME
+ type: ATTR_TYPE
+ default: ATTR_DEFAULT
+```
+This MusicInfo configuration does not define which parameters will be used in the training, only what the shape of the
+information object looks like. All parameters defined are optional, i.e. if a MusicInfo object is created from a
+JSON object, any missing keys will still generate the MusicInfo object without errors, setting any missing parameters to their
+default value defined in the `.yaml` file. There are three optional parameters within the MusicInfo class that are not configurable in the yaml file: `name`, `self_wav`, and `joint_embed`. This is to ensure the robustness of the code, as these should not be removed as class attributes for dependency reasons.
+
 ### SoundDataset and metadata
 
 The SoundDataset is an AudioDataset with descriptions metadata. Similarly to the MusicDataset,

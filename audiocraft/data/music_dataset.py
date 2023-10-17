@@ -14,6 +14,8 @@ import random
 import typing as tp
 
 import torch
+import yaml
+import os
 
 from .info_audio_dataset import (
     InfoAudioDataset,
@@ -33,25 +35,53 @@ from ..utils.utils import warn_once
 logger = logging.getLogger(__name__)
 
 
+# Get the absolute path
+CONFIG_FILE_PATH = os.path.abspath('./config/dset/music_info_config.yaml')
+config_data = yaml.load(open(CONFIG_FILE_PATH, 'r'), Loader=yaml.SafeLoader)
+
+
+def yaml_type_to_typing(type_str):
+    if type_str == "str":
+        return str
+    elif type_str == "int":
+        return int
+    elif type_str == "float":
+        return float
+    elif type_str == "list":
+        return list
+    elif type_str == "bool":
+        return bool
+    else:
+        return tp.Any  # If the type is not recognized, set it as Any
+
+
+
 @dataclass
 class MusicInfo(AudioInfo):
     """Segment info augmented with music metadata.
     """
-    # music-specific metadata
-    title: tp.Optional[str] = None
-    artist: tp.Optional[str] = None  # anonymized artist id, used to ensure no overlap between splits
-    key: tp.Optional[str] = None
-    bpm: tp.Optional[float] = None
-    genre: tp.Optional[str] = None
-    moods: tp.Optional[list] = None
-    keywords: tp.Optional[list] = None
-    description: tp.Optional[str] = None
-    name: tp.Optional[str] = None
-    instrument: tp.Optional[str] = None
+    name: tp.Optional[str] = None # file name
     # original wav accompanying the metadata
     self_wav: tp.Optional[WavCondition] = None
     # dict mapping attributes names to tuple of wav, text and metadata
     joint_embed: tp.Dict[str, JointEmbedCondition] = field(default_factory=dict)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        for attr in config_data['attributes']:
+            attr_name = attr['name']
+            attr_type = yaml_type_to_typing(attr['type'])
+            if attr_name in kwargs:
+                attr_value = kwargs[attr_name]
+            elif attr['default']:
+                attr_value = attr['default']  # Use default value from config
+            else:
+                attr_value = None
+            if isinstance(attr_value, attr_type) or attr_value is None:
+                setattr(self, attr_name, attr_value)
+            else:
+                raise TypeError(f"Attribute {attr_name} does not match the specified type {attr_type}.")
 
     @property
     def has_music_meta(self) -> bool:
