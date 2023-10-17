@@ -35,8 +35,8 @@ def set_efficient_attention_backend(backend: str = 'torch'):
     _efficient_attention_backend = backend
 
 
-def _get_attention_time_dimension() -> int:
-    if _efficient_attention_backend == 'torch':
+def _get_attention_time_dimension(memory_efficient: bool) -> int:
+    if _efficient_attention_backend == 'torch' and memory_efficient:
         return 2
     else:
         return 1
@@ -89,11 +89,11 @@ def create_sin_embedding(positions: torch.Tensor, dim: int, max_period: float = 
     return torch.cat([torch.cos(phase), torch.sin(phase)], dim=-1)
 
 
-def expand_repeated_kv(x: torch.Tensor, n_rep: int) -> torch.Tensor:
+def expand_repeated_kv(x: torch.Tensor, n_rep: int, memory_efficient: bool) -> torch.Tensor:
     """torch.repeat_interleave(x, dim=2, repeats=n_rep) from xlformers."""
     if n_rep == 1:
         return x
-    if _efficient_attention_backend == 'torch':
+    if _efficient_attention_backend == 'torch' and memory_efficient:
         bs, n_kv_heads, slen, head_dim = x.shape
         return (
             x[:, :, None, :, :]
@@ -234,7 +234,7 @@ class StreamingMultiheadAttention(StreamingModule):
         # Return a causal mask, accounting for potentially stored past keys/values
         # We actually return a bias for the attention score, as this has the same
         # convention both in the builtin MHA in Pytorch, and Xformers functions.
-        time_dim = _get_attention_time_dimension()
+        time_dim = _get_attention_time_dimension(self.memory_efficient)
         if self.memory_efficient:
             from xformers.ops import LowerTriangularMask
             if current_steps == 1:
@@ -264,7 +264,7 @@ class StreamingMultiheadAttention(StreamingModule):
             torch.full([], float('-inf'), device=device, dtype=dtype))
 
     def _complete_kv(self, k, v):
-        time_dim = _get_attention_time_dimension()
+        time_dim = _get_attention_time_dimension(self.memory_efficient)
         if self.cross_attention:
             # With cross attention we assume all keys and values
             # are already available, and streaming is with respect
@@ -298,8 +298,7 @@ class StreamingMultiheadAttention(StreamingModule):
         return nk, nv
 
     def _apply_rope(self, query: torch.Tensor, key: torch.Tensor):
-        # TODO: fix and verify layout.
-        assert _efficient_attention_backend == 'xformers', "Rope not supported with torch attn."
+        time_dim = _get_attention_time_dimension(self.memory_efficient)
         # Apply rope embeddings to query and key tensors.
         assert self.rope is not None
         if 'past_keys' in self._streaming_state:
@@ -311,7 +310,7 @@ class StreamingMultiheadAttention(StreamingModule):
         else:
             past_context_offset = 0
         streaming_offset = past_context_offset + past_keys_offset
-        return self.rope.rotate_qk(query, key, start=streaming_offset)
+        return self.rope.rotate_qk(query, key, start=streaming_offset, time_dim=time_dim)
 
     def forward(self, query: torch.Tensor, key: torch.Tensor, value: torch.Tensor,
                 key_padding_mask=None, need_weights=False, attn_mask=None,
@@ -320,7 +319,7 @@ class StreamingMultiheadAttention(StreamingModule):
         assert not is_causal, ("New param added in torch 2.0.1 not supported, "
                                "use the causal args in the constructor.")
 
-        time_dim = _get_attention_time_dimension()
+        time_dim = _get_attention_time_dimension(self.memory_efficient)
         if time_dim == 2:
             layout = "b h t d"
         else:
@@ -394,8 +393,8 @@ class StreamingMultiheadAttention(StreamingModule):
                     q, k = self._apply_rope(q, k)
                 k, v = self._complete_kv(k, v)
                 if self.kv_repeat > 1:
-                    k = expand_repeated_kv(k, self.kv_repeat)
-                    v = expand_repeated_kv(v, self.kv_repeat)
+                    k = expand_repeated_kv(k, self.kv_repeat, self.memory_efficient)
+                    v = expand_repeated_kv(v, self.kv_repeat, self.memory_efficient)
             if self.attention_as_float32:
                 q, k, v = [x.float() for x in [q, k, v]]
             if self.memory_efficient:
