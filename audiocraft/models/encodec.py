@@ -134,11 +134,6 @@ class EncodecModel(CompressionModel):
         causal (bool): Whether to use a causal version of the model.
         renormalize (bool): Whether to renormalize the audio before running the model.
     """
-    # we need assignment to override the property in the abstract class,
-    # I couldn't find a better way...
-    frame_rate: float = 0
-    sample_rate: int = 0
-    channels: int = 0
 
     def __init__(self,
                  encoder: nn.Module,
@@ -153,15 +148,27 @@ class EncodecModel(CompressionModel):
         self.encoder = encoder
         self.decoder = decoder
         self.quantizer = quantizer
-        self.frame_rate = frame_rate
-        self.sample_rate = sample_rate
-        self.channels = channels
+        self._frame_rate = frame_rate
+        self._sample_rate = sample_rate
+        self._channels = channels
         self.renormalize = renormalize
         self.causal = causal
         if self.causal:
             # we force disabling here to avoid handling linear overlap of segments
             # as supported in original EnCodec codebase.
             assert not self.renormalize, 'Causal model does not support renormalize'
+
+    @property
+    def frame_rate(self) -> float:
+        return self._frame_rate
+
+    @property
+    def sample_rate(self) -> int:
+        return self._sample_rate
+
+    @property
+    def channels(self) -> int:
+        return self._channels
 
     @property
     def total_codebooks(self):
