@@ -146,10 +146,10 @@ class PasstKLDivergenceMetric(KLDivergenceMetric):
         """Load pretrained model from PaSST."""
         try:
             if pretrained_length == 30:
-                from hear21passt.base30sec import get_basic_model  # type: ignore
+                from hear21passt.base_30sec import get_basic_model  # type: ignore
                 max_duration = 30
             elif pretrained_length == 20:
-                from hear21passt.base20sec import get_basic_model  # type: ignore
+                from hear21passt.base_20sec import get_basic_model  # type: ignore
                 max_duration = 20
             else:
                 from hear21passt.base import get_basic_model  # type: ignore
