@@ -60,7 +60,7 @@ def _get_state_dict(
     else:
         assert filename is not None, "filename needs to be defined if using HF checkpoints"
 
-        file = hf_hub_download(repo_id=file_or_url_or_id, filename=filename, cache_dir=cache_dir)
+        file = hf_hub_download(repo_id=file_or_url_or_id, filename=filename, cache_dir=cache_dir, library_name="audiocraft")
         return torch.load(file, map_location=device)
 
 
