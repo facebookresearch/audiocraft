@@ -533,9 +533,10 @@ class MusicGenSolver(base.StandardSolver):
                     rtf = 1.
                 else:
                     gen_unprompted_outputs = self.run_generate_step(
-                        batch, gen_duration=target_duration, prompt_duration=prompt_duration,
+                        batch, gen_duration=target_duration, prompt_duration=None,
                         **self.generation_params)
                     gen_unprompted_audio = gen_unprompted_outputs['gen_audio'].cpu()
+                    assert gen_outputs['prompt_audio'] is None
                     rtf = gen_unprompted_outputs['rtf']
                 sample_manager.add_samples(
                     gen_unprompted_audio, self.epoch, hydrated_conditions,
