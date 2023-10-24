@@ -410,7 +410,7 @@ class MusicGenSolver(base.StandardSolver):
         Args:
             batch (tuple[torch.Tensor, list[SegmentWithAttributes]]):
             gen_duration (float): Target audio duration for the generation.
-            prompt_duration (float, optional): Duration for the audio prompt to use for continuation. Set to None for unpromted generation.
+            prompt_duration (float, optional): Duration for the audio prompt to use for continuation. Set to None for unprompted generation.
             remove_prompt (bool, optional): Whether to remove the prompt from the generated audio.
             generation_params: Additional generation parameters.
         Returns:
