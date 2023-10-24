@@ -409,9 +409,8 @@ class MusicGenSolver(base.StandardSolver):
 
         Args:
             batch (tuple[torch.Tensor, list[SegmentWithAttributes]]):
-            use_prompt (bool): Whether to do audio continuation generation with prompt from audio batch.
             gen_duration (float): Target audio duration for the generation.
-            prompt_duration (float, optional): Duration for the audio prompt to use for continuation.
+            prompt_duration (float, optional): Duration for the audio prompt to use for continuation. Set to None for unpromted generation.
             remove_prompt (bool, optional): Whether to remove the prompt from the generated audio.
             generation_params: Additional generation parameters.
         Returns:
@@ -451,7 +450,8 @@ class MusicGenSolver(base.StandardSolver):
             total_gen_len = math.ceil(gen_duration * self.compression_model.frame_rate)
             gen_tokens = self.model.generate(
                 prompt_tokens, attributes, max_gen_len=total_gen_len,
-                num_samples=num_samples, **self.generation_params)
+                num_samples=num_samples, remove_prompts=remove_prompt,
+                **self.generation_params)
 
         # generate audio from tokens
         assert gen_tokens.dim() == 3
