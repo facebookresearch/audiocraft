@@ -13,6 +13,8 @@ Fixed DAC support with non default number of codebooks.
 
 Fixed bug when `two_step_cfg` was overriden when calling `generate()`.
 
+Fixed samples being always prompted with audio, rather than having both prompted and unprompted.
+
 **Backward incompatible change:** A `torch.no_grad` around the computation of the conditioning made its way in the public release.
 	The released models were trained without this. Those impact linear layers applied to the output of the T5 or melody conditioners.
 	We removed it, so you might need to retrain models.
