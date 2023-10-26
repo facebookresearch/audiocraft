@@ -52,6 +52,10 @@ class MusicGen:
         self.name = name
         self.compression_model = compression_model
         self.lm = lm
+        # Just to be safe, let's put everything in eval mode.
+        self.compression_model.eval()
+        self.lm.eval()
+
         if max_duration is None:
             if hasattr(lm, 'cfg'):
                 max_duration = lm.cfg.dataset.segment_duration  # type: ignore

@@ -226,7 +226,6 @@ class MusicGenSolver(base.StandardSolver):
         ce = ce / K
         return ce, ce_per_codebook
 
-    @torch.no_grad()
     def _prepare_tokens_and_attributes(
         self, batch: tp.Tuple[torch.Tensor, tp.List[SegmentWithAttributes]],
         check_synchronization_points: bool = False
