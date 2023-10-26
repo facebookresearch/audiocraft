@@ -276,7 +276,7 @@ class DAC(CompressionModel):
 
     def encode(self, x: torch.Tensor) -> tp.Tuple[torch.Tensor, tp.Optional[torch.Tensor]]:
         codes = self.model.encode(x, self.n_quantizers)[1]
-        return codes, None
+        return codes[:, :self.n_quantizers], None
 
     def decode(self, codes: torch.Tensor, scale: tp.Optional[torch.Tensor] = None):
         assert scale is None

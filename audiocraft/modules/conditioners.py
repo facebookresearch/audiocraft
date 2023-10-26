@@ -792,6 +792,8 @@ class CLAPEmbeddingConditioner(JointEmbeddingConditioner):
             import laion_clap  # type: ignore
         except ImportError:
             raise ImportError("Please install CLAP to use the CLAPEmbeddingConditioner: 'pip install laion_clap'")
+        warnings.warn("Sample rate for CLAP conditioner was fixed in version v1.1.0, (from 44.1 to 48 kHz). "
+                      "Please retrain all models.")
         checkpoint = AudioCraftEnvironment.resolve_reference_path(checkpoint)
         clap_tokenize = RobertaTokenizer.from_pretrained('roberta-base')
         clap_model = laion_clap.CLAP_Module(enable_fusion=enable_fusion, amodel=model_arch)

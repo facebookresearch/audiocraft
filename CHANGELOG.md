@@ -5,9 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 
-## [1.0.1] - TBD
+## [1.1.0a] - TBD
 
 Not using torchaudio anymore when writing audio files, relying instead directly on the commandline ffmpeg. Also not using it anymore for reading audio files, for similar reasons.
+
+Fixed DAC support with non default number of codebooks.
+
+Fixed bug when `two_step_cfg` was overriden when calling `generate()`.
+
+Fixed samples being always prompted with audio, rather than having both prompted and unprompted.
+
+**Backward incompatible change:** A `torch.no_grad` around the computation of the conditioning made its way in the public release.
+	The released models were trained without this. Those impact linear layers applied to the output of the T5 or melody conditioners.
+	We removed it, so you might need to retrain models.
+
+**Backward incompatible change:** Fixing wrong sample rate in CLAP (WARNING if you trained model with CLAP before).
+
+**Backward incompatible change:** Renamed VALLEPattern to CoarseFirstPattern, as it was wrongly named. Probably no one
+	retrained a model with this pattern, so hopefully this won't impact you!
+
 
 ## [1.0.0] - 2023-09-07
 

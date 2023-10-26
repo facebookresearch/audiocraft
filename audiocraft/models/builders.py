@@ -23,7 +23,7 @@ from ..modules.codebooks_patterns import (
     MusicLMPattern,
     ParallelPatternProvider,
     UnrolledPatternProvider,
-    VALLEPattern,
+    CoarseFirstPattern,
 )
 from ..modules.conditioners import (
     BaseConditioner,
@@ -172,7 +172,7 @@ def get_codebooks_pattern_provider(n_q: int, cfg: omegaconf.DictConfig) -> Codeb
         'parallel': ParallelPatternProvider,
         'delay': DelayedPatternProvider,
         'unroll': UnrolledPatternProvider,
-        'valle': VALLEPattern,
+        'coarse_first': CoarseFirstPattern,
         'musiclm': MusicLMPattern,
     }
     name = cfg.modeling
@@ -196,7 +196,6 @@ def get_debug_compression_model(device='cpu', sample_rate: int = 32000):
         'dimension': 32,
         'ratios': ratios,
     }
-    print(seanet_kwargs)
     encoder = audiocraft.modules.SEANetEncoder(**seanet_kwargs)
     decoder = audiocraft.modules.SEANetDecoder(**seanet_kwargs)
     quantizer = qt.ResidualVectorQuantizer(dimension=32, bins=400, n_q=4)
