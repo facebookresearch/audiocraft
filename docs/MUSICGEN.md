@@ -143,6 +143,10 @@ We provide a dummy dataset containing just a few examples for illustrative purpo
 
 Please read first the [TRAINING documentation](./TRAINING.md), in particular the Environment Setup section.
 
+
+**Warning:** As of version 1.1.0, a few breaking changes were introduced. Check the [CHANGELOG.md](../CHANGELOG.md)
+file for more information. You might need to retrain some of your models.
+
 ### Example configurations and grids
 
 We provide configurations to reproduce the released models and our research.

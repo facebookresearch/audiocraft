@@ -56,3 +56,10 @@ class TestMusicGenModel:
         wav = mg.generate(
             ['youpi', 'lapin dort'])
         assert list(wav.shape) == [2, 1, 32000 * 4]
+
+    def test_generate_two_step_cfg(self):
+        mg = self.get_musicgen()
+        mg.set_generation_params(duration=2.0, extend_stride=2., two_step_cfg=True)
+        wav = mg.generate(
+            ['youpi', 'lapin dort'])
+        assert list(wav.shape) == [2, 1, 64000]
