@@ -287,9 +287,9 @@ Once you have launched some experiments, you can easily get access
 to the Solver with the latest trained model using the following snippet.
 
 ```python
-from audiocraft.solvers.musicgen import MusicGen
+from audiocraft.solvers.musicgen import MusicGenSolver
 
-solver = MusicGen.get_eval_solver_from_sig('SIG', device='cpu', batch_size=8)
+solver = MusicGenSolver.get_eval_solver_from_sig('SIG', device='cpu', batch_size=8)
 solver.model
 solver.dataloaders
 ```
