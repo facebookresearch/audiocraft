@@ -113,5 +113,5 @@ Learn more about AudioCraft training pipelines in the [dedicated section](./TRAI
 See license information in the [README](../README.md).
 
 
-[arxiv]: https://dl.fbaipublicfiles.com/encodec/Diffusion/paper.pdf
+[arxiv]: https://arxiv.org/abs/2308.02560
 [mbd_samples]: https://ai.honu.io/papers/mbd/

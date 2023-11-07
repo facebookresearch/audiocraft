@@ -9,19 +9,23 @@
 
 import argparse
 from concurrent.futures import ProcessPoolExecutor
+import logging
 import os
 from pathlib import Path
 import subprocess as sp
+import sys
 from tempfile import NamedTemporaryFile
 import time
 import typing as tp
 import warnings
 
+from einops import rearrange
 import torch
 import gradio as gr
 
 from audiocraft.data.audio_utils import convert_audio
 from audiocraft.data.audio import audio_write
+from audiocraft.models.encodec import InterleaveStereoCompressionModel
 from audiocraft.models import MusicGen, MultiBandDiffusion
 
 
@@ -91,6 +95,8 @@ def load_model(version='facebook/musicgen-melody'):
     global MODEL
     print("Loading model", version)
     if MODEL is None or MODEL.name != version:
+        del MODEL
+        MODEL = None  # in case loading would crash
         MODEL = MusicGen.get_pretrained(version)
 
 
@@ -119,18 +125,28 @@ def _do_predictions(texts, melodies, duration, progress=False, **gen_kwargs):
             melody = convert_audio(melody, sr, target_sr, target_ac)
             processed_melodies.append(melody)
 
-    if any(m is not None for m in processed_melodies):
-        outputs = MODEL.generate_with_chroma(
-            descriptions=texts,
-            melody_wavs=processed_melodies,
-            melody_sample_rate=target_sr,
-            progress=progress,
-            return_tokens=USE_DIFFUSION
-        )
-    else:
-        outputs = MODEL.generate(texts, progress=progress, return_tokens=USE_DIFFUSION)
+    try:
+        if any(m is not None for m in processed_melodies):
+            outputs = MODEL.generate_with_chroma(
+                descriptions=texts,
+                melody_wavs=processed_melodies,
+                melody_sample_rate=target_sr,
+                progress=progress,
+                return_tokens=USE_DIFFUSION
+            )
+        else:
+            outputs = MODEL.generate(texts, progress=progress, return_tokens=USE_DIFFUSION)
+    except RuntimeError as e:
+        raise gr.Error("Error while generating " + e.args[0])
     if USE_DIFFUSION:
-        outputs_diffusion = MBD.tokens_to_wav(outputs[1])
+        tokens = outputs[1]
+        if isinstance(MODEL.compression_model, InterleaveStereoCompressionModel):
+            left, right = MODEL.compression_model.get_left_right_codes(tokens)
+            tokens = torch.cat([left, right])
+        outputs_diffusion = MBD.tokens_to_wav(tokens)
+        if isinstance(MODEL.compression_model, InterleaveStereoCompressionModel):
+            assert outputs_diffusion.shape[1] == 1  # output is mono
+            outputs_diffusion = rearrange(outputs_diffusion, '(s b) c t -> b (s c) t', s=2)
         outputs = torch.cat([outputs[0], outputs_diffusion], dim=0)
     outputs = outputs.detach().cpu().float()
     pending_videos = []
@@ -154,15 +170,25 @@ def _do_predictions(texts, melodies, duration, progress=False, **gen_kwargs):
 def predict_batched(texts, melodies):
     max_text_length = 512
     texts = [text[:max_text_length] for text in texts]
-    load_model('facebook/musicgen-melody')
+    load_model('facebook/musicgen-stereo-melody')
     res = _do_predictions(texts, melodies, BATCHED_DURATION)
     return res
 
 
-def predict_full(model, decoder, text, melody, duration, topk, topp, temperature, cfg_coef, progress=gr.Progress()):
+def predict_full(model, model_path, decoder, text, melody, duration, topk, topp, temperature, cfg_coef, progress=gr.Progress()):
     global INTERRUPTING
     global USE_DIFFUSION
     INTERRUPTING = False
+    model_path = model_path.strip()
+    if not model.startswith('facebook/'):
+        model = Path.home() / 'stereo_release' / model
+    if model_path:
+        if not Path(model_path).exists():
+            raise gr.Error(f"Model path {model_path} doesn't exist.")
+        if not Path(model_path).is_dir():
+            raise gr.Error(f"Model path {model_path} must be a folder containing "
+                           "state_dict.bin and compression_state_dict_.bin.")
+        model = model_path
     if temperature < 0:
         raise gr.Error("Temperature must be >= 0.")
     if topk < 0:
@@ -231,8 +257,12 @@ def ui_full(launch_kwargs):
                     _ = gr.Button("Interrupt").click(fn=interrupt, queue=False)
                 with gr.Row():
                     model = gr.Radio(["facebook/musicgen-melody", "facebook/musicgen-medium", "facebook/musicgen-small",
-                                      "facebook/musicgen-large"],
-                                     label="Model", value="facebook/musicgen-melody", interactive=True)
+                                      "facebook/musicgen-large", "facebook/musicgen-melody-large",
+                                      "facebook/musicgen-stereo-small", "facebook/musicgen-stereo-medium",
+                                      "facebook/musicgen-stereo-melody", "facebook/musicgen-stereo-large",
+                                      "facebook/musicgen-stereo-melody-large"],
+                                     label="Model", value="musicgen-stereo-melody", interactive=True)
+                    model_path = gr.Text(label="Model Path (custom models)")
                 with gr.Row():
                     decoder = gr.Radio(["Default", "MultiBand_Diffusion"],
                                        label="Decoder", value="Default", interactive=True)
@@ -249,7 +279,7 @@ def ui_full(launch_kwargs):
                 diffusion_output = gr.Video(label="MultiBand Diffusion Decoder")
                 audio_diffusion = gr.Audio(label="MultiBand Diffusion Decoder (wav)", type='filepath')
         submit.click(toggle_diffusion, decoder, [diffusion_output, audio_diffusion], queue=False,
-                     show_progress=False).then(predict_full, inputs=[model, decoder, text, melody, duration, topk, topp,
+                     show_progress=False).then(predict_full, inputs=[model, model_path, decoder, text, melody, duration, topk, topp,
                                                                      temperature, cfg_coef],
                                                outputs=[output, audio_output, diffusion_output, audio_diffusion])
         radio.change(toggle_audio_src, radio, [melody], queue=False, show_progress=False)
@@ -260,37 +290,37 @@ def ui_full(launch_kwargs):
                 [
                     "An 80s driving pop song with heavy drums and synth pads in the background",
                     "./assets/bach.mp3",
-                    "facebook/musicgen-melody",
+                    "facebook/musicgen-stereo-melody",
                     "Default"
                 ],
                 [
                     "A cheerful country song with acoustic guitars",
                     "./assets/bolero_ravel.mp3",
-                    "facebook/musicgen-melody",
+                    "facebook/musicgen-stereo-melody",
                     "Default"
                 ],
                 [
                     "90s rock song with electric guitar and heavy drums",
                     None,
-                    "facebook/musicgen-medium",
+                    "facebook/musicgen-stereo-medium",
                     "Default"
                 ],
                 [
                     "a light and cheerly EDM track, with syncopated drums, aery pads, and strong emotions",
                     "./assets/bach.mp3",
-                    "facebook/musicgen-melody",
+                    "facebook/musicgen-stereo-melody",
                     "Default"
                 ],
                 [
                     "lofi slow bpm electro chill with organic samples",
                     None,
-                    "facebook/musicgen-medium",
+                    "facebook/musicgen-stereo-medium",
                     "Default"
                 ],
                 [
                     "Punk rock with loud drum and power guitar",
                     None,
-                    "facebook/musicgen-medium",
+                    "facebook/musicgen-stereo-medium",
                     "MultiBand_Diffusion"
                 ],
             ],
@@ -311,23 +341,25 @@ def ui_full(launch_kwargs):
             An overlap of 12 seconds is kept with the previously generated chunk, and 18 "new" seconds
             are generated each time.
 
-            We present 4 model variations:
+            We present 10 model variations:
             1. facebook/musicgen-melody -- a music generation model capable of generating music condition
                 on text and melody inputs. **Note**, you can also use text only.
             2. facebook/musicgen-small -- a 300M transformer decoder conditioned on text only.
             3. facebook/musicgen-medium -- a 1.5B transformer decoder conditioned on text only.
             4. facebook/musicgen-large -- a 3.3B transformer decoder conditioned on text only.
+            5. facebook/musicgen-melody-large -- a 3.3B transformer decoder conditioned on and melody.
+            6. facebook/musicgen-stereo-*: same as the previous models but fine tuned to output stereo audio.
 
             We also present two way of decoding the audio tokens
-            1. Use the default GAN based compression model
-            2. Use MultiBand Diffusion from (paper linknano )
+            1. Use the default GAN based compression model.
+            2. Use [MultiBand Diffusion](https://arxiv.org/abs/2308.02560).
 
             When using `facebook/musicgen-melody`, you can optionally provide a reference audio from
             which a broad melody will be extracted. The model will then try to follow both
             the description and melody provided.
 
             You can also use your own GPU or a Google Colab by following the instructions on our repo.
-            See [github.com/facebookresearch/audiocraft](https://github.com/facebookresearch/audiocraft)
+            See [github.com/facebookresearch/audiocraft](https://github.com/facebookresearch/audiocraft/blob/main/docs/MUSICGEN.md)
             for more details.
             """
         )
@@ -341,7 +373,7 @@ def ui_batched(launch_kwargs):
             """
             # MusicGen
 
-            This is the demo for [MusicGen](https://github.com/facebookresearch/audiocraft),
+            This is the demo for [MusicGen](https://github.com/facebookresearch/audiocraft/blob/main/docs/MUSICGEN.md),
             a simple and controllable model for music generation
             presented at: ["Simple and Controllable Music Generation"](https://huggingface.co/papers/2306.05284).
             <br/>
@@ -406,7 +438,7 @@ def ui_batched(launch_kwargs):
 
         You can also use your own GPU or a Google Colab by following the instructions on our repo.
 
-        See [github.com/facebookresearch/audiocraft](https://github.com/facebookresearch/audiocraft)
+        See [github.com/facebookresearch/audiocraft](https://github.com/facebookresearch/audiocraft/blob/main/docs/MUSICGEN.md)
         for more details.
         """)
 
@@ -453,6 +485,8 @@ if __name__ == "__main__":
         launch_kwargs['inbrowser'] = args.inbrowser
     if args.share:
         launch_kwargs['share'] = args.share
+
+    logging.basicConfig(level=logging.INFO, stream=sys.stderr)
 
     # Show the interface
     if IS_BATCHED:

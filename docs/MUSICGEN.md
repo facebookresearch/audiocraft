@@ -47,11 +47,18 @@ which is regularly updated with contributions from @camenduru and the community.
 
 ## API
 
-We provide a simple API and 4 pre-trained models. The pre trained models are:
+We provide a simple API and 10 pre-trained models. The pre trained models are:
 - `facebook/musicgen-small`: 300M model, text to music only - [🤗 Hub](https://huggingface.co/facebook/musicgen-small)
 - `facebook/musicgen-medium`: 1.5B model, text to music only - [🤗 Hub](https://huggingface.co/facebook/musicgen-medium)
 - `facebook/musicgen-melody`: 1.5B model, text to music and text+melody to music - [🤗 Hub](https://huggingface.co/facebook/musicgen-melody)
 - `facebook/musicgen-large`: 3.3B model, text to music only - [🤗 Hub](https://huggingface.co/facebook/musicgen-large)
+- `facebook/musicgen-melody-large`: 3.3B model, text to music and text+melody to music - [🤗 Hub](https://huggingface.co/facebook/musicgen-melody-large)
+- `facebook/musicgen-stereo-*`: All the previous models fine tuned for stereo generation -
+    [small](https://huggingface.co/facebook/musicgen-stereo-small),
+    [medium](https://huggingface.co/facebook/musicgen-stereo-medium),
+    [large](https://huggingface.co/facebook/musicgen-stereo-large),
+    [melody](https://huggingface.co/facebook/musicgen-stereo-melody),
+    [melody large](https://huggingface.co/facebook/musicgen-stereo-melody-large).
 
 We observe the best trade-off between quality and compute with the `facebook/musicgen-medium` or `facebook/musicgen-melody` model.
 In order to use MusicGen locally **you must have a GPU**. We recommend 16GB of memory, but smaller
@@ -209,6 +216,19 @@ dora run solver=musicgen/debug \
 **Warning:** you are responsible for setting the proper value for `transformer_lm.n_q` and `transformer_lm.card` (cardinality of the codebooks). You also have to update the codebook_pattern to match `n_q` as shown in the example for using DAC. .
 
 
+### Training stereo models
+
+Use the option `interleave_stereo_codebooks.use` set to `True` to activate stereo training along with `channels=2`. Left and right channels will be
+encoded separately by the compression model, then their codebook will be interleaved, e.g. order of codebook is
+`[1_L, 1_R, 2_L, 2_R, ...]`. You will also need to update the delays for the codebook patterns to match the number of codebooks, and the `n_q` value passed to the transformer LM:
+```
+dora run solver=musicgen/debug \
+    compression_model_checkpoint=//pretrained/facebook/encodec_32khz \
+    channels=2 interleave_stereo_codebooks.use=True \
+    transformer_lm.n_q=8 transformer_lm.card=2048 \
+    codebooks_pattern.delay.delays='[0, 0, 1, 1, 2, 2, 3, 3]'
+```
+
 ### Fine tuning existing models
 
 You can initialize your model to one of the pretrained models by using the `continue_from` argument, in particular
@@ -231,6 +251,39 @@ dora run solver=musicgen/musicgen_base_32khz model/lm/model_scale=medium continu
  to change some parts, like the conditioning or some other parts of the model, you are responsible for manually crafting a checkpoint file from which we can safely run `load_state_dict`.
  If you decide to do so, make sure your checkpoint is saved with `torch.save` and contains a dict
     `{'best_state': {'model': model_state_dict_here}}`. Directly give the path to `continue_from` without a `//pretrained/` prefix.
+
+
+#### Fine tuning mono model to stereo
+
+You will not be able to `continue_from` a mono model with stereo training, as the shape of the embeddings and output linears
+would not match. You can use the following snippet to prepare a proper finetuning checkpoint.
+
+```python
+from pathlib import Path
+import torch
+
+# Download the pretrained model, e.g. from
+# https://huggingface.co/facebook/musicgen-melody/blob/main/state_dict.bin
+
+model_name = 'musicgen-melody'
+root = Path.home() / 'checkpoints'
+# You are responsible for downloading the following checkpoint in the proper location
+input_state_dict_path = root / model_name / 'state_dict.bin'
+state = torch.load(input_state_dict_path, 'cpu')
+bs = state['best_state']
+# there is a slight different in format between training checkpoints and exported public checkpoints.
+# If you want to use your own mono models from one of your training checkpont, following the instructions
+# for exporting a model explained later on this page.
+assert 'model' not in bs, 'The following code is for using an exported pretrained model'
+nbs = dict(bs)
+for k in range(8):
+    # We will just copy mono embeddings and linears twice, once for left and right channels.
+    nbs[f'linears.{k}.weight'] = bs[f'linears.{k//2}.weight']
+    nbs[f'emb.{k}.weight'] = bs[f'emb.{k//2}.weight']
+torch.save({'best_state': {'model': nbs}}, root / f'stereo_finetune_{model_name}.th')
+```
+
+Now, you can use `$HOME/checkpoints/stereo_finetune_musicgen-melody.th` as a `continue_from` target (without a `//pretrained` prefix!).
 
 ### Caching of EnCodec tokens
 
