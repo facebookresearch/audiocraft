@@ -469,6 +469,8 @@ class WaveformConditioner(BaseConditioner):
     def __init__(self, dim: int, output_dim: int, device: tp.Union[torch.device, str]):
         super().__init__(dim, output_dim)
         self.device = device
+        # if False no masking is done, used in ChromaStemConditioner when completing by periodicity a sample.
+        self._use_masking = True
 
     def tokenize(self, x: WavCondition) -> WavCondition:
         wav, length, sample_rate, path, seek_time = x
@@ -496,13 +498,12 @@ class WaveformConditioner(BaseConditioner):
         embeds = embeds.to(self.output_proj.weight)
         embeds = self.output_proj(embeds)
 
-        if lengths is not None:
+        if lengths is not None and self._use_masking:
             lengths = lengths / self._downsampling_factor()
             mask = length_to_mask(lengths, max_len=embeds.shape[1]).int()  # type: ignore
         else:
-            mask = torch.ones_like(embeds)
-        embeds = (embeds * mask.unsqueeze(2).to(self.device))
-
+            mask = torch.ones_like(embeds[..., 0])
+        embeds = (embeds * mask.unsqueeze(-1))
         return embeds, mask
 
 
@@ -537,6 +538,8 @@ class ChromaStemConditioner(WaveformConditioner):
         self.autocast = TorchAutocast(enabled=device != 'cpu', device_type=self.device, dtype=torch.float32)
         self.sample_rate = sample_rate
         self.match_len_on_eval = match_len_on_eval
+        if match_len_on_eval:
+            self._use_masking = False
         self.duration = duration
         self.__dict__['demucs'] = pretrained.get_model('htdemucs').to(device)
         stem_sources: list = self.demucs.sources  # type: ignore
@@ -792,6 +795,8 @@ class CLAPEmbeddingConditioner(JointEmbeddingConditioner):
             import laion_clap  # type: ignore
         except ImportError:
             raise ImportError("Please install CLAP to use the CLAPEmbeddingConditioner: 'pip install laion_clap'")
+        warnings.warn("Sample rate for CLAP conditioner was fixed in version v1.1.0, (from 44.1 to 48 kHz). "
+                      "Please retrain all models.")
         checkpoint = AudioCraftEnvironment.resolve_reference_path(checkpoint)
         clap_tokenize = RobertaTokenizer.from_pretrained('roberta-base')
         clap_model = laion_clap.CLAP_Module(enable_fusion=enable_fusion, amodel=model_arch)

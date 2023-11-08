@@ -14,9 +14,19 @@ solver: musicgen
 sample_rate: ???
 channels: ???
 compression_model_checkpoint: ???
+# The following will set the num codebooks on the underlying
+# model, this might be different from the actual value for n_q
+# given to the transformer, when the model output is postprocessed, for instance
+# for stereo channels. If not provided, default value for the compression model
+# will be used.
+compression_model_n_q: null
 
 tokens:
   padding_with_special_token: false
+
+interleave_stereo_codebooks:
+  use: false
+  per_timestep: false
 
 cache:
   path:

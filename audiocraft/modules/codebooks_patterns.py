@@ -486,9 +486,14 @@ class UnrolledPatternProvider(CodebooksPatternProvider):
         return Pattern(out, n_q=self.n_q, timesteps=timesteps)
 
 
-class VALLEPattern(CodebooksPatternProvider):
-    """Almost VALL-E style pattern.
-    We further allow some delays for the codebooks other than the first one.
+class CoarseFirstPattern(CodebooksPatternProvider):
+    """First generates all the codebooks #1 (e.g. coarser), then the remaining ones,
+    potentially with delays.
+
+    ..Warning:: You must always generate the full training duration at test time, for instance,
+        30 seconds, as otherwise, the fine codebooks will start being generated in an unexpected
+        location. This is due to the non causality of the remaining codebooks with respect to
+        the first ones.
 
     Args:
         n_q (int): Number of codebooks.
