@@ -12,11 +12,12 @@ and provide easy access to the generation API.
 import typing as tp
 import warnings
 
+import omegaconf
 import torch
 
 from .encodec import CompressionModel
 from .lm import LMModel
-from .builders import get_debug_compression_model, get_debug_lm_model
+from .builders import get_debug_compression_model, get_debug_lm_model, get_wrapped_compression_model
 from .loaders import load_compression_model, load_lm_model
 from ..data.audio_utils import convert_audio
 from ..modules.conditioners import ConditioningAttributes, WavCondition
@@ -52,18 +53,28 @@ class MusicGen:
         self.name = name
         self.compression_model = compression_model
         self.lm = lm
+        self.cfg: tp.Optional[omegaconf.DictConfig] = None
         # Just to be safe, let's put everything in eval mode.
         self.compression_model.eval()
         self.lm.eval()
 
+        if hasattr(lm, 'cfg'):
+            cfg = lm.cfg
+            assert isinstance(cfg, omegaconf.DictConfig)
+            self.cfg = cfg
+
+        if self.cfg is not None:
+            self.compression_model = get_wrapped_compression_model(self.compression_model, self.cfg)
+
         if max_duration is None:
-            if hasattr(lm, 'cfg'):
+            if self.cfg is not None:
                 max_duration = lm.cfg.dataset.segment_duration  # type: ignore
             else:
                 raise ValueError("You must provide max_duration when building directly MusicGen")
         assert max_duration is not None
         self.max_duration: float = max_duration
         self.device = next(iter(lm.parameters())).device
+
         self.generation_params: dict = {}
         self.set_generation_params(duration=15)  # 15 seconds by default
         self._progress_callback: tp.Optional[tp.Callable[[int, int], None]] = None
@@ -122,6 +133,7 @@ class MusicGen:
         compression_model = load_compression_model(name, device=device)
         if 'self_wav' in lm.condition_provider.conditioners:
             lm.condition_provider.conditioners['self_wav'].match_len_on_eval = True
+            lm.condition_provider.conditioners['self_wav']._use_masking = False
 
         return MusicGen(name, compression_model, lm)
 

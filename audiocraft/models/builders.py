@@ -15,7 +15,7 @@ import audiocraft
 import omegaconf
 import torch
 
-from .encodec import CompressionModel, EncodecModel
+from .encodec import CompressionModel, EncodecModel, InterleaveStereoCompressionModel
 from .lm import LMModel
 from ..modules.codebooks_patterns import (
     CodebooksPatternProvider,
@@ -247,5 +247,12 @@ def get_debug_lm_model(device='cpu'):
 def get_wrapped_compression_model(
         compression_model: CompressionModel,
         cfg: omegaconf.DictConfig) -> CompressionModel:
-    # more to come.
+    if hasattr(cfg, 'interleave_stereo_codebooks'):
+        if cfg.interleave_stereo_codebooks.use:
+            kwargs = dict_from_config(cfg.interleave_stereo_codebooks)
+            kwargs.pop('use')
+            compression_model = InterleaveStereoCompressionModel(compression_model, **kwargs)
+    if hasattr(cfg, 'compression_model_n_q'):
+        if cfg.compression_model_n_q is not None:
+            compression_model.set_num_codebooks(cfg.compression_model_n_q)
     return compression_model
