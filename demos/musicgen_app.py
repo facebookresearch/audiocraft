@@ -30,7 +30,8 @@ from audiocraft.models import MusicGen, MultiBandDiffusion
 
 
 MODEL = None  # Last used model
-IS_BATCHED = "facebook/MusicGen" in os.environ.get('SPACE_ID', '')
+SPACE_ID = os.environ.get('SPACE_ID', '')
+IS_BATCHED = "facebook/MusicGen" in SPACE_ID or 'musicgen-internal/musicgen_dev' in SPACE_ID
 print(IS_BATCHED)
 MAX_BATCH_SIZE = 12
 BATCHED_DURATION = 15
@@ -107,7 +108,7 @@ def load_diffusion():
         MBD = MultiBandDiffusion.get_mbd_musicgen()
 
 
-def _do_predictions(texts, melodies, duration, progress=False, **gen_kwargs):
+def _do_predictions(texts, melodies, duration, progress=False, gradio_progress=None, **gen_kwargs):
     MODEL.set_generation_params(duration=duration, **gen_kwargs)
     print("new batch", len(texts), texts, [None if m is None else (m[0], m[1].shape) for m in melodies])
     be = time.time()
@@ -139,6 +140,8 @@ def _do_predictions(texts, melodies, duration, progress=False, **gen_kwargs):
     except RuntimeError as e:
         raise gr.Error("Error while generating " + e.args[0])
     if USE_DIFFUSION:
+        if gradio_progress is not None:
+            gradio_progress(1, desc='Running MultiBandDiffusion...')
         tokens = outputs[1]
         if isinstance(MODEL.compression_model, InterleaveStereoCompressionModel):
             left, right = MODEL.compression_model.get_left_right_codes(tokens)
@@ -179,9 +182,8 @@ def predict_full(model, model_path, decoder, text, melody, duration, topk, topp,
     global INTERRUPTING
     global USE_DIFFUSION
     INTERRUPTING = False
+    progress(0, desc="Loading model...")
     model_path = model_path.strip()
-    if not model.startswith('facebook/'):
-        model = Path.home() / 'stereo_release' / model
     if model_path:
         if not Path(model_path).exists():
             raise gr.Error(f"Model path {model_path} doesn't exist.")
@@ -199,20 +201,26 @@ def predict_full(model, model_path, decoder, text, melody, duration, topk, topp,
     topk = int(topk)
     if decoder == "MultiBand_Diffusion":
         USE_DIFFUSION = True
+        progress(0, desc="Loading diffusion model...")
         load_diffusion()
     else:
         USE_DIFFUSION = False
     load_model(model)
 
+    max_generated = 0
+
     def _progress(generated, to_generate):
-        progress((min(generated, to_generate), to_generate))
+        nonlocal max_generated
+        max_generated = max(generated, max_generated)
+        progress((min(max_generated, to_generate), to_generate))
         if INTERRUPTING:
             raise gr.Error("Interrupted.")
     MODEL.set_custom_progress_callback(_progress)
 
     videos, wavs = _do_predictions(
         [text], [melody], duration, progress=True,
-        top_k=topk, top_p=topp, temperature=temperature, cfg_coef=cfg_coef)
+        top_k=topk, top_p=topp, temperature=temperature, cfg_coef=cfg_coef,
+        gradio_progress=progress)
     if USE_DIFFUSION:
         return videos[0], wavs[0], videos[1], wavs[1]
     return videos[0], wavs[0], None, None
@@ -261,7 +269,7 @@ def ui_full(launch_kwargs):
                                       "facebook/musicgen-stereo-small", "facebook/musicgen-stereo-medium",
                                       "facebook/musicgen-stereo-melody", "facebook/musicgen-stereo-large",
                                       "facebook/musicgen-stereo-melody-large"],
-                                     label="Model", value="musicgen-stereo-melody", interactive=True)
+                                     label="Model", value="facebook/musicgen-stereo-melody", interactive=True)
                     model_path = gr.Text(label="Model Path (custom models)")
                 with gr.Row():
                     decoder = gr.Radio(["Default", "MultiBand_Diffusion"],
@@ -332,8 +340,18 @@ def ui_full(launch_kwargs):
             ### More details
 
             The model will generate a short music extract based on the description you provided.
-            The model can generate up to 30 seconds of audio in one pass. It is now possible
-            to extend the generation by feeding back the end of the previous chunk of audio.
+            The model can generate up to 30 seconds of audio in one pass.
+
+            The model was trained with description from a stock music catalog, descriptions that will work best
+            should include some level of details on the instruments present, along with some intended use case
+            (e.g. adding "perfect for a commercial" can somehow help).
+
+            Using one of the `melody` model (e.g. `musicgen-melody-*`), you can optionally provide a reference audio
+            from which a broad melody will be extracted.
+            The model will then try to follow both the description and melody provided.
+            For best results, the melody should be 30 seconds long (I know, the samples we provide are not...)
+
+            It is now possible to extend the generation by feeding back the end of the previous chunk of audio.
             This can take a long time, and the model might lose consistency. The model might also
             decide at arbitrary positions that the song ends.
 
@@ -351,14 +369,12 @@ def ui_full(launch_kwargs):
             6. facebook/musicgen-stereo-*: same as the previous models but fine tuned to output stereo audio.
 
             We also present two way of decoding the audio tokens
-            1. Use the default GAN based compression model.
-            2. Use [MultiBand Diffusion](https://arxiv.org/abs/2308.02560).
+            1. Use the default GAN based compression model. It can suffer from artifacts especially
+                for crashes, snares etc.
+            2. Use [MultiBand Diffusion](https://arxiv.org/abs/2308.02560). Should improve the audio quality,
+                at an extra computational cost. When this is selected, we provide both the GAN based decoded
+                audio, and the one obtained with MBD.
 
-            When using `facebook/musicgen-melody`, you can optionally provide a reference audio from
-            which a broad melody will be extracted. The model will then try to follow both
-            the description and melody provided.
-
-            You can also use your own GPU or a Google Colab by following the instructions on our repo.
             See [github.com/facebookresearch/audiocraft](https://github.com/facebookresearch/audiocraft/blob/main/docs/MUSICGEN.md)
             for more details.
             """
@@ -431,15 +447,27 @@ def ui_batched(launch_kwargs):
         gr.Markdown("""
         ### More details
 
-        The model will generate 12 seconds of audio based on the description you provided.
+        The model will generate 15 seconds of audio based on the description you provided.
+        The model was trained with description from a stock music catalog, descriptions that will work best
+        should include some level of details on the instruments present, along with some intended use case
+        (e.g. adding "perfect for a commercial" can somehow help).
+
         You can optionally provide a reference audio from which a broad melody will be extracted.
         The model will then try to follow both the description and melody provided.
-        All samples are generated with the `melody` model.
+        For best results, the melody should be 30 seconds long (I know, the samples we provide are not...)
 
-        You can also use your own GPU or a Google Colab by following the instructions on our repo.
+        You can access more control (longer generation, more models etc.) by clicking
+        the <a href="https://huggingface.co/spaces/facebook/MusicGen?duplicate=true"
+                style="display: inline-block;margin-top: .5em;margin-right: .25em;" target="_blank">
+            <img style="margin-bottom: 0em;display: inline;margin-top: -.25em;"
+                src="https://bit.ly/3gLdBN6" alt="Duplicate Space"></a>
+        (you will then need a paid GPU from HuggingFace).
+        If you have a GPU, you can run the gradio demo locally (click the link to our repo below for more info).
+        Finally, you can get a GPU for free from Google
+        and run the demo in [a Google Colab.](https://ai.honu.io/red/musicgen-colab).
 
         See [github.com/facebookresearch/audiocraft](https://github.com/facebookresearch/audiocraft/blob/main/docs/MUSICGEN.md)
-        for more details.
+        for more details. All samples are generated with the `stereo-melody` model.
         """)
 
         demo.queue(max_size=8 * 4).launch(**launch_kwargs)
