@@ -96,7 +96,6 @@ def load_model(version='facebook/musicgen-melody'):
     global MODEL
     print("Loading model", version)
     if MODEL is None or MODEL.name != version:
-        del MODEL
         MODEL = None  # in case loading would crash
         MODEL = MusicGen.get_pretrained(version)
 
