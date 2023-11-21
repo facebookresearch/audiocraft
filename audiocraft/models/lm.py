@@ -383,6 +383,7 @@ class LMModel(StreamingModule):
     def generate(self,
                  prompt: tp.Optional[torch.Tensor] = None,
                  conditions: tp.List[ConditioningAttributes] = [],
+                 condition_tensors: tp.Optional[ConditionTensors] = None,
                  num_samples: tp.Optional[int] = None,
                  max_gen_len: int = 256,
                  use_sampling: bool = True,
@@ -400,6 +401,7 @@ class LMModel(StreamingModule):
         Args:
             prompt (torch.Tensor, optional): Prompt tokens of shape [B, K, T].
             conditions (list of ConditioningAttributes, optional): List of conditions.
+            condition_tensors (list of str, ConditionType, optional): List of pre-computed conditioning tensors
             num_samples (int, optional): Number of samples to generate when no prompt and no conditions are given.
             max_gen_len (int): Maximum generation length.
             use_sampling (bool): Whether to use a sampling strategy or not.
@@ -442,7 +444,9 @@ class LMModel(StreamingModule):
         # With a batch size of 1, this can be slower though.
         cfg_conditions: CFGConditions
         two_step_cfg = self.two_step_cfg if two_step_cfg is None else two_step_cfg
-        if conditions:
+        if condition_tensors:
+            cfg_conditions = condition_tensors
+        elif conditions:
             null_conditions = ClassifierFreeGuidanceDropout(p=1.0)(conditions)
             if two_step_cfg:
                 cfg_conditions = (
