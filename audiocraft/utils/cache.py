@@ -287,6 +287,7 @@ class CachedBatchLoader:
                     if isinstance(part[0], torch.Tensor):
                         out.append(torch.stack(part))
                     else:
+                        assert isinstance(part, torch.Tensor)
                         out.append(part)
                 return out
         except Exception:
