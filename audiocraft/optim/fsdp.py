@@ -143,8 +143,8 @@ class _FSDPFixStateDict(FSDP):
         new_parts = [part for part in parts if part != FSDP_WRAPPED_MODULE]
         return '.'.join(new_parts)
 
-    def state_dict(self) -> tp.Dict[str, tp.Any]:  # type: ignore
-        state = dict(super().state_dict())
+    def state_dict(self, *args, **kwargs) -> tp.Dict[str, tp.Any]:  # type: ignore
+        state = dict(super().state_dict(*args, **kwargs))
         for key, value in list(state.items()):
             if is_sharded_tensor(value):
                 del state[key]

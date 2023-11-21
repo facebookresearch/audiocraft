@@ -185,7 +185,7 @@ def length_to_mask(lengths: torch.Tensor, max_len: tp.Optional[int] = None) -> t
     assert len(lengths.shape) == 1, "Length shape should be 1 dimensional."
     final_length = lengths.max().item() if not max_len else max_len
     final_length = max(final_length, 1)  # if all seqs are of len zero we don't want a zero-size tensor
-    return torch.arange(final_length)[None, :].to(lengths.device) < lengths[:, None]
+    return torch.arange(final_length, device=lengths.device)[None, :] < lengths[:, None]
 
 
 def hash_trick(word: str, vocab_size: int) -> int:
