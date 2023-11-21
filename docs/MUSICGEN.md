@@ -340,9 +340,9 @@ Once you have launched some experiments, you can easily get access
 to the Solver with the latest trained model using the following snippet.
 
 ```python
-from audiocraft.solvers.musicgen import MusicGen
+from audiocraft.solvers.musicgen import MusicGenSolver
 
-solver = MusicGen.get_eval_solver_from_sig('SIG', device='cpu', batch_size=8)
+solver = MusicGenSolver.get_eval_solver_from_sig('SIG', device='cpu', batch_size=8)
 solver.model
 solver.dataloaders
 ```
@@ -401,11 +401,11 @@ activations by sharding the optimizer state.
 
 ## Citation
 ```
-@article{copet2023simple,
+@inproceedings{copet2023simple,
     title={Simple and Controllable Music Generation},
     author={Jade Copet and Felix Kreuk and Itai Gat and Tal Remez and David Kant and Gabriel Synnaeve and Yossi Adi and Alexandre Défossez},
+    booktitle={Thirty-seventh Conference on Neural Information Processing Systems},
     year={2023},
-    journal={arXiv preprint arXiv:2306.05284},
 }
 ```
 
