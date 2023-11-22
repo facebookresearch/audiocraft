@@ -648,7 +648,6 @@ class StreamingTransformer(StreamingModule):
                 # see audiocraft/optim/fsdp.py, magic signal to indicate this requires fixing the
                 # backward hook inside of FSDP...
                 layer._magma_checkpointed = True  # type: ignore
-                assert layer.layer_drop == 0., "Need further checking"  # type: ignore
 
     def _apply_layer(self, layer, *args, **kwargs):
         method = self.checkpointing
