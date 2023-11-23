@@ -450,7 +450,7 @@ class AudioDataset:
                     continue
 
                 energy = torch.sqrt(torch.mean(out ** 2))
-                if energy < self.energy_threshold:
+                if energy < self.energy_filter:
                     logger.warning("Segment from file %s is silent.", file_meta.path)
                     if retry == self.max_read_retry - 1:
                         raise Exception("Segment is silent.")
