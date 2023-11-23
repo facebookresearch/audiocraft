@@ -13,11 +13,11 @@ AudioCraft requires Python 3.9, PyTorch 2.0.0. To install AudioCraft, you can ru
 ```shell
 # Best to make sure you have torch installed first, in particular before installing xformers.
 # Don't run this if you already have PyTorch installed.
-pip install 'torch>=2.0'
+python -m pip install 'torch>=2.0'
 # Then proceed to one of the following
-pip install -U audiocraft  # stable release
-pip install -U git+https://git@github.com/facebookresearch/audiocraft#egg=audiocraft  # bleeding edge
-pip install -e .  # or if you cloned the repo locally (mandatory if you want to train).
+python -m pip install -U audiocraft  # stable release
+python -m pip install -U git+https://git@github.com/facebookresearch/audiocraft#egg=audiocraft  # bleeding edge
+python -m pip install -e .  # or if you cloned the repo locally (mandatory if you want to train).
 ```
 
 We also recommend having `ffmpeg` installed, either through your system or Anaconda:
@@ -72,11 +72,11 @@ Finally, if you use a model that relies on Demucs (e.g. `musicgen-melody`) and w
 
 For the general framework of AudioCraft, please cite the following.
 ```
-@article{copet2023simple,
+@inproceedings{copet2023simple,
     title={Simple and Controllable Music Generation},
     author={Jade Copet and Felix Kreuk and Itai Gat and Tal Remez and David Kant and Gabriel Synnaeve and Yossi Adi and Alexandre Défossez},
+    booktitle={Thirty-seventh Conference on Neural Information Processing Systems},
     year={2023},
-    journal={arXiv preprint arXiv:2306.05284},
 }
 ```
 
