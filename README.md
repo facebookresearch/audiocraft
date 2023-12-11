@@ -13,7 +13,9 @@ AudioCraft requires Python 3.9, PyTorch 2.0.0. To install AudioCraft, you can ru
 ```shell
 # Best to make sure you have torch installed first, in particular before installing xformers.
 # Don't run this if you already have PyTorch installed.
-python -m pip install 'torch>=2.0'
+python -m pip install 'torch==2.1.0'
+# You might need the following before trying to install the packages
+python -m pip install setuptools wheel
 # Then proceed to one of the following
 python -m pip install -U audiocraft  # stable release
 python -m pip install -U git+https://git@github.com/facebookresearch/audiocraft#egg=audiocraft  # bleeding edge
