@@ -10,6 +10,9 @@ Adding stereo models.
 
 Fixed the commitment loss, which was until now only applied to the first RVQ layer.
 
+Removed compression model state from the LM checkpoints, for consistency, it
+should always be loaded from the original `compression_model_checkpoint`.
+
 
 ## [1.1.0] - 2023-11-06
 
