@@ -8,7 +8,7 @@ for two state-of-the-art AI generative models producing high-quality audio: Audi
 
 
 ## Installation
-AudioCraft requires Python 3.9, PyTorch 2.0.0. To install AudioCraft, you can run the following:
+AudioCraft requires Python 3.9, PyTorch 2.1.0. To install AudioCraft, you can run the following:
 
 ```shell
 # Best to make sure you have torch installed first, in particular before installing xformers.
