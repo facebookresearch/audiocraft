@@ -205,7 +205,6 @@ class EuclideanCodebook(nn.Module):
         if self.training:
             # We do the expiry of code at that point as buffers are in sync
             # and all the workers will take the same decision.
-            self.expire_codes_(x)
             ema_inplace(self.cluster_size, embed_onehot.sum(0), self.decay)
             embed_sum = x.t() @ embed_onehot
             ema_inplace(self.embed_avg, embed_sum.t(), self.decay)
@@ -215,6 +214,7 @@ class EuclideanCodebook(nn.Module):
             )
             embed_normalized = self.embed_avg / cluster_size.unsqueeze(1)
             self.embed.data.copy_(embed_normalized)
+            self.expire_codes_(x)
 
         return quantize, embed_ind
 
