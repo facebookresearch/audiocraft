@@ -314,7 +314,8 @@ class LMModel(StreamingModule):
                            temp: float = 1.0,
                            top_k: int = 0,
                            top_p: float = 0.0,
-                           cfg_coef: tp.Optional[float] = None) -> torch.Tensor:
+                           cfg_coef: tp.Optional[float] = None,
+                           two_step_cfg: tp.Optional[bool] = None) -> torch.Tensor:
         """Sample next token from the model given a sequence and a set of conditions. The model supports
         multiple sampling strategies (greedy sampling, softmax, top-k, top-p...).
 
@@ -335,7 +336,8 @@ class LMModel(StreamingModule):
         B = sequence.shape[0]
         cfg_coef = self.cfg_coef if cfg_coef is None else cfg_coef
         model = self if self._fsdp is None else self._fsdp
-        if self.two_step_cfg and cfg_conditions != {}:
+        two_step_cfg = self.two_step_cfg if two_step_cfg is None else two_step_cfg
+        if two_step_cfg and cfg_conditions != {}:
             assert isinstance(cfg_conditions, tuple), type(cfg_conditions)
             condition_tensors, null_condition_tensors = cfg_conditions
             cond_logits = model(sequence, conditions=[], condition_tensors=condition_tensors)
@@ -493,7 +495,7 @@ class LMModel(StreamingModule):
                 # sample next token from the model, next token shape is [B, K, 1]
                 next_token = self._sample_next_token(
                     curr_sequence, cfg_conditions, unconditional_state, use_sampling, temp, top_k, top_p,
-                    cfg_coef=cfg_coef)
+                    cfg_coef=cfg_coef, two_step_cfg=two_step_cfg)
                 # ensure the tokens that should be masked are properly set to special_token_id
                 # as the model never output special_token_id
                 valid_mask = mask[..., offset:offset+1].expand(B, -1, -1)

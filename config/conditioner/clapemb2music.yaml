@@ -23,7 +23,7 @@ conditioners:
       checkpoint: //reference/clap/music_audioset_epoch_15_esc_90.14.pt
       model_arch: 'HTSAT-base'
       enable_fusion: false
-      sample_rate: 44100
+      sample_rate: 48000
       max_audio_length: 10
       audio_stride: 1
       dim: 512
