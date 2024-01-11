@@ -26,7 +26,7 @@ logger = logging.getLogger()
 
 
 class CompressionModel(ABC, nn.Module):
-    """Base API for all compression model that aim at being used as audio tokenizers
+    """Base API for all compression models that aim at being used as audio tokenizers
     with a language model.
     """
 
@@ -112,7 +112,7 @@ class CompressionModel(ABC, nn.Module):
             logger.info("Getting pretrained compression model for debug")
             model = builders.get_debug_compression_model()
         elif Path(name).exists():
-            # We assume here if the paths exist that it is in fact an AC checkpoint
+            # We assume here if the path exists that it is in fact an AC checkpoint
             # that was exported using `audiocraft.utils.export` functions.
             model = loaders.load_compression_model(name, device=device)
         else:
@@ -228,8 +228,8 @@ class EncodecModel(CompressionModel):
 
         Returns:
             codes, scale (tuple of torch.Tensor, torch.Tensor): Tuple composed of:
-                codes a float tensor of shape [B, K, T] with K the number of codebooks used and T the timestep.
-                scale a float tensor containing the scale for audio renormalizealization.
+                codes: a float tensor of shape [B, K, T] with K the number of codebooks used and T the timestep.
+                scale: a float tensor containing the scale for audio renormalization.
         """
         assert x.dim() == 3
         x, scale = self.preprocess(x)
