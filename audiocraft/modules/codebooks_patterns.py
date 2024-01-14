@@ -30,7 +30,7 @@ class Pattern:
 
     The pattern provides convenient methods to build and revert interleaved sequences from it:
     ``build_pattern_sequence`` maps a given a dense input tensor of multi-codebook sequence from [B, K, T]
-        to the interleaved sequence of shape [B, K, S] applying the pattern, with S being the batch size,
+        to the interleaved sequence of shape [B, K, S] applying the pattern, with B being the batch size,
         K being the number of codebooks, T the number of original timesteps and S the number of sequence steps
         for the output sequence. The unfilled positions are replaced with a special token and the built sequence
         is returned along with a mask indicating valid tokens.

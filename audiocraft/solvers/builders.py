@@ -108,7 +108,7 @@ def get_optimizer(params: tp.Union[nn.Module, tp.Iterable[torch.Tensor]], cfg: o
     elif cfg.optimizer == 'dadam':
         optimizer = optim.DAdaptAdam(parameters, lr=cfg.lr, **cfg.adam)
     else:
-        raise ValueError(f"Unsupported LR Scheduler: {cfg.lr_scheduler}")
+        raise ValueError(f"Unsupported Optimizer: {cfg.optimizer}")
     return optimizer
 
 
