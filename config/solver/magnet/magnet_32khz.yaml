@@ -1,0 +1,90 @@
+# @package __global__
+
+# This is the training loop solver
+# for the base MusicGen model (text-to-music)
+# on monophonic audio sampled at 32 kHz
+defaults:
+  - musicgen/default
+  - /model: lm/musicgen_lm
+  - override /dset: audio/default
+  - _self_
+
+lm_model: transformer_lm_magnet
+solver: magnet
+
+autocast: true
+autocast_dtype: float16
+
+# EnCodec large trained on mono-channel music audio sampled at 32khz
+# with a total stride of 640 leading to 50 frames/s.
+# rvq.n_q=4, rvq.bins=2048, no quantization dropout
+# (transformer_lm card and n_q must be compatible)
+compression_model_checkpoint: //pretrained/facebook/encodec_32khz
+
+efficient_attention_backend: xformers # restricted attention implementation supports only xformers at the moment
+
+channels: 1
+sample_rate: 32000
+
+deadlock:
+  use: true  # deadlock detection
+
+dataset:
+  batch_size: 192  # 32 GPUs
+  sample_on_weight: false  # Uniform sampling all the way
+  sample_on_duration: false  # Uniform sampling all the way
+
+optim:
+  epochs: 500
+  optimizer: dadam
+  lr: 1
+  ema:
+    use: true
+    updates: 10
+    device: cuda
+
+logging:
+  log_tensorboard: true
+
+schedule:
+  lr_scheduler: cosine
+  cosine:
+    warmup: 4000
+    lr_min_ratio: 0.0
+    cycle_length: 1.0
+
+codebooks_pattern:
+  modeling: parallel
+  parallel:
+    empty_initial: -1
+  
+transformer_lm:
+  card: 2048
+  causal: false
+  subcodes_context: 5
+  compression_model_framerate: 50  # NOTE: Must match the actual frame rate of the used compression model 
+  segment_duration: 0
+  span_len: -1
+
+masking:
+  span_len: 3
+
+generate:
+  lm: 
+    max_prompt_len: null
+    max_gen_len: null
+    remove_prompts: false
+    use_sampling: true
+    temp: 3.0
+    top_k: 0
+    top_p: 0.9
+    max_cfg_coef: 10.0
+    min_cfg_coef: 1.0
+    decoding_steps: [60, 10, 10, 10]
+    anneal_temp: true
+    span_scoring: 'max'
+    span_arrangement: 'nonoverlap'
+    prompted_samples: false
+    samples:
+      prompted: false
+      unprompted: true

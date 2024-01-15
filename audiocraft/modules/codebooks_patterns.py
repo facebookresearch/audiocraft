@@ -30,7 +30,7 @@ class Pattern:
 
     The pattern provides convenient methods to build and revert interleaved sequences from it:
     ``build_pattern_sequence`` maps a given a dense input tensor of multi-codebook sequence from [B, K, T]
-        to the interleaved sequence of shape [B, K, S] applying the pattern, with S being the batch size,
+        to the interleaved sequence of shape [B, K, S] applying the pattern, with B being the batch size,
         K being the number of codebooks, T the number of original timesteps and S the number of sequence steps
         for the output sequence. The unfilled positions are replaced with a special token and the built sequence
         is returned along with a mask indicating valid tokens.
@@ -49,7 +49,6 @@ class Pattern:
 
     def __post_init__(self):
         assert len(self.layout) > 0
-        assert self.layout[0] == []
         self._validate_layout()
         self._build_reverted_sequence_scatter_indexes = lru_cache(100)(self._build_reverted_sequence_scatter_indexes)
         self._build_pattern_sequence_scatter_indexes = lru_cache(100)(self._build_pattern_sequence_scatter_indexes)
@@ -92,6 +91,9 @@ class Pattern:
     def valid_layout(self):
         valid_step = len(self.layout) - self.max_delay
         return self.layout[:valid_step]
+
+    def starts_with_special_token(self):
+        return self.layout[0] == []
 
     def get_sequence_coords_with_timestep(self, t: int, q: tp.Optional[int] = None):
         """Get codebook coordinates in the layout that corresponds to the specified timestep t
@@ -202,7 +204,7 @@ class Pattern:
             f"sequence to revert is longer than the defined pattern: {sequence_steps} > {len(ref_layout)}"
 
         # ensure we take the appropriate indexes to keep the model output from the first special token as well
-        if is_model_output:
+        if is_model_output and self.starts_with_special_token():
             ref_layout = ref_layout[1:]
 
         # single item indexing being super slow with pytorch vs. numpy, so we use numpy here
@@ -335,7 +337,8 @@ class DelayedPatternProvider(CodebooksPatternProvider):
         assert sorted(self.delays) == self.delays
 
     def get_pattern(self, timesteps: int) -> Pattern:
-        out: PatternLayout = [[]]
+        omit_special_token = self.empty_initial < 0
+        out: PatternLayout = [] if omit_special_token else [[]]
         max_delay = max(self.delays)
         if self.empty_initial:
             out += [[] for _ in range(self.empty_initial)]
@@ -360,9 +363,10 @@ class ParallelPatternProvider(DelayedPatternProvider):
 
     Args:
         n_q (int): Number of codebooks.
+        empty_initial (int): Prepend with N empty list of coordinates.
     """
-    def __init__(self, n_q: int):
-        super().__init__(n_q, [0] * n_q)
+    def __init__(self, n_q: int, empty_initial: int = 0):
+        super().__init__(n_q, [0] * n_q, empty_initial=empty_initial)
 
 
 class UnrolledPatternProvider(CodebooksPatternProvider):

@@ -12,16 +12,15 @@ and provide easy access to the generation API.
 import typing as tp
 import warnings
 
-import omegaconf
 import torch
 
 from .encodec import CompressionModel
+from .genmodel import BaseGenModel
 from .lm import LMModel
-from .builders import get_debug_compression_model, get_debug_lm_model, get_wrapped_compression_model
+from .builders import get_debug_compression_model, get_debug_lm_model
 from .loaders import load_compression_model, load_lm_model
 from ..data.audio_utils import convert_audio
 from ..modules.conditioners import ConditioningAttributes, WavCondition
-from ..utils.autocast import TorchAutocast
 
 
 MelodyList = tp.List[tp.Optional[torch.Tensor]]
@@ -37,7 +36,7 @@ _HF_MODEL_CHECKPOINTS_MAP = {
 }
 
 
-class MusicGen:
+class MusicGen(BaseGenModel):
     """MusicGen main model with convenient generation API.
 
     Args:
@@ -50,54 +49,8 @@ class MusicGen:
     """
     def __init__(self, name: str, compression_model: CompressionModel, lm: LMModel,
                  max_duration: tp.Optional[float] = None):
-        self.name = name
-        self.compression_model = compression_model
-        self.lm = lm
-        self.cfg: tp.Optional[omegaconf.DictConfig] = None
-        # Just to be safe, let's put everything in eval mode.
-        self.compression_model.eval()
-        self.lm.eval()
-
-        if hasattr(lm, 'cfg'):
-            cfg = lm.cfg
-            assert isinstance(cfg, omegaconf.DictConfig)
-            self.cfg = cfg
-
-        if self.cfg is not None:
-            self.compression_model = get_wrapped_compression_model(self.compression_model, self.cfg)
-
-        if max_duration is None:
-            if self.cfg is not None:
-                max_duration = lm.cfg.dataset.segment_duration  # type: ignore
-            else:
-                raise ValueError("You must provide max_duration when building directly MusicGen")
-        assert max_duration is not None
-        self.max_duration: float = max_duration
-        self.device = next(iter(lm.parameters())).device
-
-        self.generation_params: dict = {}
-        self.set_generation_params(duration=15)  # 15 seconds by default
-        self._progress_callback: tp.Optional[tp.Callable[[int, int], None]] = None
-        if self.device.type == 'cpu':
-            self.autocast = TorchAutocast(enabled=False)
-        else:
-            self.autocast = TorchAutocast(
-                enabled=True, device_type=self.device.type, dtype=torch.float16)
-
-    @property
-    def frame_rate(self) -> float:
-        """Roughly the number of AR steps per seconds."""
-        return self.compression_model.frame_rate
-
-    @property
-    def sample_rate(self) -> int:
-        """Sample rate of the generated audio."""
-        return self.compression_model.sample_rate
-
-    @property
-    def audio_channels(self) -> int:
-        """Audio channels of the generated audio."""
-        return self.compression_model.channels
+        super().__init__(name, compression_model, lm, max_duration)
+        self.set_generation_params(duration=15)  # default duration
 
     @staticmethod
     def get_pretrained(name: str = 'facebook/musicgen-melody', device=None):
@@ -169,41 +122,6 @@ class MusicGen:
             'two_step_cfg': two_step_cfg,
         }
 
-    def set_custom_progress_callback(self, progress_callback: tp.Optional[tp.Callable[[int, int], None]] = None):
-        """Override the default progress callback."""
-        self._progress_callback = progress_callback
-
-    def generate_unconditional(self, num_samples: int, progress: bool = False,
-                               return_tokens: bool = False) -> tp.Union[torch.Tensor,
-                                                                        tp.Tuple[torch.Tensor, torch.Tensor]]:
-        """Generate samples in an unconditional manner.
-
-        Args:
-            num_samples (int): Number of samples to be generated.
-            progress (bool, optional): Flag to display progress of the generation process. Defaults to False.
-        """
-        descriptions: tp.List[tp.Optional[str]] = [None] * num_samples
-        attributes, prompt_tokens = self._prepare_tokens_and_attributes(descriptions, None)
-        tokens = self._generate_tokens(attributes, prompt_tokens, progress)
-        if return_tokens:
-            return self.generate_audio(tokens), tokens
-        return self.generate_audio(tokens)
-
-    def generate(self, descriptions: tp.List[str], progress: bool = False, return_tokens: bool = False) \
-            -> tp.Union[torch.Tensor, tp.Tuple[torch.Tensor, torch.Tensor]]:
-        """Generate samples conditioned on text.
-
-        Args:
-            descriptions (list of str): A list of strings used as text conditioning.
-            progress (bool, optional): Flag to display progress of the generation process. Defaults to False.
-        """
-        attributes, prompt_tokens = self._prepare_tokens_and_attributes(descriptions, None)
-        assert prompt_tokens is None
-        tokens = self._generate_tokens(attributes, prompt_tokens, progress)
-        if return_tokens:
-            return self.generate_audio(tokens), tokens
-        return self.generate_audio(tokens)
-
     def generate_with_chroma(self, descriptions: tp.List[str], melody_wavs: MelodyType,
                              melody_sample_rate: int, progress: bool = False,
                              return_tokens: bool = False) -> tp.Union[torch.Tensor,
@@ -237,33 +155,6 @@ class MusicGen:
         attributes, prompt_tokens = self._prepare_tokens_and_attributes(descriptions=descriptions, prompt=None,
                                                                         melody_wavs=melody_wavs)
         assert prompt_tokens is None
-        tokens = self._generate_tokens(attributes, prompt_tokens, progress)
-        if return_tokens:
-            return self.generate_audio(tokens), tokens
-        return self.generate_audio(tokens)
-
-    def generate_continuation(self, prompt: torch.Tensor, prompt_sample_rate: int,
-                              descriptions: tp.Optional[tp.List[tp.Optional[str]]] = None,
-                              progress: bool = False, return_tokens: bool = False) \
-            -> tp.Union[torch.Tensor, tp.Tuple[torch.Tensor, torch.Tensor]]:
-        """Generate samples conditioned on audio prompts.
-
-        Args:
-            prompt (torch.Tensor): A batch of waveforms used for continuation.
-                Prompt should be [B, C, T], or [C, T] if only one sample is generated.
-            prompt_sample_rate (int): Sampling rate of the given audio waveforms.
-            descriptions (list of str, optional): A list of strings used as text conditioning. Defaults to None.
-            progress (bool, optional): Flag to display progress of the generation process. Defaults to False.
-        """
-        if prompt.dim() == 2:
-            prompt = prompt[None]
-        if prompt.dim() != 3:
-            raise ValueError("prompt should have 3 dimensions: [B, C, T] (C = 1).")
-        prompt = convert_audio(prompt, prompt_sample_rate, self.sample_rate, self.audio_channels)
-        if descriptions is None:
-            descriptions = [None] * len(prompt)
-        attributes, prompt_tokens = self._prepare_tokens_and_attributes(descriptions, prompt)
-        assert prompt_tokens is not None
         tokens = self._generate_tokens(attributes, prompt_tokens, progress)
         if return_tokens:
             return self.generate_audio(tokens), tokens
@@ -347,9 +238,9 @@ class MusicGen:
             if self._progress_callback is not None:
                 # Note that total_gen_len might be quite wrong depending on the
                 # codebook pattern used, but with delay it is almost accurate.
-                self._progress_callback(generated_tokens, total_gen_len)
+                self._progress_callback(generated_tokens, tokens_to_generate)
             else:
-                print(f'{generated_tokens: 6d} / {total_gen_len: 6d}', end='\r')
+                print(f'{generated_tokens: 6d} / {tokens_to_generate: 6d}', end='\r')
 
         if prompt_tokens is not None:
             assert max_prompt_len >= prompt_tokens.shape[-1], \
@@ -377,6 +268,8 @@ class MusicGen:
                 all_tokens.append(prompt_tokens)
                 prompt_length = prompt_tokens.shape[-1]
 
+            assert self.extend_stride is not None, "Stride should be defined to generate beyond max_duration"
+            assert self.extend_stride < self.max_duration, "Cannot stride by more than max generation duration."
             stride_tokens = int(self.frame_rate * self.extend_stride)
 
             while current_gen_offset + prompt_length < total_gen_len:
@@ -413,10 +306,3 @@ class MusicGen:
 
             gen_tokens = torch.cat(all_tokens, dim=-1)
         return gen_tokens
-
-    def generate_audio(self, gen_tokens: torch.Tensor):
-        """Generate Audio from tokens"""
-        assert gen_tokens.dim() == 3
-        with torch.no_grad():
-            gen_audio = self.compression_model.decode(gen_tokens, None)
-        return gen_audio
