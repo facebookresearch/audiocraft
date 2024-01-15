@@ -5,8 +5,10 @@
 # LICENSE file in the root directory of this source tree.
 
 """
-Base model for audio generative models. This will combine all the required components
-and provide easy access to the generation API.
+Base implementation for audio generative models. This base implementation
+combines all the required components to run inference with pretrained audio
+generative models. It can be easily inherited by downstream model classes to
+provide easy access to the generation API.
 """
 
 from abc import ABC, abstractmethod
@@ -61,6 +63,10 @@ class BaseGenModel(ABC):
 
         self.max_duration: float = max_duration
         self.duration = self.max_duration
+
+        # self.extend_stride is the length of audio extension when generating samples longer
+        # than self.max_duration. NOTE: the derived class must set self.extend_stride to a
+        # positive float value when generating with self.duration > self.max_duration.
         self.extend_stride: tp.Optional[float] = None
         self.device = next(iter(lm.parameters())).device
         self.generation_params: dict = {}
@@ -161,7 +167,7 @@ class BaseGenModel(ABC):
                               descriptions: tp.Optional[tp.List[tp.Optional[str]]] = None,
                               progress: bool = False, return_tokens: bool = False) \
             -> tp.Union[torch.Tensor, tp.Tuple[torch.Tensor, torch.Tensor]]:
-        """Generate samples conditioned on audio prompts.
+        """Generate samples conditioned on audio prompts and an optional text description.
 
         Args:
             prompt (torch.Tensor): A batch of waveforms used for continuation.

@@ -47,6 +47,7 @@ class MagnetSolver(musicgen.MusicGenSolver):
     def build_model(self) -> None:
         self.cfg.transformer_lm.segment_duration = self.cfg.dataset.segment_duration
         self.cfg.transformer_lm.span_len = self.cfg.masking.span_len
+        assert self.cfg.efficient_attention_backend == "xformers", "MAGNeT v1 models support only xformers backend."
         super().build_model()
 
     def _calc_mean_maskrate_to_u_LUT(self, T: int):
