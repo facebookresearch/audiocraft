@@ -1,0 +1,104 @@
+# @package __global__
+
+# This is the training loop solver
+# for the base audio-MAGNeT model (text-to-sound)
+# on monophonic audio sampled at 16 kHz
+# using a similar EnCodec+LM setup to MAGNeT
+defaults:
+  - audiogen/default
+  - /model: lm/audiogen_lm
+  - override /dset: audio/default
+  - _self_
+
+lm_model: transformer_lm_magnet
+solver: audio_magnet
+
+autocast: true
+autocast_dtype: float16
+
+# EnCodec large trained on mono-channel music audio sampled at 16khz
+# with a total stride of 320 leading to 50 frames/s.
+# rvq.n_q=4, rvq.bins=2048, no quantization dropout
+# (transformer_lm card and n_q must be compatible)
+compression_model_checkpoint: //reference/bd44a852/checkpoint.th
+
+channels: 1
+sample_rate: 16000
+
+deadlock:
+  use: true  # deadlock detection
+
+dataset:
+  batch_size: 128  # matching AudioGen paper setup (256 * mix_p=0.5 = 128)
+  num_workers: 10
+  segment_duration: 10
+  min_segment_ratio: 1.0
+  sample_on_weight: false  # Uniform sampling all the way
+  sample_on_duration: false  # Uniform sampling all the way
+  external_metadata_source: null
+  # sample mixing augmentation at train time
+  train:
+    batch_size: 256  # matching AudioGen paper setup
+    aug_p: 0.5  # perform audio mixing 50% of the time
+    mix_p: 0.5  # proportion of batch items mixed together
+                # important: note that this will reduce the
+                # actual batch size used at train time
+                # which will be equal to mix_p * batch_size
+    mix_snr_low: -5
+    mix_snr_high: 5
+    mix_min_overlap: 0.5
+
+optim:
+  epochs: 100
+  optimizer: adamw
+  lr: 5e-4
+  ema:
+    use: true
+    updates: 10
+    device: cuda
+
+logging:
+  log_tensorboard: true
+
+schedule:
+  lr_scheduler: inverse_sqrt
+  inverse_sqrt:
+    warmup: 3000
+    warmup_init_lr: 0.0
+
+codebooks_pattern:
+  modeling: parallel
+  parallel:
+    empty_initial: -1
+  
+transformer_lm:
+  card: 2048
+  causal: false
+  subcodes_context: 5
+  compression_model_framerate: 50  # NOTE: Must match the actual frame rate of the used compression model 
+  segment_duration: 0
+  span_len: -1
+
+masking:
+  span_len: 3
+
+generate:
+  lm: 
+    max_prompt_len: null
+    max_gen_len: null
+    remove_prompts: false
+    use_sampling: true
+    temp: 3.5
+    top_k: 0
+    top_p: 0.8
+    max_cfg_coef: 20.0
+    min_cfg_coef: 1.0
+    decoding_steps: [20, 10, 10, 10]
+    anneal_temp: true
+    span_scoring: 'max'
+    span_arrangement: 'nonoverlap'
+    prompted_samples: false
+    samples:
+      prompted: false
+      unprompted: true
+

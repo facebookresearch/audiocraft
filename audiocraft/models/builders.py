@@ -17,6 +17,7 @@ import torch
 
 from .encodec import CompressionModel, EncodecModel, InterleaveStereoCompressionModel
 from .lm import LMModel
+from .lm_magnet import MagnetLMModel
 from ..modules.codebooks_patterns import (
     CodebooksPatternProvider,
     DelayedPatternProvider,
@@ -85,7 +86,7 @@ def get_compression_model(cfg: omegaconf.DictConfig) -> CompressionModel:
 
 def get_lm_model(cfg: omegaconf.DictConfig) -> LMModel:
     """Instantiate a transformer LM."""
-    if cfg.lm_model == 'transformer_lm':
+    if cfg.lm_model in ['transformer_lm', 'transformer_lm_magnet']:
         kwargs = dict_from_config(getattr(cfg, 'transformer_lm'))
         n_q = kwargs['n_q']
         q_modeling = kwargs.pop('q_modeling', None)
@@ -103,8 +104,10 @@ def get_lm_model(cfg: omegaconf.DictConfig) -> LMModel:
             codebooks_pattern_cfg = omegaconf.OmegaConf.create(
                 {'modeling': q_modeling, 'delay': {'delays': list(range(n_q))}}
             )
+
         pattern_provider = get_codebooks_pattern_provider(n_q, codebooks_pattern_cfg)
-        return LMModel(
+        lm_class = MagnetLMModel if cfg.lm_model == 'transformer_lm_magnet' else LMModel
+        return lm_class(
             pattern_provider=pattern_provider,
             condition_provider=condition_provider,
             fuser=fuser,

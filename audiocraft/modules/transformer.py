@@ -315,7 +315,6 @@ class StreamingMultiheadAttention(StreamingModule):
     def forward(self, query: torch.Tensor, key: torch.Tensor, value: torch.Tensor,
                 key_padding_mask=None, need_weights=False, attn_mask=None,
                 average_attn_weights=True, is_causal=False):
-        assert attn_mask is None
         assert not is_causal, ("New param added in torch 2.0.1 not supported, "
                                "use the causal args in the constructor.")
 
@@ -329,7 +328,10 @@ class StreamingMultiheadAttention(StreamingModule):
             assert self.causal or self.cross_attention, \
                 "Streaming only available for causal or cross attention"
 
+        custom_attn_mask = attn_mask is not None
+
         if self.causal:
+            assert attn_mask is None
             # At the moment we specialize only for the self-attention case.
             assert query.shape[1] == key.shape[1], "Causal only for same length query / key / value"
             assert value.shape[1] == key.shape[1], "Causal only for same length query / key / value"
@@ -398,6 +400,11 @@ class StreamingMultiheadAttention(StreamingModule):
             if self.attention_as_float32:
                 q, k, v = [x.float() for x in [q, k, v]]
             if self.memory_efficient:
+                if custom_attn_mask:
+                    # When using a custom attn mask: move to query's device + remove align8 padding
+                    seq_len = query.shape[1]
+                    attn_mask = attn_mask.to(q.dtype)
+                    attn_mask = attn_mask[:seq_len, :seq_len]
                 p = self.dropout if self.training else 0
                 if _efficient_attention_backend == 'torch':
                     x = torch.nn.functional.scaled_dot_product_attention(
