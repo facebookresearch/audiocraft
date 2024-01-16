@@ -40,7 +40,9 @@ class MagnetLMModel(LMModel):
         self.causal = kwargs['causal']
         self.subcodes_context = subcodes_context
         self.span_len = span_len
-        self._build_attn_masks(compression_model_framerate, segment_duration,
+        self._build_attn_masks(compression_model_framerate=compression_model_framerate,
+                               segment_duration=segment_duration,
+                               num_heads=kwargs['num_heads'],
                                device=kwargs['device'], dtype=kwargs['dtype'])
 
     def restricted_context_attn_mask(self, seq_len: int, device: torch.device, dtype: torch.dtype) -> torch.Tensor:
@@ -64,12 +66,13 @@ class MagnetLMModel(LMModel):
             torch.zeros([], device=device, dtype=dtype),
             torch.full([], float('-inf'), device=device, dtype=dtype))
 
-    def _stage_attn_mask(self, stage: int, seq_len: int,
+    def _stage_attn_mask(self, stage: int, seq_len: int, num_heads: int,
                          device: torch.device, dtype: torch.dtype) -> tp.Optional[torch.Tensor]:
         """Creates a restricted attention mask given the stage (codebook index).
         Args:
             stage (int): The codebook index. Takes values in [0, n_q].
             seq_len (int): Token sequence length.
+            num_heads (int): Num transformer attention heads.
             device (torch.device): device of the output tensor.
             dtype (torch.dtype): data type of the output tensor.
         Returns:
@@ -82,29 +85,34 @@ class MagnetLMModel(LMModel):
             sa_mask = self.restricted_context_attn_mask(seq_len, device=device, dtype=dtype)
 
         if sa_mask is not None:
+            # Repeat for each attention head
+            sa_mask = sa_mask.repeat((1, num_heads, 1, 1))
+
             # align8 to enable memory efficient attention
             MEMORY_EFFICIENT_ATTN_ALIGN_FACTOR = 8
             seq_len_aligned = \
                 int(np.ceil(seq_len / MEMORY_EFFICIENT_ATTN_ALIGN_FACTOR)) * MEMORY_EFFICIENT_ATTN_ALIGN_FACTOR
 
-            sa_mask_aligned = torch.zeros((seq_len_aligned, seq_len_aligned), device=device, dtype=dtype)
-            sa_mask_aligned[:seq_len, :seq_len] = sa_mask
+            sa_mask_aligned = torch.zeros((1, num_heads, seq_len_aligned, seq_len_aligned), device=device, dtype=dtype)
+            sa_mask_aligned[..., :seq_len, :seq_len] = sa_mask
             sa_mask = sa_mask_aligned
 
         return sa_mask
 
-    def _build_attn_masks(self, compression_model_framerate: int, segment_duration: int,
+    def _build_attn_masks(self, compression_model_framerate: int, segment_duration: int, num_heads: int,
                           device: torch.device, dtype: torch.dtype):
         """Construct attention mask per stage. For each of the RVQ codebook levels in the [0, n_q] range,
            either a local attention map or None would be stored as an entry in the self.attn_mask_per_stage list.
         Args:
             compression_model_framerate (int): The frame rate of the tokenizer.
             segment_duration (int): Sample length in seconds.
+            num_heads (int): Num transformer attention heads.
             device (torch.device): device of the output tensor.
             dtype (torch.dtype): data type of the output tensor.
         """
         seq_len = compression_model_framerate * segment_duration
-        self.attn_mask_per_stage = [self._stage_attn_mask(stage, seq_len, device, dtype) for stage in range(self.n_q)]
+        self.attn_mask_per_stage = [self._stage_attn_mask(stage, seq_len, num_heads,
+                                                          device, dtype) for stage in range(self.n_q)]
 
     @torch.no_grad()
     def generate(self,
