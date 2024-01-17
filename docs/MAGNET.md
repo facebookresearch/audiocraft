@@ -38,7 +38,7 @@ We provide a simple API and 6 pre-trained models. The pre trained models are:
 - `facebook/magnet-small-30secs`: 300M model, text to music, generates 30-second samples - [🤗 Hub](https://huggingface.co/facebook/magnet-small-30secs)
 - `facebook/magnet-medium-30secs`: 1.5B model, text to music, generates 30-second samples - [🤗 Hub](https://huggingface.co/facebook/magnet-medium-30secs)
 - `facebook/audio-magnet-small`: 300M model, text to sound-effect - [🤗 Hub](https://huggingface.co/facebook/audio-magnet-small)
-- `facebook/audio-magnet-small`: 300M model, text to sound-effect - [🤗 Hub](https://huggingface.co/facebook/audio-magnet-medium)
+- `facebook/audio-magnet-medium`: 300M model, text to sound-effect - [🤗 Hub](https://huggingface.co/facebook/audio-magnet-medium)
 
 In order to use MAGNeT locally **you must have a GPU**. We recommend 16GB of memory, especially for 
 the medium size models. 
