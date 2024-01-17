@@ -401,10 +401,13 @@ class StreamingMultiheadAttention(StreamingModule):
                 q, k, v = [x.float() for x in [q, k, v]]
             if self.memory_efficient:
                 if custom_attn_mask:
-                    # When using a custom attn mask: move to query's device + remove align8 padding
+                    # When using a custom attn mask:
+                    # Move to query's device, repeat for each sample, remove align8 padding
                     seq_len = query.shape[1]
                     attn_mask = attn_mask.to(q.dtype)
-                    attn_mask = attn_mask[:seq_len, :seq_len]
+                    attn_mask = attn_mask.repeat((q.shape[0], 1, 1, 1))
+                    attn_mask = attn_mask[..., :seq_len, :seq_len]
+
                 p = self.dropout if self.training else 0
                 if _efficient_attention_backend == 'torch':
                     x = torch.nn.functional.scaled_dot_product_attention(
