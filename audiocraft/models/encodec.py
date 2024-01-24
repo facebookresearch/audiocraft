@@ -13,6 +13,7 @@ import math
 from pathlib import Path
 import typing as tp
 
+from einops import rearrange
 import numpy as np
 import torch
 from torch import nn
@@ -25,7 +26,7 @@ logger = logging.getLogger()
 
 
 class CompressionModel(ABC, nn.Module):
-    """Base API for all compression model that aim at being used as audio tokenizers
+    """Base API for all compression models that aim at being used as audio tokenizers
     with a language model.
     """
 
@@ -98,7 +99,7 @@ class CompressionModel(ABC, nn.Module):
             - dac_24khz (same)
             - facebook/encodec_24khz (https://huggingface.co/facebook/encodec_24khz)
             - facebook/encodec_32khz (https://huggingface.co/facebook/encodec_32khz)
-            - your own model on HugginFace. Export instructions to come...
+            - your own model on Hugging Face. Export instructions to come...
         """
 
         from . import builders, loaders
@@ -111,7 +112,7 @@ class CompressionModel(ABC, nn.Module):
             logger.info("Getting pretrained compression model for debug")
             model = builders.get_debug_compression_model()
         elif Path(name).exists():
-            # We assume here if the paths exist that it is in fact an AC checkpoint
+            # We assume here if the path exists that it is in fact an AC checkpoint
             # that was exported using `audiocraft.utils.export` functions.
             model = loaders.load_compression_model(name, device=device)
         else:
@@ -227,8 +228,8 @@ class EncodecModel(CompressionModel):
 
         Returns:
             codes, scale (tuple of torch.Tensor, torch.Tensor): Tuple composed of:
-                codes a float tensor of shape [B, K, T] with K the number of codebooks used and T the timestep.
-                scale a float tensor containing the scale for audio renormalizealization.
+                codes: a float tensor of shape [B, K, T] with K the number of codebooks used and T the timestep.
+                scale: a float tensor containing the scale for audio renormalization.
         """
         assert x.dim() == 3
         x, scale = self.preprocess(x)
@@ -268,6 +269,7 @@ class DAC(CompressionModel):
                                "please run `pip install descript-audio-codec`")
         self.model = dac.utils.load_model(model_type=model_type)
         self.n_quantizers = self.total_codebooks
+        self.model.eval()
 
     def forward(self, x: torch.Tensor) -> qt.QuantizedResult:
         # We don't support training with this.
@@ -275,7 +277,7 @@ class DAC(CompressionModel):
 
     def encode(self, x: torch.Tensor) -> tp.Tuple[torch.Tensor, tp.Optional[torch.Tensor]]:
         codes = self.model.encode(x, self.n_quantizers)[1]
-        return codes, None
+        return codes[:, :self.n_quantizers], None
 
     def decode(self, codes: torch.Tensor, scale: tp.Optional[torch.Tensor] = None):
         assert scale is None
@@ -390,3 +392,115 @@ class HFEncodecCompressionModel(CompressionModel):
         if n not in self.possible_num_codebooks:
             raise ValueError(f"Allowed values for num codebooks: {self.possible_num_codebooks}")
         self._num_codebooks = n
+
+
+class InterleaveStereoCompressionModel(CompressionModel):
+    """Wraps a CompressionModel to support stereo inputs. The wrapped model
+    will be applied independently to the left and right channels, and both codebooks
+    will be interleaved. If the wrapped model returns a representation `[B, K ,T]` per
+    channel, then the output will be `[B, K * 2, T]`  or `[B, K, T * 2]` depending on
+    `per_timestep`.
+
+    Args:
+        model (CompressionModel): Compression model to wrap.
+        per_timestep (bool): Whether to interleave on the timestep dimension
+            or on the codebooks dimension.
+    """
+    def __init__(self, model: CompressionModel, per_timestep: bool = False):
+        super().__init__()
+        self.model = model
+        self.per_timestep = per_timestep
+        assert self.model.channels == 1, "Wrapped model is expected to be for monophonic audio"
+
+    @property
+    def total_codebooks(self):
+        return self.model.total_codebooks
+
+    @property
+    def num_codebooks(self):
+        """Active number of codebooks used by the quantizer.
+
+        ..Warning:: this reports the number of codebooks after the interleaving
+        of the codebooks!
+        """
+        return self.model.num_codebooks if self.per_timestep else self.model.num_codebooks * 2
+
+    def set_num_codebooks(self, n: int):
+        """Set the active number of codebooks used by the quantizer.
+
+        ..Warning:: this sets the number of codebooks before the interleaving!
+        """
+        self.model.set_num_codebooks(n)
+
+    @property
+    def num_virtual_steps(self) -> float:
+        """Return the number of virtual steps, e.g. one real step
+        will be split into that many steps.
+        """
+        return 2 if self.per_timestep else 1
+
+    @property
+    def frame_rate(self) -> float:
+        return self.model.frame_rate * self.num_virtual_steps
+
+    @property
+    def sample_rate(self) -> int:
+        return self.model.sample_rate
+
+    @property
+    def channels(self) -> int:
+        return 2
+
+    @property
+    def cardinality(self):
+        """Cardinality of each codebook.
+        """
+        return self.model.cardinality
+
+    def forward(self, x: torch.Tensor) -> qt.QuantizedResult:
+        raise NotImplementedError("Not supported, use encode and decode.")
+
+    def encode(self, x: torch.Tensor) -> tp.Tuple[torch.Tensor, tp.Optional[torch.Tensor]]:
+        B, C, T = x.shape
+        assert C == self.channels, f"Expecting stereo audio but audio num channels is {C}"
+
+        indices_c0, scales_c0 = self.model.encode(x[:, 0, ...].unsqueeze(1))
+        indices_c1, scales_c1 = self.model.encode(x[:, 1, ...].unsqueeze(1))
+        indices = torch.stack([indices_c0, indices_c1], dim=0)
+        scales: tp.Optional[torch.Tensor] = None
+        if scales_c0 is not None and scales_c1 is not None:
+            scales = torch.stack([scales_c0, scales_c1], dim=1)
+
+        if self.per_timestep:
+            indices = rearrange(indices, 'c b k t -> b k (t c)', c=2)
+        else:
+            indices = rearrange(indices, 'c b k t -> b (k c) t', c=2)
+
+        return (indices, scales)
+
+    def get_left_right_codes(self, codes: torch.Tensor) -> tp.Tuple[torch.Tensor, torch.Tensor]:
+        if self.per_timestep:
+            codes = rearrange(codes, 'b k (t c) -> c b k t', c=2)
+        else:
+            codes = rearrange(codes, 'b (k c) t -> c b k t', c=2)
+        return codes[0], codes[1]
+
+    def decode(self, codes: torch.Tensor, scale: tp.Optional[torch.Tensor] = None):
+        B, K, T = codes.shape
+        assert T % self.num_virtual_steps == 0, "Provided codes' number of timesteps does not match"
+        assert K == self.num_codebooks, "Provided codes' number of codebooks does not match"
+
+        scale_c0, scale_c1 = None, None
+        if scale is not None:
+            assert scale.size(0) == B and scale.size(1) == 2, f"Scale has unexpected shape: {scale.shape}"
+            scale_c0 = scale[0, ...]
+            scale_c1 = scale[1, ...]
+
+        codes_c0, codes_c1 = self.get_left_right_codes(codes)
+        audio_c0 = self.model.decode(codes_c0, scale_c0)
+        audio_c1 = self.model.decode(codes_c1, scale_c1)
+        return torch.cat([audio_c0, audio_c1], dim=1)
+
+    def decode_latent(self, codes: torch.Tensor):
+        """Decode from the discrete codes to continuous latent space."""
+        raise NotImplementedError("Not supported by interleaved stereo wrapped models.")

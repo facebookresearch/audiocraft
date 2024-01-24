@@ -5,10 +5,10 @@
 # LICENSE file in the root directory of this source tree.
 
 from pathlib import Path
-import typing as tp
 
 import torch
-import torchaudio
+
+from audiocraft.data.audio import audio_write
 
 
 def get_white_noise(chs: int = 1, num_frames: int = 1):
@@ -22,11 +22,8 @@ def get_batch_white_noise(bs: int = 1, chs: int = 1, num_frames: int = 1):
 
 
 def save_wav(path: str, wav: torch.Tensor, sample_rate: int):
+    assert wav.dim() == 2, wav.shape
     fp = Path(path)
-    kwargs: tp.Dict[str, tp.Any] = {}
-    if fp.suffix == '.wav':
-        kwargs['encoding'] = 'PCM_S'
-        kwargs['bits_per_sample'] = 16
-    elif fp.suffix == '.mp3':
-        kwargs['compression'] = 320
-    torchaudio.save(str(fp), wav, sample_rate, **kwargs)
+    assert fp.suffix in ['.mp3', '.ogg', '.wav', '.flac'], fp
+    audio_write(fp.parent / fp.stem, wav, sample_rate, fp.suffix[1:],
+                normalize=False, strategy='clip', peak_clip_headroom_db=0)

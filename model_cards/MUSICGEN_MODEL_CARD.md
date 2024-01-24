@@ -60,10 +60,10 @@ Below are the objective metrics obtained on MusicCaps with the released model. N
 
 | Model | Frechet Audio Distance | KLD | Text Consistency | Chroma Cosine Similarity |
 |---|---|---|---|---|
-| facebook/musicgen-small  | 4.88 | 1.28 | 0.27 | - |
-| facebook/musicgen-medium | 5.14 | 1.24 | 0.28 | - |
-| facebook/musicgen-large  | 5.48 | 1.22 | 0.28 | - |
-| facebook/musicgen-melody | 4.93 | 1.26 | 0.27 | 0.44 |
+| facebook/musicgen-small  | 4.88 | 1.42 | 0.27 | - |
+| facebook/musicgen-medium | 5.14 | 1.38 | 0.28 | - |
+| facebook/musicgen-large  | 5.48 | 1.37 | 0.28 | - |
+| facebook/musicgen-melody | 4.93 | 1.41 | 0.27 | 0.44 |
 
 More information can be found in the paper [Simple and Controllable Music Generation][arxiv], in the Results section.
 
@@ -86,5 +86,20 @@ More information can be found in the paper [Simple and Controllable Music Genera
 **Risks and harms:** Biases and limitations of the model may lead to generation of samples that may be considered as biased, inappropriate or offensive. We believe that providing the code to reproduce the research and train new models will allow to broaden the application to new and more representative data.
 
 **Use cases:** Users must be aware of the biases, limitations and risks of the model. MusicGen is a model developed for artificial intelligence research on controllable music generation. As such, it should not be used for downstream applications without further investigation and mitigation of risks.
+
+## Update: stereo models and large melody.
+
+We further release a set of stereophonic capable models. Those were fine tuned for 200k updates starting
+from the mono models. The training data is otherwise identical and capabilities and limitations are shared with the base modes. The stereo models work by getting 2 streams of tokens from the EnCodec model, and interleaving those using
+the delay pattern. We also release a mono large model with melody conditioning capabilities. The list of new models
+is as follow:
+
+- facebook/musicgen-stereo-small
+- facebook/musicgen-stereo-medium
+- facebook/musicgen-stereo-large
+- facebook/musicgen-stereo-melody
+- facebook/musicgen-melody-large
+- facebook/musicgen-stereo-melody-large
+
 
 [arxiv]: https://arxiv.org/abs/2306.05284

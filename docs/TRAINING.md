@@ -9,7 +9,7 @@ AudioCraft training pipelines are designed to be research and experiment-friendl
 ## Environment setup
 
 For the base installation, follow the instructions from the [README.md](../README.md).
-Below are some additional instructions for setting up environment to train new models.
+Below are some additional instructions for setting up the environment to train new models.
 
 ### Team and cluster configuration
 
@@ -47,7 +47,7 @@ properly set the `dora_dir` entries.
 
 #### Overriding environment configurations
 
-You can set the following environmet variables to bypass the team's environment configuration:
+You can set the following environment variables to bypass the team's environment configuration:
 * `AUDIOCRAFT_CONFIG`: absolute path to a team config yaml file.
 * `AUDIOCRAFT_DORA_DIR`: absolute path to a custom dora directory.
 * `AUDIOCRAFT_REFERENCE_DIR`: absolute path to the shared reference directory.
@@ -199,7 +199,7 @@ Once this configuration is created and used for running experiments, you should 
 
 Note that as we are using Dora as our experiment manager, all our experiment tracking is based on
 signatures computed from delta between configurations.
-**One must therefore ensure backward compatibilty of the configuration at all time.**
+**One must therefore ensure backward compatibility of the configuration at all time.**
 See [Dora's README](https://github.com/facebookresearch/dora) and the
 [section below introduction Dora](#running-experiments-with-dora).
 
@@ -255,7 +255,7 @@ of those hyper-parameters. We always refer to an XP with its signature, e.g. 935
 after that one can retrieve the hyper-params and re-rerun it in a single command.
 * In fact, the hash is defined as a delta between the base config and the one obtained
 with the config overrides you passed from the command line. This means you must never change
-the `conf/**.yaml` files directly., except for editing things like paths. Changing the default values
+the `conf/**.yaml` files directly, except for editing things like paths. Changing the default values
 in the config files means the XP signature won't reflect that change, and wrong checkpoints might be reused.
 I know, this is annoying, but the reason is that otherwise, any change to the config file would mean
 that all XPs ran so far would see their signature change.
@@ -276,7 +276,7 @@ dora run -d -f 81de367c dataset.batch_size=32  # start from the config of XP 81d
 dora info -f SIG -t    # will tail the log (if the XP has scheduled).
 # if you need to access the logs of the process for rank > 0, in particular because a crash didn't happen in the main
 # process, then use `dora info -f SIG` to get the main log name (finished into something like `/5037674_0_0_log.out`)
-# and worker K can accessed as `/5037674_0_{K}_log.out`.
+# and worker K can be accessed as `/5037674_0_{K}_log.out`.
 # This is only for scheduled jobs, for local distributed runs with `-d`, then you should go into the XP folder,
 # and look for `worker_{K}.log` logs.
 ```
@@ -290,9 +290,9 @@ a previous checkpoint you can use `dora run --clear [RUN ARGS]`.
 If you have a Slurm cluster, you can also use the dora grid command, e.g.
 
 ```shell
-# run a dummy grid located at `audiocraft/grids/my_grid_folder/my_grid_name.py`
+# Run a dummy grid located at `audiocraft/grids/my_grid_folder/my_grid_name.py`
 dora grid my_grid_folder.my_grid_name
-# Run the following will simply display the grid and also initialized the Dora experiments database.
+# The following will simply display the grid and also initialize the Dora experiments database.
 # You can then simply refer to a config using its signature (e.g. as `dora run -f SIG`).
 dora grid my_grid_folder.my_grid_name --dry_run --init
 ```

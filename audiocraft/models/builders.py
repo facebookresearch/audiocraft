@@ -15,15 +15,16 @@ import audiocraft
 import omegaconf
 import torch
 
-from .encodec import CompressionModel, EncodecModel
+from .encodec import CompressionModel, EncodecModel, InterleaveStereoCompressionModel
 from .lm import LMModel
+from .lm_magnet import MagnetLMModel
 from ..modules.codebooks_patterns import (
     CodebooksPatternProvider,
     DelayedPatternProvider,
     MusicLMPattern,
     ParallelPatternProvider,
     UnrolledPatternProvider,
-    VALLEPattern,
+    CoarseFirstPattern,
 )
 from ..modules.conditioners import (
     BaseConditioner,
@@ -85,7 +86,7 @@ def get_compression_model(cfg: omegaconf.DictConfig) -> CompressionModel:
 
 def get_lm_model(cfg: omegaconf.DictConfig) -> LMModel:
     """Instantiate a transformer LM."""
-    if cfg.lm_model == 'transformer_lm':
+    if cfg.lm_model in ['transformer_lm', 'transformer_lm_magnet']:
         kwargs = dict_from_config(getattr(cfg, 'transformer_lm'))
         n_q = kwargs['n_q']
         q_modeling = kwargs.pop('q_modeling', None)
@@ -103,8 +104,10 @@ def get_lm_model(cfg: omegaconf.DictConfig) -> LMModel:
             codebooks_pattern_cfg = omegaconf.OmegaConf.create(
                 {'modeling': q_modeling, 'delay': {'delays': list(range(n_q))}}
             )
+
         pattern_provider = get_codebooks_pattern_provider(n_q, codebooks_pattern_cfg)
-        return LMModel(
+        lm_class = MagnetLMModel if cfg.lm_model == 'transformer_lm_magnet' else LMModel
+        return lm_class(
             pattern_provider=pattern_provider,
             condition_provider=condition_provider,
             fuser=fuser,
@@ -172,7 +175,7 @@ def get_codebooks_pattern_provider(n_q: int, cfg: omegaconf.DictConfig) -> Codeb
         'parallel': ParallelPatternProvider,
         'delay': DelayedPatternProvider,
         'unroll': UnrolledPatternProvider,
-        'valle': VALLEPattern,
+        'coarse_first': CoarseFirstPattern,
         'musiclm': MusicLMPattern,
     }
     name = cfg.modeling
@@ -196,7 +199,6 @@ def get_debug_compression_model(device='cpu', sample_rate: int = 32000):
         'dimension': 32,
         'ratios': ratios,
     }
-    print(seanet_kwargs)
     encoder = audiocraft.modules.SEANetEncoder(**seanet_kwargs)
     decoder = audiocraft.modules.SEANetDecoder(**seanet_kwargs)
     quantizer = qt.ResidualVectorQuantizer(dimension=32, bins=400, n_q=4)
@@ -248,5 +250,12 @@ def get_debug_lm_model(device='cpu'):
 def get_wrapped_compression_model(
         compression_model: CompressionModel,
         cfg: omegaconf.DictConfig) -> CompressionModel:
-    # more to come.
+    if hasattr(cfg, 'interleave_stereo_codebooks'):
+        if cfg.interleave_stereo_codebooks.use:
+            kwargs = dict_from_config(cfg.interleave_stereo_codebooks)
+            kwargs.pop('use')
+            compression_model = InterleaveStereoCompressionModel(compression_model, **kwargs)
+    if hasattr(cfg, 'compression_model_n_q'):
+        if cfg.compression_model_n_q is not None:
+            compression_model.set_num_codebooks(cfg.compression_model_n_q)
     return compression_model

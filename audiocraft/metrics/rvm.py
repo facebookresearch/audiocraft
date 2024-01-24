@@ -26,6 +26,10 @@ class RelativeVolumeMel(nn.Module):
     of decibels. Given `x_ref` and `x_est` two waveforms of shape `[*, T]`, it will
     first renormalize both by the ground truth of `x_ref`.
 
+    ..Warning:: This class returns the volume of the distortion at the spectrogram level,
+        e.g. low negative values reflects lower distortion levels. For a SNR (like reported
+        in the MultiBandDiffusion paper), just take `-rvm`.
+
     Then it computes the mel spectrogram `z_ref` and `z_est` and compute volume of the difference
     relative to the volume of `z_ref` for each time-frequency bin. It further adds some limits, e.g.
     clamping the values between -25 and 25 dB (controlled by `min_relative_volume` and `max_relative_volume`)
