@@ -29,8 +29,7 @@ dataset:
     batch_size: 32
     num_samples: 50
     segment_duration: 10
-    audio:
-      sample_rate: ${sample_rate}
+
 
 loss:
   kind: mse
@@ -50,7 +49,9 @@ evaluate:
 generate:
   every: 25
   num_workers: 5
-
+  audio:
+    sample_rate: ${sample_rate}
+    
 checkpoint:
   save_last: true
   save_every: 25
