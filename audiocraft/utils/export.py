@@ -3,7 +3,6 @@
 #
 # This source code is licensed under the license found in the
 # LICENSE file in the root directory of this source tree.
-
 """
 Utility to export a training checkpoint to a lightweight release checkpoint.
 """
@@ -17,7 +16,8 @@ import torch
 from audiocraft import __version__
 
 
-def export_encodec(checkpoint_path: tp.Union[Path, str], out_file: tp.Union[Path, str]):
+def export_encodec(checkpoint_path: tp.Union[Path, str],
+                   out_file: tp.Union[Path, str]):
     """Export only the best state from the given EnCodec checkpoint. This
     should be used if you trained your own EnCodec model.
     """
@@ -33,9 +33,10 @@ def export_encodec(checkpoint_path: tp.Union[Path, str], out_file: tp.Union[Path
     return out_file
 
 
-def export_pretrained_compression_model(pretrained_encodec: str, out_file: tp.Union[Path, str]):
+def export_pretrained_compression_model(pretrained_encodec: str,
+                                        out_file: tp.Union[Path, str]):
     """Export a compression model (potentially EnCodec) from a pretrained model.
-    This is required for packaging the audio tokenizer along a MusicGen or AudioGen model.
+    This is required for packaging the audio tokenizer along a MusicGen model.
     Do not include the //pretrained/ prefix. For instance if you trained a model
     with `facebook/encodec_32khz`, just put that as a name. Same for `dac_44khz`.
 
@@ -58,8 +59,9 @@ def export_pretrained_compression_model(pretrained_encodec: str, out_file: tp.Un
     torch.save(pkg, out_file)
 
 
-def export_lm(checkpoint_path: tp.Union[Path, str], out_file: tp.Union[Path, str]):
-    """Export only the best state from the given MusicGen or AudioGen checkpoint.
+def export_lm(checkpoint_path: tp.Union[Path, str], out_file: tp.Union[Path,
+                                                                       str]):
+    """Export only the best state from the given MusicGen checkpoint.
     """
     pkg = torch.load(checkpoint_path, 'cpu')
     if pkg['fsdp_best_state']:
