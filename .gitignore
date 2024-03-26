@@ -52,6 +52,7 @@ egs/*
 # local datasets
 dataset/*
 !dataset/example
+export
 
 # personal notebooks & scripts
 */local_scripts

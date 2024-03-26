@@ -9,7 +9,6 @@ optimizer, losses etc into a single convenient object.
 """
 
 # flake8: noqa
-from .audiogen import AudioGenSolver
 from .builders import get_solver
 from .base import StandardSolver
 from .compression import CompressionSolver
