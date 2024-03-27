@@ -52,6 +52,7 @@ dataset/*
 !dataset/example
 musicgen-deployment.txt
 manifests
+export
 
 # personal notebooks & scripts
 */local_scripts

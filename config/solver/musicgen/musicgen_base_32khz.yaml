@@ -22,12 +22,12 @@ channels: 1
 sample_rate: 32000
 
 deadlock:
-  use: true  # deadlock detection
+  use: true # deadlock detection
 
 dataset:
-  batch_size: 192  # 32 GPUs
-  sample_on_weight: false  # Uniform sampling all the way
-  sample_on_duration: false  # Uniform sampling all the way
+  batch_size: 1 # 32 GPUs
+  sample_on_weight: false # Uniform sampling all the way
+  sample_on_duration: false # Uniform sampling all the way
 
 generate:
   lm:

@@ -11,8 +11,6 @@ At the moment we provide the training code for:
     text-to-music and melody+text autoregressive generative model.
     For the solver, see `audiocraft.solvers.musicgen.MusicGenSolver`, and for the model,
     `audiocraft.models.musicgen.MusicGen`.
-- [AudioGen](https://arxiv.org/abs/2209.15352), a state-of-the-art
-    text-to-general-audio generative model.
 - [EnCodec](https://arxiv.org/abs/2210.13438), efficient and high fidelity
     neural audio codec which provides an excellent tokenizer for autoregressive language models.
     See `audiocraft.solvers.compression.CompressionSolver`, and `audiocraft.models.encodec.EncodecModel`.
