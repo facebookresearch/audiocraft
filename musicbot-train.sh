@@ -1,6 +1,10 @@
 #!/bin/bash
 
-# TODO: Add export script
+# Check if dataset argument is provided
+if [ -z "$1" ]; then
+    echo "Usage: $0 <path-to-dataset>"
+    exit 1
+fi
 
 # Interface: musicbot-train --model-name="grimes" --path-to-dataset="gs://FOLDER"
 git clone https://github.com/createsafe/audiocraft && cd audiocraft
@@ -8,8 +12,8 @@ python -m pip install 'torch==2.1.0'
 pip install -e .
 
 # Grab UUID folder with *.json and *.mp3 pairs
-gsutil cp -r gs://musicgen-datasets/___ARGUMENT___ .
-mv __ARGUMENT__ dataset
+gsutil cp -r gs://musicgen-datasets/"$1" .
+mv "$1" dataset
 mkdir dataset/train
 mkdir dataset/val
 mkdir dataset/eval
@@ -27,5 +31,4 @@ python -m audiocraft.data.audio_dataset dataset/gen manifests/gen/data.jsonl
 dora run -d solver=musicgen/musicgen_base_32khz model/lm/model_scale=small \
     continue_from=//pretrained/facebook/musicgen-small conditioner=text2music \
     dset=audio/data
-
 

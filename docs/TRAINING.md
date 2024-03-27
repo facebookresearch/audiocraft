@@ -5,7 +5,6 @@ and [Flashy](https://github.com/facebookresearch/flashy) as our training pipelin
 and [Dora](https://github.com/facebookresearch/dora) as our experiment manager.
 AudioCraft training pipelines are designed to be research and experiment-friendly.
 
-
 ## Environment setup
 
 For the base installation, follow the instructions from the [README.md](../README.md).
@@ -19,11 +18,13 @@ or convenient mapping of paths between the supported environments.
 
 Each team can have a yaml file under the [configuration folder](../config). To select a team set the
 `AUDIOCRAFT_TEAM` environment variable to a valid team name (e.g. `labs` or `default`):
+
 ```shell
 conda env config vars set AUDIOCRAFT_TEAM=default
 ```
 
 Alternatively, you can add it to your `.bashrc`:
+
 ```shell
 export AUDIOCRAFT_TEAM=default
 ```
@@ -34,30 +35,31 @@ The cluster is automatically detected, but it is also possible to override it by
 the `AUDIOCRAFT_CLUSTER` environment variable.
 
 Based on this team and cluster, the environment is then configured with:
-* The dora experiment outputs directory.
-* The available slurm partitions: categorized by global and team.
-* A shared reference directory: In order to facilitate sharing research models while remaining
-agnostic to the used compute cluster, we created the `//reference` symbol that can be used in
-YAML config to point to a defined reference folder containing shared checkpoints
-(e.g. baselines, models for evaluation...).
 
-**Important:** The default output dir for trained models and checkpoints is under `/tmp/`. This is suitable
+-   The dora experiment outputs directory.
+-   The available slurm partitions: categorized by global and team.
+-   A shared reference directory: In order to facilitate sharing research models while remaining
+    agnostic to the used compute cluster, we created the `//reference` symbol that can be used in
+    YAML config to point to a defined reference folder containing shared checkpoints
+    (e.g. baselines, models for evaluation...).
+
+**Important:** The default output dir for trained models and checkpoints is under `./sessions/`. This is suitable
 only for quick testing. If you are doing anything serious you MUST edit the file `default.yaml` and
 properly set the `dora_dir` entries.
 
 #### Overriding environment configurations
 
 You can set the following environment variables to bypass the team's environment configuration:
-* `AUDIOCRAFT_CONFIG`: absolute path to a team config yaml file.
-* `AUDIOCRAFT_DORA_DIR`: absolute path to a custom dora directory.
-* `AUDIOCRAFT_REFERENCE_DIR`: absolute path to the shared reference directory.
+
+-   `AUDIOCRAFT_CONFIG`: absolute path to a team config yaml file.
+-   `AUDIOCRAFT_DORA_DIR`: absolute path to a custom dora directory.
+-   `AUDIOCRAFT_REFERENCE_DIR`: absolute path to the shared reference directory.
 
 ## Training pipelines
 
 Each task supported in AudioCraft has its own training pipeline and dedicated solver.
 Learn more about solvers and key designs around AudioCraft training pipeline below.
 Please refer to the documentation of each task and model for specific information on a given task.
-
 
 ### Solvers
 
@@ -160,7 +162,6 @@ and getting updates often enough. One Epoch is at least a `train` stage that las
 and a `valid` stage. You can control how long the valid stage takes with `dataset.valid.num_samples`.
 Other stages (`evaluate`, `generate`) will only happen every X epochs, as given by `evaluate.every` and `generate.every`).
 
-
 ### Models
 
 In AudioCraft, a model is a container object that wraps one or more torch modules together
@@ -206,14 +207,15 @@ See [Dora's README](https://github.com/facebookresearch/dora) and the
 ##### Configuration structure
 
 The configuration is organized in config groups:
-* `conditioner`: default values for conditioning modules.
-* `dset`: contains all data source related information (paths to manifest files
-and metadata for a given dataset).
-* `model`: contains configuration for each model defined in AudioCraft and configurations
-for different variants of models.
-* `solver`: contains the default configuration for each solver as well as configuration
-for each solver task, combining all the above components.
-* `teams`: contains the cluster configuration per teams. See environment setup for more details.
+
+-   `conditioner`: default values for conditioning modules.
+-   `dset`: contains all data source related information (paths to manifest files
+    and metadata for a given dataset).
+-   `model`: contains configuration for each model defined in AudioCraft and configurations
+    for different variants of models.
+-   `solver`: contains the default configuration for each solver as well as configuration
+    for each solver task, combining all the above components.
+-   `teams`: contains the cluster configuration per teams. See environment setup for more details.
 
 The `config.yaml` file is the main configuration that composes the above groups
 and contains default configuration for AudioCraft.
@@ -250,15 +252,16 @@ Learn more about running experiments with Dora below.
 
 [Dora](https://github.com/facebookresearch/dora) is the experiment manager tool used in AudioCraft.
 Check out the README to learn how Dora works. Here is a quick summary of what to know:
-* An XP is a unique set of hyper-parameters with a given signature. The signature is a hash
-of those hyper-parameters. We always refer to an XP with its signature, e.g. 9357e12e. We will see
-after that one can retrieve the hyper-params and re-rerun it in a single command.
-* In fact, the hash is defined as a delta between the base config and the one obtained
-with the config overrides you passed from the command line. This means you must never change
-the `conf/**.yaml` files directly, except for editing things like paths. Changing the default values
-in the config files means the XP signature won't reflect that change, and wrong checkpoints might be reused.
-I know, this is annoying, but the reason is that otherwise, any change to the config file would mean
-that all XPs ran so far would see their signature change.
+
+-   An XP is a unique set of hyper-parameters with a given signature. The signature is a hash
+    of those hyper-parameters. We always refer to an XP with its signature, e.g. 9357e12e. We will see
+    after that one can retrieve the hyper-params and re-rerun it in a single command.
+-   In fact, the hash is defined as a delta between the base config and the one obtained
+    with the config overrides you passed from the command line. This means you must never change
+    the `conf/**.yaml` files directly, except for editing things like paths. Changing the default values
+    in the config files means the XP signature won't reflect that change, and wrong checkpoints might be reused.
+    I know, this is annoying, but the reason is that otherwise, any change to the config file would mean
+    that all XPs ran so far would see their signature change.
 
 #### Dora commands
 
@@ -299,7 +302,6 @@ dora grid my_grid_folder.my_grid_name --dry_run --init
 
 Please refer to the [Dora documentation](https://github.com/facebookresearch/dora) for more information.
 
-
 #### Clearing up past experiments
 
 ```shell
@@ -308,5 +310,7 @@ Please refer to the [Dora documentation](https://github.com/facebookresearch/dor
 dora grid my_grid_folder.my_grid_name --clear
 # The following will delete the folder and checkpoint for a single XP,
 # and then run it afresh.
+dora run [-f BASE_SIG] [ARGS] --clear
+```
 dora run [-f BASE_SIG] [ARGS] --clear
 ```
