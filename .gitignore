@@ -47,11 +47,11 @@ venv/
 ENV/
 
 # egs with manifest files
-egs/*
-!egs/example
 # local datasets
 dataset/*
 !dataset/example
+musicgen-deployment.txt
+manifests
 
 # personal notebooks & scripts
 */local_scripts
