@@ -7,7 +7,6 @@ if [ -z "$1" ]; then
 fi
 
 # Interface: musicbot-train --model-name="grimes" --path-to-dataset="gs://FOLDER"
-git clone https://github.com/createsafe/audiocraft && cd audiocraft
 python -m pip install 'torch==2.1.0'
 pip install -e .
 
@@ -26,6 +25,9 @@ python -m audiocraft.data.audio_dataset dataset/train manifests/train/data.jsonl
 python -m audiocraft.data.audio_dataset dataset/val manifests/val/data.jsonl
 python -m audiocraft.data.audio_dataset dataset/eval manifests/eval/data.jsonl
 python -m audiocraft.data.audio_dataset dataset/gen manifests/gen/data.jsonl
+
+# Install tensorboard
+pip install tensorboard
 
 # Fine tune the model 
 dora run -d solver=musicgen/musicgen_base_32khz model/lm/model_scale=small \

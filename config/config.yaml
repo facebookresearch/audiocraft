@@ -31,10 +31,10 @@ label: # use this if you want twice the same exp, with a name.
 logging:
   level: INFO
   log_updates: 10
-  log_tensorboard: false
+  log_tensorboard: true
   log_wandb: false
 tensorboard:
-  with_media_logging: false
+  with_media_logging: true
   name: # optional name for the experiment
   sub_dir: # optional sub directory to store tensorboard data
 wandb:
