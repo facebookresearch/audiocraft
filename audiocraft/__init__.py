@@ -14,8 +14,6 @@ At the moment we provide the training code for:
 - [EnCodec](https://arxiv.org/abs/2210.13438), efficient and high fidelity
     neural audio codec which provides an excellent tokenizer for autoregressive language models.
     See `audiocraft.solvers.compression.CompressionSolver`, and `audiocraft.models.encodec.EncodecModel`.
-- [MultiBandDiffusion](TODO), alternative diffusion-based decoder compatible with EnCodec that
-    improves the perceived quality and reduces the artifacts coming from adversarial decoders.
 """
 
 # flake8: noqa

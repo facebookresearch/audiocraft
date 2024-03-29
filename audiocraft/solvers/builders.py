@@ -41,12 +41,10 @@ def get_solver(cfg: omegaconf.DictConfig) -> StandardSolver:
     """Instantiate solver from config."""
     from .compression import CompressionSolver
     from .musicgen import MusicGenSolver
-    from .diffusion import DiffusionSolver
     klass = {
         'compression': CompressionSolver,
         'musicgen': MusicGenSolver,
         'lm': MusicGenSolver,  # backward compatibility
-        'diffusion': DiffusionSolver,
     }[cfg.solver]
     return klass(cfg)  # type: ignore
 

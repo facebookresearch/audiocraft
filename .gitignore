@@ -53,6 +53,7 @@ dataset/*
 musicgen-deployment.txt
 manifests
 export
+sessions
 
 # personal notebooks & scripts
 */local_scripts
