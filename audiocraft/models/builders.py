@@ -3,7 +3,6 @@
 #
 # This source code is licensed under the license found in the
 # LICENSE file in the root directory of this source tree.
-
 """
 All the functions to build the relevant models and modules
 from the Hydra config.
@@ -37,10 +36,10 @@ from ..modules.conditioners import (
 from .unet import DiffusionUnet
 from .. import quantization as qt
 from ..utils.utils import dict_from_config
-from ..modules.diffusion_schedule import MultiBandProcessor, SampleProcessor
 
 
-def get_quantizer(quantizer: str, cfg: omegaconf.DictConfig, dimension: int) -> qt.BaseQuantizer:
+def get_quantizer(quantizer: str, cfg: omegaconf.DictConfig,
+                  dimension: int) -> qt.BaseQuantizer:
     klass = {
         'no_quant': qt.DummyQuantizer,
         'rvq': qt.ResidualVectorQuantizer
@@ -77,8 +76,12 @@ def get_compression_model(cfg: omegaconf.DictConfig) -> CompressionModel:
         renormalize = kwargs.pop('renormalize', False)
         # deprecated params
         kwargs.pop('renorm', None)
-        return EncodecModel(encoder, decoder, quantizer,
-                            frame_rate=frame_rate, renormalize=renormalize, **kwargs).to(cfg.device)
+        return EncodecModel(encoder,
+                            decoder,
+                            quantizer,
+                            frame_rate=frame_rate,
+                            renormalize=renormalize,
+                            **kwargs).to(cfg.device)
     else:
         raise KeyError(f"Unexpected compression model {cfg.compression_model}")
 
@@ -91,37 +94,44 @@ def get_lm_model(cfg: omegaconf.DictConfig) -> LMModel:
         q_modeling = kwargs.pop('q_modeling', None)
         codebooks_pattern_cfg = getattr(cfg, 'codebooks_pattern')
         attribute_dropout = dict_from_config(getattr(cfg, 'attribute_dropout'))
-        cls_free_guidance = dict_from_config(getattr(cfg, 'classifier_free_guidance'))
-        cfg_prob, cfg_coef = cls_free_guidance['training_dropout'], cls_free_guidance['inference_coef']
+        cls_free_guidance = dict_from_config(
+            getattr(cfg, 'classifier_free_guidance'))
+        cfg_prob, cfg_coef = cls_free_guidance[
+            'training_dropout'], cls_free_guidance['inference_coef']
         fuser = get_condition_fuser(cfg)
-        condition_provider = get_conditioner_provider(kwargs["dim"], cfg).to(cfg.device)
-        if len(fuser.fuse2cond['cross']) > 0:  # enforce cross-att programmatically
+        condition_provider = get_conditioner_provider(kwargs["dim"],
+                                                      cfg).to(cfg.device)
+        if len(fuser.fuse2cond['cross']
+               ) > 0:  # enforce cross-att programmatically
             kwargs['cross_attention'] = True
         if codebooks_pattern_cfg.modeling is None:
             assert q_modeling is not None, \
                 "LM model should either have a codebook pattern defined or transformer_lm.q_modeling"
-            codebooks_pattern_cfg = omegaconf.OmegaConf.create(
-                {'modeling': q_modeling, 'delay': {'delays': list(range(n_q))}}
-            )
+            codebooks_pattern_cfg = omegaconf.OmegaConf.create({
+                'modeling': q_modeling,
+                'delay': {
+                    'delays': list(range(n_q))
+                }
+            })
 
-        pattern_provider = get_codebooks_pattern_provider(n_q, codebooks_pattern_cfg)
+        pattern_provider = get_codebooks_pattern_provider(
+            n_q, codebooks_pattern_cfg)
         lm_class = LMModel
-        return lm_class(
-            pattern_provider=pattern_provider,
-            condition_provider=condition_provider,
-            fuser=fuser,
-            cfg_dropout=cfg_prob,
-            cfg_coef=cfg_coef,
-            attribute_dropout=attribute_dropout,
-            dtype=getattr(torch, cfg.dtype),
-            device=cfg.device,
-            **kwargs
-        ).to(cfg.device)
+        return lm_class(pattern_provider=pattern_provider,
+                        condition_provider=condition_provider,
+                        fuser=fuser,
+                        cfg_dropout=cfg_prob,
+                        cfg_coef=cfg_coef,
+                        attribute_dropout=attribute_dropout,
+                        dtype=getattr(torch, cfg.dtype),
+                        device=cfg.device,
+                        **kwargs).to(cfg.device)
     else:
         raise KeyError(f"Unexpected LM model {cfg.lm_model}")
 
 
-def get_conditioner_provider(output_dim: int, cfg: omegaconf.DictConfig) -> ConditioningProvider:
+def get_conditioner_provider(
+        output_dim: int, cfg: omegaconf.DictConfig) -> ConditioningProvider:
     """Instantiate a conditioning model."""
     device = cfg.device
     duration = cfg.dataset.segment_duration
@@ -136,25 +146,26 @@ def get_conditioner_provider(output_dim: int, cfg: omegaconf.DictConfig) -> Cond
         model_type = cond_cfg['model']
         model_args = cond_cfg[model_type]
         if model_type == 't5':
-            conditioners[str(cond)] = T5Conditioner(output_dim=output_dim, device=device, **model_args)
+            conditioners[str(cond)] = T5Conditioner(output_dim=output_dim,
+                                                    device=device,
+                                                    **model_args)
         elif model_type == 'lut':
-            conditioners[str(cond)] = LUTConditioner(output_dim=output_dim, **model_args)
+            conditioners[str(cond)] = LUTConditioner(output_dim=output_dim,
+                                                     **model_args)
         elif model_type == 'chroma_stem':
             conditioners[str(cond)] = ChromaStemConditioner(
                 output_dim=output_dim,
                 duration=duration,
                 device=device,
-                **model_args
-            )
+                **model_args)
         elif model_type == 'clap':
             conditioners[str(cond)] = CLAPEmbeddingConditioner(
-                output_dim=output_dim,
-                device=device,
-                **model_args
-            )
+                output_dim=output_dim, device=device, **model_args)
         else:
             raise ValueError(f"Unrecognized conditioning model: {model_type}")
-    conditioner = ConditioningProvider(conditioners, device=device, **condition_provider_args)
+    conditioner = ConditioningProvider(conditioners,
+                                       device=device,
+                                       **condition_provider_args)
     return conditioner
 
 
@@ -168,7 +179,8 @@ def get_condition_fuser(cfg: omegaconf.DictConfig) -> ConditionFuser:
     return fuser
 
 
-def get_codebooks_pattern_provider(n_q: int, cfg: omegaconf.DictConfig) -> CodebooksPatternProvider:
+def get_codebooks_pattern_provider(
+        n_q: int, cfg: omegaconf.DictConfig) -> CodebooksPatternProvider:
     """Instantiate a codebooks pattern provider object."""
     pattern_providers = {
         'parallel': ParallelPatternProvider,
@@ -185,7 +197,9 @@ def get_codebooks_pattern_provider(n_q: int, cfg: omegaconf.DictConfig) -> Codeb
 
 def get_debug_compression_model(device='cpu', sample_rate: int = 32000):
     """Instantiate a debug compression model to be used for unit tests."""
-    assert sample_rate in [16000, 32000], "unsupported sample rate for debug compression model"
+    assert sample_rate in [
+        16000, 32000
+    ], "unsupported sample rate for debug compression model"
     model_ratios = {
         16000: [10, 8, 8],  # 25 Hz at 16kHz
         32000: [10, 8, 16]  # 25 Hz at 32kHz
@@ -203,9 +217,12 @@ def get_debug_compression_model(device='cpu', sample_rate: int = 32000):
     quantizer = qt.ResidualVectorQuantizer(dimension=32, bins=400, n_q=4)
     init_x = torch.randn(8, 32, 128)
     quantizer(init_x, 1)  # initialize kmeans etc.
-    compression_model = EncodecModel(
-        encoder, decoder, quantizer,
-        frame_rate=frame_rate, sample_rate=sample_rate, channels=1).to(device)
+    compression_model = EncodecModel(encoder,
+                                     decoder,
+                                     quantizer,
+                                     frame_rate=frame_rate,
+                                     sample_rate=sample_rate,
+                                     channels=1).to(device)
     return compression_model.eval()
 
 
@@ -213,19 +230,9 @@ def get_diffusion_model(cfg: omegaconf.DictConfig):
     # TODO Find a way to infer the channels from dset
     channels = cfg.channels
     num_steps = cfg.schedule.num_steps
-    return DiffusionUnet(
-            chin=channels, num_steps=num_steps, **cfg.diffusion_unet)
-
-
-def get_processor(cfg, sample_rate: int = 24000):
-    sample_processor = SampleProcessor()
-    if cfg.use:
-        kw = dict(cfg)
-        kw.pop('use')
-        kw.pop('name')
-        if cfg.name == "multi_band_processor":
-            sample_processor = MultiBandProcessor(sample_rate=sample_rate, **kw)
-    return sample_processor
+    return DiffusionUnet(chin=channels,
+                         num_steps=num_steps,
+                         **cfg.diffusion_unet)
 
 
 def get_debug_lm_model(device='cpu'):
@@ -233,16 +240,30 @@ def get_debug_lm_model(device='cpu'):
     pattern = DelayedPatternProvider(n_q=4)
     dim = 16
     providers = {
-        'description': LUTConditioner(n_bins=128, dim=dim, output_dim=dim, tokenizer="whitespace"),
+        'description':
+        LUTConditioner(n_bins=128,
+                       dim=dim,
+                       output_dim=dim,
+                       tokenizer="whitespace"),
     }
     condition_provider = ConditioningProvider(providers)
-    fuser = ConditionFuser(
-        {'cross': ['description'], 'prepend': [],
-         'sum': [], 'input_interpolate': []})
-    lm = LMModel(
-        pattern, condition_provider, fuser,
-        n_q=4, card=400, dim=dim, num_heads=4, custom=True, num_layers=2,
-        cross_attention=True, causal=True)
+    fuser = ConditionFuser({
+        'cross': ['description'],
+        'prepend': [],
+        'sum': [],
+        'input_interpolate': []
+    })
+    lm = LMModel(pattern,
+                 condition_provider,
+                 fuser,
+                 n_q=4,
+                 card=400,
+                 dim=dim,
+                 num_heads=4,
+                 custom=True,
+                 num_layers=2,
+                 cross_attention=True,
+                 causal=True)
     return lm.to(device).eval()
 
 
@@ -253,7 +274,8 @@ def get_wrapped_compression_model(
         if cfg.interleave_stereo_codebooks.use:
             kwargs = dict_from_config(cfg.interleave_stereo_codebooks)
             kwargs.pop('use')
-            compression_model = InterleaveStereoCompressionModel(compression_model, **kwargs)
+            compression_model = InterleaveStereoCompressionModel(
+                compression_model, **kwargs)
     if hasattr(cfg, 'compression_model_n_q'):
         if cfg.compression_model_n_q is not None:
             compression_model.set_num_codebooks(cfg.compression_model_n_q)
