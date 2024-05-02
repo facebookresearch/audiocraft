@@ -123,16 +123,27 @@ def purge_fsdp(model: FSDP):
     """
     from torch.distributed.fsdp._runtime_utils import _reshard  # type: ignore
     for module in FSDP.fsdp_modules(model):
-        handles = module._handles
-        if not handles:
-            continue
-        handle = handles[0]
-        unsharded_flat_param = handle._get_padded_unsharded_flat_param()
-        storage_size: int = unsharded_flat_param._typed_storage()._size()  # type: ignore
-        if storage_size == 0:
-            continue
-        true_list = [True for h in handles]
-        _reshard(module, handles, true_list)
+        if hasattr(module, "_handles"):
+            # support for FSDP with torch<2.1.0
+            handles = module._handles
+            if not handles:
+                continue
+            handle = handles[0]
+            unsharded_flat_param = handle._get_padded_unsharded_flat_param()
+            storage_size: int = unsharded_flat_param._typed_storage()._size()  # type: ignore
+            if storage_size == 0:
+                continue
+            true_list = [True for h in handles]
+            _reshard(module, handles, true_list)
+        else:
+            handle = module._handle
+            if not handle:
+                continue
+            unsharded_flat_param = handle._get_padded_unsharded_flat_param()
+            storage_size: int = unsharded_flat_param._typed_storage()._size()  # type: ignore
+            if storage_size == 0:
+                continue
+            _reshard(module, handle, True)
 
 
 class _FSDPFixStateDict(FSDP):

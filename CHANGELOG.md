@@ -12,6 +12,8 @@ Typo fixes.
 
 Fixing setup.py to install only audiocraft, not the unit tests and scripts.
 
+Fix FSDP support with PyTorch 2.1.0. 
+
 ## [1.2.0] - 2024-01-11
 
 Adding stereo models.
