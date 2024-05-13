@@ -104,6 +104,7 @@ class CompressionModel(ABC, nn.Module):
 
         from . import builders, loaders
         model: CompressionModel
+
         if name in ['dac_44khz', 'dac_24khz']:
             model_type = name.split('_')[1]
             logger.info("Getting pretrained compression model from DAC %s", model_type)
