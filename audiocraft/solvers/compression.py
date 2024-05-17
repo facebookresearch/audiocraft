@@ -44,12 +44,13 @@ class CompressionSolver(base.StandardSolver):
                 for adv_name, _ in self.adv_losses.items():
                     loss_weights[f'{loss_name}_{adv_name}'] = weight
             elif weight > 0:
-                self.aux_losses[loss_name] = builders.get_loss(loss_name, self.cfg)
-                loss_weights[loss_name] = weight
-            elif loss_name == "mmd" and weight > 0:
-                # We put this one outside of the balancer because gradients are not taken on the same batch.
-                self.mmd_loss = MMDLoss(device=self.device, delay=self.cfg.mmd.delay)
-                self.batches_to_encode_mmd: tp.List[torch.Tensor] = []
+                if loss_name == "mmd":
+                    # We put this one outside of the balancer because gradients are not taken on the same batch.
+                    self.mmd_loss = MMDLoss(device=self.device, delay=self.cfg.mmd.delay)
+                    self.batches_to_encode_mmd: tp.List[torch.Tensor] = []
+                else:
+                    self.aux_losses[loss_name] = builders.get_loss(loss_name, self.cfg)
+                    loss_weights[loss_name] = weight
             else:
                 self.info_losses[loss_name] = builders.get_loss(loss_name, self.cfg)
         self.balancer = builders.get_balancer(loss_weights, self.cfg.balancer)
