@@ -23,6 +23,7 @@ from ..losses import MMDLoss
 
 logger = logging.getLogger(__name__)
 
+
 class CompressionSolver(base.StandardSolver):
     """Solver for compression task.
 
@@ -45,16 +46,14 @@ class CompressionSolver(base.StandardSolver):
             elif weight > 0:
                 self.aux_losses[loss_name] = builders.get_loss(loss_name, self.cfg)
                 loss_weights[loss_name] = weight
+            elif loss_name == "mmd" and weight > 0:
+                # We put this one outside of the balancer because gradients are not taken on the same batch.
+                self.mmd_loss = MMDLoss(device=self.device, delay=self.cfg.mmd.delay)
+                self.batches_to_encode_mmd: tp.List[torch.Tensor] = []
             else:
                 self.info_losses[loss_name] = builders.get_loss(loss_name, self.cfg)
         self.balancer = builders.get_balancer(loss_weights, self.cfg.balancer)
         self.register_stateful('adv_losses')
-
-        # We put this one outside of the balancer because gradients are not taken on the same batch.
-        if "mmd" in self.cfg.losses:
-            self.mmd_loss = MMDLoss(device=self.device, delay=self.cfg.losses.mmd.delay)
-            self.batches_to_encode_mmd = []
-            self.batches_encoded_mmd = []
 
     @property
     def best_metric_name(self) -> tp.Optional[str]:
@@ -89,7 +88,8 @@ class CompressionSolver(base.StandardSolver):
         """Perform one training or valid step on a given batch."""
         x = batch.to(self.device)
         y = x.clone()
-        if self.is_training and "mmd" in self.cfg.losses:
+        mmd_used = getattr(self.cfg.losses, 'mmd', 0) > 0
+        if self.is_training and mmd_used:
             self.batches_to_encode_mmd.append(x.clone())
 
         qres = self.model(x)
@@ -126,15 +126,16 @@ class CompressionSolver(base.StandardSolver):
             balanced_losses[loss_name] = loss
 
         # mmd loss
-        if self.is_training and "mmd" in self.cfg.losses:
-            if len(self.batches_to_encode_mmd) == self.cfg.losses.mmd.num_batches_mmd:
+        if self.is_training and mmd_used:
+            if len(self.batches_to_encode_mmd) == self.cfg.mmd.num_batches_mmd:
                 macro_batch_encoded_mmd = []
                 while len(self.batches_to_encode_mmd):
                     batch = self.batches_to_encode_mmd.pop()
                     preprocessed, _ = self.model.preprocess(batch)
-                    macro_batch_encoded_mmd.append(torch.utils.checkpoint.checkpoint(self.model.encoder, preprocessed, use_reentrant=False))  #Checkpoint the encoders so that the memory is freed at each batch
-                    macro_batch_encoded_mmd = torch.cat(macro_batch_encoded_mmd, dim=0)
-                other_losses['mmd'] = self.mmd_loss(macro_batch_encoded_mmd)
+                    # Checkpoint the encoder forward pass so that the memory is freed at each batch
+                    encoded = torch.utils.checkpoint.checkpoint(self.model.encoder, preprocessed, use_reentrant=False)
+                    macro_batch_encoded_mmd.append(encoded)
+                other_losses['mmd'] = self.mmd_loss(torch.cat(macro_batch_encoded_mmd, dim=0))
 
         # weighted losses
         metrics.update(balanced_losses)
@@ -157,7 +158,9 @@ class CompressionSolver(base.StandardSolver):
             if 'mmd' in other_losses:
                 mmd_loss += other_losses['mmd']
             if mmd_loss.requires_grad:
-                (self.cfg.losses.mmd.weight * mmd_loss).backward() #Free the encoder gradients, so the memory is free for the "true" forward pass
+                # Free the encoder gradients, so the memory is free for the "true" forward pass
+                mmd_weight = self.cfg.losses.mmd
+                (mmd_weight * mmd_loss).backward()
 
             # balancer losses backward, returns effective training loss
             # with effective weights at the current batch.

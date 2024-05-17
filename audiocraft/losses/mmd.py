@@ -1,8 +1,10 @@
 import torch
 from einops import rearrange
 
+
 def _exp_kernel(dxx: torch.Tensor, a: torch.Tensor):
     return torch.exp((-0.5 / a) * dxx).sum()
+
 
 def _shuffle_codebooks(x, groups: int = 0):
     ''' x is B,N
@@ -12,13 +14,14 @@ def _shuffle_codebooks(x, groups: int = 0):
     '''
     B, N = x.size()
     x_shuffled = torch.zeros_like(x)
-    groups = groups if groups else N #That way, we keep the original version compatible
+    groups = groups if groups else N  # That way, we keep the original version compatible
 
-    assert N%groups == 0, f"Dimensions {N} are not divisible by number of groups {groups}"
+    assert N % groups == 0, f"Dimensions {N} are not divisible by number of groups {groups}"
     for group in range(groups):
         batch_perm = torch.randperm(B, device=x.device)
         x_shuffled[:, group*N//groups: (group+1)*N//groups] = x[batch_perm, group*N//groups: (group+1)*N//groups]
     return x_shuffled
+
 
 class MMDLoss(torch.nn.Module):
     def __init__(self, delay: bool = False, device=None):
@@ -32,14 +35,16 @@ class MMDLoss(torch.nn.Module):
         if self.device is not None:
             inputs = inputs.to(self.device)
 
-        B, K, D, T = x.size()
+        B, K, D, T = inputs.size()
         x = inputs.type(torch.float)
         x = (x - x.mean(dim=(0, 2, 3), keepdim=True)) / torch.sqrt(x.var(dim=(0, 2, 3), keepdim=True) + 1e-8)
 
         # Reshaping / Delaying
         if self.delay:
-            x = torch.cat([ torch.nn.functional.pad(x[:, delay: (delay+1), :, : T-delay], (delay, 0)) for delay in range(K) ], dim=-1)
-            x = x[..., K: ] #Crop to remove zeros introduced by padding
+            x = torch.cat([
+                torch.nn.functional.pad(x[:, delay: (delay+1), :, : T-delay], (delay, 0)) for delay in range(K)
+                ], dim=-1)
+            x = x[..., K:]  # Crop to remove zeros introduced by padding
 
         # Group time dimension and shuffle to sample from factorized distribution
         x = rearrange(x, 'b k d t -> (b t) k d')

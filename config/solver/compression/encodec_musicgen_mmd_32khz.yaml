@@ -16,7 +16,8 @@ losses:
   mel: 0.
   msspec: 2.
   sisnr: 0.
-  mmd: 
-    num_batches_mmd: 32
-    weight: 1000.
-    delay: True
+  mmd: 1000.
+
+mmd: 
+  num_batches_mmd: 32
+  delay: True
