@@ -137,7 +137,7 @@ class CompressionSolver(base.StandardSolver):
                     encoded = torch.utils.checkpoint.checkpoint(self.model.encoder, preprocessed, use_reentrant=False)
                     macro_batch_encoded_mmd.append(encoded)
                 macro_batch_encoded_mmd = torch.cat(macro_batch_encoded_mmd, dim=0)
-                streams_preQ = self.model.quantizer.vq(macro_batch_encoded_mmd, get_streams_preQ=True)
+                streams_preQ = self.model.quantizer.vq.get_streams_preQ(macro_batch_encoded_mmd)
                 other_losses['mmd'] = self.mmd_loss(streams_preQ)
 
         # weighted losses
