@@ -136,7 +136,9 @@ class CompressionSolver(base.StandardSolver):
                     # Checkpoint the encoder forward pass so that the memory is freed at each batch
                     encoded = torch.utils.checkpoint.checkpoint(self.model.encoder, preprocessed, use_reentrant=False)
                     macro_batch_encoded_mmd.append(encoded)
-                other_losses['mmd'] = self.mmd_loss(torch.cat(macro_batch_encoded_mmd, dim=0))
+                macro_batch_encoded_mmd = torch.cat(macro_batch_encoded_mmd, dim=0)
+                streams_preQ = self.model.quantizer.vq(macro_batch_encoded_mmd, get_streams_preQ=True)
+                other_losses['mmd'] = self.mmd_loss(streams_preQ)
 
         # weighted losses
         metrics.update(balanced_losses)
