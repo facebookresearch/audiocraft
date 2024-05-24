@@ -6,8 +6,8 @@ def _exp_kernel(dxx: torch.Tensor, a: torch.Tensor):
     return torch.exp((-0.5 / a) * dxx).sum()
 
 
-def _shuffle_codebooks(x, groups: int = 0):
-    ''' x is B,N
+def _shuffle_codebooks_legacy(x, groups: int = 0):
+    ''' x is B,n_q*N
     If groups > 0 we do group shuffling i.e. we only permute between groups.
     The shuffling is the same intra group, so that only the groups
     will be independent between them, and we keep the intra-group correlation
@@ -20,6 +20,18 @@ def _shuffle_codebooks(x, groups: int = 0):
     for group in range(groups):
         batch_perm = torch.randperm(B, device=x.device)
         x_shuffled[:, group*N//groups: (group+1)*N//groups] = x[batch_perm, group*N//groups: (group+1)*N//groups]
+    return x_shuffled
+
+
+def _shuffle_codebooks(x):
+    ''' x is B,K,D
+    '''
+    B, K, D = x.size()
+    x_shuffled = torch.zeros_like(x)
+
+    for k in range(K):
+        batch_perm = torch.randperm(B, device=x.device)
+        x_shuffled[:, k, :] = x[batch_perm, k, :]
     return x_shuffled
 
 
