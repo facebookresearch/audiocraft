@@ -55,7 +55,7 @@ class MMDLoss(torch.nn.Module):
         if self.delay:
             x = torch.cat([
                 torch.nn.functional.pad(x[:, delay: (delay+1), :, : T-delay], (delay, 0)) for delay in range(K)
-                ], dim=-1)
+                ], dim=1)
             x = x[..., K:]  # Crop to remove zeros introduced by padding
 
         # Group time dimension and shuffle to sample from factorized distribution
