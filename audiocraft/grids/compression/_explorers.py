@@ -55,7 +55,6 @@ class CompressionExplorer(BaseExplorer):
         ]
 
 
-
 class CompressionMMDExplorer(CompressionExplorer):
     eval_metrics = ["sisnr", "visqol"]
 
