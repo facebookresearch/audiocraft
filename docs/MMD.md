@@ -49,7 +49,9 @@ dora grid compression.encodec_musicgen_mmd_32khz
 
 ### Playing with the model
 
-We provide a pretrained EnCodec-MMD model [here][drive_link].
+<!-- We provide a pretrained EnCodec-MMD model [here][drive_link]. -->
+We will provide a pretrained EnCodec-MMD 32kHz model very soon.
+Please bear with us.
 Once you have a model trained, it is possible to get the entire solver, or just
 the trained model with the following functions:
 
