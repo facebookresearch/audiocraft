@@ -17,7 +17,7 @@ and released checkpoints at this stage.
 
 We provide the implementation for EnCodec-MMD, a variant of EnCodec where the independence
 between RVQ codebooks is maximized for better music generation modeling accuracy.
-See [the dedicated section](../MMD.md) and our [ICML paper](ICML_arxiv).
+See [the dedicated section](../MMD.md) and our [ICML paper][ICML_arxiv].
 
 ## Installation
 

@@ -12,7 +12,7 @@ true model of the joint distribution.
 The training criterion, its correlation with inter-codebook dependence and 
 music generation results are presented in our 
 [An Independence-promoting Loss for Music Generation with Language Models][ICML_arxiv] paper.
-You can check out our [sample page][music-mmd_samples].
+You can check out our [sample page][musicgen-mmd_samples].
 
 
 ## Installation
@@ -49,7 +49,7 @@ dora grid compression.encodec_musicgen_mmd_32khz
 
 ### Playing with the model
 
-We provide a pretrained EnCodec-MMD model [here](drive_link).
+We provide a pretrained EnCodec-MMD model [here][drive_link].
 Once you have a model trained, it is possible to get the entire solver, or just
 the trained model with the following functions:
 
