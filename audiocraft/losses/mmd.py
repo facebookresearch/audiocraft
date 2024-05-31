@@ -36,10 +36,11 @@ def _shuffle_codebooks(x):
 
 
 class MMDLoss(torch.nn.Module):
-    def __init__(self, delay: bool = False, device=None):
+    def __init__(self, delay: bool = False, device=None, group_norm_mmd: bool = False):
         super().__init__()
         self.device = device
         self.delay = delay
+        self.group_norm_mmd = group_norm_mmd
 
     def forward(self, inputs: torch.Tensor):
         """inputs is [B, K, D, T].
@@ -60,7 +61,10 @@ class MMDLoss(torch.nn.Module):
         # Group time dimension and shuffle to sample from factorized distribution
         x = rearrange(x, 'b k d t -> (b t) k d')
         # Normalize per codebook
-        x = (x - x.mean(dim=(0, 2), keepdim=True)) / torch.sqrt(x.var(dim=(0, 2), keepdim=True) + 1e-8)
+        if self.group_norm_mmd:
+            x = (x - x.mean(dim=(0, 2), keepdim=True)) / torch.sqrt(x.var(dim=(0, 2), keepdim=True) + 1e-8)
+        else:
+            x = (x - x.mean(dim=(0,), keepdim=True)) / torch.sqrt(x.var(dim=(0,), keepdim=True) + 1e-8)
         y = _shuffle_codebooks(x)
         x = x.view(x.shape[0], -1)
         y = y.view(x.shape[0], -1)

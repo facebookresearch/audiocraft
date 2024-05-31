@@ -27,6 +27,9 @@ def explorer(launcher):
     launcher.bind_(dset='internal/music_400k_32khz')
     # launch xp
     launcher()
+
+    launcher({'mmd.group_norm_mmd': True})  # Test group norm MMD and compare to legacy
+
     launcher({
         'metrics.visqol.bin': '/data/home/jadecopet/local/usr/opt/visqol',
         'label': 'visqol',

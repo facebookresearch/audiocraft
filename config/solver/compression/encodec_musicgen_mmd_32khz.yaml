@@ -21,3 +21,4 @@ losses:
 mmd: 
   num_batches_mmd: 32
   delay: True
+  group_norm_mmd: False
