@@ -13,6 +13,11 @@ and used with the [EnCodec repository](https://github.com/facebookresearch/encod
 **Note**: We do not guarantee compatibility between the AudioCraft and EnCodec codebases
 and released checkpoints at this stage.
 
+## EnCodec-MMD
+
+We provide the implementation for EnCodec-MMD, a variant of EnCodec where the independence
+between RVQ codebooks is maximized for better music generation modeling accuracy.
+See [the dedicated section](../MMD.md) and our [ICML paper](ICML_arxiv).
 
 ## Installation
 
@@ -178,3 +183,4 @@ See license information in the [README](../README.md).
 
 [arxiv]: https://arxiv.org/abs/2210.13438
 [encodec_samples]: https://ai.honu.io/papers/encodec/samples.html
+[ICML_arxiv]: https://arxiv.org/abs/xxxx.xxxxx
