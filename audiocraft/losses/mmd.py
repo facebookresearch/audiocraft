@@ -49,7 +49,6 @@ class MMDLoss(torch.nn.Module):
 
         B, K, D, T = inputs.size()
         x = inputs.type(torch.float)
-        x = (x - x.mean(dim=(0, 2, 3), keepdim=True)) / torch.sqrt(x.var(dim=(0, 2, 3), keepdim=True) + 1e-8)
 
         # Reshaping / Delaying
         if self.delay:
@@ -60,10 +59,11 @@ class MMDLoss(torch.nn.Module):
 
         # Group time dimension and shuffle to sample from factorized distribution
         x = rearrange(x, 'b k d t -> (b t) k d')
-        macroB = x.shape[0]
+        # Normalize per codebook
+        x = (x - x.mean(dim=(0, 2), keepdim=True)) / torch.sqrt(x.var(dim=(0, 2), keepdim=True) + 1e-8)
         y = _shuffle_codebooks(x)
-        x = x.view(macroB, -1)
-        y = y.view(macroB, -1)
+        x = x.view(x.shape[0], -1)
+        y = y.view(x.shape[0], -1)
 
         xx, yy, zz = torch.mm(x, x.t()), torch.mm(y, y.t()), torch.mm(x, y.t())
         rx = xx.diag().unsqueeze(0).expand_as(xx)
