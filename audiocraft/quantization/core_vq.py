@@ -389,11 +389,10 @@ class ResidualVectorQuantization(nn.Module):
         all_residuals: tp.List[torch.Tensor] = []
 
         for _, layer in enumerate(self.layers):
-            all_residuals.append(residual)  # Important: we need to effectively force the independence
-            # by controlling the information that goes IN a quantizer, not the residual after quantization
             quantized, indices, loss = layer(residual)
             quantized = quantized.detach()
             residual = residual - quantized  # [B, D, T]
+            all_residuals.append(residual + (quantized - residual).detach())
 
         residuals_tensor = torch.stack(all_residuals, dim=1)  # [B, K, D, T]
 
