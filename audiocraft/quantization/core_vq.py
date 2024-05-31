@@ -392,7 +392,8 @@ class ResidualVectorQuantization(nn.Module):
             quantized, indices, loss = layer(residual)
             quantized = quantized.detach()
             residual = residual - quantized  # [B, D, T]
-            all_residuals.append(residual + (quantized - residual).detach())
+            # all_residuals.append(residual + (quantized - residual).detach())
+            all_residuals.append(residual)
 
         residuals_tensor = torch.stack(all_residuals, dim=1)  # [B, K, D, T]
 
