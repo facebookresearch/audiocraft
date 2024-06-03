@@ -131,9 +131,7 @@ def audio_read(filepath: tp.Union[str, Path], seek_time: float = 0.,
         info = _soundfile_info(filepath)
         frames = -1 if duration <= 0 else int(duration * info.sample_rate)
         frame_offset = int(seek_time * info.sample_rate)
-        wav, sr = soundfile.read(
-            filepath, start=frame_offset, frames=frames, dtype=np.float32
-        )
+        wav, sr = soundfile.read(filepath, start=frame_offset, frames=frames, dtype=np.float32)
         assert info.sample_rate == sr, f"Mismatch of sample rates {info.sample_rate} {sr}"
         wav = torch.from_numpy(wav).t().contiguous()
         if len(wav.shape) == 1:
@@ -160,8 +158,8 @@ def _piping_to_ffmpeg(out_path: tp.Union[str, Path], wav: torch.Tensor, sample_r
 
 def audio_write(stem_name: tp.Union[str, Path],
                 wav: torch.Tensor, sample_rate: int,
-                format: str = "wav", mp3_rate: int = 320, ogg_rate: tp.Optional[int] = None,
-                normalize: bool = True, strategy: str = "peak", peak_clip_headroom_db: float = 1,
+                format: str = 'wav', mp3_rate: int = 320, ogg_rate: tp.Optional[int] = None,
+                normalize: bool = True, strategy: str = 'peak', peak_clip_headroom_db: float = 1,
                 rms_headroom_db: float = 18, loudness_headroom_db: float = 14,
                 loudness_compressor: bool = False,
                 log_clipping: bool = True, make_parent_dir: bool = True,
