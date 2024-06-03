@@ -19,3 +19,4 @@ from .specloss import (
     MelSpectrogramL1Loss,
     MultiScaleMelSpectrogramLoss,
 )
+from .mmd import MMDLoss

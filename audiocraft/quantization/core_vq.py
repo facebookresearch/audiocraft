@@ -384,6 +384,20 @@ class ResidualVectorQuantization(nn.Module):
         out_losses, out_indices = map(torch.stack, (all_losses, all_indices))
         return quantized_out, out_indices, out_losses
 
+    def get_streams_pre_quantization(self, x: torch.Tensor) -> torch.Tensor:
+        residual = x
+        all_residuals: tp.List[torch.Tensor] = []
+
+        for _, layer in enumerate(self.layers):
+            quantized, indices, loss = layer(residual)
+            quantized = quantized.detach()
+            residual = residual - quantized  # [B, D, T]
+            all_residuals.append(residual)
+
+        residuals_tensor = torch.stack(all_residuals, dim=1)  # [B, K, D, T]
+
+        return residuals_tensor
+
     def encode(self, x: torch.Tensor, n_q: tp.Optional[int] = None) -> torch.Tensor:
         residual = x
         all_indices = []

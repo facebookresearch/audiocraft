@@ -53,3 +53,37 @@ class CompressionExplorer(BaseExplorer):
                 "evaluate", [tt.leaf(name, ".3f") for name in self.eval_metrics], align=">"
             ),
         ]
+
+
+class CompressionMMDExplorer(CompressionExplorer):
+    eval_metrics = ["sisnr", "visqol"]
+
+    def get_grid_metrics(self):
+        """Return the metrics that should be displayed in the tracking table.
+        """
+        return [
+            tt.group(
+                "train",
+                [
+                    tt.leaf("epoch"),
+                    tt.leaf("bandwidth", ".2f"),
+                    tt.leaf("adv", ".4f"),
+                    tt.leaf("d_loss", ".4f"),
+                    tt.leaf("mmd_loss", ".6f"),
+                ],
+                align=">",
+            ),
+            tt.group(
+                "valid",
+                [
+                    tt.leaf("bandwidth", ".2f"),
+                    tt.leaf("adv", ".4f"),
+                    tt.leaf("msspec", ".4f"),
+                    tt.leaf("sisnr", ".2f"),
+                ],
+                align=">",
+            ),
+            tt.group(
+                "evaluate", [tt.leaf(name, ".3f") for name in self.eval_metrics], align=">"
+            ),
+        ]

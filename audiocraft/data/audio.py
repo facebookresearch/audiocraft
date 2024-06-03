@@ -14,12 +14,12 @@ from pathlib import Path
 import logging
 import typing as tp
 
-import numpy as np
 import soundfile
 import torch
 from torch.nn import functional as F
 
 import av
+import av.audio
 import subprocess as sp
 
 from .audio_utils import f32_pcm, normalize_audio
@@ -49,9 +49,12 @@ def _av_info(filepath: tp.Union[str, Path]) -> AudioFileInfo:
     with av.open(str(filepath)) as af:
         stream = af.streams.audio[0]
         sample_rate = stream.codec_context.sample_rate
+        assert stream.time_base is not None
+        assert stream.duration is not None
         duration = float(stream.duration * stream.time_base)
         channels = stream.channels
         return AudioFileInfo(sample_rate, duration, channels)
+    assert False  # mypy is stupid
 
 
 def _soundfile_info(filepath: tp.Union[str, Path]) -> AudioFileInfo:
@@ -83,6 +86,8 @@ def _av_read(filepath: tp.Union[str, Path], seek_time: float = 0, duration: floa
     _init_av()
     with av.open(str(filepath)) as af:
         stream = af.streams.audio[0]
+        assert isinstance(stream, av.audio.stream.AudioStream)
+        assert stream.time_base is not None
         sr = stream.codec_context.sample_rate
         num_frames = int(sr * duration) if duration >= 0 else -1
         frame_offset = int(sr * seek_time)
@@ -92,6 +97,8 @@ def _av_read(filepath: tp.Union[str, Path], seek_time: float = 0, duration: floa
         frames = []
         length = 0
         for frame in af.decode(streams=stream.index):
+            assert isinstance(frame, av.audio.frame.AudioFrame)
+            assert frame.pts is not None
             current_offset = int(frame.rate * frame.pts * frame.time_base)
             strip = max(0, frame_offset - current_offset)
             buf = torch.from_numpy(frame.to_ndarray())
@@ -111,6 +118,7 @@ def _av_read(filepath: tp.Union[str, Path], seek_time: float = 0, duration: floa
         if num_frames > 0:
             wav = wav[:, :num_frames]
         return f32_pcm(wav), sr
+    assert False  # mypy is stupid
 
 
 def audio_read(filepath: tp.Union[str, Path], seek_time: float = 0.,
@@ -131,9 +139,9 @@ def audio_read(filepath: tp.Union[str, Path], seek_time: float = 0.,
         info = _soundfile_info(filepath)
         frames = -1 if duration <= 0 else int(duration * info.sample_rate)
         frame_offset = int(seek_time * info.sample_rate)
-        wav, sr = soundfile.read(filepath, start=frame_offset, frames=frames, dtype=np.float32)
+        wav_np, sr = soundfile.read(filepath, start=frame_offset, frames=frames, dtype='float32')
         assert info.sample_rate == sr, f"Mismatch of sample rates {info.sample_rate} {sr}"
-        wav = torch.from_numpy(wav).t().contiguous()
+        wav = torch.from_numpy(wav_np).t().contiguous()
         if len(wav.shape) == 1:
             wav = torch.unsqueeze(wav, 0)
     else:
