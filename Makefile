@@ -9,6 +9,9 @@ INTEG_AUDIOGEN = $(INTEG) solver=audiogen/debug dset=audio/example compression_m
 	transformer_lm.n_q=2 transformer_lm.card=48 transformer_lm.dim=16 checkpoint.save_last=false  # Using compression model from 5091833e
 INTEG_MBD = $(INTEG) solver=diffusion/debug dset=audio/example  \
 	checkpoint.save_last=false  # Using compression model from 616d7b3c
+INTEG_WATERMARK = AUDIOCRAFT_DORA_DIR="/tmp/wm_$(USER)" dora run device=cpu dataset.num_workers=0 optim.epochs=1 \
+    dataset.train.num_samples=10 dataset.valid.num_samples=10 dataset.evaluate.num_samples=10 dataset.generate.num_samples=10 \
+	logging.level=DEBUG solver=watermark/robustness checkpoint.save_last=false dset=audio/example 
 
 default: linter tests
 
@@ -29,6 +32,7 @@ tests_integ:
 	$(INTEG_MBD)
 	$(INTEG_MUSICGEN)
 	$(INTEG_AUDIOGEN)
+	$(INTEG_WATERMARK)
 
 
 api_docs:

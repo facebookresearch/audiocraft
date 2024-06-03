@@ -1,0 +1,65 @@
+# @package __global__
+
+audio_effects:
+  speed:
+    sample_rate: ${sample_rate}
+    speed_range: [0.8, 1.2]
+  updownresample:
+    sample_rate: ${sample_rate}
+    intermediate_freq: 32000
+  echo:
+    sample_rate: ${sample_rate}
+    volume_range: [0.1, 0.5]
+    duration_range: [0.1, 0.5]
+  random_noise:
+    noise_std: 0.001
+  pink_noise:
+    noise_std: 0.01
+  lowpass_filter:
+    sample_rate: ${sample_rate}
+    cutoff_freq: 5000
+  highpass_filter:
+    cutoff_freq: 500
+    sample_rate: ${sample_rate}
+  bandpass_filter:
+    cutoff_freq_low: 300
+    cutoff_freq_high: 8000
+    sample_rate: ${sample_rate}
+  smooth:
+    window_size_range: [2, 10]
+  boost_audio:
+    amount: 20
+  duck_audio:
+    amount: 20
+  mp3_compression:
+    sample_rate: ${sample_rate}
+    bitrate: 128k # should be a string e.g. "8k", "32k".. cf ffmpeg to see available bitrates
+  aac_compression:
+    sample_rate: ${sample_rate}
+    bitrate: 128k # should be a string e.g. "8k", "32k".. cf ffmpeg to see available bitrates
+    lowpass_freq: null # don't apply low pass freq to ffmpeg aac compression
+  encodec:
+    ckpt: "//pretrained/facebook/encodec_24khz"
+    n_qs: [4, 8, 16]
+
+select_aug_mode:
+  "use_eval" # other are 'all' and 'use_eval_acc', used to sample augmentations, `fixed` uses the prob from aug_weights, `all` uses all agmentations every step
+  # `use_eval_acc` changes the weights based on the accuracies at evaluation time
+
+aug_weights:
+  speed: 0.1
+  updownresample: 0.1
+  echo: 0.1
+  pink_noise: 0.1
+  lowpass_filter: 0.1
+  highpass_filter: 0.1
+  bandpass_filter: 0.1
+  smooth: 0.1
+  boost_audio: 0.1
+  duck_audio: 0.1
+  mp3_compression: 0.1 # eval only never use in training even if eval_acc low
+  aac_compression: 0.1 # eval only never use in training even if eval_acc low
+  encodec: 0.1
+  identity: 1 # no augmentation
+
+n_max_aug: null

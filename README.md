@@ -37,6 +37,7 @@ At the moment, AudioCraft contains the training code and inference code for:
 * [EnCodec](./docs/ENCODEC.md): A state-of-the-art high fidelity neural audio codec.
 * [Multi Band Diffusion](./docs/MBD.md): An EnCodec compatible decoder using diffusion.
 * [MAGNeT](./docs/MAGNET.md): A state-of-the-art non-autoregressive model for text-to-music and text-to-sound.
+* [AudioSeal](./docs/WATERMARKING.md): A state-of-the-art audio watermarking.
 
 ## Training code
 

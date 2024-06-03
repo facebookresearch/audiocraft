@@ -1,0 +1,41 @@
+# @package __global__
+
+audioseal:
+  autoencoder: seanet
+  sample_rate: 16000
+  channels: 1
+  nbits: 16
+
+seanet:
+  dimension: 128
+  channels: 1
+  causal: false
+  n_filters: 32
+  n_residual_layers: 1
+  ratios: [8, 5, 4, 2]
+  activation: ELU
+  activation_params: { "alpha": 1. }
+  norm: weight_norm
+  norm_params: {}
+  kernel_size: 7
+  residual_kernel_size: 3
+  last_kernel_size: 7
+  dilation_base: 2
+  pad_mode: constant
+  true_skip: true
+  compress: 2
+  lstm: 2
+  disable_norm_outer_blocks: 0
+  # Specific encoder or decoder params.
+  # You can also override any param for the encoder or decoder only
+  # by using Hydra `+param=` syntax, i.e.`
+  # `+seanet.decoder.n_filters=64`.
+  decoder:
+    trim_right_ratio: 1.0
+    final_activation: null
+    final_activation_params: null
+  encoder: {}
+
+detector: {
+  "output_dim": 32, # output channels of detector upsampling
+}  

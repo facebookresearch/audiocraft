@@ -15,6 +15,9 @@ from audiocraft.losses import (
     SISNR,
     STFTLoss,
 )
+from audiocraft.losses.loudnessloss import TFLoudnessRatio
+from audiocraft.losses.wmloss import WMMbLoss
+from tests.common_utils.wav_utils import get_white_noise
 
 
 def test_mel_l1_loss():
@@ -75,4 +78,26 @@ def test_stft_loss():
     mrstft = STFTLoss()
     loss = mrstft(t1, t2)
 
+    assert isinstance(loss, torch.Tensor)
+
+
+def test_wm_loss():
+    N, nbits, T = 2, 16, random.randrange(1000, 100_000)
+    positive = torch.randn(N, 2 + nbits, T)
+    t2 = torch.randn(N, 1, T)
+    message = torch.randn(N, nbits)
+
+    wmloss = WMMbLoss(0.3, "mse")
+    loss = wmloss(positive, None, t2, message)
+
+    assert isinstance(loss, torch.Tensor)
+
+
+def test_loudness_loss():
+    sr = 16_000
+    duration = 1.0
+    wav = get_white_noise(1, int(sr * duration)).unsqueeze(0)
+    tflrloss = TFLoudnessRatio(sample_rate=sr, n_bands=1)
+
+    loss = tflrloss(wav, wav)
     assert isinstance(loss, torch.Tensor)

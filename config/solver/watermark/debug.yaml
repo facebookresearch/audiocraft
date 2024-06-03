@@ -1,0 +1,207 @@
+# @package __global__
+
+defaults:
+  - /solver/default
+  - /augmentations/default
+  - /model: watermark/default
+  - override /dset: audio/example
+  - _self_
+
+solver: watermarking # standard name to load the solver using builders
+sample_rate: 48000
+channels: 1
+
+# all the defaults form compression
+losses:
+  adv: 4.
+  feat: 4.
+  l1: 0.1
+  mel: 0.0
+  msspec: 2.0
+  sisnr: 0.0
+  wm_detection: 1.0 # loss for first 2 bits cannot be 0 
+  wm_mb: 1.0  # loss for the rest of the bits (wm message)
+  tf_loudnessratio: 10.0
+
+balancer:
+  balance_grads: true
+  ema_decay: 0.999
+  per_batch_item: true
+  total_norm: 1.
+
+crop:
+  prob: 0.4
+  shuffle_prob: 0.2
+  pad_prob: 0.2  # shuffle_prob + pad_prob + prob <= 1
+  size: 0.5
+  max_n_windows: 5
+
+adversarial:
+  every: 1
+  adversaries: [msstftd]
+  adv_loss: hinge
+  feat_loss: l1
+
+tf_loudnessratio:
+  sample_rate: ${sample_rate}
+  segment: 0.5
+  overlap: 0.5
+  n_bands: 16
+  temperature: 1.0
+
+# watermarking: audioseal
+
+# losses hyperparameters
+l1: {}
+l2: {}
+
+wm_detection:
+  p_weight: 1
+  n_weight: 1
+
+wm_mb:
+  loss_type: bce # loss between decoded and original
+  temperature: 0.1 # decoded is divided by temperature before loss computation
+
+spec_range:
+  n_fft: 2048
+  min_frequency: 300.0
+  max_frequency: 15000.0
+  sample_rate: ${sample_rate}
+spec_entropy_range:
+  n_fft: 2048
+  min_frequency: 300.0
+  max_frequency: 15000.0
+  sample_rate: ${sample_rate}
+mrstft:
+  factor_sc: .5
+  factor_mag: .5
+  normalized: false
+mel:
+  sample_rate: ${sample_rate}
+  n_fft: 1024
+  hop_length: 256
+  win_length: 1024
+  n_mels: 64
+  f_min: 64
+  f_max: null
+  normalized: false
+  floor_level: 1e-5
+sisnr:
+  sample_rate: ${sample_rate}
+  segment: 5.
+msspec:
+  sample_rate: ${sample_rate}
+  range_start: 6
+  range_end: 11
+  n_mels: 64
+  f_min: 64
+  f_max: null
+  normalized: true
+  alphas: false
+  floor_level: 1e-5
+
+# metrics
+metrics:
+  visqol:
+    mode: audio
+    bin: null # path to visqol install
+    model: tcdaudio14_aacvopus_coresv_svrnsim_n.68_g.01_c1.model # visqol v3
+
+# adversaries hyperparameters
+msstftd:
+  in_channels: 1
+  out_channels: 1
+  filters: 32
+  norm: weight_norm
+  n_ffts: [1024, 2048, 512, 256, 128]
+  hop_lengths: [256, 512, 128, 64, 32]
+  win_lengths: [1024, 2048, 512, 256, 128]
+  activation: LeakyReLU
+  activation_params: { negative_slope: 0.3 }
+msd:
+  in_channels: 1
+  out_channels: 1
+  scale_norms: [spectral_norm, weight_norm, weight_norm]
+  kernel_sizes: [5, 3]
+  filters: 16
+  max_filters: 1024
+  downsample_scales: [4, 4, 4, 4]
+  inner_kernel_sizes: null
+  groups: [4, 4, 4, 4]
+  strides: null
+  paddings: null
+  activation: LeakyReLU
+  activation_params: { negative_slope: 0.3 }
+mpd:
+  in_channels: 1
+  out_channels: 1
+  periods: [2, 3, 5, 7, 11]
+  n_layers: 5
+  kernel_size: 5
+  stride: 3
+  filters: 8
+  filter_scales: 4
+  max_filters: 1024
+  activation: LeakyReLU
+  activation_params: { negative_slope: 0.3 }
+  norm: weight_norm
+
+# data hyperparameters
+dataset:
+  batch_size: 16
+  num_workers: 10
+  segment_duration: 1
+  sample_on_weight: false  # Uniform sampling all the way
+  sample_on_duration: false  # Uniform sampling all the way
+
+  generate:
+    batch_size: 16
+    num_samples: 50
+    segment_duration: 30
+
+# solver hyperparameters
+evaluate:
+  every: 10
+  num_workers: 5
+  metrics:
+    visqol: false
+    sisnr: true
+generate:
+  every: 10
+  num_workers: 5
+  audio:
+    sample_rate: ${sample_rate}
+
+# checkpointing schedule
+checkpoint:
+  save_last: true
+  save_every: 25
+  keep_last: 10
+  keep_every_states: null
+
+
+
+# optimization hyperparameters
+optim:
+  epochs: 2
+  updates_per_epoch: 10
+  lr: 5e-5
+  max_norm: 3.0
+  optimizer: adam
+  adam:
+    betas: [0.5, 0.9]
+    weight_decay: 0.
+  ema:
+    use: true # whether to use EMA or not
+    updates: 1 # update at every step
+    device: ${device} # device for EMA, can be put on GPU if more frequent updates
+    decay: 0.99 # EMA decay value, if null, no EMA is used
+
+  
+schedule:
+  lr_scheduler: "cosine"
+  cosine:
+    warmup: 4000
+    lr_min_ratio: 0.0
+    cycle_length: 1.0
