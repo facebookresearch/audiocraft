@@ -4,7 +4,7 @@ AudioCraft provides the training code and models for AudioSeal, a method for spe
 
 ## Installation and setup
 
-Currently training AudioSeal requires a bleeding-edge version (`1.4.0a1`) of AudioCraft, which you obtain by installing from the source code instead of PyPi. _NOTE_: Since we use AAC augmentation in our training loop, you need to install ffmpeg, or it will not work (See Section "Installation" in [README](../README.md)).
+To install AudioSeal, follow [Installation](https://github.com/facebookresearch/audioseal) guidelines in the AudioSeal repo. Note that currently the training of AudioSeal models requires a bleeding-edge version (`1.4.0a1`) of AudioCraft, which you obtain by installing from the source code instead of PyPi. _NOTE_: Since we use AAC augmentation in our training loop, you need to install ffmpeg, or it will not work (See Section "Installation" in [README](../README.md)).
 
 Make sure you follow [steps for basic training setup](TRAINING.md) before starting.
 
