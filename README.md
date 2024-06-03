@@ -35,6 +35,8 @@ At the moment, AudioCraft contains the training code and inference code for:
 * [MusicGen](./docs/MUSICGEN.md): A state-of-the-art controllable text-to-music model.
 * [AudioGen](./docs/AUDIOGEN.md): A state-of-the-art text-to-sound model.
 * [EnCodec](./docs/ENCODEC.md): A state-of-the-art high fidelity neural audio codec.
+* [EnCodec-MMD](./docs/MMD.md): An EnCodec variant with independence promotion between quantizer codebooks, 
+for state-of-the-art text-to-music generation.
 * [Multi Band Diffusion](./docs/MBD.md): An EnCodec compatible decoder using diffusion.
 * [MAGNeT](./docs/MAGNET.md): A state-of-the-art non-autoregressive model for text-to-music and text-to-sound.
 
