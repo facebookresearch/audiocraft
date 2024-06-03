@@ -6,23 +6,6 @@ def _exp_kernel(dxx: torch.Tensor, a: torch.Tensor):
     return torch.exp((-0.5 / a) * dxx).sum()
 
 
-def _shuffle_codebooks_legacy(x, groups: int = 0):
-    ''' x is B,n_q*N
-    If groups > 0 we do group shuffling i.e. we only permute between groups.
-    The shuffling is the same intra group, so that only the groups
-    will be independent between them, and we keep the intra-group correlation
-    '''
-    B, N = x.size()
-    x_shuffled = torch.zeros_like(x)
-    groups = groups if groups else N  # That way, we keep the original version compatible
-
-    assert N % groups == 0, f"Dimensions {N} are not divisible by number of groups {groups}"
-    for group in range(groups):
-        batch_perm = torch.randperm(B, device=x.device)
-        x_shuffled[:, group*N//groups: (group+1)*N//groups] = x[batch_perm, group*N//groups: (group+1)*N//groups]
-    return x_shuffled
-
-
 def _shuffle_codebooks(x):
     ''' x is B,K,D
     '''
@@ -60,11 +43,8 @@ class MMDLoss(torch.nn.Module):
 
         # Group time dimension and shuffle to sample from factorized distribution
         x = rearrange(x, 'b k d t -> (b t) k d')
-        # Normalize per codebook
-        if self.group_norm_mmd:
-            x = (x - x.mean(dim=(0, 2), keepdim=True)) / torch.sqrt(x.var(dim=(0, 2), keepdim=True) + 1e-8)
-        else:
-            x = (x - x.mean(dim=(0,), keepdim=True)) / torch.sqrt(x.var(dim=(0,), keepdim=True) + 1e-8)
+        # Normalize per batch example
+        x = (x - x.mean(dim=(0,), keepdim=True)) / torch.sqrt(x.var(dim=(0,), keepdim=True) + 1e-8)
         y = _shuffle_codebooks(x)
         x = x.view(x.shape[0], -1)
         y = y.view(x.shape[0], -1)
