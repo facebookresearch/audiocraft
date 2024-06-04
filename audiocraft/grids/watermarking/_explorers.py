@@ -50,10 +50,10 @@ class WatermarkingMbExplorer(BaseExplorer):
             tt.group(
                 "evaluate",
                 [
-                    tt.leaf("acc", ".4f"),
-                    tt.leaf("fnr", ".4f"),
-                    tt.leaf("fpr", ".4f"),
-                    tt.leaf("bit_acc", ".4f"),
+                    tt.leaf("aug_identity_acc", ".4f"),
+                    tt.leaf("aug_identity_fnr", ".4f"),
+                    tt.leaf("aug_identity_fpr", ".4f"),
+                    tt.leaf("aug_identity_bit_acc", ".4f"),
                     tt.leaf("pesq", ".4f"),
                     tt.leaf("all_aug_acc", ".4f"),
                     tt.leaf("localization_acc_padding", ".4f"),
