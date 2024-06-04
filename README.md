@@ -20,6 +20,7 @@ python -m pip install setuptools wheel
 python -m pip install -U audiocraft  # stable release
 python -m pip install -U git+https://git@github.com/facebookresearch/audiocraft#egg=audiocraft  # bleeding edge
 python -m pip install -e .  # or if you cloned the repo locally (mandatory if you want to train).
+python -m pip install -e '.[wm]'  # if you want to train a watermarking model
 ```
 
 We also recommend having `ffmpeg` installed, either through your system or Anaconda:

@@ -23,7 +23,7 @@ runs:
       python -m pip install --upgrade pip
       pip install torch==2.1.0 torchvision==0.16.0 torchaudio==2.1.0
       pip install xformers
-      pip install -e '.[dev]'
+      pip install -e '.[dev,wm]'
   - name: System Dependencies
     shell: bash
     run: |
