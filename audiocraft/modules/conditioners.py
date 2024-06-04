@@ -17,6 +17,7 @@ import typing as tp
 import warnings
 
 import einops
+import flashy
 from num2words import num2words
 import spacy
 from transformers import RobertaTokenizer, T5EncoderModel, T5Tokenizer  # type: ignore
@@ -27,7 +28,7 @@ from torch.nn.utils.rnn import pad_sequence
 
 from .chroma import ChromaExtractor
 from .streaming import StreamingModule
-from .transformer import create_sin_embedding
+from .transformer import create_sin_embedding, StreamingTransformer
 from ..data.audio import audio_read
 from ..data.audio_dataset import SegmentInfo
 from ..data.audio_utils import convert_audio
@@ -696,6 +697,205 @@ class ChromaStemConditioner(WaveformConditioner):
             paths = [Path(p) for p in x.path if p is not None]
             self.cache.populate_embed_cache(paths, x)
         return x
+
+class FeatureExtractor(WaveformConditioner):
+    def __init__(
+        self, model_name: str, 
+        sample_rate: int, encodec_checkpoint: str, encodec_n_q: int, length: float,
+        dim: int, output_dim: int, device: tp.Union[torch.device, str], 
+        compute_mask: bool = True,
+        use_middle_of_segment: bool = False, ds_rate_compression: int = 640, 
+        num_codebooks_lm: int = 4
+    ):
+        assert model_name in ['encodec', 'musicfm', 'mert']
+        if model_name == 'encodec':
+            from ..solvers.compression import CompressionSolver
+            feat_extractor = CompressionSolver.model_from_checkpoint(encodec_checkpoint, device)
+        # elif model_name == 'musicfm':
+        #     from ..musicfmbis.model.musicfm_25hz import MusicFM25Hz
+        #     feat_extractor = MusicFM25Hz()
+        elif model_name == 'mert':
+            from transformers import AutoModel
+            feat_extractor = AutoModel.from_pretrained("m-a-p/MERT-v1-95M", trust_remote_code=True)
+        super().__init__(
+            dim=dim,
+            output_dim=output_dim,
+            device=device
+        )
+        self.sample_rate = sample_rate        
+        self.compute_mask = compute_mask
+        self.feat_extractor: nn.Module
+        if model_name == 'encodec':
+            self.__dict__["feat_extractor"] = feat_extractor.to(device)
+            self.encodec_n_q = encodec_n_q
+            self.embed = nn.ModuleList([nn.Embedding(feat_extractor.cardinality, dim) for _ in range(encodec_n_q)])
+        elif model_name == 'musicfm':
+            self.__dict__["feat_extractor"] = feat_extractor.eval().to(device)
+            self.embed = nn.Linear(1024, dim) #hardcoded
+        if model_name == 'mert':
+            self.__dict__["feat_extractor"] = feat_extractor.eval().to(device)
+            self.embed = nn.Linear(768, dim) #hardcoded
+        self.length_subwav = int(length * sample_rate)
+        self.ds_rate_compression = ds_rate_compression
+        self.model_name = model_name
+        self.use_middle_of_segment = use_middle_of_segment
+        self.num_codebooks_lm = num_codebooks_lm
+
+    def _get_wav_embedding(self, x: WavCondition) -> torch.Tensor:
+        if x.wav.shape[-1] == 1:
+            self.temp_mask = None
+            return torch.zeros(x.wav.shape[0], 1, self.dim, device=self.device)
+        else:
+            with torch.no_grad():
+                if self.use_middle_of_segment:
+                    start = int((x.wav.shape[-1] - self.length_subwav) / 2)
+                    wav = x.wav[:, : ,start:start+self.length_subwav]
+                else:
+                    start = random.randint(0, x.wav.shape[-1] - self.length_subwav)
+                    wav = x.wav[:, :, start:start+self.length_subwav]
+                if self.compute_mask:
+                    self.temp_mask = self._get_mask_wav(x, start)
+                if self.model_name == 'encodec':
+                    tokens = self.feat_extractor.encode(wav)[0]
+                elif self.model_name == 'musicfm':
+                    wav = convert_audio(wav, from_rate=x.sample_rate[0], to_rate=24000, to_channels=1)
+                    embeds = self.feat_extractor.get_latent(wav, layer_ix=6)
+                elif self.model_name == 'mert':
+                    wav = convert_audio(wav, from_rate=x.sample_rate[0], to_rate=24000, to_channels=1)
+                    embeds = self.feat_extractor(wav.squeeze(-2)).last_hidden_state
+            if self.model_name == 'encodec':
+                tokens = tokens[:, :self.encodec_n_q]
+                embeds = sum([self.embed[k](tokens[:, k]) for k in range(self.encodec_n_q)])
+            else:
+                embeds = self.embed(embeds)
+            
+            return embeds # [B, T, dim]
+
+    def _downsampling_factor(self):
+        if self.model_name == 'encodec':
+            return self.sample_rate / self.feat_extractor.frame_rate
+        elif self.model_name == 'musicfm':
+            return self.sample_rate / 25
+        elif self.model_name == 'mert':
+            return self.sample_rate / 75
+
+    def _get_mask_wav(self, x: WavCondition, start: int) -> torch.Tensor:
+        if x.wav.shape[-1] == 1:
+            return None
+        total_length = int(x.wav.shape[-1] / self.ds_rate_compression)
+        mask_length = int(self.length_subwav / self.ds_rate_compression)
+        start = int(start / self.ds_rate_compression)
+        mask = torch.ones(x.wav.shape[0], self.num_codebooks_lm,
+                          total_length, device=self.device, dtype=torch.bool)
+        mask[:, :, start:start+mask_length] = 0
+        return mask
+
+class StyleConditioner(FeatureExtractor):
+    def __init__(self, transformer_scale: str = 'default', ds_factor: int = 15, encodec_n_q: int = 4,
+                n_q_out: int = 6, eval_q: int = 3, q_dropout: bool = True, bins: int = 1024,
+                varying_lengths: tp.List[float] = [1.5, 4.5], 
+                batch_norm: bool = True, 
+                rvq_threshold_ema_dead_code: float = 0.1,
+                **kwargs):
+        tr_args: tp.Dict[str, tp.Any]
+        if transformer_scale == 'xsmall':
+            tr_args = {'d_model': 256, 'num_heads': 8, 'num_layers': 4}
+        elif transformer_scale == 'large':
+            tr_args = {'d_model': 1024, 'num_heads': 16, 'num_layers': 24}
+        elif transformer_scale == 'default':
+            tr_args = {'d_model': 512, 'num_heads': 8, 'num_layers': 8}
+        elif transformer_scale == 'none':
+            tr_args = {'d_model': 512}
+        tr_args.update({
+            'memory_efficient': True, 'activation': 'gelu',
+            'norm_first': True, 'causal': False, 'layer_scale': None,
+            'bias_ff': False, 'bias_attn': False,
+        })
+        dim = tr_args['d_model']
+        super().__init__(dim=dim, encodec_n_q=encodec_n_q, **kwargs)
+
+        self.ds_factor = ds_factor
+        if transformer_scale == 'none':
+            self.transformer = None
+        else:
+            self.transformer = StreamingTransformer(dim_feedforward=int(4 * dim), **tr_args)
+        self.n_q_out = n_q_out
+        self.eval_q = eval_q
+        self.rvq = None
+        if n_q_out > 0:
+            self.rvq = ResidualVectorQuantizer(dim, n_q=n_q_out, q_dropout=q_dropout, bins=bins,
+                                               threshold_ema_dead_code=rvq_threshold_ema_dead_code)
+        self.autocast = TorchAutocast(enabled=self.device != 'cpu', device_type=self.device, dtype=torch.float32)
+        self.varying_lengths = varying_lengths
+        self.batch_norm = None
+        if batch_norm:
+            self.batch_norm = nn.BatchNorm1d(dim, affine=False)
+        self.mask = None
+
+    def _get_wav_embedding(self, wav: WavCondition) -> torch.Tensor:
+        with self.autocast:
+            # Sample the length of the excerpts
+            if self.varying_lengths and self.training:
+                assert len(self.varying_lengths) == 2
+                length = random.uniform(self.varying_lengths[0], self.varying_lengths[1])
+                self.length_subwav = int(length * self.sample_rate)
+            z1 = super()._get_wav_embedding(wav)
+            if self.compute_mask:
+                self.mask = self.temp_mask
+                self.temp_mask = None
+            self.temp_mask = None
+
+            if self.transformer is not None:
+                out1 = self.transformer(z1)
+            else:
+                out1 = z1
+            if self.batch_norm:
+                out1 = self.batch_norm(out1.transpose(1, 2)).transpose(1, 2)
+            # Apply quantization
+            if self.rvq:
+                if self.training:
+                    self.rvq.set_num_codebooks(self.n_q_out)
+                else:
+                    self.rvq.set_num_codebooks(self.eval_q)
+                out1 = self.rvq(out1.transpose(1, 2), frame_rate=1.)
+                if self.training:
+                    flashy.distrib.average_tensors(self.rvq.buffers())
+                out1 = out1.x.transpose(1, 2)
+            # Apply fix downsample
+            out1 = out1[:, ::self.ds_factor]
+
+        return out1
+
+    def set_params(self, eval_q: int = 3,
+                   excerpt_length: float = 3.0,
+                   ds_factor: int = None, encodec_n_q: int = None):
+        """Modify the parameters of the SSL or introduce new parameters to add noise to
+        the conditioning or to downsample it
+
+        Args:
+            eval_q (int): number of codebooks used when evaluating the model
+            excerpt_length (float): the length of the excerpts used to condition the model
+        """
+        self.eval_q = eval_q
+        self.length_subwav = int(excerpt_length * self.sample_rate)
+        if ds_factor is not None:
+            self.ds_factor = ds_factor
+        if encodec_n_q is not None:
+            self.encodec_n_q = encodec_n_q
+
+    def _downsampling_factor(self):
+        df = super()._downsampling_factor()
+        return df * self.ds_factor
+
+    def forward(self, x: WavCondition) -> ConditionType:
+        embeds = self._get_wav_embedding(x)
+        embeds = embeds.to(self.output_proj.weight)
+        embeds = self.output_proj(embeds)
+
+        mask = torch.ones_like(embeds)
+        embeds = (embeds * mask.unsqueeze(2).to(self.device))
+
+        return embeds, mask
 
 
 class JointEmbeddingConditioner(BaseConditioner):
