@@ -25,7 +25,7 @@ def explorer(launcher):
             "dset": "audio/example",
         }
     )
-    launcher.bind_(label="autodub")
+    launcher.bind_(label="audioseal")
 
     with launcher.job_array():
         launcher()

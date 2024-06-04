@@ -5,14 +5,14 @@
 # LICENSE file in the root directory of this source tree.
 
 """
-dora grid watermarking.1315_kbits_seeds --clear
+dora grid watermarking.kbits --clear
 """
 import os
 from audiocraft.environment import AudioCraftEnvironment
-from ._explorers import WatermarkingExplorer
+from ._explorers import WatermarkingMbExplorer
 
 
-@WatermarkingExplorer
+@WatermarkingMbExplorer
 def explorer(launcher):
     partitions = AudioCraftEnvironment.get_slurm_partitions(['team', 'global'])
     launcher.slurm_(
@@ -20,7 +20,6 @@ def explorer(launcher):
         partition=partitions,
         constraint="volta32gb",
     )
-    # launcher.slurm_(gpus=2, partition='learnfair')
     launcher.bind_(
         {
             "solver": "watermark/robustness",
@@ -60,10 +59,10 @@ def explorer(launcher):
             "aug_weights.encodec": 0.1,
             "aug_weights.identity": 1.0,
             # multi-bit
-            "+dummy_watermarker.nbits": 16,
-            "+wm_mb.loss_type": "bce",
-            "+wm_mb.temperature": 0.1,
-            "seanet.detector.output_dim": 32,
+            "audioseal.nbits": 16,
+            "detector.output_dim": 32,
+            "wm_mb.loss_type": "bce",
+            "wm_mb.temperature": 0.1,
             # losses
             "losses": {  # encodec loss + tf  = 10
                 "adv": 4.0,
@@ -74,11 +73,11 @@ def explorer(launcher):
                 "sisnr": 0.0,
                 "tf_loudnessratio": 10.0,
             },
-            "losses.wm_dummy": 1.0,
-            "+losses.wm_mb": 1.0,
+            "losses.wm_detection": 1.0,
+            "losses.wm_mb": 1.0,
         }
     )
-    launcher.bind_(label="1315_kbits_seeds")
+    launcher.bind_(label="kbits16")
 
     lrs = [5e-5]
     seeds = [1, 2, 3, 4]
