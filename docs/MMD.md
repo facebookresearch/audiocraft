@@ -136,6 +136,6 @@ Learn more about AudioCraft training pipelines in the [dedicated section](./TRAI
 
 See license information in the [README](../README.md).
 
-[ICML_arxiv]: https://arxiv.org/abs/xxxx.xxxxx
+[ICML_arxiv]: http://arxiv.org/abs/2406.02315
 [musicgen-mmd_samples]: https://jmlemercier.github.io/encodec-mmd.github.io/
 [drive_link]: https://drive.google.com/drive/u/2/folders/1KYQ_kQgFZDkOdFRFLEREi7tFsNdi7RLS
