@@ -35,6 +35,9 @@ generate:
     use_sampling: true
     top_k: 250
     top_p: 0.0
+    cfg_coef: 3.0
+    cfg_coef_2:
+    double_cfg: false
 
 optim:
   epochs: 500
