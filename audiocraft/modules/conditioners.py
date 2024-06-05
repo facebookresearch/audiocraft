@@ -888,11 +888,15 @@ class StyleConditioner(FeatureExtractor):
         return df * self.ds_factor
 
     def forward(self, x: WavCondition) -> ConditionType:
+        wav, lengths, *_ = x
+
         embeds = self._get_wav_embedding(x)
         embeds = embeds.to(self.output_proj.weight)
         embeds = self.output_proj(embeds)
 
-        mask = torch.ones_like(embeds)
+        lengths = lengths / self._downsampling_factor()
+        mask = length_to_mask(lengths, max_len=embeds.shape[1]).int()  # type: ignore
+
         embeds = (embeds * mask.unsqueeze(2).to(self.device))
 
         return embeds, mask
