@@ -698,13 +698,14 @@ class ChromaStemConditioner(WaveformConditioner):
             self.cache.populate_embed_cache(paths, x)
         return x
 
+
 class FeatureExtractor(WaveformConditioner):
     def __init__(
-        self, model_name: str, 
+        self, model_name: str,
         sample_rate: int, encodec_checkpoint: str, encodec_n_q: int, length: float,
-        dim: int, output_dim: int, device: tp.Union[torch.device, str], 
+        dim: int, output_dim: int, device: tp.Union[torch.device, str],
         compute_mask: bool = True,
-        use_middle_of_segment: bool = False, ds_rate_compression: int = 640, 
+        use_middle_of_segment: bool = False, ds_rate_compression: int = 640,
         num_codebooks_lm: int = 4
     ):
         assert model_name in ['encodec', 'musicfm', 'mert']
@@ -722,7 +723,7 @@ class FeatureExtractor(WaveformConditioner):
             output_dim=output_dim,
             device=device
         )
-        self.sample_rate = sample_rate        
+        self.sample_rate = sample_rate
         self.compute_mask = compute_mask
         self.feat_extractor: nn.Module
         if model_name == 'encodec':
@@ -731,10 +732,10 @@ class FeatureExtractor(WaveformConditioner):
             self.embed = nn.ModuleList([nn.Embedding(feat_extractor.cardinality, dim) for _ in range(encodec_n_q)])
         elif model_name == 'musicfm':
             self.__dict__["feat_extractor"] = feat_extractor.eval().to(device)
-            self.embed = nn.Linear(1024, dim) #hardcoded
+            self.embed = nn.Linear(1024, dim)  # hardcoded
         if model_name == 'mert':
             self.__dict__["feat_extractor"] = feat_extractor.eval().to(device)
-            self.embed = nn.Linear(768, dim) #hardcoded
+            self.embed = nn.Linear(768, dim)  # hardcoded
         self.length_subwav = int(length * sample_rate)
         self.ds_rate_compression = ds_rate_compression
         self.model_name = model_name
@@ -749,7 +750,7 @@ class FeatureExtractor(WaveformConditioner):
             with torch.no_grad():
                 if self.use_middle_of_segment:
                     start = int((x.wav.shape[-1] - self.length_subwav) / 2)
-                    wav = x.wav[:, : ,start:start+self.length_subwav]
+                    wav = x.wav[:, :, start:start+self.length_subwav]
                 else:
                     start = random.randint(0, x.wav.shape[-1] - self.length_subwav)
                     wav = x.wav[:, :, start:start+self.length_subwav]
@@ -768,8 +769,8 @@ class FeatureExtractor(WaveformConditioner):
                 embeds = sum([self.embed[k](tokens[:, k]) for k in range(self.encodec_n_q)])
             else:
                 embeds = self.embed(embeds)
-            
-            return embeds # [B, T, dim]
+
+            return embeds  # [B, T, dim]
 
     def _downsampling_factor(self):
         if self.model_name == 'encodec':
@@ -790,13 +791,13 @@ class FeatureExtractor(WaveformConditioner):
         mask[:, :, start:start+mask_length] = 0
         return mask
 
+
 class StyleConditioner(FeatureExtractor):
     def __init__(self, transformer_scale: str = 'default', ds_factor: int = 15, encodec_n_q: int = 4,
-                n_q_out: int = 6, eval_q: int = 3, q_dropout: bool = True, bins: int = 1024,
-                varying_lengths: tp.List[float] = [1.5, 4.5], 
-                batch_norm: bool = True, 
-                rvq_threshold_ema_dead_code: float = 0.1,
-                **kwargs):
+                 n_q_out: int = 6, eval_q: int = 3, q_dropout: bool = True, bins: int = 1024,
+                 varying_lengths: tp.List[float] = [1.5, 4.5],
+                 batch_norm: bool = True, rvq_threshold_ema_dead_code: float = 0.1,
+                 **kwargs):
         tr_args: tp.Dict[str, tp.Any]
         if transformer_scale == 'xsmall':
             tr_args = {'d_model': 256, 'num_heads': 8, 'num_layers': 4}

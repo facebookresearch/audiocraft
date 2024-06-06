@@ -3,11 +3,10 @@
 #
 # This source code is licensed under the license found in the
 # LICENSE file in the root directory of this source tree.
-from ... import train
 from ._explorers import LMExplorer
 from ...environment import AudioCraftEnvironment
 
-# TODO
+
 @LMExplorer
 def explorer(launcher):
     partitions = AudioCraftEnvironment.get_slurm_partitions(['team', 'global'])
@@ -15,11 +14,11 @@ def explorer(launcher):
     launcher.bind_(dset='internal/music_400k_32khz')
 
     sub = launcher.bind_({'solver': 'musicgen/musicgen_style_32khz',
-                          'autocast': False, 
+                          'autocast': False,
                           'fsdp.use': True,
                           'model/lm/model_scale': 'medium',
-                          'optim.optimizer': 'adamw', 
-                          'optim.lr': 1e-4, 
+                          'optim.optimizer': 'adamw',
+                          'optim.lr': 1e-4,
                           'generate.every': 25,
                           'dataset.generate.num_samples': 64,
                           })

@@ -94,18 +94,19 @@ def init_layer(m: nn.Module,
         else:
             init_fn(m.weight)
 
+
 def merge_pairs_of_conditions(alphas: dict, num_conditions: int, cfg_conditions: CFGConditions):
     """
-    Given: 
-        - alphas: dic where the keys are attributes that need to be merged and the values are 
-        floats in [0, 1] 
+    Given:
+        - alphas: dic where the keys are attributes that need to be merged and the values are
+        floats in [0, 1]
             ex: {'description': 0.3, 'self_wav': 0.5, 'style_wav': 1.0}
         - num_conditions: the number of conditions in parallel, 2 in case of cfg, 3 in case of
             double_cfg and 4 in case of triple_cfg
         - cfg_conditions
 
-    Returns: for each pair of condition (2i, 2i+1), we compute
-             alpha*condition_{2i} + \sqrt{1 - alpha**2}*condition_{2i+1}
+    Returns:
+        for each pair of condition (2i, 2i+1), we compute alpha*condition_{2i} + sqrt{1 - alpha**2}*condition_{2i+1}
     """
     new_cfg_conditions = deepcopy(cfg_conditions)
     for attribute in alphas.keys():
@@ -118,17 +119,18 @@ def merge_pairs_of_conditions(alphas: dict, num_conditions: int, cfg_conditions:
         new_cfg_conditions[attribute] = (new_embed, new_mask)
     return new_cfg_conditions
 
+
 def sum_pairs_of_conditions(which_conditions: dict, num_conditions: int, cfg_conditions: CFGConditions):
     """
-    Given: 
-        - which_conditions: list of the attributes that need to be merged 
+    Given:
+        - which_conditions: list of the attributes that need to be merged
             ex: ['description', 'self_wav', 'style_wav']
         - num_conditions: the number of conditions in parallel, 2 in case of cfg, 3 in case of
             double_cfg and 4 in case of triple_cfg
         - cfg_conditions
 
     Returns: for each pair of condition (2i, 2i+1), we compute
-             alpha*condition_{2i} + \sqrt{1 - alpha**2}*condition_{2i+1}
+             alpha*condition_{2i} + sqrt{1 - alpha**2}*condition_{2i+1}
     """
     new_cfg_conditions = deepcopy(cfg_conditions)
     for attribute in which_conditions:
@@ -139,6 +141,7 @@ def sum_pairs_of_conditions(which_conditions: dict, num_conditions: int, cfg_con
         new_mask = mask[::2]
         new_cfg_conditions[attribute] = (new_embed, new_mask)
     return new_cfg_conditions
+
 
 class ScaledEmbedding(nn.Embedding):
     """Boost learning rate for embeddings (with `scale`).
@@ -409,7 +412,9 @@ class LMModel(StreamingModule):
                 conditions=[], condition_tensors=condition_tensors)
             if condition_tensors:
                 cond_logits, wav_logits, uncond_logits = all_logits.split(B, dim=0)  # [B, K, T, card]
-                logits = uncond_logits + cfg_coef * (wav_logits + cfg_coef_2 * (cond_logits - wav_logits) - uncond_logits)
+                logits = uncond_logits + cfg_coef * (
+                    wav_logits + cfg_coef_2 * (cond_logits - wav_logits) - uncond_logits
+                    )
 
         elif two_step_cfg and cfg_conditions != {}:
             assert isinstance(cfg_conditions, tuple), type(cfg_conditions)
@@ -527,8 +532,8 @@ class LMModel(StreamingModule):
         if double_cfg:
             num_conditions = 3
             if conditions:
-                wav_conditions = AttributeDropout(p={'text':{'description': 1.0}, 
-                                                     'wav':{'self_wav': 0.0}})(conditions)
+                wav_conditions = AttributeDropout(p={'text': {'description': 1.0},
+                                                     'wav': {'self_wav': 0.0}})(conditions)
                 null_conditions = ClassifierFreeGuidanceDropout(p=1.0)(conditions)
                 conditions = conditions + wav_conditions + null_conditions
                 tokenized = self.condition_provider.tokenize(conditions)
