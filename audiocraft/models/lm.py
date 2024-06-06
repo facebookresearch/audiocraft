@@ -95,7 +95,7 @@ def init_layer(m: nn.Module,
             init_fn(m.weight)
 
 
-def merge_pairs_of_conditions(alphas: dict, num_conditions: int, cfg_conditions: CFGConditions):
+def merge_pairs_of_conditions(alphas: tp.Dict[str, float], num_conditions: int, cfg_conditions: CFGConditions):
     """
     Given:
         - alphas: dic where the keys are attributes that need to be merged and the values are
@@ -106,21 +106,22 @@ def merge_pairs_of_conditions(alphas: dict, num_conditions: int, cfg_conditions:
         - cfg_conditions
 
     Returns:
-        for each pair of condition (2i, 2i+1), we compute alpha*condition_{2i} + sqrt{1 - alpha**2}*condition_{2i+1}
+        for each pair of condition (2i, 2i+1),
+            we compute sqrt{alpha}*condition_{2i} + sqrt{1 - alpha**2}*condition_{2i+1}
     """
     new_cfg_conditions = deepcopy(cfg_conditions)
     for attribute in alphas.keys():
-        embed, mask = cfg_conditions[attribute]
-        B, T, C = embed.shape
+        embed, mask = cfg_conditions[attribute]  # type: ignore
+        B, T, C = embed.shape  # type: ignore
         assert B % (2 * num_conditions) == 0
         alpha = alphas[attribute]
         new_embed = alpha ** 0.5 * embed[::2] + (1 - alpha)**0.5 * embed[1::2]
         new_mask = mask[::2]
-        new_cfg_conditions[attribute] = (new_embed, new_mask)
+        new_cfg_conditions[attribute] = (new_embed, new_mask)  # type: ignore
     return new_cfg_conditions
 
 
-def sum_pairs_of_conditions(which_conditions: dict, num_conditions: int, cfg_conditions: CFGConditions):
+def sum_pairs_of_conditions(which_conditions: tp.List[str], num_conditions: int, cfg_conditions: CFGConditions):
     """
     Given:
         - which_conditions: list of the attributes that need to be merged
@@ -134,12 +135,12 @@ def sum_pairs_of_conditions(which_conditions: dict, num_conditions: int, cfg_con
     """
     new_cfg_conditions = deepcopy(cfg_conditions)
     for attribute in which_conditions:
-        embed, mask = cfg_conditions[attribute]
-        B, T, C = embed.shape
+        embed, mask = cfg_conditions[attribute]  # type: ignore
+        B, T, C = embed.shape  # type: ignore
         assert B % (2 * num_conditions) == 0
         new_embed = embed[::2] + embed[1::2]
-        new_mask = mask[::2]
-        new_cfg_conditions[attribute] = (new_embed, new_mask)
+        new_mask = mask[::2]  # type: ignore
+        new_cfg_conditions[attribute] = (new_embed, new_mask)  # type: ignore
     return new_cfg_conditions
 
 
@@ -304,7 +305,7 @@ class LMModel(StreamingModule):
         input_, cross_attention_input = self.fuser(input_, condition_tensors)
 
         out = self.transformer(input_, cross_attention_src=cross_attention_input,
-                               src_mask=(self.attn_mask_per_stage[stage] if stage >= 0 else None))
+                               src_mask=(self.attn_mask_per_stage[stage] if stage >= 0 else None))  # type: ignore
         if self.out_norm:
             out = self.out_norm(out)
         logits = torch.stack([self.linears[k](out) for k in range(K)], dim=1)  # [B, K, S, card]
@@ -472,15 +473,13 @@ class LMModel(StreamingModule):
                  two_step_cfg: tp.Optional[bool] = None,
                  double_cfg: bool = False,
                  cfg_coef_2: tp.Optional[float] = None,
-
                  remove_prompts: bool = False,
                  check: bool = False,
                  callback: tp.Optional[tp.Callable[[int, int], None]] = None,
-                 postprocess_fn: str = None,
-                 alphas: dict = None,
-                 which_conditions: tp.List[str] = None,
-
-                 **kwargs) -> torch.Tensor:
+                 postprocess_fn: tp.Optional[str] = None,
+                 alphas: tp.Optional[tp.Dict[str, float]] = None,
+                 which_conditions: tp.Optional[tp.List[str]] = None,
+                 ) -> torch.Tensor:
         """Generate tokens sampling from the model given a prompt or unconditionally. Generation can
         be performed in a greedy fashion or using sampling with top K and top P strategies.
 
@@ -559,6 +558,7 @@ class LMModel(StreamingModule):
                 assert alphas is not None
                 cfg_conditions = merge_pairs_of_conditions(alphas, num_conditions, cfg_conditions)
             elif postprocess_fn == 'sum':
+                assert which_conditions is not None
                 cfg_conditions = sum_pairs_of_conditions(which_conditions, num_conditions, cfg_conditions)
             else:
                 assert False

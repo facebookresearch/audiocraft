@@ -126,15 +126,25 @@ class MagnetLMModel(LMModel):
                  top_p: float = 0.0,
                  cfg_coef: tp.Optional[float] = None,
                  two_step_cfg: tp.Optional[bool] = None,
+                 double_cfg: bool = False,
+                 cfg_coef_2: tp.Optional[float] = None,
                  remove_prompts: bool = False,
                  check: bool = False,
                  callback: tp.Optional[tp.Callable[[int, int], None]] = None,
+                 postprocess_fn: tp.Optional[str] = None,
+                 alphas: tp.Optional[tp.Dict[str, float]] = None,
+                 which_conditions: tp.Optional[tp.List[str]] = None,
                  **kwargs) -> torch.Tensor:
 
         assert cfg_coef is None, "Unsupported in MAGNeT. Use max_cfg_coef,min_cfg_coef instead."
         assert two_step_cfg is None, "MAGNeT currently doesn't support two step classifier-free-guidance."
         assert remove_prompts is False, "MAGNeT currently doesn't support the remove_prompts arg."
         assert check is False, "MAGNeT currently doesn't support the check arg."
+        assert postprocess_fn is None, "MAGNeT currently doesn't support the postprocess_fn arg."
+        assert alphas is None, "MAGNeT currently doesn't support the alphas arg."
+        assert which_conditions is None, "MAGNeT currently doesn't support the which_conditions arg."
+        assert double_cfg is False, "MAGNeT currently doesn't support the double_cfg arg."
+        assert cfg_coef_2 is None, "MAGNeT currently doesn't support the cfg_coef_2 arg."
         # Call the MAGNeT-specific generation method
         return self._generate_magnet(prompt=prompt,
                                      conditions=conditions,

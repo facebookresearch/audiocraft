@@ -93,10 +93,11 @@ class MusicGen(BaseGenModel):
     def set_generation_params(self, use_sampling: bool = True, top_k: int = 250,
                               top_p: float = 0.0, temperature: float = 1.0,
                               duration: float = 30.0, double_cfg: bool = False,
-                              cfg_coef: float = 3.0, cfg_coef_2: float = None,
+                              cfg_coef: float = 3.0, cfg_coef_2: tp.Optional[float] = None,
                               two_step_cfg: bool = False, extend_stride: float = 18,
-                              postprocess_fn: str = None, alphas: dict = None,
-                              which_conditions: tp.List[str] = None):
+                              postprocess_fn: tp.Optional[str] = None,
+                              alphas: tp.Optional[tp.Dict[str, float]] = None,
+                              which_conditions: tp.Optional[tp.List[str]] = None):
         """Set the generation parameters for MusicGen.
 
         Args:
@@ -131,7 +132,8 @@ class MusicGen(BaseGenModel):
         }
 
     def set_style_conditioner_params(self, eval_q: int = 3, excerpt_length: float = 3.0,
-                                     ds_factor: int = None, encodec_n_q: int = None) -> None:
+                                     ds_factor: tp.Optional[int] = None,
+                                     encodec_n_q: tp.Optional[int] = None) -> None:
         """Set the parameters of the style conditioner
         Args:
             eval_q (int): the number of residual quantization streams used to quantize the style condition

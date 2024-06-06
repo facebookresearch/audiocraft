@@ -608,7 +608,7 @@ class ChromaStemConditioner(WaveformConditioner):
         with self.autocast:
             wav = convert_audio(
                 wav, sample_rate, self.demucs.samplerate, self.demucs.audio_channels)  # type: ignore
-            stems = apply_model(self.demucs, wav, device=self.device)
+            stems = apply_model(self.demucs, wav, device=self.device)  # type: ignore
             stems = stems[:, self.stem_indices]  # extract relevant stems for melody conditioning
             mix_wav = stems.sum(1)  # merge extracted stems to single waveform
             mix_wav = convert_audio(mix_wav, self.demucs.samplerate, self.sample_rate, 1)  # type: ignore
@@ -726,6 +726,7 @@ class FeatureExtractor(WaveformConditioner):
         self.sample_rate = sample_rate
         self.compute_mask = compute_mask
         self.feat_extractor: nn.Module
+        self.embed: tp.Union[nn.ModuleList, nn.Linear]
         if model_name == 'encodec':
             self.__dict__["feat_extractor"] = feat_extractor.to(device)
             self.encodec_n_q = encodec_n_q
@@ -757,16 +758,16 @@ class FeatureExtractor(WaveformConditioner):
                 if self.compute_mask:
                     self.temp_mask = self._get_mask_wav(x, start)
                 if self.model_name == 'encodec':
-                    tokens = self.feat_extractor.encode(wav)[0]
+                    tokens = self.feat_extractor.encode(wav)[0]  # type: ignore
                 elif self.model_name == 'musicfm':
                     wav = convert_audio(wav, from_rate=x.sample_rate[0], to_rate=24000, to_channels=1)
-                    embeds = self.feat_extractor.get_latent(wav, layer_ix=6)
+                    embeds = self.feat_extractor.get_latent(wav, layer_ix=6)  # type: ignore
                 elif self.model_name == 'mert':
                     wav = convert_audio(wav, from_rate=x.sample_rate[0], to_rate=24000, to_channels=1)
                     embeds = self.feat_extractor(wav.squeeze(-2)).last_hidden_state
             if self.model_name == 'encodec':
                 tokens = tokens[:, :self.encodec_n_q]
-                embeds = sum([self.embed[k](tokens[:, k]) for k in range(self.encodec_n_q)])
+                embeds = sum([self.embed[k](tokens[:, k]) for k in range(self.encodec_n_q)])  # type: ignore
             else:
                 embeds = self.embed(embeds)
 
@@ -780,7 +781,7 @@ class FeatureExtractor(WaveformConditioner):
         elif self.model_name == 'mert':
             return self.sample_rate / 75
 
-    def _get_mask_wav(self, x: WavCondition, start: int) -> torch.Tensor:
+    def _get_mask_wav(self, x: WavCondition, start: int) -> tp.Union[torch.Tensor, None]:
         if x.wav.shape[-1] == 1:
             return None
         total_length = int(x.wav.shape[-1] / self.ds_rate_compression)
@@ -842,8 +843,7 @@ class StyleConditioner(FeatureExtractor):
                 self.length_subwav = int(length * self.sample_rate)
             z1 = super()._get_wav_embedding(wav)
             if self.compute_mask:
-                self.mask = self.temp_mask
-                self.temp_mask = None
+                self.mask = self.temp_mask  # type: ignore
             self.temp_mask = None
 
             if self.transformer is not None:
@@ -869,7 +869,7 @@ class StyleConditioner(FeatureExtractor):
 
     def set_params(self, eval_q: int = 3,
                    excerpt_length: float = 3.0,
-                   ds_factor: int = None, encodec_n_q: int = None):
+                   ds_factor: tp.Optional[int] = None, encodec_n_q: tp.Optional[int] = None):
         """Modify the parameters of the SSL or introduce new parameters to add noise to
         the conditioning or to downsample it
 
