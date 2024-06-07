@@ -44,9 +44,6 @@ class MusicGenSolver(base.StandardSolver):
             'temp': self.cfg.generate.lm.temp,
             'top_k': self.cfg.generate.lm.top_k,
             'top_p': self.cfg.generate.lm.top_p,
-            'cfg_coef': self.cfg.generate.lm.cfg_coef,
-            'cfg_coef_2': self.cfg.generate.lm.cfg_coef_2,
-            'double_cfg': self.cfg.generate.lm.double_cfg,
         }
         self._best_metric_name: tp.Optional[str] = 'ce'
 
