@@ -21,6 +21,7 @@ def explorer(launcher):
                           'optim.lr': 1e-4,
                           'generate.every': 1,
                           'dataset.generate.num_samples': 64,
-                          'optim.updates_per_epoch': 100
+                          'optim.updates_per_epoch': 100,
+                          'dataset.batch_size': 8,
                           })
     sub()

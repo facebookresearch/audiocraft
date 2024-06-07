@@ -581,10 +581,10 @@ class MusicGenSolver(base.StandardSolver):
                     gen_audio, self.epoch, hydrated_conditions,
                     prompt_wavs=prompt_audio, ground_truth_wavs=audio,
                     generation_args=sample_generation_params)
-            if self.cfg.generate.lm.no_text_samples:
+            if self.cfg.generate.lm.no_text_conditioning:
                 gen_outputs = self.run_generate_step(
                     batch, gen_duration=target_duration, prompt_duration=None,
-                    remove_text_conditioning=self.cfg.generate.lm.no_text_samples)
+                    remove_text_conditioning=self.cfg.generate.lm.no_text_conditioning)
                 gen_audio = gen_outputs['gen_audio'].cpu()
                 rtf = gen_outputs['rtf']
                 # Here, the prompt is the original audio provided for the style conditioning

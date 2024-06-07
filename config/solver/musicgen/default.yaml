@@ -88,6 +88,7 @@ generate:
   lm:
     prompted_samples: true
     unprompted_samples: true
+    no_text_conditioning: false
     gen_gt_samples: false
     prompt_duration: null   # if not set, will use dataset.generate.segment_duration / 4
     gen_duration: null      # if not set, will use dataset.generate.segment_duration
