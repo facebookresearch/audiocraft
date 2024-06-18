@@ -114,7 +114,7 @@ def _av_read(filepath: tp.Union[str, Path], seek_time: float = 0, duration: floa
 
 
 def audio_read(filepath: tp.Union[str, Path], seek_time: float = 0.,
-               duration: float = -1., pad: bool = False) -> tp.Tuple[torch.Tensor, int]:
+               duration: float = -1.0, pad: bool = False) -> tp.Tuple[torch.Tensor, int]:
     """Read audio by picking the most appropriate backend tool based on the audio format.
 
     Args:
@@ -229,3 +229,123 @@ def audio_write(stem_name: tp.Union[str, Path],
             path.unlink()
         raise
     return path
+
+
+def get_spec(y, sr=16000, n_fft=4096, hop_length=128, dur=8) -> np.ndarray:
+    """Get the mel-spectrogram from the raw audio.
+
+    Args:
+        y (numpy array): raw input
+        sr (int): Sampling rate
+        n_fft (int): Number of samples per FFT. Default is 2048.
+        hop_length (int): Number of samples between successive frames. Default is 512.
+        dur (float): Maxium duration to get the spectrograms
+    Returns:
+        spectro histogram as a numpy array
+    """
+    import librosa
+    import librosa.display
+
+    spectrogram = librosa.feature.melspectrogram(
+        y=y, sr=sr, n_fft=n_fft, hop_length=hop_length
+    )
+    spectrogram_db = librosa.power_to_db(spectrogram, ref=np.max)
+    return spectrogram_db
+
+
+def save_spectrograms(
+    ys: tp.List[np.ndarray],
+    sr: int,
+    path: str,
+    names: tp.List[str],
+    n_fft: int = 4096,
+    hop_length: int = 128,
+    dur: float = 8.0,
+):
+    """Plot a spectrogram for an audio file.
+
+    Args:
+        ys: List of audio spectrograms
+        sr (int): Sampling rate of the audio file. Default is 22050 Hz.
+        path (str): Path to the plot file.
+        names: name of each spectrogram plot
+        n_fft (int): Number of samples per FFT. Default is 2048.
+        hop_length (int): Number of samples between successive frames. Default is 512.
+        dur (float): Maxium duration to plot the spectrograms
+
+    Returns:
+        None (plots the spectrogram using matplotlib)
+    """
+    import matplotlib as mpl  # type: ignore
+    import matplotlib.pyplot as plt  # type: ignore
+    import librosa.display
+
+    if not names:
+        names = ["Ground Truth", "Audio Watermarked", "Watermark"]
+    ys = [wav[: int(dur * sr)] for wav in ys]  # crop
+    assert len(names) == len(
+        ys
+    ), f"There are {len(ys)} wavs but {len(names)} names ({names})"
+
+    # Set matplotlib stuff
+    BIGGER_SIZE = 10
+    SMALLER_SIZE = 8
+    linewidth = 234.8775  # linewidth in pt
+
+    plt.rc("font", size=BIGGER_SIZE, family="serif")  # controls default text sizes
+    plt.rcParams["font.family"] = "DeJavu Serif"
+    plt.rcParams["font.serif"] = ["Times New Roman"]
+
+    plt.rc("axes", titlesize=BIGGER_SIZE)  # fontsize of the axes title
+    plt.rc("axes", labelsize=BIGGER_SIZE)  # fontsize of the x and y labels
+    plt.rc("xtick", labelsize=BIGGER_SIZE)  # fontsize of the tick labels
+    plt.rc("ytick", labelsize=SMALLER_SIZE)  # fontsize of the tick labels
+    plt.rc("legend", fontsize=BIGGER_SIZE)  # legend fontsize
+    plt.rc("figure", titlesize=BIGGER_SIZE)
+    height = 1.6 * linewidth / 72.0
+    fig, ax = plt.subplots(
+        nrows=len(ys),
+        ncols=1,
+        sharex=True,
+        figsize=(linewidth / 72.0, height),
+    )
+    fig.tight_layout()
+
+    # Plot the spectrogram
+
+    for i, ysi in enumerate(ys):
+        spectrogram_db = get_spec(ysi, sr=sr, n_fft=n_fft, hop_length=hop_length)
+        if i == 0:
+            cax = fig.add_axes(
+                [
+                    ax[0].get_position().x1 + 0.01,  # type: ignore
+                    ax[-1].get_position().y0,
+                    0.02,
+                    ax[0].get_position().y1 - ax[-1].get_position().y0,
+                ]
+            )
+            fig.colorbar(
+                mpl.cm.ScalarMappable(
+                    norm=mpl.colors.Normalize(
+                        np.min(spectrogram_db), np.max(spectrogram_db)
+                    ),
+                    cmap="magma",
+                ),
+                ax=ax,
+                orientation="vertical",
+                format="%+2.0f dB",
+                cax=cax,
+            )
+        librosa.display.specshow(
+            spectrogram_db,
+            sr=sr,
+            hop_length=hop_length,
+            x_axis="time",
+            y_axis="mel",
+            ax=ax[i],
+        )
+        ax[i].set(title=names[i])
+        ax[i].yaxis.set_label_text(None)
+        ax[i].label_outer()
+    fig.savefig(path, bbox_inches="tight")
+    plt.close()

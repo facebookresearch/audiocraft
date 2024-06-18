@@ -1,0 +1,15 @@
+# @package __global__
+defaults:
+  - watermark/default
+  - /augmentations/default
+  - /model: watermark/default
+  - _self_
+
+sample_rate: 16000
+channels: 1
+
+balancer:
+  balance_grads: true
+  ema_decay: 0.999
+  per_batch_item: true
+  total_norm: 1.

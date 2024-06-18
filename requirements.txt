@@ -17,9 +17,12 @@ transformers>=4.31.0  # need Encodec there.
 xformers<0.0.23
 demucs
 librosa
+soundfile
 gradio
 torchmetrics
 encodec
 protobuf
 torchvision==0.16.0
 torchtext==0.16.0
+pesq
+pystoi

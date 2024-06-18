@@ -18,3 +18,4 @@ from .multibanddiffusion import MultiBandDiffusion
 from .musicgen import MusicGen
 from .magnet import MAGNeT
 from .unet import DiffusionUnet
+from .watermark import WMModel

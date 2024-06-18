@@ -28,6 +28,7 @@ from omegaconf import OmegaConf, DictConfig
 import torch
 
 import audiocraft
+
 from . import builders
 from .encodec import CompressionModel
 
@@ -60,10 +61,13 @@ def _get_state_dict(
 
     else:
         assert filename is not None, "filename needs to be defined if using HF checkpoints"
-
         file = hf_hub_download(
-            repo_id=file_or_url_or_id, filename=filename, cache_dir=cache_dir,
-            library_name="audiocraft", library_version=audiocraft.__version__)
+            repo_id=file_or_url_or_id,
+            filename=filename,
+            cache_dir=cache_dir,
+            library_name="audiocraft",
+            library_version=audiocraft.__version__,
+        )
         return torch.load(file, map_location=device)
 
 
@@ -71,14 +75,18 @@ def load_compression_model_ckpt(file_or_url_or_id: tp.Union[Path, str], cache_di
     return _get_state_dict(file_or_url_or_id, filename="compression_state_dict.bin", cache_dir=cache_dir)
 
 
-def load_compression_model(file_or_url_or_id: tp.Union[Path, str], device='cpu', cache_dir: tp.Optional[str] = None):
+def load_compression_model(
+    file_or_url_or_id: tp.Union[Path, str],
+    device="cpu",
+    cache_dir: tp.Optional[str] = None,
+):
     pkg = load_compression_model_ckpt(file_or_url_or_id, cache_dir=cache_dir)
     if 'pretrained' in pkg:
         return CompressionModel.get_pretrained(pkg['pretrained'], device=device)
     cfg = OmegaConf.create(pkg['xp.cfg'])
     cfg.device = str(device)
     model = builders.get_compression_model(cfg)
-    model.load_state_dict(pkg['best_state'])
+    model.load_state_dict(pkg["best_state"])
     model.eval()
     return model
 
@@ -136,6 +144,7 @@ def load_lm_model_magnet(file_or_url_or_id: tp.Union[Path, str], compression_mod
 
     # MAGNeT models v1 support only xformers backend.
     from audiocraft.modules.transformer import set_efficient_attention_backend
+
     if cfg.transformer_lm.memory_efficient:
         set_efficient_attention_backend("xformers")
 
@@ -175,3 +184,68 @@ def load_diffusion_models(file_or_url_or_id: tp.Union[Path, str],
         processors.append(processor)
         cfgs.append(cfg)
     return models, processors, cfgs
+
+
+def load_audioseal_models(
+    file_or_url_or_id: tp.Union[Path, str],
+    device="cpu",
+    filename: tp.Optional[str] = None,
+    cache_dir: tp.Optional[str] = None,
+):
+
+    detector_ckpt = _get_state_dict(
+        file_or_url_or_id,
+        filename=f"detector_{filename}.pth",
+        device=device,
+        cache_dir=cache_dir,
+    )
+    assert (
+        "model" in detector_ckpt
+    ), f"No model state dict found in {file_or_url_or_id}/detector_{filename}.pth"
+    detector_state = detector_ckpt["model"]
+
+    generator_ckpt = _get_state_dict(
+        file_or_url_or_id,
+        filename=f"generator_{filename}.pth",
+        device=device,
+        cache_dir=cache_dir,
+    )
+    assert (
+        "model" in generator_ckpt
+    ), f"No model state dict found in {file_or_url_or_id}/generator_{filename}.pth"
+    generator_state = generator_ckpt["model"]
+
+    def load_model_config():
+        if Path(file_or_url_or_id).joinpath(f"{filename}.yaml").is_file():
+            return OmegaConf.load(Path(file_or_url_or_id).joinpath(f"{filename}.yaml"))
+        elif file_or_url_or_id.startswith("https://"):
+            import requests  # type: ignore
+
+            resp = requests.get(f"{file_or_url_or_id}/{filename}.yaml")
+            return OmegaConf.create(resp.text)
+        else:
+            file = hf_hub_download(
+                repo_id=file_or_url_or_id,
+                filename=f"{filename}.yaml",
+                cache_dir=cache_dir,
+                library_name="audiocraft",
+                library_version=audiocraft.__version__,
+            )
+            return OmegaConf.load(file)
+
+    try:
+        cfg = load_model_config()
+    except Exception as exc:  # noqa
+        cfg_fp = (
+            Path(__file__)
+            .parents[2]
+            .joinpath("config", "model", "watermark", "default.yaml")
+        )
+        cfg = OmegaConf.load(cfg_fp)
+
+    OmegaConf.resolve(cfg)
+    model = builders.get_watermark_model(cfg)
+
+    model.generator.load_state_dict(generator_state)
+    model.detector.load_state_dict(detector_state)
+    return model.to(device)

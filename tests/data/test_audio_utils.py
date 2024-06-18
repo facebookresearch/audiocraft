@@ -12,6 +12,8 @@ from audiocraft.data.audio_utils import (
     _clip_wav,
     convert_audio_channels,
     convert_audio,
+    f32_pcm,
+    i16_pcm,
     normalize_audio
 )
 from ..common_utils import get_batch_white_noise
@@ -77,6 +79,14 @@ class TestConvertAudio:
         out = convert_audio(audio, from_rate=sr, to_rate=new_sr, to_channels=c)
         out_j = julius.resample.resample_frac(audio, old_sr=sr, new_sr=new_sr)
         assert torch.allclose(out, out_j)
+
+    def test_convert_pcm(self):
+        b, c, dur = 2, 1, 4.
+        sr = 3
+        i16_audio = torch.randint(-2**15, 2**15, (b, c, int(sr * dur)), dtype=torch.int16)
+        f32_audio = f32_pcm(i16_audio)
+        another_i16_audio = i16_pcm(f32_audio)
+        assert torch.allclose(i16_audio, another_i16_audio)
 
 
 class TestNormalizeAudio:
