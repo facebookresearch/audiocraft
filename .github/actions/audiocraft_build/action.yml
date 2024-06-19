@@ -21,7 +21,7 @@ runs:
       python3 -m venv env
       .  env/bin/activate
       python -m pip install --upgrade pip
-      pip install torch==2.1.0 torchvision==0.16.0 torchaudio==2.1.0
+      pip install 'numpy<2' torch==2.1.0 torchvision==0.16.0 torchaudio==2.1.0
       pip install xformers
       pip install -e '.[dev,wm]'
   - name: System Dependencies
