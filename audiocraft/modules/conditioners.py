@@ -700,6 +700,34 @@ class ChromaStemConditioner(WaveformConditioner):
 
 
 class FeatureExtractor(WaveformConditioner):
+    """
+    Feature Extractor used for the style conditioner of the paper AUDIO CONDITIONING
+        FOR MUSIC GENERATION VIA DISCRETE BOTTLENECK FEATURES.
+
+    Given a waveform, we extract an excerpt of defined length randomly subsampled. 
+        Then, we feed this excerpt to a feature extractor.
+
+    Args:
+        model_name (str): 'encodec', 'musicfm' or 'mert'. For now 'musicfm'
+            is not supported.
+        sample_rate (str): sample rate of the input audio. (32000)
+        encodec_checkpoint (str): if encodec is used as a feature extractor, checkpoint
+            of the model. ('//pretrained/facebook/encodec_32khz' is the default)
+        encodec_n_q (int): if encodec is used as a feature extractor it sets the number of
+            quantization streams used in it.
+        length (float): length in seconds of the random subsampled excerpt that is used
+            for conditioning.
+        dim (int): The internal representation dimension.
+        output_dim (int): Output dimension for the conditioner.
+        device (tp.Union[torch.device, str], optional): Device for the conditioner.
+        compute_mask (bool): whether to mask the tokens corresponding to the subsampled
+            excerpt in the computation of the music language model cross-entropy loss.
+        use_middle_of_segment (bool): if True, always take the middle of the input 
+            instead of a random subsampled excerpt.
+        ds_rate_compression (int): downsampling parameter of the compression model used
+            for the music language model. (640 for encodec_32khz)
+        num_codebooks_lm (int): the number of codebooks used by the music language model.
+    """
     def __init__(
         self, model_name: str,
         sample_rate: int, encodec_checkpoint: str, encodec_n_q: int, length: float,
@@ -794,6 +822,30 @@ class FeatureExtractor(WaveformConditioner):
 
 
 class StyleConditioner(FeatureExtractor):
+    """Conditioner from the paper AUDIO CONDITIONING FOR MUSIC GENERATION VIA 
+    DISCRETE BOTTLENECK FEATURES. 
+    Given an audio input, it is passed through a Feature Extractor and a 
+    transformer encoder. Then it is quantized through RVQ. 
+
+    Args:
+        transformer_scale (str): size of the transformer. See in the __init__ to have more infos.
+        ds_factor (int): the downsampling factor applied to the representation after quantization.
+        encodec_n_q (int): if encodec is used as a feature extractor it sets the number of
+            quantization streams used in it.
+        n_q_out (int): the number of quantization streams used for the RVQ. If increased, there
+            is more information passing as a conditioning.
+        eval_q (int): the number of quantization streams used for the RVQ at evaluation time.
+        q_dropout (bool): if True, at training time, a random number of stream is sampled
+            at each step in the interval [1, n_q_out].
+        bins (int): the codebook size used for each quantization stream.
+        varying_lengths (List[float]): list of the min and max duration in seconds for the
+            randomly subsampled excerpt at training time. For each step a length is sampled
+            in this interval.
+        batch_norm (bool): use of batch normalization after the transformer. Stabilizes the
+            training.
+        rvq_threshold_ema_dead_code (float): threshold for dropping dead codes in the
+            RVQ.
+    """
     def __init__(self, transformer_scale: str = 'default', ds_factor: int = 15, encodec_n_q: int = 4,
                  n_q_out: int = 6, eval_q: int = 3, q_dropout: bool = True, bins: int = 1024,
                  varying_lengths: tp.List[float] = [1.5, 4.5],
