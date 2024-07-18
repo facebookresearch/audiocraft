@@ -26,4 +26,4 @@ torchvision==0.18.1
 torchtext==0.18.0
 pesq==0.0.4
 pystoi==0.4.1
-triton==3.0.0
+triton>=2.3.1
