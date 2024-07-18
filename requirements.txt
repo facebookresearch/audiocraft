@@ -6,15 +6,15 @@ hydra-core>=1.1
 hydra_colorlog
 julius
 num2words
-numpy<2.0.0
+numpy>=2.0.0
 sentencepiece
 spacy>=3.6.1
-torch==2.1.0
-torchaudio>=2.0.0,<2.1.2
+torch==2.3.1
+torchaudio>=2.0.0
 huggingface_hub
 tqdm
 transformers>=4.31.0  # need Encodec there.
-xformers<0.0.23
+xformers==0.0.27
 demucs
 librosa
 soundfile
@@ -22,7 +22,7 @@ gradio
 torchmetrics
 encodec
 protobuf
-torchvision==0.16.0
-torchtext==0.16.0
+torchvision>=0.16.0
+torchtext>=0.16.0
 pesq
 pystoi
