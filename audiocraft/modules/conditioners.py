@@ -704,7 +704,7 @@ class FeatureExtractor(WaveformConditioner):
     Feature Extractor used for the style conditioner of the paper AUDIO CONDITIONING
         FOR MUSIC GENERATION VIA DISCRETE BOTTLENECK FEATURES.
 
-    Given a waveform, we extract an excerpt of defined length randomly subsampled. 
+    Given a waveform, we extract an excerpt of defined length randomly subsampled.
         Then, we feed this excerpt to a feature extractor.
 
     Args:
@@ -722,7 +722,7 @@ class FeatureExtractor(WaveformConditioner):
         device (tp.Union[torch.device, str], optional): Device for the conditioner.
         compute_mask (bool): whether to mask the tokens corresponding to the subsampled
             excerpt in the computation of the music language model cross-entropy loss.
-        use_middle_of_segment (bool): if True, always take the middle of the input 
+        use_middle_of_segment (bool): if True, always take the middle of the input
             instead of a random subsampled excerpt.
         ds_rate_compression (int): downsampling parameter of the compression model used
             for the music language model. (640 for encodec_32khz)
@@ -822,10 +822,10 @@ class FeatureExtractor(WaveformConditioner):
 
 
 class StyleConditioner(FeatureExtractor):
-    """Conditioner from the paper AUDIO CONDITIONING FOR MUSIC GENERATION VIA 
-    DISCRETE BOTTLENECK FEATURES. 
-    Given an audio input, it is passed through a Feature Extractor and a 
-    transformer encoder. Then it is quantized through RVQ. 
+    """Conditioner from the paper AUDIO CONDITIONING FOR MUSIC GENERATION VIA
+    DISCRETE BOTTLENECK FEATURES.
+    Given an audio input, it is passed through a Feature Extractor and a
+    transformer encoder. Then it is quantized through RVQ.
 
     Args:
         transformer_scale (str): size of the transformer. See in the __init__ to have more infos.
