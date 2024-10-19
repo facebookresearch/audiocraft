@@ -14,14 +14,40 @@ autocast: true
 autocast_dtype: bfloat16
 
 
+logging:
+  level: INFO
+  log_updates: 10
+  log_tensorboard: false
+  log_wandb: true
+tensorboard:
+  with_media_logging: false
+  name:  # optional name for the experiment
+  sub_dir:  # optional sub directory to store tensorboard data
+wandb:
+  with_media_logging: true
+  project: musicgen_stereo_melody_medium
+  name:  # optional name for the experiment
+  group:  # optional group
+
+
 # EnCodec large trained on mono-channel music audio sampled at 32khz
 # with a total stride of 640 leading to 50 frames/s.
 # rvq.n_q=4, rvq.bins=2048, no quantization dropout
 # (transformer_lm card and n_q must be compatible)
 compression_model_checkpoint: //pretrained/facebook/encodec_32khz
 
-channels: 1
+transformer_lm:
+  n_q: 8
+
+channels: 2
 sample_rate: 32000
+
+interleave_stereo_codebooks:
+  use: true
+
+codebooks_pattern:
+  delay:
+    delays: [0, 0, 1, 1, 2, 2, 3, 3]
 
 deadlock:
   use: true  # deadlock detection
@@ -46,8 +72,6 @@ optim:
     updates: 10
     device: cuda
 
-logging:
-  log_tensorboard: true
 
 schedule:
   lr_scheduler: cosine

@@ -1,0 +1,10 @@
+# @package __global__
+
+datasource:
+  max_channels: 2
+  max_sample_rate: 44100
+
+  evaluate: /mnt/disks/training-data-refine/refine_audiocraft/refineEval
+  generate: /mnt/disks/training-data-refine/refine_audiocraft/refineEval
+  train: /mnt/disks/training-data-refine/refine_audiocraft/refineDataset
+  valid: /mnt/disks/training-data-refine/refine_audiocraft/refineEval

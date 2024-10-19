@@ -101,6 +101,9 @@ class MusicInfo(AudioInfo):
             if _field.name in post_init_attributes:
                 continue
             elif _field.name not in dictionary:
+                if _field.name == "description":
+                    _dictionary[_field.name] = dictionary.get("short_prompt", "")
+                    continue
                 if fields_required and _field.name not in optional_fields:
                     raise KeyError(f"Unexpected missing key: {_field.name}")
             else:
