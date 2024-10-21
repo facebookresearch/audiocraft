@@ -20,7 +20,7 @@ from .lm import LMModel
 from .builders import get_debug_compression_model, get_debug_lm_model
 from .loaders import load_compression_model, load_lm_model
 from ..data.audio_utils import convert_audio
-from ..modules.conditioners import ConditioningAttributes, WavCondition
+from ..modules.conditioners import ConditioningAttributes, WavCondition, StyleConditioner
 
 
 MelodyList = tp.List[tp.Optional[torch.Tensor]]
@@ -92,8 +92,12 @@ class MusicGen(BaseGenModel):
 
     def set_generation_params(self, use_sampling: bool = True, top_k: int = 250,
                               top_p: float = 0.0, temperature: float = 1.0,
-                              duration: float = 30.0, cfg_coef: float = 3.0,
-                              two_step_cfg: bool = False, extend_stride: float = 18):
+                              duration: float = 30.0, double_cfg: bool = False,
+                              cfg_coef: float = 3.0, cfg_coef_2: tp.Optional[float] = None,
+                              two_step_cfg: bool = False, extend_stride: float = 18,
+                              postprocess_fn: tp.Optional[str] = None,
+                              alphas: tp.Optional[tp.Dict[str, float]] = None,
+                              which_conditions: tp.Optional[tp.List[str]] = None):
         """Set the generation parameters for MusicGen.
 
         Args:
@@ -120,7 +124,33 @@ class MusicGen(BaseGenModel):
             'top_p': top_p,
             'cfg_coef': cfg_coef,
             'two_step_cfg': two_step_cfg,
+            'double_cfg': double_cfg,
+            'cfg_coef_2': cfg_coef_2,
+            'postprocess_fn': postprocess_fn,
+            'alphas': alphas,
+            'which_conditions': which_conditions
         }
+
+    def set_style_conditioner_params(self, eval_q: int = 3, excerpt_length: float = 3.0,
+                                     ds_factor: tp.Optional[int] = None,
+                                     encodec_n_q: tp.Optional[int] = None) -> None:
+        """Set the parameters of the style conditioner
+        Args:
+            eval_q (int): the number of residual quantization streams used to quantize the style condition
+                the smaller it is, the narrower is the information bottleneck
+            excerpt_length (float): the excerpt length in seconds that is extracted from the audio
+                conditioning
+            ds_factor: (int): the downsampling factor used to downsample the style tokens before
+                using them as a prefix
+            encodec_n_q: (int, optional): if encodec is used as a feature extractor, sets the number
+                of streams that is used to extract features
+        """
+        assert isinstance(self.lm.condition_provider.conditioners.self_wav, StyleConditioner), \
+            "Only use this function if you model is MusicGen-Style"
+        self.lm.condition_provider.conditioners.self_wav.set_params(eval_q=eval_q,
+                                                                    excerpt_length=excerpt_length,
+                                                                    ds_factor=ds_factor,
+                                                                    encodec_n_q=encodec_n_q)
 
     def generate_with_chroma(self, descriptions: tp.List[str], melody_wavs: MelodyType,
                              melody_sample_rate: int, progress: bool = False,

@@ -26,7 +26,7 @@ from ..modules.codebooks_patterns import (CoarseFirstPattern,
 from ..modules.conditioners import (BaseConditioner, ChromaStemConditioner,
                                     CLAPEmbeddingConditioner, ConditionFuser,
                                     ConditioningProvider, LUTConditioner,
-                                    T5Conditioner)
+                                    T5Conditioner, StyleConditioner)
 from ..modules.diffusion_schedule import MultiBandProcessor, SampleProcessor
 from ..utils.utils import dict_from_config
 from .encodec import (CompressionModel, EncodecModel,
@@ -160,6 +160,12 @@ def get_conditioner_provider(
         elif model_type == "clap":
             conditioners[str(cond)] = CLAPEmbeddingConditioner(
                 output_dim=output_dim, device=device, **model_args
+            )
+        elif model_type == 'style':
+            conditioners[str(cond)] = StyleConditioner(
+                output_dim=output_dim,
+                device=device,
+                **model_args
             )
         else:
             raise ValueError(f"Unrecognized conditioning model: {model_type}")

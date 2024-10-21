@@ -108,7 +108,7 @@ class EuclideanCodebook(nn.Module):
         kmeans_iters: int = 10,
         decay: float = 0.8,
         epsilon: float = 1e-5,
-        threshold_ema_dead_code: int = 2,
+        threshold_ema_dead_code: float = 2.,
     ):
         super().__init__()
         self.decay = decay
@@ -231,14 +231,13 @@ class VectorQuantization(nn.Module):
         epsilon (float): Epsilon value for numerical stability.
         kmeans_init (bool): Whether to use kmeans to initialize the codebooks.
         kmeans_iters (int): Number of iterations used for kmeans initialization.
-        threshold_ema_dead_code (int):
         channels_last (bool): Channels are the last dimension in the input tensors.
         commitment_weight (float): Weight for commitment loss.
         orthogonal_reg_weight (float): Orthogonal regularization weights.
         orthogonal_reg_active_codes_only (bool): Apply orthogonal regularization only on active codes.
         orthogonal_reg_max_codes (optional int): Maximum number of codes to consider
             for orthogonal regularization.
-        threshold_ema_dead_code (int): Threshold for dead code expiration. Replace any codes
+        threshold_ema_dead_code (float): Threshold for dead code expiration. Replace any codes
             that have an exponential moving average cluster size less than the specified threshold with
             randomly selected vector from the current batch.
     """
@@ -251,7 +250,7 @@ class VectorQuantization(nn.Module):
         epsilon: float = 1e-5,
         kmeans_init: bool = False,
         kmeans_iters: int = 10,
-        threshold_ema_dead_code: int = 2,
+        threshold_ema_dead_code: float = 2.,
         channels_last: bool = False,
         commitment_weight: float = 1.,
         orthogonal_reg_weight: float = 0.0,
