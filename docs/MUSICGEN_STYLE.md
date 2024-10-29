@@ -80,7 +80,7 @@ model.set_generation_params(
     cfg_coef_2=None,
 )
 
-musicgen.set_style_conditioner_params(
+model.set_style_conditioner_params(
     eval_q=1, # integer between 1 and 6
               # eval_q is the level of quantization that passes
               # through the conditioner. When low, the models adheres less to the 
@@ -119,7 +119,7 @@ model.set_generation_params(
                    # to better understand the effects of the double CFG coefficients. 
 )
 
-musicgen.set_style_conditioner_params(
+model.set_style_conditioner_params(
     eval_q=1, # integer between 1 and 6
               # eval_q is the level of quantization that passes
               # through the conditioner. When low, the models adheres less to the 
