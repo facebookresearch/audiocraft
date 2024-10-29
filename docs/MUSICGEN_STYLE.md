@@ -25,7 +25,7 @@ MusicGen-Stem requires a GPU with at least 16 GB of memory for running inference
 
 ## Usage
 
-1. You can play with MusicGen-Style by running the jupyter notebook at [`demos/musicgenstyle_demo.ipynb`](../demos/musicgen_style_demo.ipynb) locally (if you have a GPU).
+1. You can play with MusicGen-Style by running the jupyter notebook at [`demos/musicgen_style_demo.ipynb`](../demos/musicgen_style_demo.ipynb) locally (if you have a GPU).
 
 ## API
 
