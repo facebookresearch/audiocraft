@@ -33,6 +33,7 @@ _HF_MODEL_CHECKPOINTS_MAP = {
     "medium": "facebook/musicgen-medium",
     "large": "facebook/musicgen-large",
     "melody": "facebook/musicgen-melody",
+    "style": "facebook/musicgen-style",
 }
 
 
@@ -63,6 +64,8 @@ class MusicGen(BaseGenModel):
           # see: https://huggingface.co/facebook/musicgen-melody
         - facebook/musicgen-large (3.3B), text to music,
           # see: https://huggingface.co/facebook/musicgen-large
+        - facebook/musicgen-style (1.5 B), text and style to music,
+          # see: https://huggingface.co/facebook/musicgen-style
         """
         if device is None:
             if torch.cuda.device_count():

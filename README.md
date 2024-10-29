@@ -39,6 +39,7 @@ At the moment, AudioCraft contains the training code and inference code for:
 * [Multi Band Diffusion](./docs/MBD.md): An EnCodec compatible decoder using diffusion.
 * [MAGNeT](./docs/MAGNET.md): A state-of-the-art non-autoregressive model for text-to-music and text-to-sound.
 * [AudioSeal](./docs/WATERMARKING.md): A state-of-the-art audio watermarking.
+* [MusicGen Style](./docs/MUSICGEN_STYLE.md): A state-of-the-art text-and-style-to-music model.
 
 ## Training code
 
