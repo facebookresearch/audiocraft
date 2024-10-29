@@ -30,7 +30,7 @@ conditioners:
       encodec_checkpoint: '//pretrained/facebook/encodec_32khz'
       encodec_n_q: 3
       length: 3.0
-      ds_factor: 15
+      ds_factor: 15 # Since MERT is 75Hz, 75/15 results into 5Hz representations
       n_q_out: 6
       eval_q: 3
       q_dropout: true
