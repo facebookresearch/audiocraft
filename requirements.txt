@@ -16,9 +16,10 @@ tqdm
 transformers>=4.31.0  # need Encodec there.
 xformers<0.0.23
 demucs
-#librosa==0.10.1
-#scipy==1.11.2
-#numpy==1.23.5
+Cython==0.29
+librosa==0.10.1
+scipy==1.11.2
+numpy==1.23.5
 soundfile
 gradio
 torchmetrics
