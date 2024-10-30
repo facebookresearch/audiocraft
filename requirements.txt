@@ -8,7 +8,7 @@ julius
 num2words
 numpy<2.0.0
 sentencepiece
-spacy>=3.6.1
+spacy==3.7.6
 torch==2.1.0
 torchaudio>=2.0.0,<2.1.2
 huggingface_hub
@@ -16,10 +16,7 @@ tqdm
 transformers>=4.31.0  # need Encodec there.
 xformers<0.0.23
 demucs
-Cython==0.29
-librosa==0.10.1
-scipy==1.11.2
-numpy==1.23.5
+librosa
 soundfile
 gradio
 torchmetrics
