@@ -15,7 +15,7 @@ def explorer(launcher):
     # replace this by the desired music dataset
     launcher.bind_(dset='internal/music_400k_32khz')
 
-    sub = launcher.bind_({'solver': 'musicgen_sourcesep/musicgen_sourcesep_base_32khz',
+    sub = launcher.bind_({'solver': 'musicgenstem/musicgenstem_base_32khz',
                           'autocast': False, 
                           'fsdp.use': True,
                           'model/lm/model_scale': 'medium',
