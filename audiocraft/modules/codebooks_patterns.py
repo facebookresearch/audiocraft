@@ -334,7 +334,7 @@ class DelayedPatternProvider(CodebooksPatternProvider):
         self.flatten_first = flatten_first
         self.empty_initial = empty_initial
         assert len(self.delays) == self.n_q
-        assert sorted(self.delays) == self.delays
+        # assert sorted(self.delays) == self.delays # Not the case anymore for MusicGen-Stem 7cb
 
     def get_pattern(self, timesteps: int) -> Pattern:
         omit_special_token = self.empty_initial < 0

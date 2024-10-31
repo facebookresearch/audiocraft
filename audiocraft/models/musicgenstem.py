@@ -5,7 +5,7 @@
 # LICENSE file in the root directory of this source tree.
 
 """
-Main model for using MusicGen. This will combine all the required components
+Main model for using MusicGen-Stem. This will combine all the required components
 and provide easy access to the generation API.
 """
 
@@ -17,27 +17,15 @@ import torch
 from .encodec import CompressionModel
 from .genmodel import BaseGenModel
 from .lm import LMModel
-from .builders import get_debug_compression_model, get_debug_lm_model
-from .loaders import load_compression_model, load_lm_model
 from ..data.audio_utils import convert_audio
-from ..modules.conditioners import ConditioningAttributes, WavCondition, StyleConditioner
-
+from ..modules.conditioners import ConditioningAttributes, WavCondition
+from demucs.apply import apply_model
 
 MelodyList = tp.List[tp.Optional[torch.Tensor]]
 MelodyType = tp.Union[torch.Tensor, MelodyList]
 
 
-# backward compatible names mapping
-_HF_MODEL_CHECKPOINTS_MAP = {
-    "small": "facebook/musicgen-small",
-    "medium": "facebook/musicgen-medium",
-    "large": "facebook/musicgen-large",
-    "melody": "facebook/musicgen-melody",
-    "style": "facebook/musicgen-style",
-}
-
-
-class MusicGen(BaseGenModel):
+class MusicGenStem(BaseGenModel):
     """MusicGen main model with convenient generation API.
 
     Args:
@@ -52,55 +40,17 @@ class MusicGen(BaseGenModel):
                  max_duration: tp.Optional[float] = None):
         super().__init__(name, compression_model, lm, max_duration)
         self.set_generation_params(duration=15)  # default duration
+        self.demucs_is_inited = False
+
 
     @staticmethod
-    def get_pretrained(name: str = 'facebook/musicgen-melody', device=None):
-        """Return pretrained model, we provide four models:
-        - facebook/musicgen-small (300M), text to music,
-          # see: https://huggingface.co/facebook/musicgen-small
-        - facebook/musicgen-medium (1.5B), text to music,
-          # see: https://huggingface.co/facebook/musicgen-medium
-        - facebook/musicgen-melody (1.5B) text to music and text+melody to music,
-          # see: https://huggingface.co/facebook/musicgen-melody
-        - facebook/musicgen-large (3.3B), text to music,
-          # see: https://huggingface.co/facebook/musicgen-large
-        - facebook/musicgen-style (1.5B), text and style to music,
-          # see: https://huggingface.co/facebook/musicgen-style
-        """
-        if device is None:
-            if torch.cuda.device_count():
-                device = 'cuda'
-            else:
-                device = 'cpu'
-
-        if name == 'debug':
-            # used only for unit tests
-            compression_model = get_debug_compression_model(device)
-            lm = get_debug_lm_model(device)
-            return MusicGen(name, compression_model, lm, max_duration=30)
-
-        if name in _HF_MODEL_CHECKPOINTS_MAP:
-            warnings.warn(
-                "MusicGen pretrained model relying on deprecated checkpoint mapping. " +
-                f"Please use full pre-trained id instead: facebook/musicgen-{name}")
-            name = _HF_MODEL_CHECKPOINTS_MAP[name]
-
-        lm = load_lm_model(name, device=device)
-        compression_model = load_compression_model(name, device=device)
-        if 'self_wav' in lm.condition_provider.conditioners:
-            lm.condition_provider.conditioners['self_wav'].match_len_on_eval = True
-            lm.condition_provider.conditioners['self_wav']._use_masking = False
-
-        return MusicGen(name, compression_model, lm)
+    def get_pretrained(name: str, device=None):
+        return None
 
     def set_generation_params(self, use_sampling: bool = True, top_k: int = 250,
                               top_p: float = 0.0, temperature: float = 1.0,
-                              duration: float = 30.0, double_cfg: bool = False,
-                              cfg_coef: float = 3.0, cfg_coef_2: tp.Optional[float] = None,
-                              two_step_cfg: bool = False, extend_stride: float = 18,
-                              postprocess_fn: tp.Optional[str] = None,
-                              alphas: tp.Optional[tp.Dict[str, float]] = None,
-                              which_conditions: tp.Optional[tp.List[str]] = None):
+                              duration: float = 30.0, cfg_coef: float = 3.0,
+                              two_step_cfg: bool = False, extend_stride: float = 18):
         """Set the generation parameters for MusicGen.
 
         Args:
@@ -127,71 +77,7 @@ class MusicGen(BaseGenModel):
             'top_p': top_p,
             'cfg_coef': cfg_coef,
             'two_step_cfg': two_step_cfg,
-            'double_cfg': double_cfg,
-            'cfg_coef_2': cfg_coef_2,
-            'postprocess_fn': postprocess_fn,
-            'alphas': alphas,
-            'which_conditions': which_conditions
         }
-
-    def set_style_conditioner_params(self, eval_q: int = 3, excerpt_length: float = 3.0,
-                                     ds_factor: tp.Optional[int] = None,
-                                     encodec_n_q: tp.Optional[int] = None) -> None:
-        """Set the parameters of the style conditioner
-        Args:
-            eval_q (int): the number of residual quantization streams used to quantize the style condition
-                the smaller it is, the narrower is the information bottleneck
-            excerpt_length (float): the excerpt length in seconds that is extracted from the audio
-                conditioning
-            ds_factor: (int): the downsampling factor used to downsample the style tokens before
-                using them as a prefix
-            encodec_n_q: (int, optional): if encodec is used as a feature extractor, sets the number
-                of streams that is used to extract features
-        """
-        assert isinstance(self.lm.condition_provider.conditioners.self_wav, StyleConditioner), \
-            "Only use this function if you model is MusicGen-Style"
-        self.lm.condition_provider.conditioners.self_wav.set_params(eval_q=eval_q,
-                                                                    excerpt_length=excerpt_length,
-                                                                    ds_factor=ds_factor,
-                                                                    encodec_n_q=encodec_n_q)
-
-    def generate_with_chroma(self, descriptions: tp.List[str], melody_wavs: MelodyType,
-                             melody_sample_rate: int, progress: bool = False,
-                             return_tokens: bool = False) -> tp.Union[torch.Tensor,
-                                                                      tp.Tuple[torch.Tensor, torch.Tensor]]:
-        """Generate samples conditioned on text and melody.
-
-        Args:
-            descriptions (list of str): A list of strings used as text conditioning.
-            melody_wavs: (torch.Tensor or list of Tensor): A batch of waveforms used as
-                melody conditioning. Should have shape [B, C, T] with B matching the description length,
-                C=1 or 2. It can be [C, T] if there is a single description. It can also be
-                a list of [C, T] tensors.
-            melody_sample_rate: (int): Sample rate of the melody waveforms.
-            progress (bool, optional): Flag to display progress of the generation process. Defaults to False.
-        """
-        if isinstance(melody_wavs, torch.Tensor):
-            if melody_wavs.dim() == 2:
-                melody_wavs = melody_wavs[None]
-            if melody_wavs.dim() != 3:
-                raise ValueError("Melody wavs should have a shape [B, C, T].")
-            melody_wavs = list(melody_wavs)
-        else:
-            for melody in melody_wavs:
-                if melody is not None:
-                    assert melody.dim() == 2, "One melody in the list has the wrong number of dims."
-
-        melody_wavs = [
-            convert_audio(wav, melody_sample_rate, self.sample_rate, self.audio_channels)
-            if wav is not None else None
-            for wav in melody_wavs]
-        attributes, prompt_tokens = self._prepare_tokens_and_attributes(descriptions=descriptions, prompt=None,
-                                                                        melody_wavs=melody_wavs)
-        assert prompt_tokens is None
-        tokens = self._generate_tokens(attributes, prompt_tokens, progress)
-        if return_tokens:
-            return self.generate_audio(tokens), tokens
-        return self.generate_audio(tokens)
 
     @torch.no_grad()
     def _prepare_tokens_and_attributes(
@@ -245,14 +131,15 @@ class MusicGen(BaseGenModel):
             if descriptions is not None:
                 assert len(descriptions) == len(prompt), "Prompt and nb. descriptions doesn't match"
             prompt = prompt.to(self.device)
-            prompt_tokens, scale = self.compression_model.encode(prompt)
-            assert scale is None
+            prompt_tokens = self.compression_model.encode(prompt)
         else:
             prompt_tokens = None
         return attributes, prompt_tokens
 
     def _generate_tokens(self, attributes: tp.List[ConditioningAttributes],
-                         prompt_tokens: tp.Optional[torch.Tensor], progress: bool = False) -> torch.Tensor:
+                         prompt_tokens: tp.Optional[torch.Tensor], progress: bool = False,
+                         stems_prompt: tp.Optional[torch.Tensor] = None, which_stems: tp.Optional[tp.List[int]] = None,
+                         ) -> torch.Tensor:
         """Generate discrete audio tokens given audio prompt and/or conditions.
 
         Args:
@@ -288,7 +175,8 @@ class MusicGen(BaseGenModel):
             with self.autocast:
                 gen_tokens = self.lm.generate(
                     prompt_tokens, attributes,
-                    callback=callback, max_gen_len=total_gen_len, **self.generation_params)
+                    callback=callback, max_gen_len=total_gen_len, 
+                    stems_prompt=stems_prompt, which_stems=which_stems, **self.generation_params)
 
         else:
             # now this gets a bit messier, we need to handle prompts,
@@ -339,3 +227,127 @@ class MusicGen(BaseGenModel):
 
             gen_tokens = torch.cat(all_tokens, dim=-1)
         return gen_tokens
+
+    def generate_with_prompt_codes(self, descriptions: tp.List[str], prompt_codes: torch.Tensor, progress: bool = False,
+                              return_tokens: bool = False, silence_tokens: tp.List[int] = [870, 530, 621, 1215], 
+                              silence_prompt: bool = False):
+        assert prompt_codes is not None
+        attributes, _ = self._prepare_tokens_and_attributes(descriptions, None)
+        prompt_tokens = prompt_codes
+        tokens = self._generate_tokens(attributes, prompt_tokens, progress)
+        if silence_prompt:
+            for i in range(tokens.shape[1]):  # Loop over columns (second dimension)
+                for b in range(tokens.shape[0]):
+                    mask = (tokens[b, i, :] == 2048)  # Create a mask for elements equal to target_value
+                    tokens[b, i, mask] = silence_tokens[i]  # Replace these elements
+        if return_tokens:
+            return self.generate_audio(tokens), tokens
+        return self.generate_audio(tokens)
+
+
+    def regenerate_from_codes(self, codes: torch.Tensor, which_codes: tp.List[int], descriptions: tp.List[str], 
+                              prompt: torch.Tensor = None, prompt_sample_rate: int = None, prompt_codes: torch.Tensor = None, 
+                              progress: bool = False, 
+                              return_tokens: bool = False, silence_tokens: tp.List[int] = [870, 530, 621, 1215], 
+                              silence_prompt: bool = False) \
+            -> tp.Union[torch.Tensor, tp.Tuple[torch.Tensor, torch.Tensor]]:
+        """
+        Given a stream of codes, regenerate the desired streams.
+
+        Args:
+            codes: must be [1, K, T] (K being the number of codebooks)
+            which_codes: list e.g. [0, 2, 3] if you want to keep these index of streams
+            descriptions: list of strings of length B. 
+            prompt: tensor [1, 1, T] of waveform if we want a few seconds prompt before generating continuation
+                with stems fixed by codes and which codes 
+
+        Outputs:
+            regenerated songs with these descriptions
+        """
+        assert (prompt is None) or (prompt_codes is None)
+        if prompt is not None:
+            prompt = self._prepare_wav_for_compression_model(prompt, prompt_sample_rate)
+            prompt = prompt.expand(len(descriptions), -1, -1, -1)
+
+        attributes, prompt_tokens = self._prepare_tokens_and_attributes(descriptions, prompt)
+        if prompt_codes is not None:
+            prompt_tokens = prompt_codes
+            prompt_tokens = prompt_tokens.expand(len(descriptions), -1, -1)
+        tokens = self._generate_tokens(attributes, prompt_tokens, progress, stems_prompt=codes.expand(len(descriptions), -1, -1), which_stems=which_codes)
+        if silence_prompt:
+            for i in range(tokens.shape[1]):  # Loop over columns (second dimension)
+                for b in range(tokens.shape[0]):
+                    mask = (tokens[b, i, :] == 2048)  # Create a mask for elements equal to target_value
+                    tokens[b, i, mask] = silence_tokens[i]  # Replace these elements
+        if return_tokens:
+            return self.generate_audio(tokens), tokens
+        return self.generate_audio(tokens)
+
+    def _init_demucs(self):
+        from demucs import pretrained
+        self.__dict__['demucs'] = pretrained.get_model('htdemucs').to(self.device)
+        demucs_sources: list = self.demucs.sources  # type: ignore
+        sources = self.compression_model.sources
+        self.stem_indices = torch.LongTensor([demucs_sources.index(source) for source in sources]).to(self.device)
+        self.demucs_is_inited = True
+
+
+    def regenerate_from_wav(self, wav: torch.Tensor, sample_rate: int, 
+                            which_codes: tp.List[int], descriptions: tp.List[str], 
+                            prompt: torch.Tensor = None, prompt_sample_rate: int = None, prompt_codes: torch.Tensor = None,
+                            progress: bool = False, return_tokens: bool = False, silence_tokens: tp.List[int] = [870, 530, 621, 1215], 
+                              silence_prompt: bool = False) \
+            -> tp.Union[torch.Tensor, tp.Tuple[torch.Tensor, torch.Tensor]]:
+        stems = self._prepare_wav_for_compression_model(wav, sample_rate)
+        codes = self.compression_model.encode(stems)
+        return self.regenerate_from_codes(codes=codes, which_codes=which_codes, descriptions=descriptions, prompt=prompt,
+                                          prompt_sample_rate=prompt_sample_rate, prompt_codes=prompt_codes, 
+                                          progress=progress, return_tokens=return_tokens, silence_tokens=silence_tokens, silence_prompt=silence_prompt)
+        
+    def _prepare_wav_for_compression_model(self, wav, sample_rate):
+        if not self.demucs_is_inited:
+            self._init_demucs()
+            print("demucs is inited")
+        wav = wav.to(self.device)
+        wav = convert_audio(
+            wav, sample_rate, self.demucs.samplerate, self.demucs.audio_channels)  # type: ignore
+        stems = apply_model(self.demucs, wav, device=self.device)
+        stems = stems[:, self.stem_indices]
+        stems = convert_audio(stems, self.demucs.samplerate, self.sample_rate, 1)  # type: ignore
+        return stems
+
+    def generate_with_style(self, descriptions: tp.List[str], bdo_wavs: MelodyType,
+                             progress: bool = False,
+                             return_tokens: bool = False) -> tp.Union[torch.Tensor,
+                                                                      tp.Tuple[torch.Tensor, torch.Tensor]]:
+        """Generate samples conditioned on text and melody.
+
+        Args:
+            descriptions (list of str): A list of strings used as text conditioning.
+            bdo_wavs: (torch.Tensor or list of Tensor): A batch of waveforms used as
+                melody conditioning. Should have shape [B, 3, T] with B matching the description length.
+                It can be [3, T] if there is a single description. It can also be
+                a list of [3, T] tensors.
+            melody_sample_rate: (int): Sample rate of the melody waveforms.
+            progress (bool, optional): Flag to display progress of the generation process. Defaults to False.
+        """
+        if isinstance(bdo_wavs, torch.Tensor):
+            if bdo_wavs.dim() == 2:
+                bdo_wavs = bdo_wavs[None]
+            if bdo_wavs.dim() != 3:
+                raise ValueError("Melody wavs should have a shape [B, C, T].")
+            assert bdo_wavs.shape[1] == 3, "should input 3 conditions"
+            bdo_wavs = list(bdo_wavs)
+        else:
+            for melody in bdo_wavs:
+                if melody is not None:
+                    assert melody.dim() == 2, "One melody in the list has the wrong number of dims."
+                    assert melody.shape[0] == 3, "should input 3 conditions"
+
+        attributes, prompt_tokens = self._prepare_tokens_and_attributes(descriptions=descriptions, prompt=None,
+                                                                        melody_wavs=bdo_wavs)
+        assert prompt_tokens is None
+        tokens = self._generate_tokens(attributes, prompt_tokens, progress)
+        if return_tokens:
+            return self.generate_audio(tokens), tokens
+        return self.generate_audio(tokens)

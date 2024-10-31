@@ -504,3 +504,101 @@ class InterleaveStereoCompressionModel(CompressionModel):
     def decode_latent(self, codes: torch.Tensor):
         """Decode from the discrete codes to continuous latent space."""
         raise NotImplementedError("Not supported by interleaved stereo wrapped models.")
+
+class MultiStemCompressionModel(nn.Module):
+    '''
+    Class to deal with multiple compression models. Typically for multi instrument
+    generation. 
+    '''
+    def __init__(self, sources: tp.List, all_compression_models: tp.List[CompressionModel]):
+        super().__init__()
+        assert len(sources) == len(all_compression_models)
+        assert all(elem.frame_rate == all_compression_models[0].frame_rate for elem in all_compression_models)
+        assert all(elem.sample_rate == all_compression_models[0].sample_rate for elem in all_compression_models)
+        self.sources = sources
+        self.compression_models = {k: v for (k, v) in zip(sources, all_compression_models)}
+        self.frame_rate = all_compression_models[0].frame_rate
+        self.sample_rate = all_compression_models[0].sample_rate
+        self.total_codebooks = {k: self.compression_models[k].total_codebooks for k in self.sources}
+        self.num_codebooks = {k: self.compression_models[k].num_codebooks for k in self.sources}
+        self.cardinality = {k: self.compression_models[k].cardinality for k in self.sources}
+
+    def forward(self, x: torch.Tensor) -> tp.Dict[str, qt.QuantizedResult]:
+        '''
+        input: 
+            x [B, num_stems, C, T] C=1 or 2. num_stems=3 for the bass-drums-other framework
+        output:
+            Dict[str, qt.QuantizedResult]:
+                {'bass': QuantizedResult, 'drums': QuantizedResult, 'other': QuantizedResult}
+        '''
+        x = self._from_stackwav_to_dictwav(x)
+        return {k: self.compression_models[k](v) for k, v in x.items()}
+    
+    def encode(self, x: torch.Tensor) -> torch.Tensor:
+        '''
+        input: 
+            x [B, num_stems, C, T] C=1 or 2. num_stems=3 for the bass-drums-other framework
+        output:
+            codes [B, num_streams, T']
+        '''
+        x = self._from_stackwav_to_dictwav(x)
+        # we take [0] because we dont care about scale
+        all_codes = [self.compression_models[k].encode(v)[0] for k, v in x.items()]
+        return torch.cat(all_codes, dim=1)
+    
+    def decode(self, codes: torch.Tensor) -> tp.Dict[str, torch.Tensor]:
+        '''
+        input: 
+            codes [B, num_streams, T']
+        output:
+            Dict[str, torch.Tensor]:
+            ex:    {'bass': tensor [B, C, T], 'drums': tensor [B, C, T], 'other': tensor [B, C, T],}
+        '''
+        assert codes.shape[1] == sum(list(self.num_codebooks.values()))
+        split_codes = self._from_stackcodes_to_dictcodes(codes)
+        return {k: self.compression_models[k].decode(split_codes[k], None) for k in split_codes.keys()}
+
+    def _from_stackwav_to_dictwav(self, x: torch.Tensor)-> tp.Dict[str, torch.Tensor]:
+        '''
+        input: 
+            x [B, num_stems, C, T] C=1 or 2
+        output: 
+            dic {'bass': [B, C, T], 'drums': [B, C, T] etc..}
+        '''
+        assert x.shape[1] == len(self.sources)
+        return {k: x[:, i] for (i, k) in enumerate(self.sources)}
+
+    def _from_stackcodes_to_dictcodes(self, codes: torch.Tensor)-> tp.Dict[str, torch.Tensor]:
+        split_sizes = list(self.num_codebooks.values())
+        assert sum(split_sizes) == codes.shape[1]
+        split_tensors = torch.split(codes, split_sizes, dim=1)
+        return dict(zip(self.num_codebooks.keys(), split_tensors))
+
+    @staticmethod
+    def get_pretrained(
+            name: str, device: tp.Union[torch.device, str] = 'cpu'
+            ) -> 'CompressionModel':
+        """Instantiate a MultiStemCompressionModel from a given pretrained model.
+
+        Args:
+            name (Path or str): name of the pretrained model. See after.
+            device (torch.device or str): Device on which the model is loaded.
+
+            - facebook/encodec_32_khz_bass_1_drums_1_other_4 (https://huggingface.co/facebook/encodec_32_khz_bass_1_drums_1_other_4)
+            - facebook/encodec_32_khz_bass_2_drums_1_other_4 (https://huggingface.co/facebook/encodec_32_khz_bass_2_drums_1_other_4)
+            - your own model on Hugging Face. Export instructions to come...
+        """
+
+        from . import loaders
+        model: MultiStemCompressionModel
+        assert name in ['facebook/encodec_32_khz_bass_1_drums_1_other_4', 
+                        'facebook/encodec_32_khz_bass_2_drums_1_other_4']
+        
+        sources = ['bass', 'drums', 'other']
+        all_compression_models = [
+            loaders.load_compression_model(file_or_url_or_id=name, device=device, filename='compression_state_dict_bass.bin'),
+            loaders.load_compression_model(file_or_url_or_id=name, device=device, filename='compression_state_dict_drums.bin'),
+            loaders.load_compression_model(file_or_url_or_id=name, device=device, filename='compression_state_dict_other.bin'),
+            ]
+        model = MultiStemCompressionModel(sources, all_compression_models)
+        return model

@@ -11,7 +11,7 @@ import torch
 
 from .base import BaseQuantizer, QuantizedResult
 from .core_vq import ResidualVectorQuantization
-
+from .dac_core_vq import DACResidualVectorQuantization
 
 class ResidualVectorQuantizer(BaseQuantizer):
     """Residual Vector Quantizer.
@@ -83,6 +83,82 @@ class ResidualVectorQuantizer(BaseQuantizer):
         # codes is [B, K, T], with T frames, K nb of codebooks.
         bw = torch.tensor(n_q * bw_per_q).to(x)
         return QuantizedResult(quantized, codes, bw, penalty=torch.mean(commit_loss))
+
+    def encode(self, x: torch.Tensor) -> torch.Tensor:
+        """Encode a given input tensor with the specified frame rate at the given bandwidth.
+        The RVQ encode method sets the appropriate number of quantizer to use
+        and returns indices for each quantizer.
+        """
+        n_q = self.n_q
+        codes = self.vq.encode(x, n_q=n_q)
+        codes = codes.transpose(0, 1)
+        # codes is [B, K, T], with T frames, K nb of codebooks.
+        return codes
+
+    def decode(self, codes: torch.Tensor) -> torch.Tensor:
+        """Decode the given codes to the quantized representation."""
+        # codes is [B, K, T], with T frames, K nb of codebooks, vq.decode expects [K, B, T].
+        codes = codes.transpose(0, 1)
+        quantized = self.vq.decode(codes)
+        return quantized
+
+    @property
+    def total_codebooks(self):
+        return self.max_n_q
+
+    @property
+    def num_codebooks(self):
+        return self.n_q
+
+    def set_num_codebooks(self, n: int):
+        assert n > 0 and n <= self.max_n_q
+        self.n_q = n
+
+class DACResidualVectorQuantizer(BaseQuantizer):
+    """Residual Vector Quantizer.
+    Args:
+        dimension (int): Dimension of the codebooks.
+        n_q (int): Number of residual vector quantizers used.
+        q_dropout (bool): Random quantizer drop out at train time.
+        bins (int): Codebook size.
+    """
+    def __init__(
+        self,
+        dimension: int = 256,
+        n_q: int = 8,
+        q_dropout: bool = False,
+        bins: int = 1024,
+        codebook_dim: int = 8,
+        commitment_weight: float = 1.,
+        codebook_weight: float = 1.,
+    ):
+        super().__init__()
+        self.max_n_q = n_q
+        self.n_q = n_q
+        self.q_dropout = q_dropout
+        self.dimension = dimension
+        self.bins = bins
+        self.commitment_weight = commitment_weight
+        self.codebook_weight = codebook_weight
+
+        self.vq = DACResidualVectorQuantization(
+            input_dim=self.dimension,
+            n_codebooks=self.n_q,
+            codebook_size=self.bins,
+            codebook_dim=codebook_dim,
+        )
+
+    def forward(self, x: torch.Tensor, frame_rate: int):
+        n_q = self.n_q
+        if self.training and self.q_dropout:
+            n_q = int(torch.randint(1, self.n_q + 1, (1,)).item())
+        bw_per_q = math.log2(self.bins) * frame_rate / 1000
+        quantized, codes, _, commit_loss, codebook_loss = self.vq(x, n_q=n_q)
+        codes = codes.transpose(0, 1)
+        # codes is [B, K, T], with T frames, K nb of codebooks.
+        bw = torch.tensor(n_q * bw_per_q).to(x)
+        metrics = {}
+        return QuantizedResult(quantized, codes, bw, penalty=torch.mean(self.commitment_weight * commit_loss + self.codebook_weight * codebook_loss), metrics=metrics)
 
     def encode(self, x: torch.Tensor) -> torch.Tensor:
         """Encode a given input tensor with the specified frame rate at the given bandwidth.

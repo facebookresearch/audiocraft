@@ -26,11 +26,11 @@ from ..modules.codebooks_patterns import (CoarseFirstPattern,
 from ..modules.conditioners import (BaseConditioner, ChromaStemConditioner,
                                     CLAPEmbeddingConditioner, ConditionFuser,
                                     ConditioningProvider, LUTConditioner,
-                                    T5Conditioner, StyleConditioner)
+                                    T5Conditioner, StyleConditioner, MultiStemStyleConditioner)
 from ..modules.diffusion_schedule import MultiBandProcessor, SampleProcessor
 from ..utils.utils import dict_from_config
 from .encodec import (CompressionModel, EncodecModel,
-                      InterleaveStereoCompressionModel)
+                      InterleaveStereoCompressionModel, MultiStemCompressionModel)
 from .lm import LMModel
 from .lm_magnet import MagnetLMModel
 from .unet import DiffusionUnet
@@ -40,9 +40,11 @@ from .watermark import WMModel
 def get_quantizer(
     quantizer: str, cfg: omegaconf.DictConfig, dimension: int
 ) -> qt.BaseQuantizer:
-    klass = {"no_quant": qt.DummyQuantizer, "rvq": qt.ResidualVectorQuantizer}[
-        quantizer
-    ]
+    klass = {
+        'no_quant': qt.DummyQuantizer,
+        'rvq': qt.ResidualVectorQuantizer,
+        'dac': qt.DACResidualVectorQuantizer,
+    }[quantizer]
     kwargs = dict_from_config(getattr(cfg, quantizer))
     if quantizer != "no_quant":
         kwargs["dimension"] = dimension
@@ -167,6 +169,13 @@ def get_conditioner_provider(
                 device=device,
                 **model_args
             )
+        elif model_type == 'multistem_style':
+            conditioners[str(cond)] = MultiStemStyleConditioner(
+                output_dim=output_dim,
+                device=device,
+                **model_args
+            )
+
         else:
             raise ValueError(f"Unrecognized conditioning model: {model_type}")
     conditioner = ConditioningProvider(
