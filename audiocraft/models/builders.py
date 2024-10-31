@@ -58,6 +58,9 @@ def get_encodec_autoencoder(encoder_name: str, cfg: omegaconf.DictConfig):
         decoder_override_kwargs = kwargs.pop("decoder")
         encoder_kwargs = {**kwargs, **encoder_override_kwargs}
         decoder_kwargs = {**kwargs, **decoder_override_kwargs}
+        # deprecated params
+        kwargs.pop("encoder_transformer", None)
+        kwargs.pop("decoder_transformer", None)
         encoder = audiocraft.modules.SEANetEncoder(**encoder_kwargs)
         decoder = audiocraft.modules.SEANetDecoder(**decoder_kwargs)
         return encoder, decoder
