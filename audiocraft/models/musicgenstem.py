@@ -14,9 +14,10 @@ import warnings
 
 import torch
 
-from .encodec import CompressionModel
+from .encodec import CompressionModel, MultiStemCompressionModel
 from .genmodel import BaseGenModel
 from .lm import LMModel
+from .loaders import load_compression_model, load_lm_model
 from ..data.audio_utils import convert_audio
 from ..modules.conditioners import ConditioningAttributes, WavCondition
 from demucs.apply import apply_model
@@ -44,8 +45,31 @@ class MusicGenStem(BaseGenModel):
 
 
     @staticmethod
-    def get_pretrained(name: str, device=None):
-        return None
+    def get_pretrained(name: str = 'facebook/musicgen-stem-6cb', device=None):
+        """Return pretrained model, we provide four models:
+        - facebook/musicgen-stem-6cb (1.5B), text to music with 6 codebooks
+            1 for the bass, 1 for the drums and 4 for the other
+          # see: https://huggingface.co/facebook/musicgen-stem-6cb
+        - facebook/musicgen-stem-7cb (1.5B), text to music with 7 codebooks
+            2 for the bass, 1 for the drums and 4 for the other
+          # see: https://huggingface.co/facebook/musicgen-stem-7cb
+        """
+        if device is None:
+            if torch.cuda.device_count():
+                device = 'cuda'
+            else:
+                device = 'cpu'
+
+        lm = load_lm_model(name, device=device)
+        sources = ['bass', 'drums', 'other']
+        all_compression_models = [
+            load_compression_model(file_or_url_or_id=name, device=device, filename='compression_state_dict_bass.bin'),
+            load_compression_model(file_or_url_or_id=name, device=device, filename='compression_state_dict_drums.bin'),
+            load_compression_model(file_or_url_or_id=name, device=device, filename='compression_state_dict_other.bin'),
+            ]
+        compression_model = MultiStemCompressionModel(sources, all_compression_models)
+
+        return MusicGenStem(name, compression_model, lm)
 
     def set_generation_params(self, use_sampling: bool = True, top_k: int = 250,
                               top_p: float = 0.0, temperature: float = 1.0,
