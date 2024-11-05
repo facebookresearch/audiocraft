@@ -350,6 +350,8 @@ class LMModel(StreamingModule):
                 in paragraph 4.3 (https://arxiv.org/pdf/2407.12563). This beta coefficient is meant to
                 push the text condition more than the style condition in the case where both text and style
                 conditions are being used.
+            two_step_cfg (bool): Whether to run classifier free-guidance with 2 distinct steps.
+
         Returns:
             next_token (torch.Tensor): Next token tensor of shape [B, K, 1].
         """
