@@ -235,8 +235,8 @@ def ui_full(launch_kwargs):
     with gr.Blocks() as interface:
         gr.Markdown(
             """
-            # MusicGen
-            This is your private demo for [MusicGen-Stem](https://github.com/facebookresearch/audiocraft),
+            # MusicGen-Style
+            This is your private demo for [MusicGen-Style](https://github.com/facebookresearch/audiocraft),
             a simple and controllable model for music generation
             presented at: ["Audio Conditioning for Music Generation via Discrete Bottleneck Features"](https://arxiv.org/abs/2407.12563)
             """
