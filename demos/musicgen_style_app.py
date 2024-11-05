@@ -303,9 +303,11 @@ def ui_full(launch_kwargs):
 
             The model can generate a short music extract based on 3 different input setups:
                 1) A textual description. In that case we recommend to use simple (not double!) classifier free guidance with the CFG coef = 3.
+
                 2) A audio excerpt that it use for style conditioning. The audio shouldn't be longer that 4.5 seconds. If so, 
                     a random subsequence will be subsample with the length being chosen by the user. We recommend this length to be between 1.5 and 4.5 seconds. 
                     We recommend simple CFG with the coef = 3.
+                    
                 3) Both a textual description and an audio input. In that case the user should use double CFG with alpha=3 and beta=4. Then, if the model 
                     adheres too much to the text description, the user should lower beta. If the model adheres too much to the style, the user can augment beta. 
             The model can generate up to 30 seconds of audio in one pass.
