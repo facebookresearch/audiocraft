@@ -708,8 +708,7 @@ class FeatureExtractor(WaveformConditioner):
         Then, we feed this excerpt to a feature extractor.
 
     Args:
-        model_name (str): 'encodec', 'musicfm' or 'mert'. For now 'musicfm'
-            is not supported.
+        model_name (str): 'encodec' or 'mert'.
         sample_rate (str): sample rate of the input audio. (32000)
         encodec_checkpoint (str): if encodec is used as a feature extractor, checkpoint
             of the model. ('//pretrained/facebook/encodec_32khz' is the default)
@@ -736,13 +735,10 @@ class FeatureExtractor(WaveformConditioner):
         use_middle_of_segment: bool = False, ds_rate_compression: int = 640,
         num_codebooks_lm: int = 4
     ):
-        assert model_name in ['encodec', 'musicfm', 'mert']
+        assert model_name in ['encodec', 'mert']
         if model_name == 'encodec':
             from ..solvers.compression import CompressionSolver
             feat_extractor = CompressionSolver.model_from_checkpoint(encodec_checkpoint, device)
-        # elif model_name == 'musicfm':
-        #     from ..musicfmbis.model.musicfm_25hz import MusicFM25Hz
-        #     feat_extractor = MusicFM25Hz()
         elif model_name == 'mert':
             from transformers import AutoModel
             feat_extractor = AutoModel.from_pretrained("m-a-p/MERT-v1-95M", trust_remote_code=True)
@@ -759,9 +755,6 @@ class FeatureExtractor(WaveformConditioner):
             self.__dict__["feat_extractor"] = feat_extractor.to(device)
             self.encodec_n_q = encodec_n_q
             self.embed = nn.ModuleList([nn.Embedding(feat_extractor.cardinality, dim) for _ in range(encodec_n_q)])
-        elif model_name == 'musicfm':
-            self.__dict__["feat_extractor"] = feat_extractor.eval().to(device)
-            self.embed = nn.Linear(1024, dim)  # hardcoded
         if model_name == 'mert':
             self.__dict__["feat_extractor"] = feat_extractor.eval().to(device)
             self.embed = nn.Linear(768, dim)  # hardcoded
@@ -787,9 +780,6 @@ class FeatureExtractor(WaveformConditioner):
                     self.temp_mask = self._get_mask_wav(x, start)
                 if self.model_name == 'encodec':
                     tokens = self.feat_extractor.encode(wav)[0]  # type: ignore
-                elif self.model_name == 'musicfm':
-                    wav = convert_audio(wav, from_rate=x.sample_rate[0], to_rate=24000, to_channels=1)
-                    embeds = self.feat_extractor.get_latent(wav, layer_ix=6)  # type: ignore
                 elif self.model_name == 'mert':
                     wav = convert_audio(wav, from_rate=x.sample_rate[0], to_rate=24000, to_channels=1)
                     embeds = self.feat_extractor(wav.squeeze(-2)).last_hidden_state
@@ -804,8 +794,6 @@ class FeatureExtractor(WaveformConditioner):
     def _downsampling_factor(self):
         if self.model_name == 'encodec':
             return self.sample_rate / self.feat_extractor.frame_rate
-        elif self.model_name == 'musicfm':
-            return self.sample_rate / 25
         elif self.model_name == 'mert':
             return self.sample_rate / 75
 

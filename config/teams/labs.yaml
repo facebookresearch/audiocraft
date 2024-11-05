@@ -1,29 +1,19 @@
 aws:
-  dora_dir: /fsx-codegen/${oc.env:USER}/experiments/audiocraft/outputs
+  dora_dir: /fsx-audio-craft-llm/${oc.env:USER}/experiments/audiocraft/outputs
   partitions:
     global: learnlab
     team: learnlab
-  reference_dir: /fsx-codegen/shared/audiocraft/reference
+  reference_dir: /fsx-audio-craft-llm/shared/audiocraft/reference
   dataset_mappers:
-    "^/checkpoint/jadecopet/datasets/mmi/mmi_11k_32khz": "/fsx-shutterstock-music-resampled/dataset/mmi_11k_32khz"
-    # "^/fsx-audio-craft-llm/datasets/mmi_nv/mmi_11k"
-    "^/fsx-audio-craft-llm/datasets/shutterstock_nv/p5": "/fsx-shutterstock-music-original/dataset/p5"
-    "^/fsx-audio-craft-llm/datasets/shutterstock_nv/shutterstock": "/fsx-shutterstock-music-original/dataset/shutterstock"
+    "^/checkpoint/[a-z]+": "/fsx-audio-craft-llm"
 fair:
   dora_dir: /checkpoint/${oc.env:USER}/experiments/audiocraft/outputs
   partitions:
     global: learnlab
     team: learnlab
-  reference_dir: /large_experiments/audiocraft/audiocraft_magma/reference
+  reference_dir: /large_experiments/audiocraft/reference
   dataset_mappers:
     "^/datasets01/datasets01": "/datasets01"
-    "^/datasets01/shutterstock-music-resampled/shutterstock_32khz_wav": "/large_experiments/audiocraft/datasets/datasets_32khz_mono/shutterstock"
-    "^/datasets01/shutterstock-music-resampled/p5_32khz_wav": "/large_experiments/audiocraft/datasets/datasets_32khz_mono/p5"
-    "^/checkpoint/jadecopet/datasets/mmi/mmi_11k_32khz": "/large_experiments/audiocraft/datasets/datasets_32khz_mono/mmi_11k"
-    "^/fsx-shutterstock-music-resampled/dataset/p5_32khz_wav": "/large_experiments/audiocraft/datasets/datasets_32khz_mono/p5"
-    "^/fsx-shutterstock-music-resampled/dataset/shutterstock_32khz_wav": "/large_experiments/audiocraft/datasets/datasets_32khz_mono/shutterstock"
-    "^/large_experiments/audiocraft/datasets/datasets_32khz_mono/shutterstock/db/e54/c55/f6f3/5329/14443.wav": "/datasets01/shutterstock-music-resampled/shutterstock_32khz_wav/db/e54/c55/f6f3/5329/14443.wav" 
-    # last line is to fix the missing file '/large_experiments/audiocraft/datasets/datasets_32khz_mono/shutterstock/db/e54/c55/f6f3/5329/14443.wav'
 darwin:
   dora_dir: /tmp/audiocraft_${oc.env:USER}
   partitions:

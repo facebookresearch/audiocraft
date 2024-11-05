@@ -196,37 +196,3 @@ dora run solver=musicgen/musicgen_style_32khz model/lm/model_scale=medium contin
  to change some parts, like the conditioning or some other parts of the model, you are responsible for manually crafting a checkpoint file from which we can safely run `load_state_dict`.
  If you decide to do so, make sure your checkpoint is saved with `torch.save` and contains a dict
     `{'best_state': {'model': model_state_dict_here}}`. Directly give the path to `continue_from` without a `//pretrained/` prefix.
-
-
-## FAQ
-
-#### What are top-k, top-p, temperature and classifier-free guidance?
-
-Check out [@FurkanGozukara tutorial](https://github.com/FurkanGozukara/Stable-Diffusion/blob/main/Tutorials/AI-Music-Generation-Audiocraft-Tutorial.md#more-info-about-top-k-top-p-temperature-and-classifier-free-guidance-from-chatgpt).
-
-#### Should I use FSDP or autocast ?
-
-The two are mutually exclusive (because FSDP does autocast on its own).
-You can use autocast up to 1.5B (medium), if you have enough RAM on your GPU.
-FSDP makes everything more complex but will free up some memory for the actual
-activations by sharding the optimizer state.
-
-## Citation
-```
-@misc{rouard2024audioconditioningmusicgeneration,
-      title={Audio Conditioning for Music Generation via Discrete Bottleneck Features}, 
-      author={Simon Rouard and Yossi Adi and Jade Copet and Axel Roebel and Alexandre Défossez},
-      year={2024},
-      eprint={2407.12563},
-      archivePrefix={arXiv},
-      primaryClass={cs.SD},
-      url={https://arxiv.org/abs/2407.12563}, 
-}
-```
-
-## License
-
-See license information in the [model card](../model_cards/MUSICGEN_STYLE_MODEL_CARD.md).
-
-[arxiv]: https://arxiv.org/abs/2407.12563
-[musicgen_style_samples]: https://musicgenstyle.github.io/
