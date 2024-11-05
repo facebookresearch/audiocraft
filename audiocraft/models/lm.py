@@ -9,7 +9,6 @@ from functools import partial
 import logging
 import math
 import typing as tp
-from copy import deepcopy
 
 import torch
 from torch import nn
@@ -24,7 +23,7 @@ from ..modules.conditioners import (
     ConditioningProvider,
     ConditioningAttributes,
     ConditionType,
-    _drop_text_condition
+    _drop_description_condition
 )
 from ..modules.codebooks_patterns import CodebooksPatternProvider
 from ..modules.activations import get_activation_fn
@@ -347,8 +346,8 @@ class LMModel(StreamingModule):
             top_p (float): P for "top-p" sampling.
             cfg_coef (float, optional): classifier free guidance coefficient
             cfg_coef_beta (float, optional): If None, simple classifier free guidance is used with cfg_coef.
-                If not None, we apply double classifier free guidance as introduced in MusicGen-Style 
-                in paragraph 4.3 (https://arxiv.org/pdf/2407.12563). This beta coefficient is meant to 
+                If not None, we apply double classifier free guidance as introduced in MusicGen-Style
+                in paragraph 4.3 (https://arxiv.org/pdf/2407.12563). This beta coefficient is meant to
                 push the text condition more than the style condition in the case where both text and style
                 conditions are being used.
         Returns:
@@ -362,7 +361,7 @@ class LMModel(StreamingModule):
             assert isinstance(cfg_conditions, dict)
             condition_tensors = cfg_conditions
             if condition_tensors:
-                # Preparing for CFG, predicting conditional text and style, conditional style 
+                # Preparing for CFG, predicting conditional text and style, conditional style
                 # and unconditional
                 sequence = torch.cat([sequence, sequence, sequence], dim=0)
             all_logits = model(
@@ -447,8 +446,8 @@ class LMModel(StreamingModule):
             top_p (float): P for "top-p" sampling.
             cfg_coef (float, optional): Classifier-free guidance coefficient.
             cfg_coef_beta (float, optional): If None, simple classifier free guidance is used with cfg_coef.
-                If not None, we apply double classifier free guidance as introduced in MusicGen-Style 
-                in paragraph 4.3 (https://arxiv.org/pdf/2407.12563). This beta coefficient is meant to 
+                If not None, we apply double classifier free guidance as introduced in MusicGen-Style
+                in paragraph 4.3 (https://arxiv.org/pdf/2407.12563). This beta coefficient is meant to
                 push the text condition more than the style condition in the case where both text and style
                 conditions are being used.
             two_step_cfg (bool, optional): Whether to perform classifier-free guidance with two steps generation.
@@ -488,7 +487,7 @@ class LMModel(StreamingModule):
         cfg_conditions = {}
         if cfg_coef_beta is not None:
             if conditions:
-                wav_conditions = _drop_text_condition(conditions)
+                wav_conditions = _drop_description_condition(conditions)
                 null_conditions = ClassifierFreeGuidanceDropout(p=1.0)(conditions)
                 conditions = conditions + wav_conditions + null_conditions
                 tokenized = self.condition_provider.tokenize(conditions)

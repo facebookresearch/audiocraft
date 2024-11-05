@@ -177,7 +177,8 @@ def nullify_joint_embed(embed: JointEmbedCondition) -> JointEmbedCondition:
         seek_time=[0] * embed.wav.shape[0],
     )
 
-def _drop_text_condition(conditions: tp.List[ConditioningAttributes]) -> tp.List[ConditioningAttributes]:
+
+def _drop_description_condition(conditions: tp.List[ConditioningAttributes]) -> tp.List[ConditioningAttributes]:
     """Drop the text condition but keep the wav conditon on a list of ConditioningAttributes.
     This is useful to calculate l_style in the double classifier free guidance formula.
     See paragraph 4.3 in https://arxiv.org/pdf/2407.12563
@@ -185,8 +186,13 @@ def _drop_text_condition(conditions: tp.List[ConditioningAttributes]) -> tp.List
     Args:
         conditions (tp.List[ConditioningAttributes]): List of conditions.
     """
+    # We assert that description and self_wav are in the conditions
+    for condition in conditions:
+        assert 'description' in condition.text.keys()
+        assert 'self_wav' in condition.wav.keys()
     return AttributeDropout(p={'text': {'description': 1.0},
                                'wav': {'self_wav': 0.0}})(conditions)
+
 
 class Tokenizer:
     """Base tokenizer implementation

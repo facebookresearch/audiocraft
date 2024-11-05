@@ -95,7 +95,7 @@ class MusicGen(BaseGenModel):
 
     def set_generation_params(self, use_sampling: bool = True, top_k: int = 250,
                               top_p: float = 0.0, temperature: float = 1.0,
-                              duration: float = 30.0, cfg_coef: float = 3.0, 
+                              duration: float = 30.0, cfg_coef: float = 3.0,
                               cfg_coef_beta: tp.Optional[float] = None,
                               two_step_cfg: bool = False, extend_stride: float = 18,):
         """Set the generation parameters for MusicGen.
@@ -109,7 +109,7 @@ class MusicGen(BaseGenModel):
             cfg_coef (float, optional): Coefficient used for classifier free guidance. Defaults to 3.0.
             cfg_coef_beta (float, optional): beta coefficient in double classifier free guidance.
                 Should be only used for MusicGen melody if we want to push the text condition more than
-                the melody conditioning. See paragraph 4.3 in https://arxiv.org/pdf/2407.12563 to understand
+                the audio conditioning. See paragraph 4.3 in https://arxiv.org/pdf/2407.12563 to understand
                 double CFG.
             two_step_cfg (bool, optional): If True, performs 2 forward for Classifier Free Guidance,
                 instead of batching together the two. This has some impact on how things
