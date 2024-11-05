@@ -519,8 +519,8 @@ class MultiStemCompressionModel(nn.Module):
         self.compression_models = {k: v for (k, v) in zip(sources, all_compression_models)}
         self.frame_rate = all_compression_models[0].frame_rate
         self.sample_rate = all_compression_models[0].sample_rate
-        self.total_codebooks = {k: self.compression_models[k].total_codebooks for k in self.sources}
         self.num_codebooks = {k: self.compression_models[k].num_codebooks for k in self.sources}
+        self.total_codebooks = sum(list(self.num_codebooks.values()))
         self.cardinality = {k: self.compression_models[k].cardinality for k in self.sources}
 
     def forward(self, x: torch.Tensor) -> tp.Dict[str, qt.QuantizedResult]:
@@ -546,7 +546,7 @@ class MultiStemCompressionModel(nn.Module):
         all_codes = [self.compression_models[k].encode(v)[0] for k, v in x.items()]
         return torch.cat(all_codes, dim=1)
     
-    def decode(self, codes: torch.Tensor) -> tp.Dict[str, torch.Tensor]:
+    def decode(self, codes: torch.Tensor, scale: tp.Optional[torch.Tensor] = None) -> tp.Dict[str, torch.Tensor]:
         '''
         input: 
             codes [B, num_streams, T']
@@ -554,9 +554,9 @@ class MultiStemCompressionModel(nn.Module):
             Dict[str, torch.Tensor]:
             ex:    {'bass': tensor [B, C, T], 'drums': tensor [B, C, T], 'other': tensor [B, C, T],}
         '''
-        assert codes.shape[1] == sum(list(self.num_codebooks.values()))
+        assert codes.shape[1] == self.total_codebooks
         split_codes = self._from_stackcodes_to_dictcodes(codes)
-        return {k: self.compression_models[k].decode(split_codes[k], None) for k in split_codes.keys()}
+        return {k: self.compression_models[k].decode(split_codes[k], scale) for k in split_codes.keys()}
 
     def _from_stackwav_to_dictwav(self, x: torch.Tensor)-> tp.Dict[str, torch.Tensor]:
         '''

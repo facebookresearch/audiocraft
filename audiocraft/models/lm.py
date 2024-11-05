@@ -476,6 +476,8 @@ class LMModel(StreamingModule):
                  remove_prompts: bool = False,
                  check: bool = False,
                  callback: tp.Optional[tp.Callable[[int, int], None]] = None,
+                 forced_streams_prompt: tp.Optional[torch.Tensor] = None,
+                 which_forced_streams: tp.Optional[tp.List[int]] = None,
                  postprocess_fn: tp.Optional[str] = None,
                  alphas: tp.Optional[tp.Dict[str, float]] = None,
                  which_conditions: tp.Optional[tp.List[str]] = None,
@@ -492,8 +494,13 @@ class LMModel(StreamingModule):
             temp (float): Sampling temperature.
             top_k (int): K for "top-k" sampling.
             top_p (float): P for "top-p" sampling.
-            cfg_coeff (float, optional): Classifier-free guidance coefficient.
+            cfg_coef (float, optional): Classifier-free guidance coefficient.
             two_step_cfg (bool, optional): Whether to perform classifier-free guidance with two steps generation.
+            double_cfg (bool, optional): if True, apply double classifier free guidance (see at the bottom of
+                https://musicgenstyle.github.io/)
+            cfg_coef_2 (float, optional): if double_cfg is True, cfg_coef_2 is the beta coefficient in the double
+                cfg formula
+            forced_streams_prompt (torch.Tensor, optional): 
             remove_prompts (bool): Whether to remove prompts from generation or not.
             check (bool): Whether to apply further checks on generated sequence.
             callback (Callback, optional): Callback function to report generation progress.
@@ -501,6 +508,9 @@ class LMModel(StreamingModule):
             torch.Tensor: Generated tokens.
         """
         assert not self.training, "generation shouldn't be used in training mode."
+        if forced_streams_prompt is not None:
+            assert which_forced_streams is not None, "you need to provide which forced_streams are kept for the generation"
+
         first_param = next(iter(self.parameters()))
         device = first_param.device
 
@@ -510,6 +520,8 @@ class LMModel(StreamingModule):
             possible_num_samples.append(num_samples)
         elif prompt is not None:
             possible_num_samples.append(prompt.shape[0])
+        elif forced_streams_prompt is not None:
+            possible_num_samples.append(forced_streams_prompt.shape[0])
         elif conditions:
             possible_num_samples.append(len(conditions))
         else:
@@ -583,6 +595,9 @@ class LMModel(StreamingModule):
         gen_codes = torch.full((B, K, max_gen_len), unknown_token, dtype=torch.long, device=device)
         # filling the gen_codes with the prompt if needed
         gen_codes[..., :start_offset] = prompt
+        if forced_streams_prompt is not None:
+            assert forced_streams_prompt.shape[-1] <= max_gen_len - start_offset
+            gen_codes[..., which_forced_streams, start_offset:start_offset + forced_streams_prompt.shape[-1]] = forced_streams_prompt[..., which_forced_streams, :]
         # create the gen_sequence with proper interleaving from the pattern: [B, K, S]
         gen_sequence, indexes, mask = pattern.build_pattern_sequence(gen_codes, self.special_token_id)
         # retrieve the start_offset in the sequence:

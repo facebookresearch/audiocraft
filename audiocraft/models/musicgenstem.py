@@ -13,6 +13,7 @@ import typing as tp
 import warnings
 
 import torch
+import torch.nn.functional as F
 
 from .encodec import CompressionModel, MultiStemCompressionModel
 from .genmodel import BaseGenModel
@@ -42,6 +43,24 @@ class MusicGenStem(BaseGenModel):
         super().__init__(name, compression_model, lm, max_duration)
         self.set_generation_params(duration=15)  # default duration
         self.demucs_is_inited = False
+        self._init_instruments_indices()
+
+    def _init_instruments_indices(self):
+        """
+        Creates a dictionary with the instruments as keys and the list of associated
+            codes indices as values.
+            e.g.: {'bass': [0], 'drums': [1], 'other': [2, 3, 4, 5]} for the 
+            pretrained model facebook/musicgen-stem-6cb
+        """
+        instrument_indices = {}
+        start_index = 0
+
+        for inst, num_codebooks in self.compression_model.num_codebooks.items():
+            indices = list(range(start_index, start_index + num_codebooks))
+            instrument_indices[inst] = indices
+            start_index += num_codebooks
+            
+        self.instrument_indices = instrument_indices
 
 
     @staticmethod
@@ -162,7 +181,8 @@ class MusicGenStem(BaseGenModel):
 
     def _generate_tokens(self, attributes: tp.List[ConditioningAttributes],
                          prompt_tokens: tp.Optional[torch.Tensor], progress: bool = False,
-                         stems_prompt: tp.Optional[torch.Tensor] = None, which_stems: tp.Optional[tp.List[int]] = None,
+                         forced_streams_prompt: tp.Optional[torch.Tensor] = None, 
+                         which_forced_streams: tp.Optional[tp.List[int]] = None,
                          ) -> torch.Tensor:
         """Generate discrete audio tokens given audio prompt and/or conditions.
 
@@ -200,7 +220,7 @@ class MusicGenStem(BaseGenModel):
                 gen_tokens = self.lm.generate(
                     prompt_tokens, attributes,
                     callback=callback, max_gen_len=total_gen_len, 
-                    stems_prompt=stems_prompt, which_stems=which_stems, **self.generation_params)
+                    forced_streams_prompt=forced_streams_prompt, which_forced_streams=which_forced_streams, **self.generation_params)
 
         else:
             # now this gets a bit messier, we need to handle prompts,
@@ -252,21 +272,242 @@ class MusicGenStem(BaseGenModel):
             gen_tokens = torch.cat(all_tokens, dim=-1)
         return gen_tokens
 
-    def generate_with_prompt_codes(self, descriptions: tp.List[str], prompt_codes: torch.Tensor, progress: bool = False,
-                              return_tokens: bool = False, silence_tokens: tp.List[int] = [870, 530, 621, 1215], 
-                              silence_prompt: bool = False):
-        assert prompt_codes is not None
-        attributes, _ = self._prepare_tokens_and_attributes(descriptions, None)
-        prompt_tokens = prompt_codes
+    def _init_demucs(self):
+        """Initialize and load demucs if we need to separate a mixture into stems.
+        """
+        from demucs import pretrained
+        self.__dict__['demucs'] = pretrained.get_model('htdemucs').to(self.device)
+        demucs_sources: list = self.demucs.sources  # type: ignore
+        sources = self.compression_model.sources
+        self.stem_indices = torch.LongTensor([demucs_sources.index(source) for source in sources]).to(self.device)
+        self.demucs_is_inited = True
+
+    def _prepare_mixture_for_compression_model(self, mixture: torch.Tensor, sample_rate: int):
+        """Separate a mixture and convert it to the compression model's sample rate.
+        Args:
+            mixture (torch.Tensor): A batch of mixture waveforms to separate.
+                mixture should be [B, C, T].
+            sample_rate (int): Sampling rate of the given mixture waveforms.
+        Returns:
+            stems (torch.Tensor): [B, num_stems, 1, T] the separated stems converted to 
+                the compression model's sample rate.
+        """
+        if not self.demucs_is_inited:
+            self._init_demucs()
+            print("demucs is inited")
+        mixture = mixture.to(self.device)
+        mixture = convert_audio(
+            mixture, sample_rate, self.demucs.samplerate, self.demucs.audio_channels)  # type: ignore
+        stems = apply_model(self.demucs, mixture, device=self.device)
+        stems = stems[:, self.stem_indices]
+        stems = convert_audio(stems, self.demucs.samplerate, self.sample_rate, 1)  # type: ignore
+        return stems
+
+
+    # def generate_with_prompt_codes(self, descriptions: tp.List[str], prompt_codes: torch.Tensor, progress: bool = False,
+    #                           return_tokens: bool = False, silence_tokens: tp.List[int] = [870, 530, 621, 1215], 
+    #                           silence_prompt: bool = False):
+    #     assert prompt_codes is not None
+    #     attributes, _ = self._prepare_tokens_and_attributes(descriptions, None)
+    #     prompt_tokens = prompt_codes
+    #     tokens = self._generate_tokens(attributes, prompt_tokens, progress)
+    #     if silence_prompt:
+    #         for i in range(tokens.shape[1]):  # Loop over columns (second dimension)
+    #             for b in range(tokens.shape[0]):
+    #                 mask = (tokens[b, i, :] == 2048)  # Create a mask for elements equal to target_value
+    #                 tokens[b, i, mask] = silence_tokens[i]  # Replace these elements
+    #     if return_tokens:
+    #         return self.generate_audio(tokens), tokens
+    #     return self.generate_audio(tokens)
+
+    def generate_continuation_from_mixture(self, mixture: torch.Tensor, mixture_sample_rate: int,
+                                           descriptions: tp.Optional[tp.List[tp.Optional[str]]] = None,
+                                           progress: bool = False, return_tokens: bool = False) \
+            -> tp.Union[torch.Tensor, tp.Tuple[torch.Tensor, torch.Tensor]]:
+        """Generate samples conditioned on audio prompts and an optional text description.
+
+        Args:
+            mixture (torch.Tensor): A batch of waveforms used for continuation.
+                mixture should be [B, C, T], or [C, T] if only one sample is generated.
+            mixture_sample_rate (int): Sampling rate of the given audio waveforms.
+            descriptions (list of str, optional): A list of strings used as text conditioning. Defaults to None.
+            progress (bool, optional): Flag to display progress of the generation process. Defaults to False.
+        """
+        if mixture.dim() == 2:
+            mixture = mixture[None]
+        if mixture.dim() != 3:
+            raise ValueError("mixture should have 3 dimensions: [B, C, T].")
+        prompt = self._prepare_mixture_for_compression_model(mixture, mixture_sample_rate)
+        if descriptions is None:
+            descriptions = [None] * len(prompt)
+        attributes, prompt_tokens = self._prepare_tokens_and_attributes(descriptions, prompt)
+        assert prompt_tokens is not None
         tokens = self._generate_tokens(attributes, prompt_tokens, progress)
-        if silence_prompt:
-            for i in range(tokens.shape[1]):  # Loop over columns (second dimension)
-                for b in range(tokens.shape[0]):
-                    mask = (tokens[b, i, :] == 2048)  # Create a mask for elements equal to target_value
-                    tokens[b, i, mask] = silence_tokens[i]  # Replace these elements
         if return_tokens:
             return self.generate_audio(tokens), tokens
         return self.generate_audio(tokens)
+
+    def generate_continuation_from_codes(self, codes: torch.Tensor, 
+                                         descriptions: tp.Optional[tp.List[tp.Optional[str]]] = None,
+                                         progress: bool = False, return_tokens: bool = False) \
+            -> tp.Union[torch.Tensor, tp.Tuple[torch.Tensor, torch.Tensor]]:
+        """Generate samples conditioned on audio prompts and an optional text description.
+
+        Args:
+            codes (torch.Tensor): A batch of tokens of encoded audio.
+            descriptions (list of str, optional): A list of strings used as text conditioning. Defaults to None.
+            progress (bool, optional): Flag to display progress of the generation process. Defaults to False.
+        """
+        assert codes is not None
+        if descriptions is None:
+            descriptions = [None] * len(codes)
+        attributes, _ = self._prepare_tokens_and_attributes(descriptions, prompt=None)
+        tokens = self._generate_tokens(attributes, codes, progress)
+        if return_tokens:
+            return self.generate_audio(tokens), tokens
+        return self.generate_audio(tokens)
+
+    def regenerate_instruments_from_mixture(self, mixture: torch.Tensor, mixture_sample_rate: int,
+                                            which_instruments_regenerate: tp.List[str],
+                                            descriptions: tp.List[tp.Optional[str]],
+                                            progress: bool = False, return_tokens: bool = False,
+                                            return_non_compressed_stems: bool = False,) \
+            -> tp.Union[torch.Tensor, tp.Tuple[torch.Tensor, torch.Tensor]]:
+        """Given a mixture, a list of instruments that is a subset of ['bass', 'drums', 'other'] and descriptions,
+            regenerates the desired instruments by keeping the complementary ones identical.
+
+        Args:
+            mixture (torch.Tensor): A batch of waveforms used for regeneration.
+                mixture should be [1, C, T], or [C, T].
+            mixture_sample_rate (int): Sampling rate of the given audio waveforms.
+
+            descriptions (list of str, optional): A list of strings used as text conditioning. Defaults to None.
+            progress (bool, optional): Flag to display progress of the generation process. Defaults to False.
+            return_non_compressed_stems (bool, optional): if True, instead of returning the compressed version of
+                the stems that are not regenerated, we output the non compressed ones. 
+        """
+        if mixture.dim() == 2:
+            mixture = mixture[None]
+        if mixture.dim() != 3:
+            raise ValueError("mixture should have 3 dimensions: [1, C, T].")
+        assert mixture.shape[0] == 1, "For now, we only perform regeneration on a single song" # TODO
+        stems = self._prepare_mixture_for_compression_model(mixture, mixture_sample_rate)
+
+        target_length = self.sample_rate * 25
+        if stems.shape[-1] < target_length:
+            stems = F.pad(stems, (0, target_length - stems.shape[-1]))
+        elif stems.shape[-1] > target_length:
+            print("The model can only regenerate on sequences of maximum 25 seconds, we cropped to 25 seconds")
+            stems = stems[..., :target_length]
+        codes = self.compression_model.encode(stems)
+        codes = codes.expand(len(descriptions), -1, -1)
+
+        prefix_codes = codes[..., ::5]
+        B, K, _ = prefix_codes.shape
+        transition_token = self.lm.special_token_id * torch.ones((B, K, 1), device=prefix_codes.device, 
+                                             dtype=prefix_codes.dtype)
+        prefix_codes = torch.cat([prefix_codes, transition_token], dim=-1)
+
+        assert prefix_codes.shape[-1] == 251 # sanity check
+
+        which_indices_regenerate = [index for name in which_instruments_regenerate for index in self.instrument_indices.get(name, [])]
+
+        which_indices_kept = list(set(range(self.compression_model.total_codebooks)) - set(which_indices_regenerate))
+
+        prefix_codes[:, which_indices_regenerate, :] = self.lm.special_token_id
+
+        attributes, _ = self._prepare_tokens_and_attributes(descriptions, None)
+
+        len_max_codes = int(self.duration * self.compression_model.frame_rate - 251)
+
+        tokens = self._generate_tokens(attributes=attributes, prompt_tokens=prefix_codes, 
+                                       progress=progress, forced_streams_prompt=codes[..., :len_max_codes], 
+                                       which_forced_streams=which_indices_kept)
+        
+        tokens = tokens[..., 251:]
+
+        audio = self.generate_audio(tokens)
+        if return_non_compressed_stems:
+            B, _, T = audio[which_instruments_regenerate[0]].shape
+            for inst in (set(self.compression_model.sources) - set(which_instruments_regenerate)):
+                audio[inst] = stems[:, self.compression_model.sources.index(inst), :, :T].expand(B, -1, -1)
+
+        if return_tokens:
+            return audio, tokens
+        return audio
+
+    def regenerate_instruments_from_stems(self, stems: tp.Dict[str, torch.Tensor], stems_sample_rate: int,
+                                            which_instruments_regenerate: tp.List[str],
+                                            descriptions: tp.List[tp.Optional[str]],
+                                            progress: bool = False, return_tokens: bool = False,
+                                            return_non_compressed_stems: bool = False,) \
+            -> tp.Union[torch.Tensor, tp.Tuple[torch.Tensor, torch.Tensor]]:
+        """Given a mixture, a list of instruments that is a subset of ['bass', 'drums', 'other'] and descriptions,
+            regenerates the desired instruments by keeping the complementary ones identical.
+
+        Args:
+            stems (Dict[str, torch.Tensor]): A dictionary of waveforms on top of which we want to regenerate.
+                for instance stems = {'bass': bass_waveform, 'other': other_waveform}
+                the waveforms should be [1, C, T], or [C, T].
+            stems_sample_rate (int): Sampling rate of the given audio waveforms.
+
+            descriptions (list of str, optional): A list of strings used as text conditioning. Defaults to None.
+            progress (bool, optional): Flag to display progress of the generation process. Defaults to False.
+            return_non_compressed_stems (bool, optional): if True, instead of returning the compressed version of
+                the stems that are not regenerated, we output the non compressed ones. 
+        """
+        for instr, wav in stems.items():
+            if wav.dim() == 2:
+                wav = wav[None]
+            if wav.dim() != 3:
+                raise ValueError("mixture should have 3 dimensions: [1, C, T].")
+            resampled_wav = convert_audio(wav, stems_sample_rate, self.sample_rate, 1)
+            stems[instr] = resampled_wav
+        all_stems = [stems[instr] if instr in stems.keys() else torch.zeros_like(resampled_wav) for instr in self.compression_model.sources]
+        stems = torch.cat(all_stems, dim=0)[None].to(self.device) # [1, num_stems, 1, T]
+        print(stems.shape)
+        target_length = self.sample_rate * 25
+        if stems.shape[-1] < target_length:
+            stems = F.pad(stems, (0, target_length - stems.shape[-1]))
+        elif stems.shape[-1] > target_length:
+            print("The model can only regenerate on sequences of maximum 25 seconds, we cropped to 25 seconds")
+            stems = stems[..., :target_length]
+        codes = self.compression_model.encode(stems)
+        codes = codes.expand(len(descriptions), -1, -1)
+
+        prefix_codes = codes[..., ::5]
+        B, K, _ = prefix_codes.shape
+        transition_token = self.lm.special_token_id * torch.ones((B, K, 1), device=prefix_codes.device, 
+                                             dtype=prefix_codes.dtype)
+        prefix_codes = torch.cat([prefix_codes, transition_token], dim=-1)
+
+        assert prefix_codes.shape[-1] == 251 # sanity check
+
+        which_indices_regenerate = [index for name in which_instruments_regenerate for index in self.instrument_indices.get(name, [])]
+
+        which_indices_kept = list(set(range(self.compression_model.total_codebooks)) - set(which_indices_regenerate))
+
+        prefix_codes[:, which_indices_regenerate, :] = self.lm.special_token_id
+
+        attributes, _ = self._prepare_tokens_and_attributes(descriptions, None)
+
+        len_max_codes = int(self.duration * self.compression_model.frame_rate - 251)
+
+        tokens = self._generate_tokens(attributes=attributes, prompt_tokens=prefix_codes, 
+                                       progress=progress, forced_streams_prompt=codes[..., :len_max_codes], 
+                                       which_forced_streams=which_indices_kept)
+        
+        tokens = tokens[..., 251:]
+
+        audio = self.generate_audio(tokens)
+        if return_non_compressed_stems:
+            B, _, T = audio[which_instruments_regenerate[0]].shape
+            for inst in (set(self.compression_model.sources) - set(which_instruments_regenerate)):
+                audio[inst] = stems[:, self.compression_model.sources.index(inst), :, :T].expand(B, -1, -1)
+
+        if return_tokens:
+            return audio, tokens
+        return audio
 
 
     def regenerate_from_codes(self, codes: torch.Tensor, which_codes: tp.List[int], descriptions: tp.List[str], 
@@ -290,14 +531,15 @@ class MusicGenStem(BaseGenModel):
         """
         assert (prompt is None) or (prompt_codes is None)
         if prompt is not None:
-            prompt = self._prepare_wav_for_compression_model(prompt, prompt_sample_rate)
+            prompt = self._prepare_mixture_for_compression_model(prompt, prompt_sample_rate)
             prompt = prompt.expand(len(descriptions), -1, -1, -1)
 
         attributes, prompt_tokens = self._prepare_tokens_and_attributes(descriptions, prompt)
         if prompt_codes is not None:
             prompt_tokens = prompt_codes
             prompt_tokens = prompt_tokens.expand(len(descriptions), -1, -1)
-        tokens = self._generate_tokens(attributes, prompt_tokens, progress, stems_prompt=codes.expand(len(descriptions), -1, -1), which_stems=which_codes)
+        tokens = self._generate_tokens(attributes, prompt_tokens, progress, 
+                                    forced_streams_prompt=codes.expand(len(descriptions), -1, -1), which_forced_streams=which_codes)
         if silence_prompt:
             for i in range(tokens.shape[1]):  # Loop over columns (second dimension)
                 for b in range(tokens.shape[0]):
@@ -307,39 +549,18 @@ class MusicGenStem(BaseGenModel):
             return self.generate_audio(tokens), tokens
         return self.generate_audio(tokens)
 
-    def _init_demucs(self):
-        from demucs import pretrained
-        self.__dict__['demucs'] = pretrained.get_model('htdemucs').to(self.device)
-        demucs_sources: list = self.demucs.sources  # type: ignore
-        sources = self.compression_model.sources
-        self.stem_indices = torch.LongTensor([demucs_sources.index(source) for source in sources]).to(self.device)
-        self.demucs_is_inited = True
-
-
     def regenerate_from_wav(self, wav: torch.Tensor, sample_rate: int, 
                             which_codes: tp.List[int], descriptions: tp.List[str], 
                             prompt: torch.Tensor = None, prompt_sample_rate: int = None, prompt_codes: torch.Tensor = None,
                             progress: bool = False, return_tokens: bool = False, silence_tokens: tp.List[int] = [870, 530, 621, 1215], 
                               silence_prompt: bool = False) \
             -> tp.Union[torch.Tensor, tp.Tuple[torch.Tensor, torch.Tensor]]:
-        stems = self._prepare_wav_for_compression_model(wav, sample_rate)
+        stems = self._prepare_mixture_for_compression_model(wav, sample_rate)
         codes = self.compression_model.encode(stems)
         return self.regenerate_from_codes(codes=codes, which_codes=which_codes, descriptions=descriptions, prompt=prompt,
                                           prompt_sample_rate=prompt_sample_rate, prompt_codes=prompt_codes, 
                                           progress=progress, return_tokens=return_tokens, silence_tokens=silence_tokens, silence_prompt=silence_prompt)
         
-    def _prepare_wav_for_compression_model(self, wav, sample_rate):
-        if not self.demucs_is_inited:
-            self._init_demucs()
-            print("demucs is inited")
-        wav = wav.to(self.device)
-        wav = convert_audio(
-            wav, sample_rate, self.demucs.samplerate, self.demucs.audio_channels)  # type: ignore
-        stems = apply_model(self.demucs, wav, device=self.device)
-        stems = stems[:, self.stem_indices]
-        stems = convert_audio(stems, self.demucs.samplerate, self.sample_rate, 1)  # type: ignore
-        return stems
-
     def generate_with_style(self, descriptions: tp.List[str], bdo_wavs: MelodyType,
                              progress: bool = False,
                              return_tokens: bool = False) -> tp.Union[torch.Tensor,
