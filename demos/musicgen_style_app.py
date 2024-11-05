@@ -270,7 +270,7 @@ def ui_full(launch_kwargs):
                     temperature = gr.Number(label="Temperature", value=1.0, interactive=True)
                     cfg_coef = gr.Number(label="CFG alpha", value=3.0, interactive=True)
                     double_cfg = gr.Radio(["Yes", "No"], 
-                                          label="Use Double Classifier Free Guidance (if No, CFG beta is useless)", value="Yes", interactive=True)
+                                          label="Use Double Classifier Free Guidance (if No, CFG beta is useless). Only use it if you have input text and a melody file.", value="Yes", interactive=True)
                     cfg_coef_beta = gr.Number(label="CFG beta (double CFG)", value=5.0, interactive=True)
                     excerpt_length = gr.Number(label="length used of the conditioning (has to be <= 4.5 seconds)", value=3.0, interactive=True)
             with gr.Column():
@@ -307,7 +307,7 @@ def ui_full(launch_kwargs):
                 2) A audio excerpt that it use for style conditioning. The audio shouldn't be longer that 4.5 seconds. If so, 
                     a random subsequence will be subsample with the length being chosen by the user. We recommend this length to be between 1.5 and 4.5 seconds. 
                     We recommend simple CFG with the coef = 3.
-                    
+
                 3) Both a textual description and an audio input. In that case the user should use double CFG with alpha=3 and beta=4. Then, if the model 
                     adheres too much to the text description, the user should lower beta. If the model adheres too much to the style, the user can augment beta. 
             The model can generate up to 30 seconds of audio in one pass.
