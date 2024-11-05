@@ -52,8 +52,7 @@ model.set_generation_params(
     use_sampling=True, 
     top_k=250,
     cfg_coef=3., # Classifier Free Guidance coefficient 
-    double_cfg=False, # double CFG is only useful for text-and-style conditioning
-    cfg_coef_2=None,
+    cfg_coef_beta=None, # double CFG is only useful for text-and-style conditioning
 )  
 
 descriptions = ['disco beat', 'energetic EDM', 'funky groove']
@@ -78,8 +77,7 @@ model.set_generation_params(
     use_sampling=True, 
     top_k=250,
     cfg_coef=3., # Classifier Free Guidance coefficient 
-    double_cfg=False, # double CFG is only useful for text-and-style conditioning
-    cfg_coef_2=None,
+    cfg_coef_beta=None, # double CFG is only useful for text-and-style conditioning
 )
 
 model.set_style_conditioner_params(
@@ -115,8 +113,8 @@ model.set_generation_params(
     use_sampling=True, 
     top_k=250,
     cfg_coef=3., # Classifier Free Guidance coefficient 
-    double_cfg=True, # double CFG is necessary for text-and-style conditioning
-    cfg_coef_2=5., # Beta in the double CFG formula. between 1 and 9. When set to 1 it is equivalent to normal CFG. 
+    cfg_coef_beta=5., # double CFG is necessary for text-and-style conditioning
+                   # Beta in the double CFG formula. between 1 and 9. When set to 1 it is equivalent to normal CFG. 
                    # When we increase this parameter, the text condition is pushed. See the bottom of https://musicgenstyle.github.io/ 
                    # to better understand the effects of the double CFG coefficients. 
 )

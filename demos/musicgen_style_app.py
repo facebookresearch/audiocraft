@@ -104,8 +104,8 @@ def load_diffusion():
         MBD = MultiBandDiffusion.get_mbd_musicgen()
 
 
-def _do_predictions(texts, melodies, duration, top_k, top_p, temperature, cfg_coef, double_cfg, cfg_coef_2, eval_q, excerpt_length, progress=False, gradio_progress=None):
-    MODEL.set_generation_params(duration=duration, top_k=top_k, top_p=top_p, temperature=temperature, cfg_coef=cfg_coef, double_cfg=double_cfg, cfg_coef_2=cfg_coef_2)
+def _do_predictions(texts, melodies, duration, top_k, top_p, temperature, cfg_coef, double_cfg, cfg_coef_beta, eval_q, excerpt_length, progress=False, gradio_progress=None):
+    MODEL.set_generation_params(duration=duration, top_k=top_k, top_p=top_p, temperature=temperature, cfg_coef=cfg_coef, cfg_coef_beta=cfg_coef_beta)
     MODEL.set_style_conditioner_params(eval_q=eval_q, excerpt_length=excerpt_length)
     print("new batch", len(texts), texts, [None if m is None else (m[0], m[1].shape) for m in melodies])
     be = time.time()
@@ -161,7 +161,7 @@ def _do_predictions(texts, melodies, duration, top_k, top_p, temperature, cfg_co
     return out_videos, out_wavs
 
 
-def predict_full(model, model_path, decoder, text, melody, duration, topk, topp, temperature, cfg_coef, double_cfg, cfg_coef_2, eval_q, excerpt_length, progress=gr.Progress()):
+def predict_full(model, model_path, decoder, text, melody, duration, topk, topp, temperature, cfg_coef, double_cfg, cfg_coef_beta, eval_q, excerpt_length, progress=gr.Progress()):
     global INTERRUPTING
     global USE_DIFFUSION
     INTERRUPTING = False
@@ -195,11 +195,8 @@ def predict_full(model, model_path, decoder, text, melody, duration, topk, topp,
         USE_DIFFUSION = False
     load_model(model)
 
-    if double_cfg == "Yes":
-        double_cfg = True
-    else:
-        double_cfg = False
-        cfg_coef_2 = None
+    if double_cfg != "Yes":
+        cfg_coef_beta = None
     max_generated = 0
 
     def _progress(generated, to_generate):
@@ -213,7 +210,7 @@ def predict_full(model, model_path, decoder, text, melody, duration, topk, topp,
     videos, wavs = _do_predictions(
         [text], [melody], duration, progress=True,
         top_k=topk, top_p=topp, temperature=temperature, cfg_coef=cfg_coef,
-        double_cfg=double_cfg, cfg_coef_2=cfg_coef_2, eval_q=eval_q, excerpt_length=excerpt_length,
+        cfg_coef_beta=cfg_coef_beta, eval_q=eval_q, excerpt_length=excerpt_length,
         gradio_progress=progress)
     if USE_DIFFUSION:
         return videos[0], wavs[0], videos[1], wavs[1]
@@ -274,7 +271,7 @@ def ui_full(launch_kwargs):
                     cfg_coef = gr.Number(label="CFG alpha", value=3.0, interactive=True)
                     double_cfg = gr.Radio(["Yes", "No"], 
                                           label="Use Double Classifier Free Guidance (if No, CFG beta is useless)", value="Yes", interactive=True)
-                    cfg_coef_2 = gr.Number(label="CFG beta (double CFG)", value=5.0, interactive=True)
+                    cfg_coef_beta = gr.Number(label="CFG beta (double CFG)", value=5.0, interactive=True)
                     excerpt_length = gr.Number(label="length used of the conditioning (has to be <= 4.5 seconds)", value=3.0, interactive=True)
             with gr.Column():
                 output = gr.Video(label="Generated Music")
@@ -283,7 +280,7 @@ def ui_full(launch_kwargs):
                 audio_diffusion = gr.Audio(label="MultiBand Diffusion Decoder (wav)", type='filepath')
         submit.click(toggle_diffusion, decoder, [diffusion_output, audio_diffusion], queue=False,
                      show_progress=False).then(predict_full, inputs=[model, model_path, decoder, text, melody, duration, topk, topp,
-                                                                     temperature, cfg_coef, double_cfg, cfg_coef_2, eval_q, excerpt_length],
+                                                                     temperature, cfg_coef, double_cfg, cfg_coef_beta, eval_q, excerpt_length],
                                                outputs=[output, audio_output, diffusion_output, audio_diffusion])
         radio.change(toggle_audio_src, radio, [melody], queue=False, show_progress=False)
 

@@ -36,8 +36,7 @@ generate:
     top_k: 250
     top_p: 0.0
     cfg_coef: 3.0
-    cfg_coef_2:
-    double_cfg: false
+    cfg_coef_beta:
 
 optim:
   epochs: 500

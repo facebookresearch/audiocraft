@@ -95,12 +95,9 @@ class MusicGen(BaseGenModel):
 
     def set_generation_params(self, use_sampling: bool = True, top_k: int = 250,
                               top_p: float = 0.0, temperature: float = 1.0,
-                              duration: float = 30.0, double_cfg: bool = False,
-                              cfg_coef: float = 3.0, cfg_coef_2: tp.Optional[float] = None,
-                              two_step_cfg: bool = False, extend_stride: float = 18,
-                              postprocess_fn: tp.Optional[str] = None,
-                              alphas: tp.Optional[tp.Dict[str, float]] = None,
-                              which_conditions: tp.Optional[tp.List[str]] = None):
+                              duration: float = 30.0, cfg_coef: float = 3.0, 
+                              cfg_coef_beta: tp.Optional[float] = None,
+                              two_step_cfg: bool = False, extend_stride: float = 18,):
         """Set the generation parameters for MusicGen.
 
         Args:
@@ -110,6 +107,10 @@ class MusicGen(BaseGenModel):
             temperature (float, optional): Softmax temperature parameter. Defaults to 1.0.
             duration (float, optional): Duration of the generated waveform. Defaults to 30.0.
             cfg_coef (float, optional): Coefficient used for classifier free guidance. Defaults to 3.0.
+            cfg_coef_beta (float, optional): beta coefficient in double classifier free guidance.
+                Should be only used for MusicGen melody if we want to push the text condition more than
+                the melody conditioning. See paragraph 4.3 in https://arxiv.org/pdf/2407.12563 to understand
+                double CFG.
             two_step_cfg (bool, optional): If True, performs 2 forward for Classifier Free Guidance,
                 instead of batching together the two. This has some impact on how things
                 are padded but seems to have little impact in practice.
@@ -127,11 +128,7 @@ class MusicGen(BaseGenModel):
             'top_p': top_p,
             'cfg_coef': cfg_coef,
             'two_step_cfg': two_step_cfg,
-            'double_cfg': double_cfg,
-            'cfg_coef_2': cfg_coef_2,
-            'postprocess_fn': postprocess_fn,
-            'alphas': alphas,
-            'which_conditions': which_conditions
+            'cfg_coef_beta': cfg_coef_beta,
         }
 
     def set_style_conditioner_params(self, eval_q: int = 3, excerpt_length: float = 3.0,
