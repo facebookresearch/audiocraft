@@ -23,7 +23,7 @@ from ..data.audio_dataset import AudioDataset
 from ..data.music_dataset import MusicDataset, MusicInfo, AudioInfo
 from ..data.audio_utils import normalize_audio
 from ..modules.conditioners import JointEmbedCondition, SegmentWithAttributes, WavCondition, \
-            StyleConditioner, AttributeDropout
+            StyleConditioner, AttributeDropout, _drop_description_condition
 from ..utils.cache import CachedBatchWriter, CachedBatchLoader
 from ..utils.samples.manager import SampleManager
 from ..utils.utils import get_dataset_from_loader, is_jsonable, warn_once, model_hash
@@ -456,9 +456,7 @@ class MusicGenSolver(base.StandardSolver):
         # prepare attributes
         attributes = [x.to_condition_attributes() for x in meta]
         if remove_text_conditioning:
-            attributes = AttributeDropout(p={'text': {'description': 1.0},
-                                             'wav': {'self_wav': 0.0}})(attributes)
-        # TODO: Add dropout for chroma?
+            attributes = _drop_description_condition(attributes)
 
         # prepare audio prompt
         if prompt_duration is None:
