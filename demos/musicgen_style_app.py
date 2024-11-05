@@ -104,7 +104,7 @@ def load_diffusion():
         MBD = MultiBandDiffusion.get_mbd_musicgen()
 
 
-def _do_predictions(texts, melodies, duration, top_k, top_p, temperature, cfg_coef, double_cfg, cfg_coef_beta, eval_q, excerpt_length, progress=False, gradio_progress=None):
+def _do_predictions(texts, melodies, duration, top_k, top_p, temperature, cfg_coef, cfg_coef_beta, eval_q, excerpt_length, progress=False, gradio_progress=None):
     MODEL.set_generation_params(duration=duration, top_k=top_k, top_p=top_p, temperature=temperature, cfg_coef=cfg_coef, cfg_coef_beta=cfg_coef_beta)
     MODEL.set_style_conditioner_params(eval_q=eval_q, excerpt_length=excerpt_length)
     print("new batch", len(texts), texts, [None if m is None else (m[0], m[1].shape) for m in melodies])
