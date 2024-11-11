@@ -125,6 +125,7 @@ class MagnetLMModel(LMModel):
                  top_k: int = 250,
                  top_p: float = 0.0,
                  cfg_coef: tp.Optional[float] = None,
+                 cfg_coef_beta: tp.Optional[float] = None,
                  two_step_cfg: tp.Optional[bool] = None,
                  remove_prompts: bool = False,
                  check: bool = False,
@@ -135,6 +136,7 @@ class MagnetLMModel(LMModel):
         assert two_step_cfg is None, "MAGNeT currently doesn't support two step classifier-free-guidance."
         assert remove_prompts is False, "MAGNeT currently doesn't support the remove_prompts arg."
         assert check is False, "MAGNeT currently doesn't support the check arg."
+        assert cfg_coef_beta is None, "MAGNeT currently doesn't support the cfg_coef_beta arg."
         # Call the MAGNeT-specific generation method
         return self._generate_magnet(prompt=prompt,
                                      conditions=conditions,

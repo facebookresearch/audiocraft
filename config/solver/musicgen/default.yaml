@@ -88,6 +88,7 @@ generate:
   lm:
     prompted_samples: true
     unprompted_samples: true
+    no_text_conditioning: false
     gen_gt_samples: false
     prompt_duration: null   # if not set, will use dataset.generate.segment_duration / 4
     gen_duration: null      # if not set, will use dataset.generate.segment_duration
@@ -97,6 +98,7 @@ generate:
     temp: 1.0
     top_k: 0
     top_p: 0.0
+
 evaluate:
   every: 25
   num_workers: 5

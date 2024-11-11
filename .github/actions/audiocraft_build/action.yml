@@ -22,7 +22,7 @@ runs:
       .  env/bin/activate
       python -m pip install --upgrade pip
       pip install 'numpy<2' torch==2.1.0 torchvision==0.16.0 torchaudio==2.1.0
-      pip install xformers
+      pip install xformers==0.0.22.post7
       pip install -e '.[dev,wm]'
   - name: System Dependencies
     shell: bash

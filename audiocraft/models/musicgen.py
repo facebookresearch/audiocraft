@@ -20,7 +20,7 @@ from .lm import LMModel
 from .builders import get_debug_compression_model, get_debug_lm_model
 from .loaders import load_compression_model, load_lm_model
 from ..data.audio_utils import convert_audio
-from ..modules.conditioners import ConditioningAttributes, WavCondition
+from ..modules.conditioners import ConditioningAttributes, WavCondition, StyleConditioner
 
 
 MelodyList = tp.List[tp.Optional[torch.Tensor]]
@@ -33,6 +33,7 @@ _HF_MODEL_CHECKPOINTS_MAP = {
     "medium": "facebook/musicgen-medium",
     "large": "facebook/musicgen-large",
     "melody": "facebook/musicgen-melody",
+    "style": "facebook/musicgen-style",
 }
 
 
@@ -63,6 +64,8 @@ class MusicGen(BaseGenModel):
           # see: https://huggingface.co/facebook/musicgen-melody
         - facebook/musicgen-large (3.3B), text to music,
           # see: https://huggingface.co/facebook/musicgen-large
+        - facebook/musicgen-style (1.5 B), text and style to music,
+          # see: https://huggingface.co/facebook/musicgen-style
         """
         if device is None:
             if torch.cuda.device_count():
@@ -93,7 +96,8 @@ class MusicGen(BaseGenModel):
     def set_generation_params(self, use_sampling: bool = True, top_k: int = 250,
                               top_p: float = 0.0, temperature: float = 1.0,
                               duration: float = 30.0, cfg_coef: float = 3.0,
-                              two_step_cfg: bool = False, extend_stride: float = 18):
+                              cfg_coef_beta: tp.Optional[float] = None,
+                              two_step_cfg: bool = False, extend_stride: float = 18,):
         """Set the generation parameters for MusicGen.
 
         Args:
@@ -103,6 +107,10 @@ class MusicGen(BaseGenModel):
             temperature (float, optional): Softmax temperature parameter. Defaults to 1.0.
             duration (float, optional): Duration of the generated waveform. Defaults to 30.0.
             cfg_coef (float, optional): Coefficient used for classifier free guidance. Defaults to 3.0.
+            cfg_coef_beta (float, optional): beta coefficient in double classifier free guidance.
+                Should be only used for MusicGen melody if we want to push the text condition more than
+                the audio conditioning. See paragraph 4.3 in https://arxiv.org/pdf/2407.12563 to understand
+                double CFG.
             two_step_cfg (bool, optional): If True, performs 2 forward for Classifier Free Guidance,
                 instead of batching together the two. This has some impact on how things
                 are padded but seems to have little impact in practice.
@@ -120,7 +128,29 @@ class MusicGen(BaseGenModel):
             'top_p': top_p,
             'cfg_coef': cfg_coef,
             'two_step_cfg': two_step_cfg,
+            'cfg_coef_beta': cfg_coef_beta,
         }
+
+    def set_style_conditioner_params(self, eval_q: int = 3, excerpt_length: float = 3.0,
+                                     ds_factor: tp.Optional[int] = None,
+                                     encodec_n_q: tp.Optional[int] = None) -> None:
+        """Set the parameters of the style conditioner
+        Args:
+            eval_q (int): the number of residual quantization streams used to quantize the style condition
+                the smaller it is, the narrower is the information bottleneck
+            excerpt_length (float): the excerpt length in seconds that is extracted from the audio
+                conditioning
+            ds_factor: (int): the downsampling factor used to downsample the style tokens before
+                using them as a prefix
+            encodec_n_q: (int, optional): if encodec is used as a feature extractor, sets the number
+                of streams that is used to extract features
+        """
+        assert isinstance(self.lm.condition_provider.conditioners.self_wav, StyleConditioner), \
+            "Only use this function if you model is MusicGen-Style"
+        self.lm.condition_provider.conditioners.self_wav.set_params(eval_q=eval_q,
+                                                                    excerpt_length=excerpt_length,
+                                                                    ds_factor=ds_factor,
+                                                                    encodec_n_q=encodec_n_q)
 
     def generate_with_chroma(self, descriptions: tp.List[str], melody_wavs: MelodyType,
                              melody_sample_rate: int, progress: bool = False,

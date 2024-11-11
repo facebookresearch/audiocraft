@@ -1,0 +1,59 @@
+# @package __global__
+
+classifier_free_guidance:
+  training_dropout: 0.1
+  inference_coef: 3.0
+
+attribute_dropout:
+  args:
+    active_on_eval: false
+  text: 
+    description: 0.4
+  wav:
+    self_wav: 0.4
+
+fuser:
+  cross_attention_pos_emb: false
+  cross_attention_pos_emb_scale: 1
+  sum: []
+  prepend: [self_wav, description]
+  cross: []
+  input_interpolate: []
+
+conditioners:
+  self_wav:
+    model: style
+    style:
+      model_name: mert
+      transformer_scale: default
+      sample_rate: ${sample_rate}
+      encodec_checkpoint: '//pretrained/facebook/encodec_32khz'
+      encodec_n_q: 3
+      length: 3.0
+      ds_factor: 15 # Since MERT is 75Hz, 75/15 results into 5Hz representations
+      n_q_out: 6
+      eval_q: 3
+      q_dropout: true
+      bins: 1024
+      varying_lengths: [1.5, 4.5]
+      batch_norm: true
+      compute_mask: true
+      num_codebooks_lm: ${transformer_lm.n_q}
+      ds_rate_compression: 640
+      use_middle_of_segment: false
+      rvq_threshold_ema_dead_code: 0.1
+
+  description:
+    model: t5
+    t5:
+      name: t5-base
+      finetune: false
+      word_dropout: 0.2
+      normalize_text: false
+
+dataset:
+  train:
+    merge_text_p: 0.25
+    drop_desc_p: 0.5
+    drop_other_p: 0.5
+  shuffle: true

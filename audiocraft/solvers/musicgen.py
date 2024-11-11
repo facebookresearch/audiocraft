@@ -22,7 +22,8 @@ from .. import models
 from ..data.audio_dataset import AudioDataset
 from ..data.music_dataset import MusicDataset, MusicInfo, AudioInfo
 from ..data.audio_utils import normalize_audio
-from ..modules.conditioners import JointEmbedCondition, SegmentWithAttributes, WavCondition
+from ..modules.conditioners import JointEmbedCondition, SegmentWithAttributes, WavCondition, \
+            StyleConditioner, _drop_description_condition
 from ..utils.cache import CachedBatchWriter, CachedBatchLoader
 from ..utils.samples.manager import SampleManager
 from ..utils.utils import get_dataset_from_loader, is_jsonable, warn_once, model_hash
@@ -362,9 +363,17 @@ class MusicGenSolver(base.StandardSolver):
             torch.cuda.set_sync_debug_mode('warn')
 
         with self.autocast:
+            style_mask = None
+            if hasattr(self.model.condition_provider.conditioners, 'self_wav'):
+                if isinstance(self.model.condition_provider.conditioners.self_wav, StyleConditioner):
+                    style_mask = self.model.condition_provider.conditioners.self_wav.mask
+
             model_output = self.model.compute_predictions(audio_tokens, [], condition_tensors)  # type: ignore
             logits = model_output.logits
-            mask = padding_mask & model_output.mask
+            if style_mask is not None:
+                mask = padding_mask & model_output.mask & style_mask
+            else:
+                mask = padding_mask & model_output.mask
             ce, ce_per_codebook = self._compute_cross_entropy(logits, audio_tokens, mask)
             loss = ce
         self.deadlock_detect.update('loss')
@@ -425,8 +434,8 @@ class MusicGenSolver(base.StandardSolver):
     @torch.no_grad()
     def run_generate_step(self, batch: tp.Tuple[torch.Tensor, tp.List[SegmentWithAttributes]],
                           gen_duration: float, prompt_duration: tp.Optional[float] = None,
-                          remove_prompt: bool = False,
-                          **generation_params) -> dict:
+                          remove_text_conditioning: bool = False,
+                          ) -> dict:
         """Run generate step on a batch of optional audio tensor and corresponding attributes.
 
         Args:
@@ -434,8 +443,6 @@ class MusicGenSolver(base.StandardSolver):
             use_prompt (bool): Whether to do audio continuation generation with prompt from audio batch.
             gen_duration (float): Target audio duration for the generation.
             prompt_duration (float, optional): Duration for the audio prompt to use for continuation.
-            remove_prompt (bool, optional): Whether to remove the prompt from the generated audio.
-            generation_params: Additional generation parameters.
         Returns:
             gen_outputs (dict): Generation outputs, consisting in audio, audio tokens from both the generation
                 and the prompt along with additional information.
@@ -448,7 +455,8 @@ class MusicGenSolver(base.StandardSolver):
         )
         # prepare attributes
         attributes = [x.to_condition_attributes() for x in meta]
-        # TODO: Add dropout for chroma?
+        if remove_text_conditioning:
+            attributes = _drop_description_condition(attributes)
 
         # prepare audio prompt
         if prompt_duration is None:
@@ -555,8 +563,7 @@ class MusicGenSolver(base.StandardSolver):
                     rtf = 1.
                 else:
                     gen_unprompted_outputs = self.run_generate_step(
-                        batch, gen_duration=target_duration, prompt_duration=None,
-                        **self.generation_params)
+                        batch, gen_duration=target_duration, prompt_duration=None)
                     gen_unprompted_audio = gen_unprompted_outputs['gen_audio'].cpu()
                     rtf = gen_unprompted_outputs['rtf']
                 sample_manager.add_samples(
@@ -565,10 +572,21 @@ class MusicGenSolver(base.StandardSolver):
 
             if self.cfg.generate.lm.prompted_samples:
                 gen_outputs = self.run_generate_step(
-                    batch, gen_duration=target_duration, prompt_duration=prompt_duration,
-                    **self.generation_params)
+                    batch, gen_duration=target_duration, prompt_duration=prompt_duration)
                 gen_audio = gen_outputs['gen_audio'].cpu()
                 prompt_audio = gen_outputs['prompt_audio'].cpu()
+                sample_manager.add_samples(
+                    gen_audio, self.epoch, hydrated_conditions,
+                    prompt_wavs=prompt_audio, ground_truth_wavs=audio,
+                    generation_args=sample_generation_params)
+            if self.cfg.generate.lm.no_text_conditioning:
+                gen_outputs = self.run_generate_step(
+                    batch, gen_duration=target_duration, prompt_duration=None,
+                    remove_text_conditioning=self.cfg.generate.lm.no_text_conditioning)
+                gen_audio = gen_outputs['gen_audio'].cpu()
+                rtf = gen_outputs['rtf']
+                # Here, the prompt is the original audio provided for the style conditioning
+                prompt_audio = gen_outputs['ref_audio'].cpu()
                 sample_manager.add_samples(
                     gen_audio, self.epoch, hydrated_conditions,
                     prompt_wavs=prompt_audio, ground_truth_wavs=audio,
@@ -661,7 +679,7 @@ class MusicGenSolver(base.StandardSolver):
 
                 gen_outputs = self.run_generate_step(
                     batch, gen_duration=target_duration,
-                    **self.generation_params
+                    remove_text_conditioning=self.cfg.evaluate.remove_text_conditioning
                 )
                 y_pred = gen_outputs['gen_audio'].detach()
                 y_pred = y_pred[..., :audio.shape[-1]]

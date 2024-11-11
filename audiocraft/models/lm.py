@@ -23,6 +23,7 @@ from ..modules.conditioners import (
     ConditioningProvider,
     ConditioningAttributes,
     ConditionType,
+    _drop_description_condition
 )
 from ..modules.codebooks_patterns import CodebooksPatternProvider
 from ..modules.activations import get_activation_fn
@@ -255,7 +256,7 @@ class LMModel(StreamingModule):
         input_, cross_attention_input = self.fuser(input_, condition_tensors)
 
         out = self.transformer(input_, cross_attention_src=cross_attention_input,
-                               src_mask=(self.attn_mask_per_stage[stage] if stage >= 0 else None))
+                               src_mask=(self.attn_mask_per_stage[stage] if stage >= 0 else None))  # type: ignore
         if self.out_norm:
             out = self.out_norm(out)
         logits = torch.stack([self.linears[k](out) for k in range(K)], dim=1)  # [B, K, S, card]
@@ -328,6 +329,7 @@ class LMModel(StreamingModule):
                            top_k: int = 0,
                            top_p: float = 0.0,
                            cfg_coef: tp.Optional[float] = None,
+                           cfg_coef_beta: tp.Optional[float] = None,
                            two_step_cfg: tp.Optional[bool] = None) -> torch.Tensor:
         """Sample next token from the model given a sequence and a set of conditions. The model supports
         multiple sampling strategies (greedy sampling, softmax, top-k, top-p...).
@@ -343,6 +345,13 @@ class LMModel(StreamingModule):
             top_k (int): K for "top-k" sampling.
             top_p (float): P for "top-p" sampling.
             cfg_coef (float, optional): classifier free guidance coefficient
+            cfg_coef_beta (float, optional): If None, simple classifier free guidance is used with cfg_coef.
+                If not None, we apply double classifier free guidance as introduced in MusicGen-Style
+                in paragraph 4.3 (https://arxiv.org/pdf/2407.12563). This beta coefficient is meant to
+                push the text condition more than the style condition in the case where both text and style
+                conditions are being used.
+            two_step_cfg (bool): Whether to run classifier free-guidance with 2 distinct steps.
+
         Returns:
             next_token (torch.Tensor): Next token tensor of shape [B, K, 1].
         """
@@ -350,7 +359,23 @@ class LMModel(StreamingModule):
         cfg_coef = self.cfg_coef if cfg_coef is None else cfg_coef
         model = self if self._fsdp is None else self._fsdp
         two_step_cfg = self.two_step_cfg if two_step_cfg is None else two_step_cfg
-        if two_step_cfg and cfg_conditions != {}:
+        if cfg_coef_beta is not None:
+            assert isinstance(cfg_conditions, dict)
+            condition_tensors = cfg_conditions
+            if condition_tensors:
+                # Preparing for CFG, predicting conditional text and style, conditional style
+                # and unconditional
+                sequence = torch.cat([sequence, sequence, sequence], dim=0)
+            all_logits = model(
+                sequence,
+                conditions=[], condition_tensors=condition_tensors)
+            if condition_tensors:
+                cond_logits, wav_logits, uncond_logits = all_logits.split(B, dim=0)  # [B, K, T, card]
+                logits = uncond_logits + cfg_coef * (
+                    wav_logits + cfg_coef_beta * (cond_logits - wav_logits) - uncond_logits
+                    )
+
+        elif two_step_cfg and cfg_conditions != {}:
             assert isinstance(cfg_conditions, tuple), type(cfg_conditions)
             condition_tensors, null_condition_tensors = cfg_conditions
             cond_logits = model(sequence, conditions=[], condition_tensors=condition_tensors)
@@ -403,24 +428,30 @@ class LMModel(StreamingModule):
                  top_k: int = 250,
                  top_p: float = 0.0,
                  cfg_coef: tp.Optional[float] = None,
+                 cfg_coef_beta: tp.Optional[float] = None,
                  two_step_cfg: tp.Optional[bool] = None,
                  remove_prompts: bool = False,
                  check: bool = False,
                  callback: tp.Optional[tp.Callable[[int, int], None]] = None,
-                 **kwargs) -> torch.Tensor:
+                 ) -> torch.Tensor:
         """Generate tokens sampling from the model given a prompt or unconditionally. Generation can
         be performed in a greedy fashion or using sampling with top K and top P strategies.
 
         Args:
             prompt (torch.Tensor, optional): Prompt tokens of shape [B, K, T].
-            conditions_tensors (list of ConditioningAttributes, optional): List of conditions.
+            conditions (list of ConditioningAttributes, optional): List of conditions.
             num_samples (int, optional): Number of samples to generate when no prompt and no conditions are given.
             max_gen_len (int): Maximum generation length.
             use_sampling (bool): Whether to use a sampling strategy or not.
             temp (float): Sampling temperature.
             top_k (int): K for "top-k" sampling.
             top_p (float): P for "top-p" sampling.
-            cfg_coeff (float, optional): Classifier-free guidance coefficient.
+            cfg_coef (float, optional): Classifier-free guidance coefficient.
+            cfg_coef_beta (float, optional): If None, simple classifier free guidance is used with cfg_coef.
+                If not None, we apply double classifier free guidance as introduced in MusicGen-Style
+                in paragraph 4.3 (https://arxiv.org/pdf/2407.12563). This beta coefficient is meant to
+                push the text condition more than the style condition in the case where both text and style
+                conditions are being used.
             two_step_cfg (bool, optional): Whether to perform classifier-free guidance with two steps generation.
             remove_prompts (bool): Whether to remove prompts from generation or not.
             check (bool): Whether to apply further checks on generated sequence.
@@ -455,18 +486,27 @@ class LMModel(StreamingModule):
         # the padding structure is exactly the same between train and test.
         # With a batch size of 1, this can be slower though.
         cfg_conditions: CFGConditions
-        two_step_cfg = self.two_step_cfg if two_step_cfg is None else two_step_cfg
-        if conditions:
-            null_conditions = ClassifierFreeGuidanceDropout(p=1.0)(conditions)
-            if two_step_cfg:
-                cfg_conditions = (
-                    self.condition_provider(self.condition_provider.tokenize(conditions)),
-                    self.condition_provider(self.condition_provider.tokenize(null_conditions)),
-                )
-            else:
-                conditions = conditions + null_conditions
+        cfg_conditions = {}
+        if cfg_coef_beta is not None:
+            if conditions:
+                wav_conditions = _drop_description_condition(conditions)
+                null_conditions = ClassifierFreeGuidanceDropout(p=1.0)(conditions)
+                conditions = conditions + wav_conditions + null_conditions
                 tokenized = self.condition_provider.tokenize(conditions)
                 cfg_conditions = self.condition_provider(tokenized)
+        elif conditions:
+            two_step_cfg = self.two_step_cfg if two_step_cfg is None else two_step_cfg
+            if conditions:
+                null_conditions = ClassifierFreeGuidanceDropout(p=1.0)(conditions)
+                if two_step_cfg:
+                    cfg_conditions = (
+                        self.condition_provider(self.condition_provider.tokenize(conditions)),
+                        self.condition_provider(self.condition_provider.tokenize(null_conditions)),
+                    )
+                else:
+                    conditions = conditions + null_conditions
+                    tokenized = self.condition_provider.tokenize(conditions)
+                    cfg_conditions = self.condition_provider(tokenized)
         else:
             cfg_conditions = {}
 
@@ -509,7 +549,7 @@ class LMModel(StreamingModule):
                 # sample next token from the model, next token shape is [B, K, 1]
                 next_token = self._sample_next_token(
                     curr_sequence, cfg_conditions, unconditional_state, use_sampling, temp, top_k, top_p,
-                    cfg_coef=cfg_coef, two_step_cfg=two_step_cfg)
+                    cfg_coef=cfg_coef, cfg_coef_beta=cfg_coef_beta, two_step_cfg=two_step_cfg)
                 # ensure the tokens that should be masked are properly set to special_token_id
                 # as the model never output special_token_id
                 valid_mask = mask[..., offset:offset+1].expand(B, -1, -1)
