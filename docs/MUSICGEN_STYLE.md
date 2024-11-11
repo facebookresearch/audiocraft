@@ -194,3 +194,7 @@ dora run solver=musicgen/musicgen_style_32khz model/lm/model_scale=medium contin
  to change some parts, like the conditioning or some other parts of the model, you are responsible for manually crafting a checkpoint file from which we can safely run `load_state_dict`.
  If you decide to do so, make sure your checkpoint is saved with `torch.save` and contains a dict
     `{'best_state': {'model': model_state_dict_here}}`. Directly give the path to `continue_from` without a `//pretrained/` prefix.
+
+
+[arxiv]: https://arxiv.org/abs/2407.12563
+[musicgen_samples]: https://musicgenstyle.github.io/
