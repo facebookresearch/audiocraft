@@ -71,16 +71,18 @@ def _get_state_dict(
         return torch.load(file, map_location=device)
 
 
-def load_compression_model_ckpt(file_or_url_or_id: tp.Union[Path, str], cache_dir: tp.Optional[str] = None):
-    return _get_state_dict(file_or_url_or_id, filename="compression_state_dict.bin", cache_dir=cache_dir)
+def load_compression_model_ckpt(file_or_url_or_id: tp.Union[Path, str], cache_dir: tp.Optional[str] = None,
+                                filename: str = "compression_state_dict.bin"):
+    return _get_state_dict(file_or_url_or_id, filename=filename, cache_dir=cache_dir)
 
 
 def load_compression_model(
     file_or_url_or_id: tp.Union[Path, str],
     device="cpu",
     cache_dir: tp.Optional[str] = None,
+    filename: str = "compression_state_dict.bin",
 ):
-    pkg = load_compression_model_ckpt(file_or_url_or_id, cache_dir=cache_dir)
+    pkg = load_compression_model_ckpt(file_or_url_or_id, cache_dir=cache_dir, filename=filename)
     if 'pretrained' in pkg:
         return CompressionModel.get_pretrained(pkg['pretrained'], device=device)
     cfg = OmegaConf.create(pkg['xp.cfg'])

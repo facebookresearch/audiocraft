@@ -10,7 +10,7 @@ Models for EnCodec, AudioGen, MusicGen, as well as the generic LMModel.
 from . import builders, loaders
 from .encodec import (
     CompressionModel, EncodecModel, DAC,
-    HFEncodecModel, HFEncodecCompressionModel)
+    HFEncodecModel, HFEncodecCompressionModel, MultiStemCompressionModel)
 from .audiogen import AudioGen
 from .lm import LMModel
 from .lm_magnet import MagnetLMModel
@@ -19,3 +19,4 @@ from .musicgen import MusicGen
 from .magnet import MAGNeT
 from .unet import DiffusionUnet
 from .watermark import WMModel
+from .musicgenstem import MusicGenStem

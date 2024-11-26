@@ -5,5 +5,5 @@
 # LICENSE file in the root directory of this source tree.
 """RVQ."""
 # flake8: noqa
-from .vq import ResidualVectorQuantizer
+from .vq import ResidualVectorQuantizer, DACResidualVectorQuantizer
 from .base import BaseQuantizer, DummyQuantizer, QuantizedResult
