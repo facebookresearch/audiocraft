@@ -104,8 +104,8 @@ def load_diffusion():
         MBD = MultiBandDiffusion.get_mbd_musicgen()
 
 
-def _do_predictions(texts, melodies, duration, top_k, top_p, temperature, cfg_coef, double_cfg, cfg_coef_2, eval_q, excerpt_length, progress=False, gradio_progress=None):
-    MODEL.set_generation_params(duration=duration, top_k=top_k, top_p=top_p, temperature=temperature, cfg_coef=cfg_coef, double_cfg=double_cfg, cfg_coef_2=cfg_coef_2)
+def _do_predictions(texts, melodies, duration, top_k, top_p, temperature, cfg_coef, cfg_coef_beta, eval_q, excerpt_length, progress=False, gradio_progress=None):
+    MODEL.set_generation_params(duration=duration, top_k=top_k, top_p=top_p, temperature=temperature, cfg_coef=cfg_coef, cfg_coef_beta=cfg_coef_beta)
     MODEL.set_style_conditioner_params(eval_q=eval_q, excerpt_length=excerpt_length)
     print("new batch", len(texts), texts, [None if m is None else (m[0], m[1].shape) for m in melodies])
     be = time.time()
@@ -161,7 +161,7 @@ def _do_predictions(texts, melodies, duration, top_k, top_p, temperature, cfg_co
     return out_videos, out_wavs
 
 
-def predict_full(model, model_path, decoder, text, melody, duration, topk, topp, temperature, cfg_coef, double_cfg, cfg_coef_2, eval_q, excerpt_length, progress=gr.Progress()):
+def predict_full(model, model_path, decoder, text, melody, duration, topk, topp, temperature, cfg_coef, double_cfg, cfg_coef_beta, eval_q, excerpt_length, progress=gr.Progress()):
     global INTERRUPTING
     global USE_DIFFUSION
     INTERRUPTING = False
@@ -195,11 +195,8 @@ def predict_full(model, model_path, decoder, text, melody, duration, topk, topp,
         USE_DIFFUSION = False
     load_model(model)
 
-    if double_cfg == "Yes":
-        double_cfg = True
-    else:
-        double_cfg = False
-        cfg_coef_2 = None
+    if double_cfg != "Yes":
+        cfg_coef_beta = None
     max_generated = 0
 
     def _progress(generated, to_generate):
@@ -213,7 +210,7 @@ def predict_full(model, model_path, decoder, text, melody, duration, topk, topp,
     videos, wavs = _do_predictions(
         [text], [melody], duration, progress=True,
         top_k=topk, top_p=topp, temperature=temperature, cfg_coef=cfg_coef,
-        double_cfg=double_cfg, cfg_coef_2=cfg_coef_2, eval_q=eval_q, excerpt_length=excerpt_length,
+        cfg_coef_beta=cfg_coef_beta, eval_q=eval_q, excerpt_length=excerpt_length,
         gradio_progress=progress)
     if USE_DIFFUSION:
         return videos[0], wavs[0], videos[1], wavs[1]
@@ -238,8 +235,8 @@ def ui_full(launch_kwargs):
     with gr.Blocks() as interface:
         gr.Markdown(
             """
-            # MusicGen
-            This is your private demo for [MusicGen-Stem](https://github.com/facebookresearch/audiocraft),
+            # MusicGen-Style
+            This is your private demo for [MusicGen-Style](https://github.com/facebookresearch/audiocraft),
             a simple and controllable model for music generation
             presented at: ["Audio Conditioning for Music Generation via Discrete Bottleneck Features"](https://arxiv.org/abs/2407.12563)
             """
@@ -273,8 +270,8 @@ def ui_full(launch_kwargs):
                     temperature = gr.Number(label="Temperature", value=1.0, interactive=True)
                     cfg_coef = gr.Number(label="CFG alpha", value=3.0, interactive=True)
                     double_cfg = gr.Radio(["Yes", "No"], 
-                                          label="Use Double Classifier Free Guidance (if No, CFG beta is useless)", value="Yes", interactive=True)
-                    cfg_coef_2 = gr.Number(label="CFG beta (double CFG)", value=5.0, interactive=True)
+                                          label="Use Double Classifier Free Guidance (if No, CFG beta is useless). Only use it if you have input text and a melody file.", value="Yes", interactive=True)
+                    cfg_coef_beta = gr.Number(label="CFG beta (double CFG)", value=5.0, interactive=True)
                     excerpt_length = gr.Number(label="length used of the conditioning (has to be <= 4.5 seconds)", value=3.0, interactive=True)
             with gr.Column():
                 output = gr.Video(label="Generated Music")
@@ -283,7 +280,7 @@ def ui_full(launch_kwargs):
                 audio_diffusion = gr.Audio(label="MultiBand Diffusion Decoder (wav)", type='filepath')
         submit.click(toggle_diffusion, decoder, [diffusion_output, audio_diffusion], queue=False,
                      show_progress=False).then(predict_full, inputs=[model, model_path, decoder, text, melody, duration, topk, topp,
-                                                                     temperature, cfg_coef, double_cfg, cfg_coef_2, eval_q, excerpt_length],
+                                                                     temperature, cfg_coef, double_cfg, cfg_coef_beta, eval_q, excerpt_length],
                                                outputs=[output, audio_output, diffusion_output, audio_diffusion])
         radio.change(toggle_audio_src, radio, [melody], queue=False, show_progress=False)
 
@@ -306,9 +303,11 @@ def ui_full(launch_kwargs):
 
             The model can generate a short music extract based on 3 different input setups:
                 1) A textual description. In that case we recommend to use simple (not double!) classifier free guidance with the CFG coef = 3.
+
                 2) A audio excerpt that it use for style conditioning. The audio shouldn't be longer that 4.5 seconds. If so, 
                     a random subsequence will be subsample with the length being chosen by the user. We recommend this length to be between 1.5 and 4.5 seconds. 
                     We recommend simple CFG with the coef = 3.
+
                 3) Both a textual description and an audio input. In that case the user should use double CFG with alpha=3 and beta=4. Then, if the model 
                     adheres too much to the text description, the user should lower beta. If the model adheres too much to the style, the user can augment beta. 
             The model can generate up to 30 seconds of audio in one pass.

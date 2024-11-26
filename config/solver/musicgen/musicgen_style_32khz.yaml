@@ -1,7 +1,7 @@
 # @package __global__
 
 # This is the training loop solver
-# for the base MusicGen model (text-to-music)
+# for MusicGen-Style model (text-and-style-to-music)
 # on monophonic audio sampled at 32 kHz
 defaults:
   - musicgen/default
@@ -36,8 +36,7 @@ generate:
     top_k: 250
     top_p: 0.0
     cfg_coef: 3.0
-    cfg_coef_2:
-    double_cfg: false
+    cfg_coef_beta:
 
 optim:
   epochs: 500

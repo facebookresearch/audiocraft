@@ -52,8 +52,7 @@ model.set_generation_params(
     use_sampling=True, 
     top_k=250,
     cfg_coef=3., # Classifier Free Guidance coefficient 
-    double_cfg=False, # double CFG is only useful for text-and-style conditioning
-    cfg_coef_2=None,
+    cfg_coef_beta=None, # double CFG is only useful for text-and-style conditioning
 )  
 
 descriptions = ['disco beat', 'energetic EDM', 'funky groove']
@@ -78,8 +77,7 @@ model.set_generation_params(
     use_sampling=True, 
     top_k=250,
     cfg_coef=3., # Classifier Free Guidance coefficient 
-    double_cfg=False, # double CFG is only useful for text-and-style conditioning
-    cfg_coef_2=None,
+    cfg_coef_beta=None, # double CFG is only useful for text-and-style conditioning
 )
 
 model.set_style_conditioner_params(
@@ -115,8 +113,8 @@ model.set_generation_params(
     use_sampling=True, 
     top_k=250,
     cfg_coef=3., # Classifier Free Guidance coefficient 
-    double_cfg=True, # double CFG is necessary for text-and-style conditioning
-    cfg_coef_2=5., # Beta in the double CFG formula. between 1 and 9. When set to 1 it is equivalent to normal CFG. 
+    cfg_coef_beta=5., # double CFG is necessary for text-and-style conditioning
+                   # Beta in the double CFG formula. between 1 and 9. When set to 1 it is equivalent to normal CFG. 
                    # When we increase this parameter, the text condition is pushed. See the bottom of https://musicgenstyle.github.io/ 
                    # to better understand the effects of the double CFG coefficients. 
 )
@@ -198,35 +196,5 @@ dora run solver=musicgen/musicgen_style_32khz model/lm/model_scale=medium contin
     `{'best_state': {'model': model_state_dict_here}}`. Directly give the path to `continue_from` without a `//pretrained/` prefix.
 
 
-## FAQ
-
-#### What are top-k, top-p, temperature and classifier-free guidance?
-
-Check out [@FurkanGozukara tutorial](https://github.com/FurkanGozukara/Stable-Diffusion/blob/main/Tutorials/AI-Music-Generation-Audiocraft-Tutorial.md#more-info-about-top-k-top-p-temperature-and-classifier-free-guidance-from-chatgpt).
-
-#### Should I use FSDP or autocast ?
-
-The two are mutually exclusive (because FSDP does autocast on its own).
-You can use autocast up to 1.5B (medium), if you have enough RAM on your GPU.
-FSDP makes everything more complex but will free up some memory for the actual
-activations by sharding the optimizer state.
-
-## Citation
-```
-@misc{rouard2024audioconditioningmusicgeneration,
-      title={Audio Conditioning for Music Generation via Discrete Bottleneck Features}, 
-      author={Simon Rouard and Yossi Adi and Jade Copet and Axel Roebel and Alexandre Défossez},
-      year={2024},
-      eprint={2407.12563},
-      archivePrefix={arXiv},
-      primaryClass={cs.SD},
-      url={https://arxiv.org/abs/2407.12563}, 
-}
-```
-
-## License
-
-See license information in the [model card](../model_cards/MUSICGEN_STYLE_MODEL_CARD.md).
-
 [arxiv]: https://arxiv.org/abs/2407.12563
-[musicgen_style_samples]: https://musicgenstyle.github.io/
+[musicgen_samples]: https://musicgenstyle.github.io/

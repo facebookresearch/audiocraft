@@ -9,7 +9,6 @@ from functools import partial
 import logging
 import math
 import typing as tp
-from copy import deepcopy
 
 import torch
 from torch import nn
@@ -24,6 +23,7 @@ from ..modules.conditioners import (
     ConditioningProvider,
     ConditioningAttributes,
     ConditionType,
+    _drop_description_condition
 )
 from ..modules.codebooks_patterns import CodebooksPatternProvider
 from ..modules.activations import get_activation_fn
@@ -93,55 +93,6 @@ def init_layer(m: nn.Module,
             m.weight.data[:] = weight.half()
         else:
             init_fn(m.weight)
-
-
-def merge_pairs_of_conditions(alphas: tp.Dict[str, float], num_conditions: int, cfg_conditions: CFGConditions):
-    """
-    Given:
-        - alphas: dic where the keys are attributes that need to be merged and the values are
-        floats in [0, 1]
-            ex: {'description': 0.3, 'self_wav': 0.5, 'style_wav': 1.0}
-        - num_conditions: the number of conditions in parallel, 2 in case of cfg, 3 in case of
-            double_cfg and 4 in case of triple_cfg
-        - cfg_conditions
-
-    Returns:
-        for each pair of condition (2i, 2i+1),
-            we compute sqrt{alpha}*condition_{2i} + sqrt{1 - alpha**2}*condition_{2i+1}
-    """
-    new_cfg_conditions = deepcopy(cfg_conditions)
-    for attribute in alphas.keys():
-        embed, mask = cfg_conditions[attribute]  # type: ignore
-        B, T, C = embed.shape  # type: ignore
-        assert B % (2 * num_conditions) == 0
-        alpha = alphas[attribute]
-        new_embed = alpha ** 0.5 * embed[::2] + (1 - alpha)**0.5 * embed[1::2]
-        new_mask = mask[::2]
-        new_cfg_conditions[attribute] = (new_embed, new_mask)  # type: ignore
-    return new_cfg_conditions
-
-
-def sum_pairs_of_conditions(which_conditions: tp.List[str], num_conditions: int, cfg_conditions: CFGConditions):
-    """
-    Given:
-        - which_conditions: list of the attributes that need to be merged
-            ex: ['description', 'self_wav', 'style_wav']
-        - num_conditions: the number of conditions in parallel, 2 in case of cfg, 3 in case of
-            double_cfg and 4 in case of triple_cfg
-        - cfg_conditions
-
-    Returns: for each pair of condition (2i, 2i+1), we compute
-             alpha*condition_{2i} + sqrt{1 - alpha**2}*condition_{2i+1}
-    """
-    new_cfg_conditions = deepcopy(cfg_conditions)
-    for attribute in which_conditions:
-        embed, mask = cfg_conditions[attribute]  # type: ignore
-        B, T, C = embed.shape  # type: ignore
-        assert B % (2 * num_conditions) == 0
-        new_embed = embed[::2] + embed[1::2]
-        new_mask = mask[::2]  # type: ignore
-        new_cfg_conditions[attribute] = (new_embed, new_mask)  # type: ignore
-    return new_cfg_conditions
 
 
 class ScaledEmbedding(nn.Embedding):
@@ -377,9 +328,8 @@ class LMModel(StreamingModule):
                            temp: float = 1.0,
                            top_k: int = 0,
                            top_p: float = 0.0,
-                           double_cfg: bool = False,
                            cfg_coef: tp.Optional[float] = None,
-                           cfg_coef_2: tp.Optional[float] = None,
+                           cfg_coef_beta: tp.Optional[float] = None,
                            two_step_cfg: tp.Optional[bool] = None) -> torch.Tensor:
         """Sample next token from the model given a sequence and a set of conditions. The model supports
         multiple sampling strategies (greedy sampling, softmax, top-k, top-p...).
@@ -395,6 +345,13 @@ class LMModel(StreamingModule):
             top_k (int): K for "top-k" sampling.
             top_p (float): P for "top-p" sampling.
             cfg_coef (float, optional): classifier free guidance coefficient
+            cfg_coef_beta (float, optional): If None, simple classifier free guidance is used with cfg_coef.
+                If not None, we apply double classifier free guidance as introduced in MusicGen-Style
+                in paragraph 4.3 (https://arxiv.org/pdf/2407.12563). This beta coefficient is meant to
+                push the text condition more than the style condition in the case where both text and style
+                conditions are being used.
+            two_step_cfg (bool): Whether to run classifier free-guidance with 2 distinct steps.
+
         Returns:
             next_token (torch.Tensor): Next token tensor of shape [B, K, 1].
         """
@@ -402,11 +359,12 @@ class LMModel(StreamingModule):
         cfg_coef = self.cfg_coef if cfg_coef is None else cfg_coef
         model = self if self._fsdp is None else self._fsdp
         two_step_cfg = self.two_step_cfg if two_step_cfg is None else two_step_cfg
-        if double_cfg:
+        if cfg_coef_beta is not None:
             assert isinstance(cfg_conditions, dict)
-            assert cfg_coef_2 is not None
             condition_tensors = cfg_conditions
             if condition_tensors:
+                # Preparing for CFG, predicting conditional text and style, conditional style
+                # and unconditional
                 sequence = torch.cat([sequence, sequence, sequence], dim=0)
             all_logits = model(
                 sequence,
@@ -414,7 +372,7 @@ class LMModel(StreamingModule):
             if condition_tensors:
                 cond_logits, wav_logits, uncond_logits = all_logits.split(B, dim=0)  # [B, K, T, card]
                 logits = uncond_logits + cfg_coef * (
-                    wav_logits + cfg_coef_2 * (cond_logits - wav_logits) - uncond_logits
+                    wav_logits + cfg_coef_beta * (cond_logits - wav_logits) - uncond_logits
                     )
 
         elif two_step_cfg and cfg_conditions != {}:
@@ -470,24 +428,18 @@ class LMModel(StreamingModule):
                  top_k: int = 250,
                  top_p: float = 0.0,
                  cfg_coef: tp.Optional[float] = None,
+                 cfg_coef_beta: tp.Optional[float] = None,
                  two_step_cfg: tp.Optional[bool] = None,
-                 double_cfg: bool = False,
-                 cfg_coef_2: tp.Optional[float] = None,
                  remove_prompts: bool = False,
                  check: bool = False,
                  callback: tp.Optional[tp.Callable[[int, int], None]] = None,
-                 forced_streams_prompt: tp.Optional[torch.Tensor] = None,
-                 which_forced_streams: tp.Optional[tp.List[int]] = None,
-                 postprocess_fn: tp.Optional[str] = None,
-                 alphas: tp.Optional[tp.Dict[str, float]] = None,
-                 which_conditions: tp.Optional[tp.List[str]] = None,
                  ) -> torch.Tensor:
         """Generate tokens sampling from the model given a prompt or unconditionally. Generation can
         be performed in a greedy fashion or using sampling with top K and top P strategies.
 
         Args:
             prompt (torch.Tensor, optional): Prompt tokens of shape [B, K, T].
-            conditions_tensors (list of ConditioningAttributes, optional): List of conditions.
+            conditions (list of ConditioningAttributes, optional): List of conditions.
             num_samples (int, optional): Number of samples to generate when no prompt and no conditions are given.
             max_gen_len (int): Maximum generation length.
             use_sampling (bool): Whether to use a sampling strategy or not.
@@ -495,12 +447,12 @@ class LMModel(StreamingModule):
             top_k (int): K for "top-k" sampling.
             top_p (float): P for "top-p" sampling.
             cfg_coef (float, optional): Classifier-free guidance coefficient.
+            cfg_coef_beta (float, optional): If None, simple classifier free guidance is used with cfg_coef.
+                If not None, we apply double classifier free guidance as introduced in MusicGen-Style
+                in paragraph 4.3 (https://arxiv.org/pdf/2407.12563). This beta coefficient is meant to
+                push the text condition more than the style condition in the case where both text and style
+                conditions are being used.
             two_step_cfg (bool, optional): Whether to perform classifier-free guidance with two steps generation.
-            double_cfg (bool, optional): if True, apply double classifier free guidance (see at the bottom of
-                https://musicgenstyle.github.io/)
-            cfg_coef_2 (float, optional): if double_cfg is True, cfg_coef_2 is the beta coefficient in the double
-                cfg formula
-            forced_streams_prompt (torch.Tensor, optional): 
             remove_prompts (bool): Whether to remove prompts from generation or not.
             check (bool): Whether to apply further checks on generated sequence.
             callback (Callback, optional): Callback function to report generation progress.
@@ -508,9 +460,6 @@ class LMModel(StreamingModule):
             torch.Tensor: Generated tokens.
         """
         assert not self.training, "generation shouldn't be used in training mode."
-        if forced_streams_prompt is not None:
-            assert which_forced_streams is not None, "you need to provide which forced_streams are kept for the generation"
-
         first_param = next(iter(self.parameters()))
         device = first_param.device
 
@@ -520,8 +469,6 @@ class LMModel(StreamingModule):
             possible_num_samples.append(num_samples)
         elif prompt is not None:
             possible_num_samples.append(prompt.shape[0])
-        elif forced_streams_prompt is not None:
-            possible_num_samples.append(forced_streams_prompt.shape[0])
         elif conditions:
             possible_num_samples.append(len(conditions))
         else:
@@ -540,17 +487,14 @@ class LMModel(StreamingModule):
         # With a batch size of 1, this can be slower though.
         cfg_conditions: CFGConditions
         cfg_conditions = {}
-        if double_cfg:
-            num_conditions = 3
+        if cfg_coef_beta is not None:
             if conditions:
-                wav_conditions = AttributeDropout(p={'text': {'description': 1.0},
-                                                     'wav': {'self_wav': 0.0}})(conditions)
+                wav_conditions = _drop_description_condition(conditions)
                 null_conditions = ClassifierFreeGuidanceDropout(p=1.0)(conditions)
                 conditions = conditions + wav_conditions + null_conditions
                 tokenized = self.condition_provider.tokenize(conditions)
                 cfg_conditions = self.condition_provider(tokenized)
         elif conditions:
-            num_conditions = 2
             two_step_cfg = self.two_step_cfg if two_step_cfg is None else two_step_cfg
             if conditions:
                 null_conditions = ClassifierFreeGuidanceDropout(p=1.0)(conditions)
@@ -565,23 +509,10 @@ class LMModel(StreamingModule):
                     cfg_conditions = self.condition_provider(tokenized)
         else:
             cfg_conditions = {}
-        if postprocess_fn is not None:
-            if postprocess_fn == 'merge':
-                assert alphas is not None
-                cfg_conditions = merge_pairs_of_conditions(alphas, num_conditions, cfg_conditions)
-            elif postprocess_fn == 'sum':
-                assert which_conditions is not None
-                cfg_conditions = sum_pairs_of_conditions(which_conditions, num_conditions, cfg_conditions)
-            else:
-                assert False
 
         if prompt is None:
             assert num_samples > 0
-            if postprocess_fn in ['merge', 'sum']:
-                assert num_samples % 2 == 0
-                prompt = torch.zeros((num_samples // 2, self.num_codebooks, 0), dtype=torch.long, device=device)
-            else:
-                prompt = torch.zeros((num_samples, self.num_codebooks, 0), dtype=torch.long, device=device)
+            prompt = torch.zeros((num_samples, self.num_codebooks, 0), dtype=torch.long, device=device)
 
         B, K, T = prompt.shape
         start_offset = T
@@ -595,9 +526,6 @@ class LMModel(StreamingModule):
         gen_codes = torch.full((B, K, max_gen_len), unknown_token, dtype=torch.long, device=device)
         # filling the gen_codes with the prompt if needed
         gen_codes[..., :start_offset] = prompt
-        if forced_streams_prompt is not None:
-            assert forced_streams_prompt.shape[-1] <= max_gen_len - start_offset
-            gen_codes[..., which_forced_streams, start_offset:start_offset + forced_streams_prompt.shape[-1]] = forced_streams_prompt[..., which_forced_streams, :]
         # create the gen_sequence with proper interleaving from the pattern: [B, K, S]
         gen_sequence, indexes, mask = pattern.build_pattern_sequence(gen_codes, self.special_token_id)
         # retrieve the start_offset in the sequence:
@@ -621,7 +549,7 @@ class LMModel(StreamingModule):
                 # sample next token from the model, next token shape is [B, K, 1]
                 next_token = self._sample_next_token(
                     curr_sequence, cfg_conditions, unconditional_state, use_sampling, temp, top_k, top_p,
-                    double_cfg=double_cfg, cfg_coef=cfg_coef, cfg_coef_2=cfg_coef_2, two_step_cfg=two_step_cfg)
+                    cfg_coef=cfg_coef, cfg_coef_beta=cfg_coef_beta, two_step_cfg=two_step_cfg)
                 # ensure the tokens that should be masked are properly set to special_token_id
                 # as the model never output special_token_id
                 valid_mask = mask[..., offset:offset+1].expand(B, -1, -1)
