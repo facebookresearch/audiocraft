@@ -9,6 +9,7 @@ import inspect
 import random
 import typing as tp
 from functools import partial
+import torchaudio
 
 import julius
 import omegaconf
@@ -250,9 +251,9 @@ class AudioEffects:
         # Define a few reflections with decreasing amplitude
         impulse_response[0] = 1.0  # Direct sound
 
-        impulse_response[
-            int(sample_rate * duration) - 1
-        ] = volume  # First reflection after 100ms
+        impulse_response[int(sample_rate * duration) - 1] = (
+            volume  # First reflection after 100ms
+        )
 
         # Add batch and channel dimensions to the impulse response
         impulse_response = impulse_response.unsqueeze(0).unsqueeze(0)
@@ -455,9 +456,9 @@ class AudioEffects:
             tensor, get_aac, sr=sample_rate, bitrate=bitrate, lowpass_freq=lowpass_freq
         )
         return audio_effect_return(tensor=out, mask=mask)
-    
-        @staticmethod
-    def pitch_shift(
+
+    @staticmethod
+    def pitcch_shift(
         tensor: torch.Tensor,
         n_steps: float = 2.0,
         sample_rate: int = 16000,
@@ -475,7 +476,9 @@ class AudioEffects:
         Returns:
         - torch.Tensor: Pitch-shifted audio tensor.
         """
-        shifted_tensor = torchaudio.transforms.PitchShift(sample_rate, n_steps=n_steps)(tensor)
+        shifted_tensor = torchaudio.transforms.PitchShift(sample_rate, n_steps=n_steps)(
+            tensor
+        )
         return audio_effect_return(tensor=shifted_tensor, mask=mask)
 
     @staticmethod
@@ -527,7 +530,7 @@ class AudioEffects:
 
         Parameters:
         - tensor (torch.Tensor): Input audio tensor, assuming shape (batch_size, channels, time).
-        - stretch_factor (float): Factor by which to stretch the audio (greater than 1 for slower, less than 1 for faster).
+        - stretch_factor (float): Factor by which to stretch the audio.
         - mask (torch.Tensor): Optional mask tensor.
 
         Returns:
@@ -609,7 +612,7 @@ class AudioEffects:
         Returns:
         - torch.Tensor: Audio tensor with reduced bit depth.
         """
-        scale = 2 ** bit_depth
+        scale = 2**bit_depth
         crushed_tensor = torch.round(tensor * scale) / scale
         return audio_effect_return(tensor=crushed_tensor, mask=mask)
 
@@ -657,6 +660,9 @@ class AudioEffects:
         - torch.Tensor: Granulated audio tensor.
         """
         step_size = int(grain_size * (1 - overlap))
-        grains = [tensor[..., i:i+grain_size] for i in range(0, tensor.shape[-1] - grain_size, step_size)]
+        grains = [
+            tensor[..., i:i+grain_size]
+            for i in range(0, tensor.shape[-1] - grain_size, step_size)
+        ]
         granulated_tensor = torch.cat(grains, dim=-1)
         return audio_effect_return(tensor=granulated_tensor, mask=mask)
