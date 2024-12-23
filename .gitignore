@@ -57,6 +57,10 @@ dataset/*
 */local_scripts
 */notes
 .vscode/
+.idea/
 /notebooks
 /local_scripts
 /notes
+
+# personal info
+config/teams/default.yaml
