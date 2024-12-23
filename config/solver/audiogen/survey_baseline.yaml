@@ -1,0 +1,71 @@
+# @package __global__
+
+# This is the training loop solver
+# for the base AudioGen model (text-to-sound)
+# on monophonic audio sampled at 16 kHz
+# using a similar EnCodec+LM setup to MusicGen
+defaults:
+  - audiogen/default
+  - /model: lm/audiogen_lm
+  - override /dset: audio/survey_data
+  - _self_
+
+autocast: true
+autocast_dtype: float16
+
+compression_model_checkpoint: ??
+
+sample_rate: 44100
+channels: 1
+
+deadlock:
+  use: true  # deadlock detection
+
+conditioners:
+  description:
+    t5:
+      name: t5-base
+
+dataset:
+  batch_size: 128  # matching AudioGen paper setup (256 * mix_p=0.5 = 128)
+  num_workers: 10
+  segment_duration: 10
+  min_segment_ratio: 1.0
+  sample_on_weight: false  # Uniform sampling all the way
+  sample_on_duration: false  # Uniform sampling all the way
+  external_metadata_source: null
+  # sample mixing augmentation at train time
+  train:
+    batch_size: 256  # matching AudioGen paper setup
+    aug_p: 0.5  # perform audio mixing 50% of the time
+    mix_p: 0.5  # proportion of batch items mixed together
+                # important: note that this will reduce the
+                # actual batch size used at train time
+                # which will be equal to mix_p * batch_size
+    mix_snr_low: -5
+    mix_snr_high: 5
+    mix_min_overlap: 0.5
+
+generate:
+  lm:
+    use_sampling: true
+    top_k: 250
+    top_p: 0.0
+
+optim:
+  epochs: 100
+  optimizer: adamw
+  lr: 5e-4
+  ema:
+    use: true
+    updates: 10
+    device: cuda
+
+logging:
+  log_tensorboard: true
+
+schedule:
+  lr_scheduler: inverse_sqrt
+  inverse_sqrt:
+    warmup: 3000
+    warmup_init_lr: 0.0
