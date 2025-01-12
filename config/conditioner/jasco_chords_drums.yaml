@@ -1,0 +1,50 @@
+# @package __global__
+
+classifier_free_guidance:
+  training_dropout: 0.3  # dropout of all conditions
+  inference_coef: 3.0
+
+attribute_dropout:
+  text: {}
+  symbolic:
+    chords: 0.3  # independent dropout of chords
+  wav:
+    self_wav: 0.3  # independent dropout of drums
+
+fuser:
+  cross_attention_pos_emb: false
+  cross_attention_pos_emb_scale: 1
+  sum: []
+  prepend: []
+  cross: [description]
+  ignore: [chords, self_wav]
+  input_interpolate: []
+
+conditioners:
+  self_wav:
+    model: drum_latents
+    drum_latents:
+      sample_rate: ${sample_rate}
+      out_dim: 2
+      blurring_factor: 3
+      cache_path: null
+
+  description:
+    model: t5
+    t5:
+      name: t5-base
+      finetune: false
+      word_dropout: 0.3
+      normalize_text: false
+  chords:
+    model: chords_emb
+    chords_emb:
+      card: 194  # Chordino
+      out_dim: 16
+
+dataset:
+  train:
+    merge_text_p: 0.25
+    drop_desc_p: 0.5
+    drop_other_p: 0.5
+

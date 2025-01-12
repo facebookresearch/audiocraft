@@ -155,6 +155,23 @@ def load_lm_model_magnet(file_or_url_or_id: tp.Union[Path, str], compression_mod
     return model
 
 
+def load_jasco_model(file_or_url_or_id: tp.Union[Path, str],
+                     compression_model: CompressionModel,
+                     device='cpu', cache_dir: tp.Optional[str] = None):
+    pkg = load_lm_model_ckpt(file_or_url_or_id, cache_dir=cache_dir)
+    cfg = OmegaConf.create(pkg['xp.cfg'])
+    cfg.device = str(device)
+    if cfg.device == 'cpu':
+        cfg.dtype = 'float32'
+    else:
+        cfg.dtype = 'float16'
+    model = builders.get_jasco_model(cfg, compression_model)
+    model.load_state_dict(pkg['best_state'])
+    model.eval()
+    model.cfg = cfg
+    return model
+
+
 def load_mbd_ckpt(file_or_url_or_id: tp.Union[Path, str],
                   filename: tp.Optional[str] = None,
                   cache_dir: tp.Optional[str] = None):

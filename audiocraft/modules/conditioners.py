@@ -15,7 +15,6 @@ import random
 import re
 import typing as tp
 import warnings
-
 import einops
 import flashy
 from num2words import num2words
@@ -25,7 +24,7 @@ import torch
 from torch import nn
 import torch.nn.functional as F
 from torch.nn.utils.rnn import pad_sequence
-
+from enum import Enum
 from .chroma import ChromaExtractor
 from .streaming import StreamingModule
 from .transformer import create_sin_embedding, StreamingTransformer
@@ -42,6 +41,15 @@ from ..utils.utils import collate, hash_trick, length_to_mask, load_clap_state_d
 logger = logging.getLogger(__name__)
 TextCondition = tp.Optional[str]  # a text condition can be a string or None (if doesn't exist)
 ConditionType = tp.Tuple[torch.Tensor, torch.Tensor]  # condition, mask
+
+
+class JascoCondConst(Enum):
+    DRM = 'self_wav'
+    CRD = 'chords'
+    MLD = 'melody'
+    SYM = {'chords', 'melody'}
+    LAT = {'self_wav'}
+    ALL = ['chords', 'self_wav', 'melody']  # order matters
 
 
 class WavCondition(tp.NamedTuple):
@@ -61,11 +69,17 @@ class JointEmbedCondition(tp.NamedTuple):
     seek_time: tp.List[tp.Optional[float]] = []
 
 
+class SymbolicCondition(tp.NamedTuple):
+    frame_chords: tp.Optional[torch.Tensor] = None
+    melody: tp.Optional[torch.Tensor] = None
+
+
 @dataclass
 class ConditioningAttributes:
     text: tp.Dict[str, tp.Optional[str]] = field(default_factory=dict)
     wav: tp.Dict[str, WavCondition] = field(default_factory=dict)
     joint_embed: tp.Dict[str, JointEmbedCondition] = field(default_factory=dict)
+    symbolic: tp.Dict[str, SymbolicCondition] = field(default_factory=dict)
 
     def __getitem__(self, item):
         return getattr(self, item)
@@ -83,18 +97,24 @@ class ConditioningAttributes:
         return self.joint_embed.keys()
 
     @property
+    def symbolic_attributes(self):
+        return self.symbolic.keys()
+
+    @property
     def attributes(self):
         return {
             "text": self.text_attributes,
             "wav": self.wav_attributes,
             "joint_embed": self.joint_embed_attributes,
+            "symbolic": self.symbolic_attributes,
         }
 
     def to_flat_dict(self):
         return {
             **{f"text.{k}": v for k, v in self.text.items()},
             **{f"wav.{k}": v for k, v in self.wav.items()},
-            **{f"joint_embed.{k}": v for k, v in self.joint_embed.items()}
+            **{f"joint_embed.{k}": v for k, v in self.joint_embed.items()},
+            **{f"symbolic.{k}": v for k, v in self.symbolic.items()}
         }
 
     @classmethod
@@ -176,6 +196,28 @@ def nullify_joint_embed(embed: JointEmbedCondition) -> JointEmbedCondition:
         path=[None] * embed.wav.shape[0],
         seek_time=[0] * embed.wav.shape[0],
     )
+
+
+def nullify_chords(sym_cond: SymbolicCondition, null_chord_idx: int = 194) -> SymbolicCondition:
+    """Nullify the symbolic condition by setting all frame chords to a specified null chord index.
+    Args:
+        sym_cond (SymbolicCondition): The symbolic condition containing frame chords to be nullified.
+        null_chord_idx (int, optional): The index to use for nullifying the chords. Defaults to 194 (Chordino).
+    Returns:
+        SymbolicCondition: A new symbolic condition with all frame chords set to the null chord index.
+    """
+    return SymbolicCondition(frame_chords=torch.ones_like(sym_cond.frame_chords) * null_chord_idx)  # type: ignore
+
+
+def nullify_melody(sym_cond: SymbolicCondition) -> SymbolicCondition:
+    """Nullify the symbolic condition by replacing the melody matrix with zeros matrix.
+    Args:
+        sym_cond (SymbolicCondition): The symbolic condition containing frame chords to be nullified.
+        null_chord_idx (int, optional): The index to use for nullifying the chords. Defaults to 194 (Chordino).
+    Returns:
+        SymbolicCondition: A new symbolic condition with all frame chords set to the null chord index.
+    """
+    return SymbolicCondition(melody=torch.zeros_like(sym_cond.melody))  # type: ignore
 
 
 def _drop_description_condition(conditions: tp.List[ConditioningAttributes]) -> tp.List[ConditioningAttributes]:
@@ -314,7 +356,8 @@ class BaseConditioner(nn.Module):
         super().__init__()
         self.dim = dim
         self.output_dim = output_dim
-        self.output_proj = nn.Linear(dim, output_dim)
+        if self.output_dim > -1:  # omit projection when output_dim <= 0
+            self.output_proj = nn.Linear(dim, output_dim)
 
     def tokenize(self, *args, **kwargs) -> tp.Any:
         """Should be any part of the processing that will lead to a synchronization
@@ -512,8 +555,9 @@ class WaveformConditioner(BaseConditioner):
         wav, lengths, *_ = x
         with torch.no_grad():
             embeds = self._get_wav_embedding(x)
-        embeds = embeds.to(self.output_proj.weight)
-        embeds = self.output_proj(embeds)
+        if hasattr(self, 'output_proj'):
+            embeds = embeds.to(self.output_proj.weight)
+            embeds = self.output_proj(embeds)
 
         if lengths is not None and self._use_masking:
             lengths = lengths / self._downsampling_factor()
@@ -1257,13 +1301,48 @@ class CLAPEmbeddingConditioner(JointEmbeddingConditioner):
         return embed, empty_idx
 
 
-def dropout_condition(sample: ConditioningAttributes, condition_type: str, condition: str) -> ConditioningAttributes:
+def dropout_symbolic_conditions(sample: ConditioningAttributes,
+                                condition: str, null_chord_idx: int = 194) -> ConditioningAttributes:
+    """
+    Applies dropout to symbolic conditions within the sample based on the specified condition by setting the condition
+    value to a null index.
+    Args:
+        sample (ConditioningAttributes): The sample containing symbolic attributes to potentially dropout.
+        condition (str): The specific condition within the symbolic attributes to apply dropout.
+        null_chord_idx (int, optional): The index used to represent a null chord. Defaults to 194.
+    Returns:
+        ConditioningAttributes: The modified sample with dropout applied to the specified condition.
+    Raises:
+        ValueError: If the specified condition is not present in the sample's symbolic attributes.
+    """
+    if sample.symbolic == {} or sample.symbolic[JascoCondConst.CRD.value].frame_chords.shape[-1] <= 1:  # type: ignore
+        # nothing to drop
+        return sample
+
+    if condition not in getattr(sample, 'symbolic'):
+        raise ValueError(
+            "dropout_symbolic_condition received an unexpected condition!"
+            f" expected {sample.symbolic.keys()}"
+            f" but got '{condition}'!"
+        )
+
+    if condition == JascoCondConst.CRD.value:
+        sample.symbolic[condition] = nullify_chords(sample.symbolic[condition], null_chord_idx=null_chord_idx)
+    elif condition == JascoCondConst.MLD.value:
+        sample.symbolic[condition] = nullify_melody(sample.symbolic[condition])
+
+    return sample
+
+
+def dropout_condition(sample: ConditioningAttributes,
+                      condition_type: str, condition: str,
+                      **kwargs) -> ConditioningAttributes:
     """Utility function for nullifying an attribute inside an ConditioningAttributes object.
     If the condition is of type "wav", then nullify it using `nullify_condition` function.
     If the condition is of any other type, set its value to None.
     Works in-place.
     """
-    if condition_type not in ['text', 'wav', 'joint_embed']:
+    if condition_type not in ['text', 'wav', 'joint_embed', 'symbolic']:
         raise ValueError(
             "dropout_condition got an unexpected condition type!"
             f" expected 'text', 'wav' or 'joint_embed' but got '{condition_type}'"
@@ -1282,6 +1361,8 @@ def dropout_condition(sample: ConditioningAttributes, condition_type: str, condi
     elif condition_type == 'joint_embed':
         embed = sample.joint_embed[condition]
         sample.joint_embed[condition] = nullify_joint_embed(embed)
+    elif condition_type == 'symbolic':
+        sample = dropout_symbolic_conditions(sample=sample, condition=condition, **kwargs)
     else:
         sample.text[condition] = None
 
@@ -1332,7 +1413,7 @@ class AttributeDropout(DropoutModule):
             return samples
 
         samples = deepcopy(samples)
-        for condition_type, ps in self.p.items():  # for condition types [text, wav]
+        for condition_type, ps in self.p.items():  # for condition types [text, wav, symbolic]
             for condition, p in ps.items():  # for attributes of each type (e.g., [artist, genre])
                 if torch.rand(1, generator=self.rng).item() < p:
                     for sample in samples:
@@ -1355,7 +1436,9 @@ class ClassifierFreeGuidanceDropout(DropoutModule):
         super().__init__(seed=seed)
         self.p = p
 
-    def forward(self, samples: tp.List[ConditioningAttributes]) -> tp.List[ConditioningAttributes]:
+    def forward(self, samples: tp.List[ConditioningAttributes],
+                cond_types: tp.List[str] = ["wav", "text"],
+                **kwargs) -> tp.List[ConditioningAttributes]:
         """
         Args:
             samples (list[ConditioningAttributes]): List of conditions.
@@ -1372,10 +1455,11 @@ class ClassifierFreeGuidanceDropout(DropoutModule):
 
         # nullify conditions of all attributes
         samples = deepcopy(samples)
-        for condition_type in ["wav", "text"]:
+        for condition_type in cond_types:
             for sample in samples:
                 for condition in sample.attributes[condition_type]:
-                    dropout_condition(sample, condition_type, condition)
+                    dropout_condition(sample, condition_type, condition,
+                                      **kwargs)
         return samples
 
     def __repr__(self):
@@ -1600,7 +1684,7 @@ class ConditionFuser(StreamingModule):
         cross_attention_pos_emb (bool, optional): Use positional embeddings in cross attention.
         cross_attention_pos_emb_scale (int): Scale for positional embeddings in cross attention if used.
     """
-    FUSING_METHODS = ["sum", "prepend", "cross", "input_interpolate"]
+    FUSING_METHODS = ["sum", "prepend", "cross", "ignore", "input_interpolate"]
 
     def __init__(self, fuse2cond: tp.Dict[str, tp.List[str]], cross_attention_pos_emb: bool = False,
                  cross_attention_pos_emb_scale: float = 1.0):
@@ -1660,6 +1744,8 @@ class ConditionFuser(StreamingModule):
                     cross_attention_output = torch.cat([cross_attention_output, cond], dim=1)
                 else:
                     cross_attention_output = cond
+            elif op == 'ignore':
+                continue
             else:
                 raise ValueError(f"unknown op ({op})")
 
