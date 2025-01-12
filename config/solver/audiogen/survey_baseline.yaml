@@ -53,7 +53,7 @@ generate:
     top_p: 0.0
 
 optim:
-  epochs: 100
+  epochs: 75
   optimizer: adamw
   lr: 5e-4
   ema:
@@ -69,3 +69,7 @@ schedule:
   inverse_sqrt:
     warmup: 3000
     warmup_init_lr: 0.0
+
+metrics:
+  fad:
+    model: torch
