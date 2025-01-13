@@ -27,7 +27,7 @@ conditioners:
       name: t5-base
 
 dataset:
-  batch_size: 128  # matching AudioGen paper setup (256 * mix_p=0.5 = 128)
+  batch_size: 64  # matching AudioGen paper setup (256 * mix_p=0.5 = 128)
   num_workers: 10
   segment_duration: 10
   min_segment_ratio: 1.0
@@ -36,7 +36,7 @@ dataset:
   external_metadata_source: null
   # sample mixing augmentation at train time
   train:
-    batch_size: 256  # matching AudioGen paper setup
+    batch_size: 128  # matching AudioGen paper setup
     aug_p: 0.5  # perform audio mixing 50% of the time
     mix_p: 0.5  # proportion of batch items mixed together
                 # important: note that this will reduce the
@@ -69,3 +69,7 @@ schedule:
   inverse_sqrt:
     warmup: 3000
     warmup_init_lr: 0.0
+
+metrics:
+  fad:
+    model: torch

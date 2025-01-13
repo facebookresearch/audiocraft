@@ -256,12 +256,19 @@ def get_visqol(cfg: omegaconf.DictConfig) -> metrics.ViSQOL:
     return metrics.ViSQOL(**kwargs)
 
 
-def get_fad(cfg: omegaconf.DictConfig) -> metrics.FrechetAudioDistanceMetric:
+def get_fad(cfg: omegaconf.DictConfig) -> tp.Union[metrics.FrechetAudioDistanceMetric, metrics.TorchFrechetAudioDistanceMetric]:
     """Instantiate Frechet Audio Distance metric from config."""
-    kwargs = dict_from_config(cfg.tf)
-    xp = dora.get_xp()
-    kwargs['log_folder'] = xp.folder
-    return metrics.FrechetAudioDistanceMetric(**kwargs)
+    if cfg.model == 'tf':
+        kwargs = dict_from_config(cfg.tf)
+        xp = dora.get_xp()
+        kwargs['log_folder'] = xp.folder
+        return metrics.FrechetAudioDistanceMetric(**kwargs)
+    elif cfg.model == 'torch':
+        kwargs = cfg.get("torch", None)
+        kwargs = dict_from_config(kwargs) if kwargs is not None else dict()
+        xp = dora.get_xp()
+        kwargs['log_folder'] = xp.folder
+        return metrics.TorchFrechetAudioDistanceMetric(**kwargs)
 
 
 def get_kldiv(cfg: omegaconf.DictConfig) -> metrics.KLDivergenceMetric:

@@ -327,3 +327,98 @@ class FrechetAudioDistanceMetric(torchmetrics.Metric):
         logger.warning(f"FAD score = {fad_score}")
         fad_score = flashy.distrib.broadcast_object(fad_score, src=0)
         return fad_score
+
+
+class TorchFrechetAudioDistanceMetric(torchmetrics.Metric):
+    """Fréchet Audio Distance computation based on PyTorch implementation from https://pypi.org/project/frechet-audio-distance/.
+    Results were shown to be relatively consistent with the official implementation from Google Research, yet the
+    installation and running are much simpler
+    Args:
+        bin (Path or str): Path to installed frechet audio distance code.
+        model_path (Path or str): Path to Tensorflow checkpoint for the model
+            used to compute statistics over the embedding beams.
+        format (str): Audio format used to save files.
+        log_folder (Path or str, optional): Path where to write process logs.
+    """
+    def __init__(self,
+                 format: str = "wav", batch_size: tp.Optional[int] = None,
+                 log_folder: tp.Optional[tp.Union[Path, str]] = None):
+        super().__init__()
+        from fadtk.model_loader import VGGishModel
+        from fadtk.fad import FrechetAudioDistance
+        self.model_sample_rate = VGGISH_SAMPLE_RATE
+        self.model_channels = VGGISH_CHANNELS
+        self.format = format
+        self.batch_size = batch_size
+        # TODO: do we want to make this configurable?
+        self.model = VGGishModel()
+        self.fad = FrechetAudioDistance(self.model, audio_load_worker=4, load_model=False)
+        self.reset(log_folder)
+        self.add_state("total_files", default=torch.tensor(0.), dist_reduce_fx="sum")
+
+    def reset(self, log_folder: tp.Optional[tp.Union[Path, str]] = None):
+        """Reset torchmetrics.Metrics state."""
+        log_folder = Path(log_folder or tempfile.mkdtemp())
+        self.tmp_dir = log_folder / 'fad'
+        self.tmp_dir.mkdir(exist_ok=True)
+        self.samples_tests_dir = self.tmp_dir / 'tests'
+        self.samples_tests_dir.mkdir(exist_ok=True)
+        self.samples_background_dir = self.tmp_dir / 'background'
+        self.samples_background_dir.mkdir(exist_ok=True)
+        self.counter = 0
+
+    def update(self, preds: torch.Tensor, targets: torch.Tensor,
+               sizes: torch.Tensor, sample_rates: torch.Tensor,
+               stems: tp.Optional[tp.List[str]] = None):
+        """Update torchmetrics.Metrics by saving the audio"""
+        assert preds.shape == targets.shape, f"preds={preds.shape} != targets={targets.shape}"
+        num_samples = preds.shape[0]
+        assert num_samples == sizes.size(0) and num_samples == sample_rates.size(0)
+        assert stems is None or num_samples == len(set(stems))
+        for i in range(num_samples):
+            self.total_files += 1  # type: ignore
+            self.counter += 1
+            wav_len = int(sizes[i].item())
+            sample_rate = int(sample_rates[i].item())
+            pred_wav = preds[i]
+            target_wav = targets[i]
+            pred_wav = pred_wav[..., :wav_len]
+            target_wav = target_wav[..., :wav_len]
+            stem_name = stems[i] if stems is not None else f'sample_{self.counter}_{flashy.distrib.rank()}'
+            # dump audio files
+            try:
+                pred_wav = convert_audio(
+                    pred_wav.unsqueeze(0), from_rate=sample_rate,
+                    to_rate=self.model_sample_rate, to_channels=1).squeeze(0)
+                audio_write(
+                    self.samples_tests_dir / stem_name, pred_wav, sample_rate=self.model_sample_rate,
+                    format=self.format, strategy="peak")
+            except Exception as e:
+                logger.error(f"Exception occured when saving tests files for FAD computation: {repr(e)} - {e}")
+            try:
+                # for the ground truth audio, we enforce the 'peak' strategy to avoid modifying
+                # the original audio when writing it
+                target_wav = convert_audio(
+                    target_wav.unsqueeze(0), from_rate=sample_rate,
+                    to_rate=self.model_sample_rate, to_channels=1).squeeze(0)
+                audio_write(
+                    self.samples_background_dir / stem_name, target_wav, sample_rate=self.model_sample_rate,
+                    format=self.format, strategy="peak")
+            except Exception as e:
+                logger.error(f"Exception occured when saving background files for FAD computation: {repr(e)} - {e}")
+
+    @flashy.distrib.rank_zero_only
+    def _local_compute_frechet_audio_distance(self):
+        """Compute Frechet Audio Distance score"""
+        from fadtk.fad_batch import cache_embedding_files
+        cache_embedding_files(self.samples_background_dir, self.model, workers=4)
+        cache_embedding_files(self.samples_tests_dir, self.model, workers=4)
+        return self.fad.score(self.samples_background_dir, self.samples_tests_dir)
+
+    def compute(self) -> float:
+        """Compute metrics."""
+        assert self.total_files.item() > 0, "No files dumped for FAD computation!"  # type: ignore
+        fad_score = self._local_compute_frechet_audio_distance()
+        logger.warning(f"FAD score = {fad_score}")
+        fad_score = flashy.distrib.broadcast_object(fad_score, src=0)
+        return fad_score
