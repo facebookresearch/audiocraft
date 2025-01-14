@@ -1,0 +1,78 @@
+# @package __global__
+
+# This is the training loop solver
+# for the base MusicGen model (text-to-music)
+# on monophonic audio sampled at 32 kHz
+defaults:
+  - musicgen/default
+  - /model: lm/musicgen_lm
+  - override /dset: audio/default
+  - _self_
+
+lm_model: flow_matching
+solver: jasco
+
+autocast: true
+autocast_dtype: float16
+
+# EnCodec large trained on mono-channel music audio sampled at 32khz
+# with a total stride of 640 leading to 50 frames/s.
+# rvq.n_q=4, rvq.bins=2048, no quantization dropout
+# (transformer_lm card and n_q must be compatible)
+compression_model_checkpoint: //pretrained/facebook/encodec_32khz
+# precomputed mean std accross training data sub-partition
+compression_model_latent_std: 4.0102
+compression_model_latent_mean: -0.0074
+compression_model_framerate: 50
+compression_model_latent_dim: 128 
+
+efficient_attention_backend: xformers # restricted attention implementation supports only xformers at the moment
+
+channels: 1
+sample_rate: 32000
+
+deadlock:
+  use: true  # deadlock detection
+
+dataset:
+  segment_duration: 10
+  batch_size: 320  # 32 GPUs
+  sample_on_weight: false  # Uniform sampling all the way
+  sample_on_duration: false  # Uniform sampling all the way
+
+optim:
+  epochs: 500
+  optimizer: adamw
+  lr: 1e-4
+  ema:
+    use: true
+    updates: 10
+    device: cuda
+
+logging:
+  log_tensorboard: true
+
+schedule:
+  lr_scheduler: cosine
+  cosine:
+    warmup: 4000
+    lr_min_ratio: 0.0
+    cycle_length: 1.0
+
+transformer_lm:
+  causal: false
+  skip_connections: false
+  flow_dim: ${compression_model_latent_dim}
+
+generate:
+  lm: 
+    max_prompt_len: null
+    max_gen_len: null
+    remove_prompts: false
+    cfg_coef_all: 3.0
+    cfg_coef_txt: 0.0
+
+    prompted_samples: false
+    samples:
+      prompted: false
+      unprompted: true

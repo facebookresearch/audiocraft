@@ -12,7 +12,6 @@ import json
 import logging
 from pathlib import Path
 import typing as tp
-
 import flashy
 import flashy.distrib
 import omegaconf
@@ -296,3 +295,32 @@ def load_clap_state_dict(clap_model, path: tp.Union[str, Path]):
     pkg = load_state_dict(path)
     pkg.pop('text_branch.embeddings.position_ids', None)
     clap_model.model.load_state_dict(pkg)
+
+
+def construct_frame_chords(
+                    min_timestamp: int,
+                    chord_changes: tp.List[tp.Tuple[float, str]],
+                    mapping_dict: tp.Dict,
+                    prev_chord: str,
+                    frame_rate: float,
+                    segment_duration: float,
+                    ) -> tp.List[str]:
+    """ Translate symbolic chords [(start_time, tuples),...] into a frame-level int sequence"""
+
+    frames = [
+        frame / frame_rate
+        for frame in range(
+            min_timestamp, int(min_timestamp + segment_duration * frame_rate)
+        )
+    ]
+
+    frame_chords = []
+    current_chord = prev_chord
+
+    for frame in frames:
+        while chord_changes and frame >= chord_changes[0][0]:
+            current_chord = chord_changes.pop(0)[1]
+        current_chord = 'N' if current_chord in {None, ''} else current_chord
+        frame_chords.append(mapping_dict[current_chord])
+
+    return frame_chords

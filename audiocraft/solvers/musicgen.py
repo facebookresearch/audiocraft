@@ -111,6 +111,32 @@ class MusicGenSolver(base.StandardSolver):
     def best_metric_name(self) -> tp.Optional[str]:
         return self._best_metric_name
 
+    def initialize_optimization(self) -> None:
+        if self.cfg.fsdp.use:
+            assert not self.cfg.autocast, "Cannot use autocast with fsdp"
+            self.model = self.wrap_with_fsdp(self.model)
+        self.register_ema('model')
+        # initialize optimization
+        self.optimizer = builders.get_optimizer(builders.get_optim_parameter_groups(self.model), self.cfg.optim)
+        self.lr_scheduler = builders.get_lr_scheduler(self.optimizer, self.cfg.schedule, self.total_updates)
+        self.register_stateful('model', 'optimizer', 'lr_scheduler')
+        self.register_best_state('model')
+        self.autocast_dtype = {
+            'float16': torch.float16, 'bfloat16': torch.bfloat16
+        }[self.cfg.autocast_dtype]
+        self.scaler: tp.Optional[torch.cuda.amp.GradScaler] = None
+        if self.cfg.fsdp.use:
+            need_scaler = self.cfg.fsdp.param_dtype == 'float16'
+        else:
+            need_scaler = self.cfg.autocast and self.autocast_dtype is torch.float16
+        if need_scaler:
+            if self.cfg.fsdp.use:
+                from torch.distributed.fsdp.sharded_grad_scaler import ShardedGradScaler
+                self.scaler = ShardedGradScaler()  # type: ignore
+            else:
+                self.scaler = torch.cuda.amp.GradScaler()
+            self.register_stateful('scaler')
+
     def build_model(self) -> None:
         """Instantiate models and optimizer."""
         # we can potentially not use all quantizers with which the EnCodec model was trained
@@ -136,31 +162,11 @@ class MusicGenSolver(base.StandardSolver):
                          self.compression_model.num_codebooks, self.compression_model.cardinality,
                          self.compression_model.frame_rate)
         # instantiate LM model
-        self.model: models.LMModel = models.builders.get_lm_model(self.cfg).to(self.device)
-        if self.cfg.fsdp.use:
-            assert not self.cfg.autocast, "Cannot use autocast with fsdp"
-            self.model = self.wrap_with_fsdp(self.model)
-        self.register_ema('model')
+        self.model: tp.Union[models.LMModel, models.FlowMatchingModel] = models.builders.get_lm_model(
+            self.cfg).to(self.device)
+
         # initialize optimization
-        self.optimizer = builders.get_optimizer(builders.get_optim_parameter_groups(self.model), self.cfg.optim)
-        self.lr_scheduler = builders.get_lr_scheduler(self.optimizer, self.cfg.schedule, self.total_updates)
-        self.register_stateful('model', 'optimizer', 'lr_scheduler')
-        self.register_best_state('model')
-        self.autocast_dtype = {
-            'float16': torch.float16, 'bfloat16': torch.bfloat16
-        }[self.cfg.autocast_dtype]
-        self.scaler: tp.Optional[torch.cuda.amp.GradScaler] = None
-        if self.cfg.fsdp.use:
-            need_scaler = self.cfg.fsdp.param_dtype == 'float16'
-        else:
-            need_scaler = self.cfg.autocast and self.autocast_dtype is torch.float16
-        if need_scaler:
-            if self.cfg.fsdp.use:
-                from torch.distributed.fsdp.sharded_grad_scaler import ShardedGradScaler
-                self.scaler = ShardedGradScaler()  # type: ignore
-            else:
-                self.scaler = torch.cuda.amp.GradScaler()
-            self.register_stateful('scaler')
+        self.initialize_optimization()
 
     def build_dataloaders(self) -> None:
         """Instantiate audio dataloaders for each stage."""
@@ -244,6 +250,12 @@ class MusicGenSolver(base.StandardSolver):
         ce = ce / K
         return ce, ce_per_codebook
 
+    def _get_audio_tokens(self, audio: torch.Tensor):
+        with torch.no_grad():
+            audio_tokens, scale = self.compression_model.encode(audio)
+            assert scale is None, "Scaled compression model not supported with LM."
+            return audio_tokens
+
     def _prepare_tokens_and_attributes(
         self, batch: tp.Tuple[torch.Tensor, tp.List[SegmentWithAttributes]],
         check_synchronization_points: bool = False
@@ -310,9 +322,7 @@ class MusicGenSolver(base.StandardSolver):
             torch.cuda.set_sync_debug_mode("warn")
 
         if audio_tokens is None:
-            with torch.no_grad():
-                audio_tokens, scale = self.compression_model.encode(audio)
-                assert scale is None, "Scaled compression model not supported with LM."
+            audio_tokens = self._get_audio_tokens(audio)
 
         with self.autocast:
             condition_tensors = self.model.condition_provider(tokenized)
@@ -679,7 +689,7 @@ class MusicGenSolver(base.StandardSolver):
 
                 gen_outputs = self.run_generate_step(
                     batch, gen_duration=target_duration,
-                    remove_text_conditioning=self.cfg.evaluate.remove_text_conditioning
+                    remove_text_conditioning=self.cfg.evaluate.get('remove_text_conditioning', False)
                 )
                 y_pred = gen_outputs['gen_audio'].detach()
                 y_pred = y_pred[..., :audio.shape[-1]]
