@@ -24,19 +24,15 @@ from ..modules.codebooks_patterns import (CoarseFirstPattern,
                                           ParallelPatternProvider,
                                           UnrolledPatternProvider)
 from ..modules.conditioners import (BaseConditioner, ChromaStemConditioner,
-                                    CLAPEmbeddingConditioner,
-                                    ConditionFuser, JascoCondConst,
+                                    CLAPEmbeddingConditioner, ConditionFuser,
                                     ConditioningProvider, LUTConditioner,
                                     T5Conditioner, StyleConditioner)
-from ..modules.jasco_conditioners import (JascoConditioningProvider, ChordsEmbConditioner,
-                                          DrumsConditioner, MelodyConditioner)
 from ..modules.diffusion_schedule import MultiBandProcessor, SampleProcessor
 from ..utils.utils import dict_from_config
 from .encodec import (CompressionModel, EncodecModel,
                       InterleaveStereoCompressionModel)
 from .lm import LMModel
 from .lm_magnet import MagnetLMModel
-from .flow_matching import FlowMatchingModel
 from .unet import DiffusionUnet
 from .watermark import WMModel
 
@@ -89,48 +85,6 @@ def get_compression_model(cfg: omegaconf.DictConfig) -> CompressionModel:
         ).to(cfg.device)
     else:
         raise KeyError(f"Unexpected compression model {cfg.compression_model}")
-
-
-def get_jasco_model(cfg: omegaconf.DictConfig,
-                    compression_model: tp.Optional[CompressionModel] = None) -> FlowMatchingModel:
-    kwargs = dict_from_config(getattr(cfg, "transformer_lm"))
-    attribute_dropout = dict_from_config(getattr(cfg, "attribute_dropout"))
-    cls_free_guidance = dict_from_config(getattr(cfg, "classifier_free_guidance"))
-    cfg_prob = cls_free_guidance["training_dropout"]
-    cfg_coef = cls_free_guidance["inference_coef"]
-    fuser = get_condition_fuser(cfg)
-    condition_provider = get_conditioner_provider(kwargs["dim"], cfg).to(cfg.device)
-    if JascoCondConst.DRM.value in condition_provider.conditioners:  # use self_wav for drums
-        assert compression_model is not None
-
-        # use compression model for drums conditioning
-        condition_provider.conditioners.self_wav.compression_model = compression_model
-        condition_provider.conditioners.self_wav.compression_model.requires_grad_(False)
-
-    # downcast to jasco conditioning provider
-    seq_len = cfg.compression_model_framerate * cfg.dataset.segment_duration
-    chords_card = cfg.conditioners.chords.chords_emb.card if JascoCondConst.CRD.value in cfg.conditioners else -1
-    condition_provider = JascoConditioningProvider(device=condition_provider.device,
-                                                   conditioners=condition_provider.conditioners,
-                                                   chords_card=chords_card,
-                                                   sequence_length=seq_len)
-
-    if len(fuser.fuse2cond["cross"]) > 0:  # enforce cross-att programmatically
-        kwargs["cross_attention"] = True
-
-    kwargs.pop("n_q", None)
-    kwargs.pop("card", None)
-
-    return FlowMatchingModel(
-        condition_provider=condition_provider,
-        fuser=fuser,
-        cfg_dropout=cfg_prob,
-        cfg_coef=cfg_coef,
-        attribute_dropout=attribute_dropout,
-        dtype=getattr(torch, cfg.dtype),
-        device=cfg.device,
-        **kwargs,
-    ).to(cfg.device)
 
 
 def get_lm_model(cfg: omegaconf.DictConfig) -> LMModel:
@@ -203,12 +157,6 @@ def get_conditioner_provider(
             conditioners[str(cond)] = ChromaStemConditioner(
                 output_dim=output_dim, duration=duration, device=device, **model_args
             )
-        elif model_type in {"chords_emb", "drum_latents", "melody"}:
-            conditioners_classes = {"chords_emb": ChordsEmbConditioner,
-                                    "drum_latents": DrumsConditioner,
-                                    "melody": MelodyConditioner}
-            conditioner_class = conditioners_classes[model_type]
-            conditioners[str(cond)] = conditioner_class(device=device, **model_args)
         elif model_type == "clap":
             conditioners[str(cond)] = CLAPEmbeddingConditioner(
                 output_dim=output_dim, device=device, **model_args
@@ -230,8 +178,8 @@ def get_conditioner_provider(
 def get_condition_fuser(cfg: omegaconf.DictConfig) -> ConditionFuser:
     """Instantiate a condition fuser object."""
     fuser_cfg = getattr(cfg, "fuser")
-    fuser_methods = ["sum", "cross", "prepend", "ignore", "input_interpolate"]
-    fuse2cond = {k: fuser_cfg[k] for k in fuser_methods if k in fuser_cfg}
+    fuser_methods = ["sum", "cross", "prepend", "input_interpolate"]
+    fuse2cond = {k: fuser_cfg[k] for k in fuser_methods}
     kwargs = {k: v for k, v in fuser_cfg.items() if k not in fuser_methods}
     fuser = ConditionFuser(fuse2cond=fuse2cond, **kwargs)
     return fuser

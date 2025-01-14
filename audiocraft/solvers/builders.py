@@ -38,7 +38,6 @@ class DatasetType(Enum):
     AUDIO = "audio"
     MUSIC = "music"
     SOUND = "sound"
-    JASCO = "jasco"
 
 
 def get_solver(cfg: omegaconf.DictConfig) -> StandardSolver:
@@ -49,7 +48,6 @@ def get_solver(cfg: omegaconf.DictConfig) -> StandardSolver:
     from .diffusion import DiffusionSolver
     from .magnet import MagnetSolver, AudioMagnetSolver
     from .watermark import WatermarkSolver
-    from .jasco import JascoSolver
     klass = {
         'compression': CompressionSolver,
         'musicgen': MusicGenSolver,
@@ -60,7 +58,6 @@ def get_solver(cfg: omegaconf.DictConfig) -> StandardSolver:
         'diffusion': DiffusionSolver,
         'sound_lm': AudioGenSolver,  # backward compatibility
         'watermarking': WatermarkSolver,
-        'jasco': JascoSolver,
     }[cfg.solver]
     return klass(cfg)  # type: ignore
 
@@ -358,8 +355,6 @@ def get_audio_datasets(cfg: omegaconf.DictConfig,
             dataset = data.sound_dataset.SoundDataset.from_meta(path, **kwargs)
         elif dataset_type == DatasetType.AUDIO:
             dataset = data.info_audio_dataset.InfoAudioDataset.from_meta(path, return_info=return_info, **kwargs)
-        elif dataset_type == DatasetType.JASCO:
-            dataset = data.jasco_dataset.JascoDataset.from_meta(path, return_info=return_info, **kwargs)
         else:
             raise ValueError(f"Dataset type is unsupported: {dataset_type}")
 
