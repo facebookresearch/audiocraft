@@ -18,9 +18,11 @@ At the moment we provide the training code for:
     See `audiocraft.solvers.compression.CompressionSolver`, and `audiocraft.models.encodec.EncodecModel`.
 - [MultiBandDiffusion](TODO), alternative diffusion-based decoder compatible with EnCodec that
     improves the perceived quality and reduces the artifacts coming from adversarial decoders.
+- [JASCO](https://arxiv.org/abs/2406.10970) Joint Audio and Symbolic Conditioning for Temporally Controlled
+    Text-to-Music Generation.
 """
 
 # flake8: noqa
 from . import data, modules, models
 
-__version__ = '1.4.0a1'
+__version__ = '1.4.0a2'
