@@ -35,6 +35,8 @@ We currently offer two ways to interact with JASCO:
 We provide a simple API and pre-trained models:
 - `facebook/jasco-chords-drums-400M`: 400M model, text to music with chords and drums support, generates 10-second samples - [🤗 Hub](https://huggingface.co/facebook/jasco-chords-drums-400M)
 - `facebook/jasco-chords-drums-1B`: 1B model, text to music with chords and drums support, generates 10-second samples - [🤗 Hub](https://huggingface.co/facebook/jasco-chords-drums-1B)
+- `facebook/jasco-chords-drums-melody-400M`: 400M model, text to music with chords, drums and melody support, generates 10-second samples - [🤗 Hub](https://huggingface.co/facebook/jasco-chords-drums-melody-400M)
+- `facebook/jasco-chords-drums-melody-1B`: 1B model, text to music with chords, drums and melody support, generates 10-second samples - [🤗 Hub](https://huggingface.co/facebook/jasco-chords-drums-melody-1B)
 
 
 See after a quick example for using the API.
