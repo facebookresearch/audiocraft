@@ -61,7 +61,7 @@ We provide some [API documentation](https://facebookresearch.github.io/audiocraf
 
 #### Is the training code available?
 
-Yes! We provide the training code for [EnCodec](./docs/ENCODEC.md), [MusicGen](./docs/MUSICGEN.md) and [Multi Band Diffusion](./docs/MBD.md).
+Yes! We provide the training code for [EnCodec](./docs/ENCODEC.md), [MusicGen](./docs/MUSICGEN.md),[Multi Band Diffusion](./docs/MBD.md) and [JASCO](./docs/JASCO.md).
 
 #### Where are the models stored?
 
