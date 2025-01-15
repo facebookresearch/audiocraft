@@ -42,6 +42,7 @@ At the moment, AudioCraft contains the training code and inference code for:
 * [MusicGen Style](./docs/MUSICGEN_STYLE.md): A state-of-the-art text-and-style-to-music model.
 * [JASCO](./docs/JASCO.md): "High quality text-to-music model conditioned on chords, melodies and drum tracks"
 
+
 ## Training code
 
 AudioCraft contains PyTorch components for deep learning research in audio and training pipelines for the developed models.
