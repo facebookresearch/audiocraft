@@ -8,6 +8,7 @@ Also defines the main interface that a model must follow to be usable as an audi
 """
 
 from abc import ABC, abstractmethod
+import os
 import logging
 import math
 from pathlib import Path
@@ -108,6 +109,9 @@ class CompressionModel(ABC, nn.Module):
             model_type = name.split('_')[1]
             logger.info("Getting pretrained compression model from DAC %s", model_type)
             model = DAC(model_type)
+        elif name in ['wavtokenizer']:
+            logger.info("Getting pretrained compression model from WavTokenizer")
+            model = WavTokenizer()
         elif name in ['debug_compression_model']:
             logger.info("Getting pretrained compression model for debug")
             model = builders.get_debug_compression_model()
@@ -317,6 +321,74 @@ class DAC(CompressionModel):
         """
         assert n >= 1
         assert n <= self.total_codebooks
+        self.n_quantizers = n
+
+
+class WavTokenizer(CompressionModel):
+    # we need assignment to override the property in the abstract class,
+    # I couldn't find a better way...
+    frame_rate: float = 0
+    sample_rate: int = 0
+    channels: int = 0
+    cardinality: int = 0
+
+    def __init__(self,
+                 repo_id="novateur/WavTokenizer-medium-music-audio-75token",
+                 config="wavtokenizer_mediumdata_music_audio_frame75_3s_nq1_code4096_dim512_kmeans200_attn.yaml",
+                 checkpoint="wavtokenizer_medium_music_audio_320_24k_v2.ckpt"):
+        super().__init__()
+        from huggingface_hub import snapshot_download
+
+        try:
+            import wavtokenizer
+        except ImportError:
+            raise ImportError(
+                "Please install the WavTokenizer module using: "
+                "`pip install git+https://github.com/Tomiinek/WavTokenizer`"
+            )
+
+        # TODO: make this more robust
+        self.sample_rate = 24_000
+        self.frame_rate = 75
+        self.cardinality = 4096
+
+        # download model
+        path = snapshot_download(repo_id=repo_id)
+        checkpoint_path = os.path.join(path, checkpoint)
+        config_path = os.path.join(path, config)
+        self.model = wavtokenizer.WavTokenizer.from_pretrained0802(config_path, checkpoint_path)
+        self.n_quantizers = self.total_codebooks
+        self.model.eval()
+
+    def forward(self, x: torch.Tensor) -> qt.QuantizedResult:
+        # We don't support training with this.
+        raise NotImplementedError("Forward and training with WavTokeniser not supported.")
+
+    def encode(self, x: torch.Tensor) -> tp.Tuple[torch.Tensor, tp.Optional[torch.Tensor]]:
+        _, tokens = self.model.encode(x.squeeze(1), bandwidth_id=0)
+        return tokens.movedim(0, 1), None
+
+    def decode(self, codes: torch.Tensor, scale: tp.Optional[torch.Tensor] = None):
+        assert scale is None
+        feats = self.model.codes_to_features(codes.movedim(1, 0))
+        return self.model.decode(feats, bandwidth_id=torch.tensor(0, device=codes.device))
+
+    def decode_latent(self, codes: torch.Tensor):
+        """Decode from the discrete codes to continuous latent space."""
+        return self.model.codes_to_features(codes)
+
+    @property
+    def num_codebooks(self) -> int:
+        return 1  # WavTokenizer only supports 1 codebook
+
+    @property
+    def total_codebooks(self) -> int:
+        return 1  # WavTokenizer only supports 1 codebook
+
+    def set_num_codebooks(self, n: int):
+        """Set the active number of codebooks used by the quantizer.
+        """
+        assert n == 1, "WavTokenizer only supports 1 codebook"
         self.n_quantizers = n
 
 
