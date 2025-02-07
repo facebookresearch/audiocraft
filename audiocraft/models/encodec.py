@@ -318,6 +318,145 @@ class DAC(CompressionModel):
         assert n >= 1
         assert n <= self.total_codebooks
         self.n_quantizers = n
+    
+class SQCodec(CompressionModel):
+    """SQCodec adapted tokenizer version for LLM training
+    Author: Haici Yang
+
+    """
+    frame_rate: float = 0
+    sample_rate: int = 0
+    channels: int = 0
+
+    def __init__(
+        self,
+        checkpoint_path='//reference/pretrained/SQ-Codec/ckpt_00190000.pth',
+        sample_rate=16000,
+        dim_codebook=19683,
+        n_codebook=4,
+        bw=2,
+        clip_length=450,
+    ):
+        """ Make sure to download checkpoint from https://huggingface.co/Dongchao/UniAudio/blob/main/SQ-Codec.zip
+        """
+        super(SQCodec, self).__init__()
+        
+        try:
+            self.ckpt_path = checkpoint.resolve_checkpoint_path(checkpoint_path, use_fsdp=False)
+        except:
+            print("1. Download SQ-Codec checkpoint from https://huggingface.co/Dongchao/UniAudio/blob/main/SQ-Codec.zip")
+            print("2. Place ckpt_00190000.pth into //reference/pretrained/SQ-Codec/")
+
+        self.scalar_codec = self.build_codec_model()
+        self.sample_rate = sample_rate
+        self.dim_codebook = dim_codebook
+        self.n_codebook = n_codebook
+        self.bw = bw
+        self.mask_id = self.dim_codebook * self.n_codebook
+    
+    def build_codec_model(self,):
+        scalar_codec = ScalarModel()  
+        parameter_dict = torch.load(self.ckpt_path)
+        scalar_codec.load_state_dict(parameter_dict['codec_model']) # load model
+        print('Loaded SQCodec from pretrained checkpoint.')
+        return scalar_codec
+
+    @property
+    def total_codebooks(self):
+        """Total number of quantizer codebooks available."""
+        return self.n_codebook
+
+    @property
+    def num_codebooks(self):
+        """Active number of codebooks used by the quantizer."""
+        return self.n_codebook
+
+    def set_num_codebooks(self, n: int):
+        """Set the active number of codebooks used by the quantizer.
+        """
+        assert n >= 1
+        assert n <= self.total_codebooks
+        self.n_codebook = n
+
+    @property
+    def cardinality(self):
+        """Cardinality of each codebook."""
+        return self.dim_codebook
+    
+    @property
+    def channels(self) -> int:
+        return 1
+    
+    @property
+    def frame_rate(self) -> int:
+        return 50
+    
+    def forward(self, x: torch.Tensor):
+        # We don't support training with this.
+        raise NotImplementedError("Forward and training with SQCodec not supported.")
+
+    def encode(self, x: torch.Tensor):
+        """
+        Args:
+            x (torch.Tensor): Float tensor of shape [B, C, T]
+
+        Returns:
+            codes, scale (tuple of torch.Tensor, torch.Tensor): Tuple composed of:
+                codes: a float tensor of shape [B, K, T] with K the number of codebooks used and T the timestep.
+        """
+        assert x.dim() == 3
+        compressed = self.scalar_codec.encode(x) # B, dim, len
+        # compressed = compressed.squeeze(0) # dim, len
+        chunks = compressed.chunk(self.n_codebook, dim=1) # 
+        codec_ls = []
+        for i, chunk in enumerate(chunks):
+            # chunk = int(chunk.detach().cpu().numpy()) + 1
+            chunk = chunk.detach().cpu().numpy() #.int() + 1
+            chunk= chunk.astype(np.int32) + 1 # .astype(np.int32)
+            tmp_codec = ternary_matrix_to_decimal(chunk) # 
+            codec_ls.append(torch.from_numpy(tmp_codec).to(torch.int64))
+
+        codec_ls = torch.stack(codec_ls, dim=1)
+
+        return codec_ls.to('cuda'), None
+
+    def decode(self, codes: torch.Tensor, scale: tp.Optional[torch.Tensor] = None):
+        
+        """Decode the given codes to a reconstructed representation, using the scale to perform
+        audio denormalization if needed.
+
+        Args:
+            codes (torch.Tensor): Int tensor of shape [B, K, T]
+        Returns:
+            out (torch.Tensor): Float tensor of shape [B, C, T], the reconstructed audio.
+        """
+
+        assert scale == None
+        emb_quant = self.decode_latent(codes)
+        out = self.scalar_codec.decode(emb_quant.float().to('cuda'))
+
+        return out
+
+    def decode_latent(self, codes: torch.Tensor):
+        """ Get 
+        Args:
+            codes (torch.Tensor): Int tensor of shape [B, K, T]; K is the number of codebooks
+
+        Returns:
+            codes, scale (tuple of torch.Tensor, torch.Tensor): Tuple composed of:
+                codes: a float tensor of shape [B, K, T] with K the number of codebooks used and T the timestep.
+        """
+        assert codes.dim() == 3
+
+        for i in range(self.n_codebook):
+            codes[:, i, :] -= i * self.dim_codebook
+        emb_quant = []
+        for i in range(self.n_codebook):
+            tmp_list = decimal_to_ternary_matrix(codes[:, i, :], D=9) - 1
+            emb_quant.append(tmp_list)
+        emb_quant = torch.cat(emb_quant, dim=1)
+
+        return emb_quant
 
 
 class HFEncodecCompressionModel(CompressionModel):
