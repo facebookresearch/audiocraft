@@ -103,7 +103,7 @@ class MelodyData:
                         'saliency_files': self.saliency_files,
                         'trk2idx': self.trk2idx}, f"{chroma_root}/cache.pkl")
         else:
-            tmp = torch.load(f"{chroma_root}/cache.pkl")
+            tmp = torch.load(f"{chroma_root}/cache.pkl", weights_only=False)
             self.tracks = tmp['tracks']
             self.saliency_files = tmp['saliency_files']
             self.trk2idx = tmp['trk2idx']

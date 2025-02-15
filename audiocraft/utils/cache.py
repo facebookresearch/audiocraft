@@ -85,7 +85,7 @@ class EmbeddingCache:
     def _get_full_embed_from_cache(cache: Path):
         """Loads full pre-computed embedding from the cache."""
         try:
-            embed = torch.load(cache, 'cpu')
+            embed = torch.load(cache, 'cpu', weights_only=False)
         except Exception as exc:
             logger.error("Error loading %s: %r", cache, exc)
             embed = None
@@ -279,7 +279,7 @@ class CachedBatchLoader:
                 items = items[start: start + self.batch_size]
                 assert len(items) == self.batch_size
                 entries = []
-                entries = [torch.load(item.open(mode), 'cpu') for item in items]  # type: ignore
+                entries = [torch.load(item.open(mode, weights_only=False), 'cpu') for item in items]  # type: ignore
                 transposed = zip(*entries)
                 out = []
                 for part in transposed:
