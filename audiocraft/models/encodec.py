@@ -371,7 +371,7 @@ class WavTokenizer(CompressionModel):
     def decode(self, codes: torch.Tensor, scale: tp.Optional[torch.Tensor] = None):
         assert scale is None
         feats = self.model.codes_to_features(codes.movedim(1, 0))
-        return self.model.decode(feats, bandwidth_id=torch.tensor(0, device=codes.device))
+        return self.model.decode(feats, bandwidth_id=torch.tensor(0, device=codes.device)).unsqueeze(1)
 
     def decode_latent(self, codes: torch.Tensor):
         """Decode from the discrete codes to continuous latent space."""
