@@ -108,6 +108,9 @@ class CompressionModel(ABC, nn.Module):
             model_type = name.split('_')[1]
             logger.info("Getting pretrained compression model from DAC %s", model_type)
             model = DAC(model_type)
+        elif name in ['sqcodec']:
+            logger.info("Getting pretrained compression model from SQCodec %s")
+            model = SQCodec()
         elif name in ['debug_compression_model']:
             logger.info("Getting pretrained compression model for debug")
             model = builders.get_debug_compression_model()
