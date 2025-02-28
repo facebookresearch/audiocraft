@@ -6,7 +6,7 @@
 """Compression models or wrapper around existing models.
 Also defines the main interface that a model must follow to be usable as an audio tokenizer.
 """
-
+import sys
 from abc import ABC, abstractmethod
 import logging
 import math
@@ -20,6 +20,8 @@ from torch import nn
 from transformers import EncodecModel as HFEncodecModel
 
 from .. import quantization as qt
+from ..utils import checkpoint
+from .scalarmodel import ScalarModel
 
 
 logger = logging.getLogger()
@@ -321,6 +323,55 @@ class DAC(CompressionModel):
         assert n >= 1
         assert n <= self.total_codebooks
         self.n_quantizers = n
+
+def decimal_to_ternary_matrix(decimals, D):
+    """
+    Convert a tensor of decimal numbers to a D*T ternary matrix for each batch.
+
+    Arguments
+    ---------
+    decimals : torch.Tensor
+        A 2D tensor of decimal numbers with shape (B, T), where B is the batch size
+        and T is the number of elements in each batch.
+    D : int
+        Number of ternary digits to represent each number (depth).
+
+    Returns
+    -------
+    torch.Tensor
+        A 3D tensor of shape (B, D, T) where each slice along the first dimension
+        corresponds to a batch, and each column is represented as a ternary number.
+    """
+    B, T = decimals.shape
+    ternary_matrix = torch.zeros((B, D, T), dtype=torch.long)
+    for pos in range(D):
+        ternary_matrix[:, pos, :] = decimals % 3  # Modulo operation
+        decimals //= 3  # Floor division for next ternary digit
+
+    return ternary_matrix
+
+
+def ternary_matrix_to_decimal(matrix):
+    """
+    Convert a D*N ternary matrix to a list of decimal numbers.
+    
+    Parameters:
+    - matrix: a 2D numpy array of shape (D, N) where each column is a ternary number.
+    
+    Returns:
+    - A list of integers, each representing the decimal equivalent of a ternary number.
+    """
+    B, D, N = matrix.shape  # B is the batch size, D is the number of digits, N is the number of ternary numbers
+    
+    powers_of_three = 3 ** np.arange(D)  # [3^0, 3^1, ..., 3^(D-1)]
+
+    # Reshape powers_of_three for broadcasting: [D] -> [1, D, 1]
+    powers_of_three = powers_of_three[:, np.newaxis]  # Shape [D, 1]
+
+    # Compute dot product using broadcasting: matrix * powers_of_three along D axis
+    decimals = np.sum(matrix * powers_of_three, axis=1)  # Sum along the D axis
+
+    return decimals
     
 class SQCodec(CompressionModel):
     """SQCodec adapted tokenizer version for LLM training
@@ -346,11 +397,13 @@ class SQCodec(CompressionModel):
         
         try:
             self.ckpt_path = checkpoint.resolve_checkpoint_path(checkpoint_path, use_fsdp=False)
-        except:
-            print("1. Download SQ-Codec checkpoint from https://huggingface.co/Dongchao/UniAudio/blob/main/SQ-Codec.zip")
-            print("2. Place ckpt_00190000.pth into //reference/pretrained/SQ-Codec/")
-
-        self.scalar_codec = self.build_codec_model()
+            self.scalar_codec = self.build_codec_model()
+            
+        except AttributeError as e:
+            print(e)
+            print("1. Download checkpoint - wget https://huggingface.co/Dongchao/UniAudio/resolve/main/SQ-Codec.zip")
+            print("2. Make sure ckpt_00190000.pth locates at //reference/pretrained/SQ-Codec/")
+            sys.exit()
         self.sample_rate = sample_rate
         self.dim_codebook = dim_codebook
         self.n_codebook = n_codebook
