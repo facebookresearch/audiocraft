@@ -1,0 +1,500 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.5">
+<title>audiocraft.metrics.kld API documentation</title>
+<meta name="description" content="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>audiocraft.metrics.kld</code></h1>
+</header>
+<section id="section-intro">
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="audiocraft.metrics.kld.kl_divergence"><code class="name flex">
+<span>def <span class="ident">kl_divergence</span></span>(<span>pred_probs: torch.Tensor, target_probs: torch.Tensor, epsilon: float = 1e-06) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def kl_divergence(pred_probs: torch.Tensor, target_probs: torch.Tensor, epsilon: float = 1e-6) -&gt; torch.Tensor:
+    &#34;&#34;&#34;Computes the elementwise KL-Divergence loss between probability distributions
+    from generated samples and target samples.
+
+    Args:
+        pred_probs (torch.Tensor): Probabilities for each label obtained
+            from a classifier on generated audio. Expected shape is [B, num_classes].
+        target_probs (torch.Tensor): Probabilities for each label obtained
+            from a classifier on target audio. Expected shape is [B, num_classes].
+        epsilon (float): Epsilon value.
+    Returns:
+        kld (torch.Tensor): KLD loss between each generated sample and target pair.
+    &#34;&#34;&#34;
+    kl_div = torch.nn.functional.kl_div((pred_probs + epsilon).log(), target_probs, reduction=&#34;none&#34;)
+    return kl_div.sum(-1)</code></pre>
+</details>
+<div class="desc"><p>Computes the elementwise KL-Divergence loss between probability distributions
+from generated samples and target samples.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>pred_probs</code></strong> :&ensp;<code>torch.Tensor</code></dt>
+<dd>Probabilities for each label obtained
+from a classifier on generated audio. Expected shape is [B, num_classes].</dd>
+<dt><strong><code>target_probs</code></strong> :&ensp;<code>torch.Tensor</code></dt>
+<dd>Probabilities for each label obtained
+from a classifier on target audio. Expected shape is [B, num_classes].</dd>
+<dt><strong><code>epsilon</code></strong> :&ensp;<code>float</code></dt>
+<dd>Epsilon value.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>kld (torch.Tensor): KLD loss between each generated sample and target pair.</p></div>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="audiocraft.metrics.kld.KLDivergenceMetric"><code class="flex name class">
+<span>class <span class="ident">KLDivergenceMetric</span></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class KLDivergenceMetric(torchmetrics.Metric):
+    &#34;&#34;&#34;Base implementation for KL Divergence metric.
+
+    The KL divergence is measured between probability distributions
+    of class predictions returned by a pre-trained audio classification model.
+    When the KL-divergence is low, the generated audio is expected to
+    have similar acoustic characteristics as the reference audio,
+    according to the classifier.
+    &#34;&#34;&#34;
+    def __init__(self):
+        super().__init__()
+        self.add_state(&#34;kld_pq_sum&#34;, default=torch.tensor(0.), dist_reduce_fx=&#34;sum&#34;)
+        self.add_state(&#34;kld_qp_sum&#34;, default=torch.tensor(0.), dist_reduce_fx=&#34;sum&#34;)
+        self.add_state(&#34;kld_all_sum&#34;, default=torch.tensor(0.), dist_reduce_fx=&#34;sum&#34;)
+        self.add_state(&#34;weight&#34;, default=torch.tensor(0), dist_reduce_fx=&#34;sum&#34;)
+
+    def _get_label_distribution(self, x: torch.Tensor, sizes: torch.Tensor,
+                                sample_rates: torch.Tensor) -&gt; tp.Optional[torch.Tensor]:
+        &#34;&#34;&#34;Get model output given provided input tensor.
+
+        Args:
+            x (torch.Tensor): Input audio tensor of shape [B, C, T].
+            sizes (torch.Tensor): Actual audio sample length, of shape [B].
+            sample_rates (torch.Tensor): Actual audio sample rate, of shape [B].
+        Returns:
+            probs (torch.Tensor): Probabilities over labels, of shape [B, num_classes].
+        &#34;&#34;&#34;
+        raise NotImplementedError(&#34;implement method to extract label distributions from the model.&#34;)
+
+    def update(self, preds: torch.Tensor, targets: torch.Tensor,
+               sizes: torch.Tensor, sample_rates: torch.Tensor) -&gt; None:
+        &#34;&#34;&#34;Calculates running KL-Divergence loss between batches of audio
+        preds (generated) and target (ground-truth)
+        Args:
+            preds (torch.Tensor): Audio samples to evaluate, of shape [B, C, T].
+            targets (torch.Tensor): Target samples to compare against, of shape [B, C, T].
+            sizes (torch.Tensor): Actual audio sample length, of shape [B].
+            sample_rates (torch.Tensor): Actual audio sample rate, of shape [B].
+        &#34;&#34;&#34;
+        assert preds.shape == targets.shape
+        assert preds.size(0) &gt; 0, &#34;Cannot update the loss with empty tensors&#34;
+        preds_probs = self._get_label_distribution(preds, sizes, sample_rates)
+        targets_probs = self._get_label_distribution(targets, sizes, sample_rates)
+        if preds_probs is not None and targets_probs is not None:
+            assert preds_probs.shape == targets_probs.shape
+            kld_scores = kl_divergence(preds_probs, targets_probs)
+            assert not torch.isnan(kld_scores).any(), &#34;kld_scores contains NaN value(s)!&#34;
+            self.kld_pq_sum += torch.sum(kld_scores)
+            kld_qp_scores = kl_divergence(targets_probs, preds_probs)
+            self.kld_qp_sum += torch.sum(kld_qp_scores)
+            self.weight += torch.tensor(kld_scores.size(0))
+
+    def compute(self) -&gt; dict:
+        &#34;&#34;&#34;Computes KL-Divergence across all evaluated pred/target pairs.&#34;&#34;&#34;
+        weight: float = float(self.weight.item())  # type: ignore
+        assert weight &gt; 0, &#34;Unable to compute with total number of comparisons &lt;= 0&#34;
+        logger.info(f&#34;Computing KL divergence on a total of {weight} samples&#34;)
+        kld_pq = self.kld_pq_sum.item() / weight  # type: ignore
+        kld_qp = self.kld_qp_sum.item() / weight  # type: ignore
+        kld_both = kld_pq + kld_qp
+        return {&#39;kld&#39;: kld_pq, &#39;kld_pq&#39;: kld_pq, &#39;kld_qp&#39;: kld_qp, &#39;kld_both&#39;: kld_both}</code></pre>
+</details>
+<div class="desc"><p>Base implementation for KL Divergence metric.</p>
+<p>The KL divergence is measured between probability distributions
+of class predictions returned by a pre-trained audio classification model.
+When the KL-divergence is low, the generated audio is expected to
+have similar acoustic characteristics as the reference audio,
+according to the classifier.</p>
+<p>Initializes internal Module state, shared by both nn.Module and ScriptModule.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>torchmetrics.metric.Metric</li>
+<li>torch.nn.modules.module.Module</li>
+<li>abc.ABC</li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="audiocraft.metrics.kld.PasstKLDivergenceMetric" href="#audiocraft.metrics.kld.PasstKLDivergenceMetric">PasstKLDivergenceMetric</a></li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="audiocraft.metrics.kld.KLDivergenceMetric.full_state_update"><code class="name">var <span class="ident">full_state_update</span> : bool | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.metrics.kld.KLDivergenceMetric.higher_is_better"><code class="name">var <span class="ident">higher_is_better</span> : bool | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.metrics.kld.KLDivergenceMetric.is_differentiable"><code class="name">var <span class="ident">is_differentiable</span> : bool | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.metrics.kld.KLDivergenceMetric.plot_legend_name"><code class="name">var <span class="ident">plot_legend_name</span> : str | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.metrics.kld.KLDivergenceMetric.plot_lower_bound"><code class="name">var <span class="ident">plot_lower_bound</span> : float | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.metrics.kld.KLDivergenceMetric.plot_upper_bound"><code class="name">var <span class="ident">plot_upper_bound</span> : float | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="audiocraft.metrics.kld.KLDivergenceMetric.compute"><code class="name flex">
+<span>def <span class="ident">compute</span></span>(<span>self) ‑> dict</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def compute(self) -&gt; dict:
+    &#34;&#34;&#34;Computes KL-Divergence across all evaluated pred/target pairs.&#34;&#34;&#34;
+    weight: float = float(self.weight.item())  # type: ignore
+    assert weight &gt; 0, &#34;Unable to compute with total number of comparisons &lt;= 0&#34;
+    logger.info(f&#34;Computing KL divergence on a total of {weight} samples&#34;)
+    kld_pq = self.kld_pq_sum.item() / weight  # type: ignore
+    kld_qp = self.kld_qp_sum.item() / weight  # type: ignore
+    kld_both = kld_pq + kld_qp
+    return {&#39;kld&#39;: kld_pq, &#39;kld_pq&#39;: kld_pq, &#39;kld_qp&#39;: kld_qp, &#39;kld_both&#39;: kld_both}</code></pre>
+</details>
+<div class="desc"><p>Computes KL-Divergence across all evaluated pred/target pairs.</p></div>
+</dd>
+<dt id="audiocraft.metrics.kld.KLDivergenceMetric.update"><code class="name flex">
+<span>def <span class="ident">update</span></span>(<span>self,<br>preds: torch.Tensor,<br>targets: torch.Tensor,<br>sizes: torch.Tensor,<br>sample_rates: torch.Tensor) ‑> None</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def update(self, preds: torch.Tensor, targets: torch.Tensor,
+           sizes: torch.Tensor, sample_rates: torch.Tensor) -&gt; None:
+    &#34;&#34;&#34;Calculates running KL-Divergence loss between batches of audio
+    preds (generated) and target (ground-truth)
+    Args:
+        preds (torch.Tensor): Audio samples to evaluate, of shape [B, C, T].
+        targets (torch.Tensor): Target samples to compare against, of shape [B, C, T].
+        sizes (torch.Tensor): Actual audio sample length, of shape [B].
+        sample_rates (torch.Tensor): Actual audio sample rate, of shape [B].
+    &#34;&#34;&#34;
+    assert preds.shape == targets.shape
+    assert preds.size(0) &gt; 0, &#34;Cannot update the loss with empty tensors&#34;
+    preds_probs = self._get_label_distribution(preds, sizes, sample_rates)
+    targets_probs = self._get_label_distribution(targets, sizes, sample_rates)
+    if preds_probs is not None and targets_probs is not None:
+        assert preds_probs.shape == targets_probs.shape
+        kld_scores = kl_divergence(preds_probs, targets_probs)
+        assert not torch.isnan(kld_scores).any(), &#34;kld_scores contains NaN value(s)!&#34;
+        self.kld_pq_sum += torch.sum(kld_scores)
+        kld_qp_scores = kl_divergence(targets_probs, preds_probs)
+        self.kld_qp_sum += torch.sum(kld_qp_scores)
+        self.weight += torch.tensor(kld_scores.size(0))</code></pre>
+</details>
+<div class="desc"><p>Calculates running KL-Divergence loss between batches of audio
+preds (generated) and target (ground-truth)</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>preds</code></strong> :&ensp;<code>torch.Tensor</code></dt>
+<dd>Audio samples to evaluate, of shape [B, C, T].</dd>
+<dt><strong><code>targets</code></strong> :&ensp;<code>torch.Tensor</code></dt>
+<dd>Target samples to compare against, of shape [B, C, T].</dd>
+<dt><strong><code>sizes</code></strong> :&ensp;<code>torch.Tensor</code></dt>
+<dd>Actual audio sample length, of shape [B].</dd>
+<dt><strong><code>sample_rates</code></strong> :&ensp;<code>torch.Tensor</code></dt>
+<dd>Actual audio sample rate, of shape [B].</dd>
+</dl></div>
+</dd>
+</dl>
+</dd>
+<dt id="audiocraft.metrics.kld.PasstKLDivergenceMetric"><code class="flex name class">
+<span>class <span class="ident">PasstKLDivergenceMetric</span></span>
+<span>(</span><span>pretrained_length: float | None = None)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class PasstKLDivergenceMetric(KLDivergenceMetric):
+    &#34;&#34;&#34;KL-Divergence metric based on pre-trained PASST classifier on AudioSet.
+
+    From: PaSST: Efficient Training of Audio Transformers with Patchout
+    Paper: https://arxiv.org/abs/2110.05069
+    Implementation: https://github.com/kkoutini/PaSST
+
+    Follow instructions from the github repo:
+    ```
+    pip install &#39;git+https://github.com/kkoutini/passt_hear21@0.0.19#egg=hear21passt&#39;
+    ```
+
+    Args:
+        pretrained_length (float, optional): Audio duration used for the pretrained model.
+    &#34;&#34;&#34;
+    def __init__(self, pretrained_length: tp.Optional[float] = None):
+        super().__init__()
+        self._initialize_model(pretrained_length)
+
+    def _initialize_model(self, pretrained_length: tp.Optional[float] = None):
+        &#34;&#34;&#34;Initialize underlying PaSST audio classifier.&#34;&#34;&#34;
+        model, sr, max_frames, min_frames = self._load_base_model(pretrained_length)
+        self.min_input_frames = min_frames
+        self.max_input_frames = max_frames
+        self.model_sample_rate = sr
+        self.model = model
+        self.model.eval()
+        self.model.to(self.device)
+
+    def _load_base_model(self, pretrained_length: tp.Optional[float]):
+        &#34;&#34;&#34;Load pretrained model from PaSST.&#34;&#34;&#34;
+        try:
+            if pretrained_length == 30:
+                from hear21passt.base30sec import get_basic_model  # type: ignore
+                max_duration = 30
+            elif pretrained_length == 20:
+                from hear21passt.base20sec import get_basic_model  # type: ignore
+                max_duration = 20
+            else:
+                from hear21passt.base import get_basic_model  # type: ignore
+                # Original PASST was trained on AudioSet with 10s-long audio samples
+                max_duration = 10
+            min_duration = 0.15
+            min_duration = 0.15
+        except ModuleNotFoundError:
+            raise ModuleNotFoundError(
+                &#34;Please install hear21passt to compute KL divergence: &#34;,
+                &#34;pip install &#39;git+https://github.com/kkoutini/passt_hear21@0.0.19#egg=hear21passt&#39;&#34;
+            )
+        model_sample_rate = 32_000
+        max_input_frames = int(max_duration * model_sample_rate)
+        min_input_frames = int(min_duration * model_sample_rate)
+        with open(os.devnull, &#39;w&#39;) as f, contextlib.redirect_stdout(f):
+            model = get_basic_model(mode=&#39;logits&#39;)
+        return model, model_sample_rate, max_input_frames, min_input_frames
+
+    def _process_audio(self, wav: torch.Tensor, sample_rate: int, wav_len: int) -&gt; tp.List[torch.Tensor]:
+        &#34;&#34;&#34;Process audio to feed to the pretrained model.&#34;&#34;&#34;
+        wav = wav.unsqueeze(0)
+        wav = wav[..., :wav_len]
+        wav = convert_audio(wav, from_rate=sample_rate, to_rate=self.model_sample_rate, to_channels=1)
+        wav = wav.squeeze(0)
+        # we don&#39;t pad but return a list of audio segments as this otherwise affects the KLD computation
+        segments = torch.split(wav, self.max_input_frames, dim=-1)
+        valid_segments = []
+        for s in segments:
+            # ignoring too small segments that are breaking the model inference
+            if s.size(-1) &gt; self.min_input_frames:
+                valid_segments.append(s)
+        return [s[None] for s in valid_segments]
+
+    def _get_model_preds(self, wav: torch.Tensor) -&gt; torch.Tensor:
+        &#34;&#34;&#34;Run the pretrained model and get the predictions.&#34;&#34;&#34;
+        assert wav.dim() == 3, f&#34;Unexpected number of dims for preprocessed wav: {wav.shape}&#34;
+        wav = wav.mean(dim=1)
+        # PaSST is printing a lot of garbage that we are not interested in
+        with open(os.devnull, &#34;w&#34;) as f, contextlib.redirect_stdout(f):
+            with torch.no_grad(), _patch_passt_stft():
+                logits = self.model(wav.to(self.device))
+                probs = torch.softmax(logits, dim=-1)
+                return probs
+
+    def _get_label_distribution(self, x: torch.Tensor, sizes: torch.Tensor,
+                                sample_rates: torch.Tensor) -&gt; tp.Optional[torch.Tensor]:
+        &#34;&#34;&#34;Get model output given provided input tensor.
+
+        Args:
+            x (torch.Tensor): Input audio tensor of shape [B, C, T].
+            sizes (torch.Tensor): Actual audio sample length, of shape [B].
+            sample_rates (torch.Tensor): Actual audio sample rate, of shape [B].
+        Returns:
+            probs (torch.Tensor, optional): Probabilities over labels, of shape [B, num_classes].
+        &#34;&#34;&#34;
+        all_probs: tp.List[torch.Tensor] = []
+        for i, wav in enumerate(x):
+            sample_rate = int(sample_rates[i].item())
+            wav_len = int(sizes[i].item())
+            wav_segments = self._process_audio(wav, sample_rate, wav_len)
+            for segment in wav_segments:
+                probs = self._get_model_preds(segment).mean(dim=0)
+                all_probs.append(probs)
+        if len(all_probs) &gt; 0:
+            return torch.stack(all_probs, dim=0)
+        else:
+            return None</code></pre>
+</details>
+<div class="desc"><p>KL-Divergence metric based on pre-trained PASST classifier on AudioSet.</p>
+<p>From: PaSST: Efficient Training of Audio Transformers with Patchout
+Paper: <a href="https://arxiv.org/abs/2110.05069">https://arxiv.org/abs/2110.05069</a>
+Implementation: <a href="https://github.com/kkoutini/PaSST">https://github.com/kkoutini/PaSST</a></p>
+<p>Follow instructions from the github repo:</p>
+<pre><code>pip install 'git+https://github.com/kkoutini/passt_hear21@0.0.19#egg=hear21passt'
+</code></pre>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>pretrained_length</code></strong> :&ensp;<code>float</code>, optional</dt>
+<dd>Audio duration used for the pretrained model.</dd>
+</dl>
+<p>Initializes internal Module state, shared by both nn.Module and ScriptModule.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="audiocraft.metrics.kld.KLDivergenceMetric" href="#audiocraft.metrics.kld.KLDivergenceMetric">KLDivergenceMetric</a></li>
+<li>torchmetrics.metric.Metric</li>
+<li>torch.nn.modules.module.Module</li>
+<li>abc.ABC</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="audiocraft.metrics.kld.PasstKLDivergenceMetric.full_state_update"><code class="name">var <span class="ident">full_state_update</span> : bool | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.metrics.kld.PasstKLDivergenceMetric.higher_is_better"><code class="name">var <span class="ident">higher_is_better</span> : bool | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.metrics.kld.PasstKLDivergenceMetric.is_differentiable"><code class="name">var <span class="ident">is_differentiable</span> : bool | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.metrics.kld.PasstKLDivergenceMetric.plot_legend_name"><code class="name">var <span class="ident">plot_legend_name</span> : str | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.metrics.kld.PasstKLDivergenceMetric.plot_lower_bound"><code class="name">var <span class="ident">plot_lower_bound</span> : float | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.metrics.kld.PasstKLDivergenceMetric.plot_upper_bound"><code class="name">var <span class="ident">plot_upper_bound</span> : float | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="audiocraft.metrics.kld.KLDivergenceMetric" href="#audiocraft.metrics.kld.KLDivergenceMetric">KLDivergenceMetric</a></b></code>:
+<ul class="hlist">
+<li><code><a title="audiocraft.metrics.kld.KLDivergenceMetric.compute" href="#audiocraft.metrics.kld.KLDivergenceMetric.compute">compute</a></code></li>
+<li><code><a title="audiocraft.metrics.kld.KLDivergenceMetric.update" href="#audiocraft.metrics.kld.KLDivergenceMetric.update">update</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="audiocraft.metrics" href="index.html">audiocraft.metrics</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="audiocraft.metrics.kld.kl_divergence" href="#audiocraft.metrics.kld.kl_divergence">kl_divergence</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="audiocraft.metrics.kld.KLDivergenceMetric" href="#audiocraft.metrics.kld.KLDivergenceMetric">KLDivergenceMetric</a></code></h4>
+<ul class="two-column">
+<li><code><a title="audiocraft.metrics.kld.KLDivergenceMetric.compute" href="#audiocraft.metrics.kld.KLDivergenceMetric.compute">compute</a></code></li>
+<li><code><a title="audiocraft.metrics.kld.KLDivergenceMetric.full_state_update" href="#audiocraft.metrics.kld.KLDivergenceMetric.full_state_update">full_state_update</a></code></li>
+<li><code><a title="audiocraft.metrics.kld.KLDivergenceMetric.higher_is_better" href="#audiocraft.metrics.kld.KLDivergenceMetric.higher_is_better">higher_is_better</a></code></li>
+<li><code><a title="audiocraft.metrics.kld.KLDivergenceMetric.is_differentiable" href="#audiocraft.metrics.kld.KLDivergenceMetric.is_differentiable">is_differentiable</a></code></li>
+<li><code><a title="audiocraft.metrics.kld.KLDivergenceMetric.plot_legend_name" href="#audiocraft.metrics.kld.KLDivergenceMetric.plot_legend_name">plot_legend_name</a></code></li>
+<li><code><a title="audiocraft.metrics.kld.KLDivergenceMetric.plot_lower_bound" href="#audiocraft.metrics.kld.KLDivergenceMetric.plot_lower_bound">plot_lower_bound</a></code></li>
+<li><code><a title="audiocraft.metrics.kld.KLDivergenceMetric.plot_upper_bound" href="#audiocraft.metrics.kld.KLDivergenceMetric.plot_upper_bound">plot_upper_bound</a></code></li>
+<li><code><a title="audiocraft.metrics.kld.KLDivergenceMetric.update" href="#audiocraft.metrics.kld.KLDivergenceMetric.update">update</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="audiocraft.metrics.kld.PasstKLDivergenceMetric" href="#audiocraft.metrics.kld.PasstKLDivergenceMetric">PasstKLDivergenceMetric</a></code></h4>
+<ul class="two-column">
+<li><code><a title="audiocraft.metrics.kld.PasstKLDivergenceMetric.full_state_update" href="#audiocraft.metrics.kld.PasstKLDivergenceMetric.full_state_update">full_state_update</a></code></li>
+<li><code><a title="audiocraft.metrics.kld.PasstKLDivergenceMetric.higher_is_better" href="#audiocraft.metrics.kld.PasstKLDivergenceMetric.higher_is_better">higher_is_better</a></code></li>
+<li><code><a title="audiocraft.metrics.kld.PasstKLDivergenceMetric.is_differentiable" href="#audiocraft.metrics.kld.PasstKLDivergenceMetric.is_differentiable">is_differentiable</a></code></li>
+<li><code><a title="audiocraft.metrics.kld.PasstKLDivergenceMetric.plot_legend_name" href="#audiocraft.metrics.kld.PasstKLDivergenceMetric.plot_legend_name">plot_legend_name</a></code></li>
+<li><code><a title="audiocraft.metrics.kld.PasstKLDivergenceMetric.plot_lower_bound" href="#audiocraft.metrics.kld.PasstKLDivergenceMetric.plot_lower_bound">plot_lower_bound</a></code></li>
+<li><code><a title="audiocraft.metrics.kld.PasstKLDivergenceMetric.plot_upper_bound" href="#audiocraft.metrics.kld.PasstKLDivergenceMetric.plot_upper_bound">plot_upper_bound</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.5</a>.</p>
+</footer>
+</body>
+</html>

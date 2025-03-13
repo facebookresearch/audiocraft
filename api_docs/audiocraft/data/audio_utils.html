@@ -1,0 +1,647 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.5">
+<title>audiocraft.data.audio_utils API documentation</title>
+<meta name="description" content="Various utilities for audio convertion (pcm format, sample rate and channels),
+and volume normalization.">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>audiocraft.data.audio_utils</code></h1>
+</header>
+<section id="section-intro">
+<p>Various utilities for audio convertion (pcm format, sample rate and channels),
+and volume normalization.</p>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="audiocraft.data.audio_utils.compress"><code class="name flex">
+<span>def <span class="ident">compress</span></span>(<span>wav: torch.Tensor,<br>sr: int,<br>target_format: Literal['mp3', 'ogg', 'flac'] = 'mp3',<br>bitrate: str = '128k') ‑> Tuple[torch.Tensor, int]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def compress(wav: torch.Tensor, sr: int,
+             target_format: tp.Literal[&#34;mp3&#34;, &#34;ogg&#34;, &#34;flac&#34;] = &#34;mp3&#34;,
+             bitrate: str = &#34;128k&#34;) -&gt; tp.Tuple[torch.Tensor, int]:
+    &#34;&#34;&#34;Convert audio wave form to a specified lossy format: mp3, ogg, flac
+
+    Args:
+        wav (torch.Tensor): Input wav tensor.
+        sr (int): Sampling rate.
+        target_format (str): Compression format (e.g., &#39;mp3&#39;).
+        bitrate (str): Bitrate for compression.
+
+    Returns:
+        Tuple of compressed WAV tensor and sampling rate.
+    &#34;&#34;&#34;
+
+    # Extract the bit rate from string (e.g., &#39;128k&#39;)
+    match = re.search(r&#34;\d+(\.\d+)?&#34;, str(bitrate))
+    parsed_bitrate = float(match.group()) if match else None
+    assert parsed_bitrate, f&#34;Invalid bitrate specified (got {parsed_bitrate})&#34;
+    try:
+        # Create a virtual file instead of saving to disk
+        buffer = io.BytesIO()
+
+        torchaudio.save(
+            buffer, wav, sr, format=target_format, bits_per_sample=parsed_bitrate,
+        )
+        # Move to the beginning of the file
+        buffer.seek(0)
+        compressed_wav, sr = torchaudio.load(buffer)
+        return compressed_wav, sr
+
+    except RuntimeError:
+        logger.warning(
+            f&#34;compression failed skipping compression: {format} {parsed_bitrate}&#34;
+        )
+        return wav, sr</code></pre>
+</details>
+<div class="desc"><p>Convert audio wave form to a specified lossy format: mp3, ogg, flac</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>wav</code></strong> :&ensp;<code>torch.Tensor</code></dt>
+<dd>Input wav tensor.</dd>
+<dt><strong><code>sr</code></strong> :&ensp;<code>int</code></dt>
+<dd>Sampling rate.</dd>
+<dt><strong><code>target_format</code></strong> :&ensp;<code>str</code></dt>
+<dd>Compression format (e.g., 'mp3').</dd>
+<dt><strong><code>bitrate</code></strong> :&ensp;<code>str</code></dt>
+<dd>Bitrate for compression.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Tuple of compressed WAV tensor and sampling rate.</p></div>
+</dd>
+<dt id="audiocraft.data.audio_utils.convert_audio"><code class="name flex">
+<span>def <span class="ident">convert_audio</span></span>(<span>wav: torch.Tensor, from_rate: float, to_rate: float, to_channels: int) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def convert_audio(wav: torch.Tensor, from_rate: float,
+                  to_rate: float, to_channels: int) -&gt; torch.Tensor:
+    &#34;&#34;&#34;Convert audio to new sample rate and number of audio channels.&#34;&#34;&#34;
+    wav = julius.resample_frac(wav, int(from_rate), int(to_rate))
+    wav = convert_audio_channels(wav, to_channels)
+    return wav</code></pre>
+</details>
+<div class="desc"><p>Convert audio to new sample rate and number of audio channels.</p></div>
+</dd>
+<dt id="audiocraft.data.audio_utils.convert_audio_channels"><code class="name flex">
+<span>def <span class="ident">convert_audio_channels</span></span>(<span>wav: torch.Tensor, channels: int = 2) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def convert_audio_channels(wav: torch.Tensor, channels: int = 2) -&gt; torch.Tensor:
+    &#34;&#34;&#34;Convert audio to the given number of channels.
+
+    Args:
+        wav (torch.Tensor): Audio wave of shape [B, C, T].
+        channels (int): Expected number of channels as output.
+    Returns:
+        torch.Tensor: Downmixed or unchanged audio wave [B, C, T].
+    &#34;&#34;&#34;
+    *shape, src_channels, length = wav.shape
+    if src_channels == channels:
+        pass
+    elif channels == 1:
+        # Case 1:
+        # The caller asked 1-channel audio, and the stream has multiple
+        # channels, downmix all channels.
+        wav = wav.mean(dim=-2, keepdim=True)
+    elif src_channels == 1:
+        # Case 2:
+        # The caller asked for multiple channels, but the input file has
+        # a single channel, replicate the audio over all channels.
+        wav = wav.expand(*shape, channels, length)
+    elif src_channels &gt;= channels:
+        # Case 3:
+        # The caller asked for multiple channels, and the input file has
+        # more channels than requested. In that case return the first channels.
+        wav = wav[..., :channels, :]
+    else:
+        # Case 4: What is a reasonable choice here?
+        raise ValueError(&#39;The audio file has less channels than requested but is not mono.&#39;)
+    return wav</code></pre>
+</details>
+<div class="desc"><p>Convert audio to the given number of channels.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>wav</code></strong> :&ensp;<code>torch.Tensor</code></dt>
+<dd>Audio wave of shape [B, C, T].</dd>
+<dt><strong><code>channels</code></strong> :&ensp;<code>int</code></dt>
+<dd>Expected number of channels as output.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>torch.Tensor</code></dt>
+<dd>Downmixed or unchanged audio wave [B, C, T].</dd>
+</dl></div>
+</dd>
+<dt id="audiocraft.data.audio_utils.f32_pcm"><code class="name flex">
+<span>def <span class="ident">f32_pcm</span></span>(<span>wav: torch.Tensor) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def f32_pcm(wav: torch.Tensor) -&gt; torch.Tensor:
+    &#34;&#34;&#34;
+    Convert audio to float 32 bits PCM format.
+    Args:
+        wav (torch.tensor): Input wav tensor
+    Returns:
+        same wav in float32 PCM format
+    &#34;&#34;&#34;
+    if wav.dtype.is_floating_point:
+        return wav
+    elif wav.dtype == torch.int16:
+        return wav.float() / 2**15
+    elif wav.dtype == torch.int32:
+        return wav.float() / 2**31
+    raise ValueError(f&#34;Unsupported wav dtype: {wav.dtype}&#34;)</code></pre>
+</details>
+<div class="desc"><p>Convert audio to float 32 bits PCM format.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>wav</code></strong> :&ensp;<code>torch.tensor</code></dt>
+<dd>Input wav tensor</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>same wav in float32 PCM format</p></div>
+</dd>
+<dt id="audiocraft.data.audio_utils.get_aac"><code class="name flex">
+<span>def <span class="ident">get_aac</span></span>(<span>wav_tensor: torch.Tensor,<br>sr: int,<br>bitrate: str = '128k',<br>lowpass_freq: int | None = None) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_aac(
+    wav_tensor: torch.Tensor,
+    sr: int,
+    bitrate: str = &#34;128k&#34;,
+    lowpass_freq: tp.Optional[int] = None,
+) -&gt; torch.Tensor:
+    &#34;&#34;&#34;Converts a batch of audio tensors to AAC format and then back to tensors.
+
+    This function first saves the input tensor batch as WAV files, then uses FFmpeg to convert
+    these WAV files to AAC format. Finally, it loads the AAC files back into tensors.
+
+    Args:
+        wav_tensor (torch.Tensor): A batch of audio files represented as a tensor.
+                                   Shape should be (batch_size, channels, length).
+        sr (int): Sampling rate of the audio.
+        bitrate (str): Bitrate for AAC conversion, default is &#39;128k&#39;.
+        lowpass_freq (Optional[int]): Frequency for a low-pass filter. If None, no filter is applied.
+
+    Returns:
+        torch.Tensor: Batch of audio files converted to AAC and back, with the same
+                      shape as the input tensor.
+    &#34;&#34;&#34;
+    import tempfile
+    import subprocess
+
+    device = wav_tensor.device
+    batch_size, channels, original_length = wav_tensor.shape
+
+    # Parse the bitrate value from the string
+    match = re.search(r&#34;\d+(\.\d+)?&#34;, bitrate)
+    parsed_bitrate = (
+        match.group() if match else &#34;128&#34;
+    )  # Default to 128 if parsing fails
+
+    # Flatten tensor for conversion and move to CPU
+    wav_tensor_flat = wav_tensor.view(1, -1).cpu()
+
+    with tempfile.NamedTemporaryFile(
+        suffix=&#34;.wav&#34;
+    ) as f_in, tempfile.NamedTemporaryFile(suffix=&#34;.aac&#34;) as f_out:
+        input_path, output_path = f_in.name, f_out.name
+
+        # Save the tensor as a WAV file
+        torchaudio.save(input_path, wav_tensor_flat, sr, backend=&#34;ffmpeg&#34;)
+
+        # Prepare FFmpeg command for AAC conversion
+        command = [
+            &#34;ffmpeg&#34;,
+            &#34;-y&#34;,
+            &#34;-i&#34;,
+            input_path,
+            &#34;-ar&#34;,
+            str(sr),
+            &#34;-b:a&#34;,
+            f&#34;{parsed_bitrate}k&#34;,
+            &#34;-c:a&#34;,
+            &#34;aac&#34;,
+        ]
+        if lowpass_freq is not None:
+            command += [&#34;-cutoff&#34;, str(lowpass_freq)]
+        command.append(output_path)
+
+        try:
+            # Run FFmpeg and suppress output
+            subprocess.run(command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+            # Load the AAC audio back into a tensor
+            aac_tensor, _ = torchaudio.load(output_path, backend=&#34;ffmpeg&#34;)
+        except Exception as exc:
+            raise RuntimeError(
+                &#34;Failed to run command &#34; &#34;.join(command)} &#34;
+                &#34;(Often this means ffmpeg is not installed or the encoder is not supported, &#34;
+                &#34;make sure you installed an older version ffmpeg&lt;5)&#34;
+            ) from exc
+
+    original_length_flat = batch_size * channels * original_length
+    compressed_length_flat = aac_tensor.shape[-1]
+
+    # Trim excess frames
+    if compressed_length_flat &gt; original_length_flat:
+        aac_tensor = aac_tensor[:, :original_length_flat]
+
+    # Pad the shortedn frames
+    elif compressed_length_flat &lt; original_length_flat:
+        padding = torch.zeros(
+            1, original_length_flat - compressed_length_flat, device=device
+        )
+        aac_tensor = torch.cat((aac_tensor, padding), dim=-1)
+
+    # Reshape and adjust length to match original tensor
+    wav_tensor = aac_tensor.view(batch_size, channels, -1)
+    compressed_length = wav_tensor.shape[-1]
+
+    assert compressed_length == original_length, (
+        &#34;AAC-compressed audio does not have the same frames as original one. &#34;
+        &#34;One reason can be ffmpeg is not  installed and used as proper backed &#34;
+        &#34;for torchaudio, or the AAC encoder is not correct. Run &#34;
+        &#34;`torchaudio.utils.ffmpeg_utils.get_audio_encoders()` and make sure we see entry for&#34;
+        &#34;AAC in the output.&#34;
+    )
+    return wav_tensor.to(device)</code></pre>
+</details>
+<div class="desc"><p>Converts a batch of audio tensors to AAC format and then back to tensors.</p>
+<p>This function first saves the input tensor batch as WAV files, then uses FFmpeg to convert
+these WAV files to AAC format. Finally, it loads the AAC files back into tensors.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>wav_tensor</code></strong> :&ensp;<code>torch.Tensor</code></dt>
+<dd>A batch of audio files represented as a tensor.
+Shape should be (batch_size, channels, length).</dd>
+<dt><strong><code>sr</code></strong> :&ensp;<code>int</code></dt>
+<dd>Sampling rate of the audio.</dd>
+<dt><strong><code>bitrate</code></strong> :&ensp;<code>str</code></dt>
+<dd>Bitrate for AAC conversion, default is '128k'.</dd>
+<dt><strong><code>lowpass_freq</code></strong> :&ensp;<code>Optional[int]</code></dt>
+<dd>Frequency for a low-pass filter. If None, no filter is applied.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>torch.Tensor</code></dt>
+<dd>Batch of audio files converted to AAC and back, with the same
+shape as the input tensor.</dd>
+</dl></div>
+</dd>
+<dt id="audiocraft.data.audio_utils.get_mp3"><code class="name flex">
+<span>def <span class="ident">get_mp3</span></span>(<span>wav_tensor: torch.Tensor, sr: int, bitrate: str = '128k') ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_mp3(wav_tensor: torch.Tensor, sr: int, bitrate: str = &#34;128k&#34;) -&gt; torch.Tensor:
+    &#34;&#34;&#34;Convert a batch of audio files to MP3 format, maintaining the original shape.
+
+    This function takes a batch of audio files represented as a PyTorch tensor, converts
+    them to MP3 format using the specified bitrate, and returns the batch in the same
+    shape as the input.
+
+    Args:
+        wav_tensor (torch.Tensor): Batch of audio files represented as a tensor.
+            Shape should be (batch_size, channels, length).
+        sr (int): Sampling rate of the audio.
+        bitrate (str): Bitrate for MP3 conversion, default is &#39;128k&#39;.
+
+    Returns:
+        torch.Tensor: Batch of audio files converted to MP3 format, with the same
+            shape as the input tensor.
+    &#34;&#34;&#34;
+    device = wav_tensor.device
+    batch_size, channels, original_length = wav_tensor.shape
+
+    # Flatten tensor for conversion and move to CPU
+    wav_tensor_flat = wav_tensor.view(1, -1).cpu()
+
+    # Convert to MP3 format with specified bitrate
+    wav_tensor_flat, _ = compress(wav_tensor_flat, sr, bitrate=bitrate)
+
+    # Reshape back to original batch format and trim or pad if necessary
+    wav_tensor = wav_tensor_flat.view(batch_size, channels, -1)
+    compressed_length = wav_tensor.shape[-1]
+    if compressed_length &gt; original_length:
+        wav_tensor = wav_tensor[:, :, :original_length]  # Trim excess frames
+    elif compressed_length &lt; original_length:
+        padding = torch.zeros(
+            batch_size, channels, original_length - compressed_length, device=device
+        )
+        wav_tensor = torch.cat((wav_tensor, padding), dim=-1)  # Pad with zeros
+
+    # Move tensor back to the original device
+    return wav_tensor.to(device)</code></pre>
+</details>
+<div class="desc"><p>Convert a batch of audio files to MP3 format, maintaining the original shape.</p>
+<p>This function takes a batch of audio files represented as a PyTorch tensor, converts
+them to MP3 format using the specified bitrate, and returns the batch in the same
+shape as the input.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>wav_tensor</code></strong> :&ensp;<code>torch.Tensor</code></dt>
+<dd>Batch of audio files represented as a tensor.
+Shape should be (batch_size, channels, length).</dd>
+<dt><strong><code>sr</code></strong> :&ensp;<code>int</code></dt>
+<dd>Sampling rate of the audio.</dd>
+<dt><strong><code>bitrate</code></strong> :&ensp;<code>str</code></dt>
+<dd>Bitrate for MP3 conversion, default is '128k'.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>torch.Tensor</code></dt>
+<dd>Batch of audio files converted to MP3 format, with the same
+shape as the input tensor.</dd>
+</dl></div>
+</dd>
+<dt id="audiocraft.data.audio_utils.i16_pcm"><code class="name flex">
+<span>def <span class="ident">i16_pcm</span></span>(<span>wav: torch.Tensor) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def i16_pcm(wav: torch.Tensor) -&gt; torch.Tensor:
+    &#34;&#34;&#34;Convert audio to int 16 bits PCM format.
+
+    ..Warning:: There exist many formula for doing this conversion. None are perfect
+    due to the asymmetry of the int16 range. One either have possible clipping, DC offset,
+    or inconsistencies with f32_pcm. If the given wav doesn&#39;t have enough headroom,
+    it is possible that `i16_pcm(f32_pcm)) != Identity`.
+    Args:
+        wav (torch.tensor): Input wav tensor
+    Returns:
+        same wav in float16 PCM format
+    &#34;&#34;&#34;
+    if wav.dtype.is_floating_point:
+        assert wav.abs().max() &lt;= 1
+        candidate = (wav * 2 ** 15).round()
+        if candidate.max() &gt;= 2 ** 15:  # clipping would occur
+            candidate = (wav * (2 ** 15 - 1)).round()
+        return candidate.short()
+    else:
+        assert wav.dtype == torch.int16
+        return wav</code></pre>
+</details>
+<div class="desc"><p>Convert audio to int 16 bits PCM format.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning:&ensp;There exist many formula for doing this conversion. None are perfect</p>
+</div>
+<p>due to the asymmetry of the int16 range. One either have possible clipping, DC offset,
+or inconsistencies with f32_pcm. If the given wav doesn't have enough headroom,
+it is possible that <code>i16_pcm(f32_pcm)) != Identity</code>.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>wav</code></strong> :&ensp;<code>torch.tensor</code></dt>
+<dd>Input wav tensor</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>same wav in float16 PCM format</p></div>
+</dd>
+<dt id="audiocraft.data.audio_utils.normalize_audio"><code class="name flex">
+<span>def <span class="ident">normalize_audio</span></span>(<span>wav: torch.Tensor,<br>normalize: bool = True,<br>strategy: str = 'peak',<br>peak_clip_headroom_db: float = 1,<br>rms_headroom_db: float = 18,<br>loudness_headroom_db: float = 14,<br>loudness_compressor: bool = False,<br>log_clipping: bool = False,<br>sample_rate: int | None = None,<br>stem_name: str | None = None) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def normalize_audio(wav: torch.Tensor, normalize: bool = True,
+                    strategy: str = &#39;peak&#39;, peak_clip_headroom_db: float = 1,
+                    rms_headroom_db: float = 18, loudness_headroom_db: float = 14,
+                    loudness_compressor: bool = False, log_clipping: bool = False,
+                    sample_rate: tp.Optional[int] = None,
+                    stem_name: tp.Optional[str] = None) -&gt; torch.Tensor:
+    &#34;&#34;&#34;Normalize the audio according to the prescribed strategy (see after).
+
+    Args:
+        wav (torch.Tensor): Audio data.
+        normalize (bool): if `True` (default), normalizes according to the prescribed
+            strategy (see after). If `False`, the strategy is only used in case clipping
+            would happen.
+        strategy (str): Can be either &#39;clip&#39;, &#39;peak&#39;, or &#39;rms&#39;. Default is &#39;peak&#39;,
+            i.e. audio is normalized by its largest value. RMS normalizes by root-mean-square
+            with extra headroom to avoid clipping. &#39;clip&#39; just clips.
+        peak_clip_headroom_db (float): Headroom in dB when doing &#39;peak&#39; or &#39;clip&#39; strategy.
+        rms_headroom_db (float): Headroom in dB when doing &#39;rms&#39; strategy. This must be much larger
+            than the `peak_clip` one to avoid further clipping.
+        loudness_headroom_db (float): Target loudness for loudness normalization.
+        loudness_compressor (bool): If True, uses tanh based soft clipping.
+        log_clipping (bool): If True, basic logging on stderr when clipping still
+            occurs despite strategy (only for &#39;rms&#39;).
+        sample_rate (int): Sample rate for the audio data (required for loudness).
+        stem_name (str, optional): Stem name for clipping logging.
+    Returns:
+        torch.Tensor: Normalized audio.
+    &#34;&#34;&#34;
+    scale_peak = 10 ** (-peak_clip_headroom_db / 20)
+    scale_rms = 10 ** (-rms_headroom_db / 20)
+    if strategy == &#39;peak&#39;:
+        rescaling = (scale_peak / wav.abs().max())
+        if normalize or rescaling &lt; 1:
+            wav = wav * rescaling
+    elif strategy == &#39;clip&#39;:
+        wav = wav.clamp(-scale_peak, scale_peak)
+    elif strategy == &#39;rms&#39;:
+        mono = wav.mean(dim=0)
+        rescaling = scale_rms / mono.pow(2).mean().sqrt()
+        if normalize or rescaling &lt; 1:
+            wav = wav * rescaling
+        _clip_wav(wav, log_clipping=log_clipping, stem_name=stem_name)
+    elif strategy == &#39;loudness&#39;:
+        assert sample_rate is not None, &#34;Loudness normalization requires sample rate.&#34;
+        wav = normalize_loudness(wav, sample_rate, loudness_headroom_db, loudness_compressor)
+        _clip_wav(wav, log_clipping=log_clipping, stem_name=stem_name)
+    else:
+        assert wav.abs().max() &lt; 1
+        assert strategy == &#39;&#39; or strategy == &#39;none&#39;, f&#34;Unexpected strategy: &#39;{strategy}&#39;&#34;
+    return wav</code></pre>
+</details>
+<div class="desc"><p>Normalize the audio according to the prescribed strategy (see after).</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>wav</code></strong> :&ensp;<code>torch.Tensor</code></dt>
+<dd>Audio data.</dd>
+<dt><strong><code>normalize</code></strong> :&ensp;<code>bool</code></dt>
+<dd>if <code>True</code> (default), normalizes according to the prescribed
+strategy (see after). If <code>False</code>, the strategy is only used in case clipping
+would happen.</dd>
+<dt><strong><code>strategy</code></strong> :&ensp;<code>str</code></dt>
+<dd>Can be either 'clip', 'peak', or 'rms'. Default is 'peak',
+i.e. audio is normalized by its largest value. RMS normalizes by root-mean-square
+with extra headroom to avoid clipping. 'clip' just clips.</dd>
+<dt><strong><code>peak_clip_headroom_db</code></strong> :&ensp;<code>float</code></dt>
+<dd>Headroom in dB when doing 'peak' or 'clip' strategy.</dd>
+<dt><strong><code>rms_headroom_db</code></strong> :&ensp;<code>float</code></dt>
+<dd>Headroom in dB when doing 'rms' strategy. This must be much larger
+than the <code>peak_clip</code> one to avoid further clipping.</dd>
+<dt><strong><code>loudness_headroom_db</code></strong> :&ensp;<code>float</code></dt>
+<dd>Target loudness for loudness normalization.</dd>
+<dt><strong><code>loudness_compressor</code></strong> :&ensp;<code>bool</code></dt>
+<dd>If True, uses tanh based soft clipping.</dd>
+<dt><strong><code>log_clipping</code></strong> :&ensp;<code>bool</code></dt>
+<dd>If True, basic logging on stderr when clipping still
+occurs despite strategy (only for 'rms').</dd>
+<dt><strong><code>sample_rate</code></strong> :&ensp;<code>int</code></dt>
+<dd>Sample rate for the audio data (required for loudness).</dd>
+<dt><strong><code>stem_name</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>Stem name for clipping logging.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>torch.Tensor</code></dt>
+<dd>Normalized audio.</dd>
+</dl></div>
+</dd>
+<dt id="audiocraft.data.audio_utils.normalize_loudness"><code class="name flex">
+<span>def <span class="ident">normalize_loudness</span></span>(<span>wav: torch.Tensor,<br>sample_rate: int,<br>loudness_headroom_db: float = 14,<br>loudness_compressor: bool = False,<br>energy_floor: float = 0.002)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def normalize_loudness(wav: torch.Tensor, sample_rate: int, loudness_headroom_db: float = 14,
+                       loudness_compressor: bool = False, energy_floor: float = 2e-3):
+    &#34;&#34;&#34;Normalize an input signal to a user loudness in dB LKFS.
+    Audio loudness is defined according to the ITU-R BS.1770-4 recommendation.
+
+    Args:
+        wav (torch.Tensor): Input multichannel audio data.
+        sample_rate (int): Sample rate.
+        loudness_headroom_db (float): Target loudness of the output in dB LUFS.
+        loudness_compressor (bool): Uses tanh for soft clipping.
+        energy_floor (float): anything below that RMS level will not be rescaled.
+    Returns:
+        torch.Tensor: Loudness normalized output data.
+    &#34;&#34;&#34;
+    energy = wav.pow(2).mean().sqrt().item()
+    if energy &lt; energy_floor:
+        return wav
+    transform = torchaudio.transforms.Loudness(sample_rate)
+    input_loudness_db = transform(wav).item()
+    # calculate the gain needed to scale to the desired loudness level
+    delta_loudness = -loudness_headroom_db - input_loudness_db
+    gain = 10.0 ** (delta_loudness / 20.0)
+    output = gain * wav
+    if loudness_compressor:
+        output = torch.tanh(output)
+    assert output.isfinite().all(), (input_loudness_db, wav.pow(2).mean().sqrt())
+    return output</code></pre>
+</details>
+<div class="desc"><p>Normalize an input signal to a user loudness in dB LKFS.
+Audio loudness is defined according to the ITU-R BS.1770-4 recommendation.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>wav</code></strong> :&ensp;<code>torch.Tensor</code></dt>
+<dd>Input multichannel audio data.</dd>
+<dt><strong><code>sample_rate</code></strong> :&ensp;<code>int</code></dt>
+<dd>Sample rate.</dd>
+<dt><strong><code>loudness_headroom_db</code></strong> :&ensp;<code>float</code></dt>
+<dd>Target loudness of the output in dB LUFS.</dd>
+<dt><strong><code>loudness_compressor</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Uses tanh for soft clipping.</dd>
+<dt><strong><code>energy_floor</code></strong> :&ensp;<code>float</code></dt>
+<dd>anything below that RMS level will not be rescaled.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>torch.Tensor</code></dt>
+<dd>Loudness normalized output data.</dd>
+</dl></div>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="audiocraft.data" href="index.html">audiocraft.data</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="audiocraft.data.audio_utils.compress" href="#audiocraft.data.audio_utils.compress">compress</a></code></li>
+<li><code><a title="audiocraft.data.audio_utils.convert_audio" href="#audiocraft.data.audio_utils.convert_audio">convert_audio</a></code></li>
+<li><code><a title="audiocraft.data.audio_utils.convert_audio_channels" href="#audiocraft.data.audio_utils.convert_audio_channels">convert_audio_channels</a></code></li>
+<li><code><a title="audiocraft.data.audio_utils.f32_pcm" href="#audiocraft.data.audio_utils.f32_pcm">f32_pcm</a></code></li>
+<li><code><a title="audiocraft.data.audio_utils.get_aac" href="#audiocraft.data.audio_utils.get_aac">get_aac</a></code></li>
+<li><code><a title="audiocraft.data.audio_utils.get_mp3" href="#audiocraft.data.audio_utils.get_mp3">get_mp3</a></code></li>
+<li><code><a title="audiocraft.data.audio_utils.i16_pcm" href="#audiocraft.data.audio_utils.i16_pcm">i16_pcm</a></code></li>
+<li><code><a title="audiocraft.data.audio_utils.normalize_audio" href="#audiocraft.data.audio_utils.normalize_audio">normalize_audio</a></code></li>
+<li><code><a title="audiocraft.data.audio_utils.normalize_loudness" href="#audiocraft.data.audio_utils.normalize_loudness">normalize_loudness</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.5</a>.</p>
+</footer>
+</body>
+</html>

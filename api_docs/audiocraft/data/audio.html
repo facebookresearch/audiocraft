@@ -1,0 +1,500 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.5">
+<title>audiocraft.data.audio API documentation</title>
+<meta name="description" content="Audio IO methods are defined in this module (info, read, write),
+We rely on av library for faster read when possible, otherwise on torchaudio.">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>audiocraft.data.audio</code></h1>
+</header>
+<section id="section-intro">
+<p>Audio IO methods are defined in this module (info, read, write),
+We rely on av library for faster read when possible, otherwise on torchaudio.</p>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="audiocraft.data.audio.audio_info"><code class="name flex">
+<span>def <span class="ident">audio_info</span></span>(<span>filepath: str | pathlib.Path) ‑> <a title="audiocraft.data.audio.AudioFileInfo" href="#audiocraft.data.audio.AudioFileInfo">AudioFileInfo</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def audio_info(filepath: tp.Union[str, Path]) -&gt; AudioFileInfo:
+    # torchaudio no longer returns useful duration informations for some formats like mp3s.
+    filepath = Path(filepath)
+    if filepath.suffix in [&#39;.flac&#39;, &#39;.ogg&#39;]:  # TODO: Validate .ogg can be safely read with av_info
+        # ffmpeg has some weird issue with flac.
+        return _soundfile_info(filepath)
+    else:
+        return _av_info(filepath)</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.data.audio.audio_read"><code class="name flex">
+<span>def <span class="ident">audio_read</span></span>(<span>filepath: str | pathlib.Path,<br>seek_time: float = 0.0,<br>duration: float = -1.0,<br>pad: bool = False) ‑> Tuple[torch.Tensor, int]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def audio_read(filepath: tp.Union[str, Path], seek_time: float = 0.,
+               duration: float = -1.0, pad: bool = False) -&gt; tp.Tuple[torch.Tensor, int]:
+    &#34;&#34;&#34;Read audio by picking the most appropriate backend tool based on the audio format.
+
+    Args:
+        filepath (str or Path): Path to audio file to read.
+        seek_time (float): Time at which to start reading in the file.
+        duration (float): Duration to read from the file. If set to -1, the whole file is read.
+        pad (bool): Pad output audio if not reaching expected duration.
+    Returns:
+        tuple of torch.Tensor, int: Tuple containing audio data and sample rate.
+    &#34;&#34;&#34;
+    fp = Path(filepath)
+    if fp.suffix in [&#39;.flac&#39;, &#39;.ogg&#39;]:  # TODO: check if we can safely use av_read for .ogg
+        # There is some bug with ffmpeg and reading flac
+        info = _soundfile_info(filepath)
+        frames = -1 if duration &lt;= 0 else int(duration * info.sample_rate)
+        frame_offset = int(seek_time * info.sample_rate)
+        wav, sr = soundfile.read(filepath, start=frame_offset, frames=frames, dtype=np.float32)
+        assert info.sample_rate == sr, f&#34;Mismatch of sample rates {info.sample_rate} {sr}&#34;
+        wav = torch.from_numpy(wav).t().contiguous()
+        if len(wav.shape) == 1:
+            wav = torch.unsqueeze(wav, 0)
+    else:
+        wav, sr = _av_read(filepath, seek_time, duration)
+    if pad and duration &gt; 0:
+        expected_frames = int(duration * sr)
+        wav = F.pad(wav, (0, expected_frames - wav.shape[-1]))
+    return wav, sr</code></pre>
+</details>
+<div class="desc"><p>Read audio by picking the most appropriate backend tool based on the audio format.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>filepath</code></strong> :&ensp;<code>str</code> or <code>Path</code></dt>
+<dd>Path to audio file to read.</dd>
+<dt><strong><code>seek_time</code></strong> :&ensp;<code>float</code></dt>
+<dd>Time at which to start reading in the file.</dd>
+<dt><strong><code>duration</code></strong> :&ensp;<code>float</code></dt>
+<dd>Duration to read from the file. If set to -1, the whole file is read.</dd>
+<dt><strong><code>pad</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Pad output audio if not reaching expected duration.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>tuple</code> of <code>torch.Tensor, int</code></dt>
+<dd>Tuple containing audio data and sample rate.</dd>
+</dl></div>
+</dd>
+<dt id="audiocraft.data.audio.audio_write"><code class="name flex">
+<span>def <span class="ident">audio_write</span></span>(<span>stem_name: str | pathlib.Path,<br>wav: torch.Tensor,<br>sample_rate: int,<br>format: str = 'wav',<br>mp3_rate: int = 320,<br>ogg_rate: int | None = None,<br>normalize: bool = True,<br>strategy: str = 'peak',<br>peak_clip_headroom_db: float = 1,<br>rms_headroom_db: float = 18,<br>loudness_headroom_db: float = 14,<br>loudness_compressor: bool = False,<br>log_clipping: bool = True,<br>make_parent_dir: bool = True,<br>add_suffix: bool = True) ‑> pathlib.Path</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def audio_write(stem_name: tp.Union[str, Path],
+                wav: torch.Tensor, sample_rate: int,
+                format: str = &#39;wav&#39;, mp3_rate: int = 320, ogg_rate: tp.Optional[int] = None,
+                normalize: bool = True, strategy: str = &#39;peak&#39;, peak_clip_headroom_db: float = 1,
+                rms_headroom_db: float = 18, loudness_headroom_db: float = 14,
+                loudness_compressor: bool = False,
+                log_clipping: bool = True, make_parent_dir: bool = True,
+                add_suffix: bool = True) -&gt; Path:
+    &#34;&#34;&#34;Convenience function for saving audio to disk. Returns the filename the audio was written to.
+
+    Args:
+        stem_name (str or Path): Filename without extension which will be added automatically.
+        wav (torch.Tensor): Audio data to save.
+        sample_rate (int): Sample rate of audio data.
+        format (str): Either &#34;wav&#34;, &#34;mp3&#34;, &#34;ogg&#34;, or &#34;flac&#34;.
+        mp3_rate (int): kbps when using mp3s.
+        ogg_rate (int): kbps when using ogg/vorbis. If not provided, let ffmpeg decide for itself.
+        normalize (bool): if `True` (default), normalizes according to the prescribed
+            strategy (see after). If `False`, the strategy is only used in case clipping
+            would happen.
+        strategy (str): Can be either &#39;clip&#39;, &#39;peak&#39;, or &#39;rms&#39;. Default is &#39;peak&#39;,
+            i.e. audio is normalized by its largest value. RMS normalizes by root-mean-square
+            with extra headroom to avoid clipping. &#39;clip&#39; just clips.
+        peak_clip_headroom_db (float): Headroom in dB when doing &#39;peak&#39; or &#39;clip&#39; strategy.
+        rms_headroom_db (float): Headroom in dB when doing &#39;rms&#39; strategy. This must be much larger
+            than the `peak_clip` one to avoid further clipping.
+        loudness_headroom_db (float): Target loudness for loudness normalization.
+        loudness_compressor (bool): Uses tanh for soft clipping when strategy is &#39;loudness&#39;.
+         when strategy is &#39;loudness&#39; log_clipping (bool): If True, basic logging on stderr when clipping still
+            occurs despite strategy (only for &#39;rms&#39;).
+        make_parent_dir (bool): Make parent directory if it doesn&#39;t exist.
+    Returns:
+        Path: Path of the saved audio.
+    &#34;&#34;&#34;
+    assert wav.dtype.is_floating_point, &#34;wav is not floating point&#34;
+    if wav.dim() == 1:
+        wav = wav[None]
+    elif wav.dim() &gt; 2:
+        raise ValueError(&#34;Input wav should be at most 2 dimension.&#34;)
+    assert wav.isfinite().all()
+    wav = normalize_audio(wav, normalize, strategy, peak_clip_headroom_db,
+                          rms_headroom_db, loudness_headroom_db, loudness_compressor,
+                          log_clipping=log_clipping, sample_rate=sample_rate,
+                          stem_name=str(stem_name))
+    if format == &#39;mp3&#39;:
+        suffix = &#39;.mp3&#39;
+        flags = [&#39;-f&#39;, &#39;mp3&#39;, &#39;-c:a&#39;, &#39;libmp3lame&#39;, &#39;-b:a&#39;, f&#39;{mp3_rate}k&#39;]
+    elif format == &#39;wav&#39;:
+        suffix = &#39;.wav&#39;
+        flags = [&#39;-f&#39;, &#39;wav&#39;, &#39;-c:a&#39;, &#39;pcm_s16le&#39;]
+    elif format == &#39;ogg&#39;:
+        suffix = &#39;.ogg&#39;
+        flags = [&#39;-f&#39;, &#39;ogg&#39;, &#39;-c:a&#39;, &#39;libvorbis&#39;]
+        if ogg_rate is not None:
+            flags += [&#39;-b:a&#39;, f&#39;{ogg_rate}k&#39;]
+    elif format == &#39;flac&#39;:
+        suffix = &#39;.flac&#39;
+        flags = [&#39;-f&#39;, &#39;flac&#39;]
+    else:
+        raise RuntimeError(f&#34;Invalid format {format}. Only wav or mp3 are supported.&#34;)
+    if not add_suffix:
+        suffix = &#39;&#39;
+    path = Path(str(stem_name) + suffix)
+    if make_parent_dir:
+        path.parent.mkdir(exist_ok=True, parents=True)
+    try:
+        _piping_to_ffmpeg(path, wav, sample_rate, flags)
+    except Exception:
+        if path.exists():
+            # we do not want to leave half written files around.
+            path.unlink()
+        raise
+    return path</code></pre>
+</details>
+<div class="desc"><p>Convenience function for saving audio to disk. Returns the filename the audio was written to.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>stem_name</code></strong> :&ensp;<code>str</code> or <code>Path</code></dt>
+<dd>Filename without extension which will be added automatically.</dd>
+<dt><strong><code>wav</code></strong> :&ensp;<code>torch.Tensor</code></dt>
+<dd>Audio data to save.</dd>
+<dt><strong><code>sample_rate</code></strong> :&ensp;<code>int</code></dt>
+<dd>Sample rate of audio data.</dd>
+<dt><strong><code>format</code></strong> :&ensp;<code>str</code></dt>
+<dd>Either "wav", "mp3", "ogg", or "flac".</dd>
+<dt><strong><code>mp3_rate</code></strong> :&ensp;<code>int</code></dt>
+<dd>kbps when using mp3s.</dd>
+<dt><strong><code>ogg_rate</code></strong> :&ensp;<code>int</code></dt>
+<dd>kbps when using ogg/vorbis. If not provided, let ffmpeg decide for itself.</dd>
+<dt><strong><code>normalize</code></strong> :&ensp;<code>bool</code></dt>
+<dd>if <code>True</code> (default), normalizes according to the prescribed
+strategy (see after). If <code>False</code>, the strategy is only used in case clipping
+would happen.</dd>
+<dt><strong><code>strategy</code></strong> :&ensp;<code>str</code></dt>
+<dd>Can be either 'clip', 'peak', or 'rms'. Default is 'peak',
+i.e. audio is normalized by its largest value. RMS normalizes by root-mean-square
+with extra headroom to avoid clipping. 'clip' just clips.</dd>
+<dt><strong><code>peak_clip_headroom_db</code></strong> :&ensp;<code>float</code></dt>
+<dd>Headroom in dB when doing 'peak' or 'clip' strategy.</dd>
+<dt><strong><code>rms_headroom_db</code></strong> :&ensp;<code>float</code></dt>
+<dd>Headroom in dB when doing 'rms' strategy. This must be much larger
+than the <code>peak_clip</code> one to avoid further clipping.</dd>
+<dt><strong><code>loudness_headroom_db</code></strong> :&ensp;<code>float</code></dt>
+<dd>Target loudness for loudness normalization.</dd>
+<dt><strong><code>loudness_compressor</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Uses tanh for soft clipping when strategy is 'loudness'.</dd>
+<dt>when strategy is 'loudness' log_clipping (bool): If True, basic logging on stderr when clipping still</dt>
+<dt>occurs despite strategy (only for 'rms').</dt>
+<dt><strong><code>make_parent_dir</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Make parent directory if it doesn't exist.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>Path</code></dt>
+<dd>Path of the saved audio.</dd>
+</dl></div>
+</dd>
+<dt id="audiocraft.data.audio.get_spec"><code class="name flex">
+<span>def <span class="ident">get_spec</span></span>(<span>y, sr=16000, n_fft=4096, hop_length=128, dur=8) ‑> numpy.ndarray</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_spec(y, sr=16000, n_fft=4096, hop_length=128, dur=8) -&gt; np.ndarray:
+    &#34;&#34;&#34;Get the mel-spectrogram from the raw audio.
+
+    Args:
+        y (numpy array): raw input
+        sr (int): Sampling rate
+        n_fft (int): Number of samples per FFT. Default is 2048.
+        hop_length (int): Number of samples between successive frames. Default is 512.
+        dur (float): Maxium duration to get the spectrograms
+    Returns:
+        spectro histogram as a numpy array
+    &#34;&#34;&#34;
+    import librosa
+    import librosa.display
+
+    spectrogram = librosa.feature.melspectrogram(
+        y=y, sr=sr, n_fft=n_fft, hop_length=hop_length
+    )
+    spectrogram_db = librosa.power_to_db(spectrogram, ref=np.max)
+    return spectrogram_db</code></pre>
+</details>
+<div class="desc"><p>Get the mel-spectrogram from the raw audio.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>y</code></strong> :&ensp;<code>numpy array</code></dt>
+<dd>raw input</dd>
+<dt><strong><code>sr</code></strong> :&ensp;<code>int</code></dt>
+<dd>Sampling rate</dd>
+<dt><strong><code>n_fft</code></strong> :&ensp;<code>int</code></dt>
+<dd>Number of samples per FFT. Default is 2048.</dd>
+<dt><strong><code>hop_length</code></strong> :&ensp;<code>int</code></dt>
+<dd>Number of samples between successive frames. Default is 512.</dd>
+<dt><strong><code>dur</code></strong> :&ensp;<code>float</code></dt>
+<dd>Maxium duration to get the spectrograms</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>spectro histogram as a numpy array</p></div>
+</dd>
+<dt id="audiocraft.data.audio.save_spectrograms"><code class="name flex">
+<span>def <span class="ident">save_spectrograms</span></span>(<span>ys: List[numpy.ndarray],<br>sr: int,<br>path: str,<br>names: List[str],<br>n_fft: int = 4096,<br>hop_length: int = 128,<br>dur: float = 8.0)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def save_spectrograms(
+    ys: tp.List[np.ndarray],
+    sr: int,
+    path: str,
+    names: tp.List[str],
+    n_fft: int = 4096,
+    hop_length: int = 128,
+    dur: float = 8.0,
+):
+    &#34;&#34;&#34;Plot a spectrogram for an audio file.
+
+    Args:
+        ys: List of audio spectrograms
+        sr (int): Sampling rate of the audio file. Default is 22050 Hz.
+        path (str): Path to the plot file.
+        names: name of each spectrogram plot
+        n_fft (int): Number of samples per FFT. Default is 2048.
+        hop_length (int): Number of samples between successive frames. Default is 512.
+        dur (float): Maxium duration to plot the spectrograms
+
+    Returns:
+        None (plots the spectrogram using matplotlib)
+    &#34;&#34;&#34;
+    import matplotlib as mpl  # type: ignore
+    import matplotlib.pyplot as plt  # type: ignore
+    import librosa.display
+
+    if not names:
+        names = [&#34;Ground Truth&#34;, &#34;Audio Watermarked&#34;, &#34;Watermark&#34;]
+    ys = [wav[: int(dur * sr)] for wav in ys]  # crop
+    assert len(names) == len(
+        ys
+    ), f&#34;There are {len(ys)} wavs but {len(names)} names ({names})&#34;
+
+    # Set matplotlib stuff
+    BIGGER_SIZE = 10
+    SMALLER_SIZE = 8
+    linewidth = 234.8775  # linewidth in pt
+
+    plt.rc(&#34;font&#34;, size=BIGGER_SIZE, family=&#34;serif&#34;)  # controls default text sizes
+    plt.rcParams[&#34;font.family&#34;] = &#34;DeJavu Serif&#34;
+    plt.rcParams[&#34;font.serif&#34;] = [&#34;Times New Roman&#34;]
+
+    plt.rc(&#34;axes&#34;, titlesize=BIGGER_SIZE)  # fontsize of the axes title
+    plt.rc(&#34;axes&#34;, labelsize=BIGGER_SIZE)  # fontsize of the x and y labels
+    plt.rc(&#34;xtick&#34;, labelsize=BIGGER_SIZE)  # fontsize of the tick labels
+    plt.rc(&#34;ytick&#34;, labelsize=SMALLER_SIZE)  # fontsize of the tick labels
+    plt.rc(&#34;legend&#34;, fontsize=BIGGER_SIZE)  # legend fontsize
+    plt.rc(&#34;figure&#34;, titlesize=BIGGER_SIZE)
+    height = 1.6 * linewidth / 72.0
+    fig, ax = plt.subplots(
+        nrows=len(ys),
+        ncols=1,
+        sharex=True,
+        figsize=(linewidth / 72.0, height),
+    )
+    fig.tight_layout()
+
+    # Plot the spectrogram
+
+    for i, ysi in enumerate(ys):
+        spectrogram_db = get_spec(ysi, sr=sr, n_fft=n_fft, hop_length=hop_length)
+        if i == 0:
+            cax = fig.add_axes(
+                [
+                    ax[0].get_position().x1 + 0.01,  # type: ignore
+                    ax[-1].get_position().y0,
+                    0.02,
+                    ax[0].get_position().y1 - ax[-1].get_position().y0,
+                ]
+            )
+            fig.colorbar(
+                mpl.cm.ScalarMappable(
+                    norm=mpl.colors.Normalize(
+                        np.min(spectrogram_db), np.max(spectrogram_db)
+                    ),
+                    cmap=&#34;magma&#34;,
+                ),
+                ax=ax,
+                orientation=&#34;vertical&#34;,
+                format=&#34;%+2.0f dB&#34;,
+                cax=cax,
+            )
+        librosa.display.specshow(
+            spectrogram_db,
+            sr=sr,
+            hop_length=hop_length,
+            x_axis=&#34;time&#34;,
+            y_axis=&#34;mel&#34;,
+            ax=ax[i],
+        )
+        ax[i].set(title=names[i])
+        ax[i].yaxis.set_label_text(None)
+        ax[i].label_outer()
+    fig.savefig(path, bbox_inches=&#34;tight&#34;)
+    plt.close()</code></pre>
+</details>
+<div class="desc"><p>Plot a spectrogram for an audio file.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>ys</code></strong></dt>
+<dd>List of audio spectrograms</dd>
+<dt><strong><code>sr</code></strong> :&ensp;<code>int</code></dt>
+<dd>Sampling rate of the audio file. Default is 22050 Hz.</dd>
+<dt><strong><code>path</code></strong> :&ensp;<code>str</code></dt>
+<dd>Path to the plot file.</dd>
+<dt><strong><code>names</code></strong></dt>
+<dd>name of each spectrogram plot</dd>
+<dt><strong><code>n_fft</code></strong> :&ensp;<code>int</code></dt>
+<dd>Number of samples per FFT. Default is 2048.</dd>
+<dt><strong><code>hop_length</code></strong> :&ensp;<code>int</code></dt>
+<dd>Number of samples between successive frames. Default is 512.</dd>
+<dt><strong><code>dur</code></strong> :&ensp;<code>float</code></dt>
+<dd>Maxium duration to plot the spectrograms</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None (plots the spectrogram using matplotlib)</p></div>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="audiocraft.data.audio.AudioFileInfo"><code class="flex name class">
+<span>class <span class="ident">AudioFileInfo</span></span>
+<span>(</span><span>sample_rate: int, duration: float, channels: int)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass(frozen=True)
+class AudioFileInfo:
+    sample_rate: int
+    duration: float
+    channels: int</code></pre>
+</details>
+<div class="desc"><p>AudioFileInfo(sample_rate: int, duration: float, channels: int)</p></div>
+<h3>Class variables</h3>
+<dl>
+<dt id="audiocraft.data.audio.AudioFileInfo.channels"><code class="name">var <span class="ident">channels</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.data.audio.AudioFileInfo.duration"><code class="name">var <span class="ident">duration</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.data.audio.AudioFileInfo.sample_rate"><code class="name">var <span class="ident">sample_rate</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="audiocraft.data" href="index.html">audiocraft.data</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="audiocraft.data.audio.audio_info" href="#audiocraft.data.audio.audio_info">audio_info</a></code></li>
+<li><code><a title="audiocraft.data.audio.audio_read" href="#audiocraft.data.audio.audio_read">audio_read</a></code></li>
+<li><code><a title="audiocraft.data.audio.audio_write" href="#audiocraft.data.audio.audio_write">audio_write</a></code></li>
+<li><code><a title="audiocraft.data.audio.get_spec" href="#audiocraft.data.audio.get_spec">get_spec</a></code></li>
+<li><code><a title="audiocraft.data.audio.save_spectrograms" href="#audiocraft.data.audio.save_spectrograms">save_spectrograms</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="audiocraft.data.audio.AudioFileInfo" href="#audiocraft.data.audio.AudioFileInfo">AudioFileInfo</a></code></h4>
+<ul class="">
+<li><code><a title="audiocraft.data.audio.AudioFileInfo.channels" href="#audiocraft.data.audio.AudioFileInfo.channels">channels</a></code></li>
+<li><code><a title="audiocraft.data.audio.AudioFileInfo.duration" href="#audiocraft.data.audio.AudioFileInfo.duration">duration</a></code></li>
+<li><code><a title="audiocraft.data.audio.AudioFileInfo.sample_rate" href="#audiocraft.data.audio.AudioFileInfo.sample_rate">sample_rate</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.5</a>.</p>
+</footer>
+</body>
+</html>

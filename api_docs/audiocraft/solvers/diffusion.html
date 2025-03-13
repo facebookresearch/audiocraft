@@ -1,0 +1,616 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.5">
+<title>audiocraft.solvers.diffusion API documentation</title>
+<meta name="description" content="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>audiocraft.solvers.diffusion</code></h1>
+</header>
+<section id="section-intro">
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="audiocraft.solvers.diffusion.DataProcess"><code class="flex name class">
+<span>class <span class="ident">DataProcess</span></span>
+<span>(</span><span>initial_sr: int = 24000,<br>target_sr: int = 16000,<br>use_resampling: bool = False,<br>use_filter: bool = False,<br>n_bands: int = 4,<br>idx_band: int = 0,<br>device: torch.device = device(type='cpu'),<br>cutoffs=None,<br>boost=False)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class DataProcess:
+    &#34;&#34;&#34;Apply filtering or resampling.
+
+    Args:
+        initial_sr (int): Initial sample rate.
+        target_sr (int): Target sample rate.
+        use_resampling: Whether to use resampling or not.
+        use_filter (bool):
+        n_bands (int): Number of bands to consider.
+        idx_band (int):
+        device (torch.device or str):
+        cutoffs ():
+        boost (bool):
+    &#34;&#34;&#34;
+    def __init__(self, initial_sr: int = 24000, target_sr: int = 16000, use_resampling: bool = False,
+                 use_filter: bool = False, n_bands: int = 4,
+                 idx_band: int = 0, device: torch.device = torch.device(&#39;cpu&#39;), cutoffs=None, boost=False):
+        &#34;&#34;&#34;Apply filtering or resampling
+        Args:
+            initial_sr (int): sample rate of the dataset
+            target_sr (int): sample rate after resampling
+            use_resampling (bool): whether or not performs resampling
+            use_filter (bool): when True filter the data to keep only one frequency band
+            n_bands (int): Number of bands used
+            cuts (none or list): The cutoff frequencies of the band filtering
+                                if None then we use mel scale bands.
+            idx_band (int): index of the frequency band. 0 are lows ... (n_bands - 1) highs
+            boost (bool): make the data scale match our music dataset.
+        &#34;&#34;&#34;
+        assert idx_band &lt; n_bands
+        self.idx_band = idx_band
+        if use_filter:
+            if cutoffs is not None:
+                self.filter = julius.SplitBands(sample_rate=initial_sr, cutoffs=cutoffs).to(device)
+            else:
+                self.filter = julius.SplitBands(sample_rate=initial_sr, n_bands=n_bands).to(device)
+        self.use_filter = use_filter
+        self.use_resampling = use_resampling
+        self.target_sr = target_sr
+        self.initial_sr = initial_sr
+        self.boost = boost
+
+    def process_data(self, x, metric=False):
+        if x is None:
+            return None
+        if self.boost:
+            x /= torch.clamp(x.std(dim=(1, 2), keepdim=True), min=1e-4)
+            x * 0.22
+        if self.use_filter and not metric:
+            x = self.filter(x)[self.idx_band]
+        if self.use_resampling:
+            x = julius.resample_frac(x, old_sr=self.initial_sr, new_sr=self.target_sr)
+        return x
+
+    def inverse_process(self, x):
+        &#34;&#34;&#34;Upsampling only.&#34;&#34;&#34;
+        if self.use_resampling:
+            x = julius.resample_frac(x, old_sr=self.target_sr, new_sr=self.target_sr)
+        return x</code></pre>
+</details>
+<div class="desc"><p>Apply filtering or resampling.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>initial_sr</code></strong> :&ensp;<code>int</code></dt>
+<dd>Initial sample rate.</dd>
+<dt><strong><code>target_sr</code></strong> :&ensp;<code>int</code></dt>
+<dd>Target sample rate.</dd>
+<dt><strong><code>use_resampling</code></strong></dt>
+<dd>Whether to use resampling or not.</dd>
+<dt>use_filter (bool):</dt>
+<dt><strong><code>n_bands</code></strong> :&ensp;<code>int</code></dt>
+<dd>Number of bands to consider.</dd>
+</dl>
+<p>idx_band (int):
+device (torch.device or str):
+cutoffs ():
+boost (bool):
+Apply filtering or resampling</p>
+<h2 id="args_1">Args</h2>
+<dl>
+<dt><strong><code>initial_sr</code></strong> :&ensp;<code>int</code></dt>
+<dd>sample rate of the dataset</dd>
+<dt><strong><code>target_sr</code></strong> :&ensp;<code>int</code></dt>
+<dd>sample rate after resampling</dd>
+<dt><strong><code>use_resampling</code></strong> :&ensp;<code>bool</code></dt>
+<dd>whether or not performs resampling</dd>
+<dt><strong><code>use_filter</code></strong> :&ensp;<code>bool</code></dt>
+<dd>when True filter the data to keep only one frequency band</dd>
+<dt><strong><code>n_bands</code></strong> :&ensp;<code>int</code></dt>
+<dd>Number of bands used</dd>
+<dt><strong><code>cuts</code></strong> :&ensp;<code>none</code> or <code>list</code></dt>
+<dd>The cutoff frequencies of the band filtering
+if None then we use mel scale bands.</dd>
+<dt><strong><code>idx_band</code></strong> :&ensp;<code>int</code></dt>
+<dd>index of the frequency band. 0 are lows &hellip; (n_bands - 1) highs</dd>
+<dt><strong><code>boost</code></strong> :&ensp;<code>bool</code></dt>
+<dd>make the data scale match our music dataset.</dd>
+</dl></div>
+<h3>Methods</h3>
+<dl>
+<dt id="audiocraft.solvers.diffusion.DataProcess.inverse_process"><code class="name flex">
+<span>def <span class="ident">inverse_process</span></span>(<span>self, x)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def inverse_process(self, x):
+    &#34;&#34;&#34;Upsampling only.&#34;&#34;&#34;
+    if self.use_resampling:
+        x = julius.resample_frac(x, old_sr=self.target_sr, new_sr=self.target_sr)
+    return x</code></pre>
+</details>
+<div class="desc"><p>Upsampling only.</p></div>
+</dd>
+<dt id="audiocraft.solvers.diffusion.DataProcess.process_data"><code class="name flex">
+<span>def <span class="ident">process_data</span></span>(<span>self, x, metric=False)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def process_data(self, x, metric=False):
+    if x is None:
+        return None
+    if self.boost:
+        x /= torch.clamp(x.std(dim=(1, 2), keepdim=True), min=1e-4)
+        x * 0.22
+    if self.use_filter and not metric:
+        x = self.filter(x)[self.idx_band]
+    if self.use_resampling:
+        x = julius.resample_frac(x, old_sr=self.initial_sr, new_sr=self.target_sr)
+    return x</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="audiocraft.solvers.diffusion.DiffusionSolver"><code class="flex name class">
+<span>class <span class="ident">DiffusionSolver</span></span>
+<span>(</span><span>cfg: omegaconf.dictconfig.DictConfig)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class DiffusionSolver(base.StandardSolver):
+    &#34;&#34;&#34;Solver for compression task.
+
+    The diffusion task allows for MultiBand diffusion model training.
+
+    Args:
+        cfg (DictConfig): Configuration.
+    &#34;&#34;&#34;
+    def __init__(self, cfg: omegaconf.DictConfig):
+        super().__init__(cfg)
+        self.cfg = cfg
+        self.device = cfg.device
+        self.sample_rate: int = self.cfg.sample_rate
+        self.codec_model = CompressionSolver.model_from_checkpoint(
+            cfg.compression_model_checkpoint, device=self.device)
+
+        self.codec_model.set_num_codebooks(cfg.n_q)
+        assert self.codec_model.sample_rate == self.cfg.sample_rate, (
+            f&#34;Codec model sample rate is {self.codec_model.sample_rate} but &#34;
+            f&#34;Solver sample rate is {self.cfg.sample_rate}.&#34;
+            )
+        assert self.codec_model.sample_rate == self.sample_rate, \
+            f&#34;Sample rate of solver {self.sample_rate} and codec {self.codec_model.sample_rate} &#34; \
+            &#34;don&#39;t match.&#34;
+
+        self.sample_processor = get_processor(cfg.processor, sample_rate=self.sample_rate)
+        self.register_stateful(&#39;sample_processor&#39;)
+        self.sample_processor.to(self.device)
+
+        self.schedule = NoiseSchedule(
+            **cfg.schedule, device=self.device, sample_processor=self.sample_processor)
+
+        self.eval_metric: tp.Optional[torch.nn.Module] = None
+
+        self.rvm = RelativeVolumeMel()
+        self.data_processor = DataProcess(initial_sr=self.sample_rate, target_sr=cfg.resampling.target_sr,
+                                          use_resampling=cfg.resampling.use, cutoffs=cfg.filter.cutoffs,
+                                          use_filter=cfg.filter.use, n_bands=cfg.filter.n_bands,
+                                          idx_band=cfg.filter.idx_band, device=self.device)
+
+    @property
+    def best_metric_name(self) -&gt; tp.Optional[str]:
+        if self._current_stage == &#34;evaluate&#34;:
+            return &#39;rvm&#39;
+        else:
+            return &#39;loss&#39;
+
+    @torch.no_grad()
+    def get_condition(self, wav: torch.Tensor) -&gt; torch.Tensor:
+        codes, scale = self.codec_model.encode(wav)
+        assert scale is None, &#34;Scaled compression models not supported.&#34;
+        emb = self.codec_model.decode_latent(codes)
+        return emb
+
+    def build_model(self):
+        &#34;&#34;&#34;Build model and optimizer as well as optional Exponential Moving Average of the model.
+        &#34;&#34;&#34;
+        # Model and optimizer
+        self.model = models.builders.get_diffusion_model(self.cfg).to(self.device)
+        self.optimizer = builders.get_optimizer(self.model.parameters(), self.cfg.optim)
+        self.register_stateful(&#39;model&#39;, &#39;optimizer&#39;)
+        self.register_best_state(&#39;model&#39;)
+        self.register_ema(&#39;model&#39;)
+
+    def build_dataloaders(self):
+        &#34;&#34;&#34;Build audio dataloaders for each stage.&#34;&#34;&#34;
+        self.dataloaders = builders.get_audio_datasets(self.cfg)
+
+    def show(self):
+        # TODO
+        raise NotImplementedError()
+
+    def run_step(self, idx: int, batch: torch.Tensor, metrics: dict):
+        &#34;&#34;&#34;Perform one training or valid step on a given batch.&#34;&#34;&#34;
+        x = batch.to(self.device)
+        loss_fun = F.mse_loss if self.cfg.loss.kind == &#39;mse&#39; else F.l1_loss
+
+        condition = self.get_condition(x)  # [bs, 128, T/hop, n_emb]
+        sample = self.data_processor.process_data(x)
+
+        input_, target, step = self.schedule.get_training_item(sample,
+                                                               tensor_step=self.cfg.schedule.variable_step_batch)
+        out = self.model(input_, step, condition=condition).sample
+
+        base_loss = loss_fun(out, target, reduction=&#39;none&#39;).mean(dim=(1, 2))
+        reference_loss = loss_fun(input_, target, reduction=&#39;none&#39;).mean(dim=(1, 2))
+        loss = base_loss / reference_loss ** self.cfg.loss.norm_power
+
+        if self.is_training:
+            loss.mean().backward()
+            flashy.distrib.sync_model(self.model)
+            self.optimizer.step()
+            self.optimizer.zero_grad()
+        metrics = {
+            &#39;loss&#39;: loss.mean(), &#39;normed_loss&#39;: (base_loss / reference_loss).mean(),
+            }
+        metrics.update(self.per_stage({&#39;loss&#39;: loss, &#39;normed_loss&#39;: base_loss / reference_loss}, step))
+        metrics.update({
+            &#39;std_in&#39;: input_.std(), &#39;std_out&#39;: out.std()})
+        return metrics
+
+    def run_epoch(self):
+        # reset random seed at the beginning of the epoch
+        self.rng = torch.Generator()
+        self.rng.manual_seed(1234 + self.epoch)
+        self.per_stage = PerStageMetrics(self.schedule.num_steps, self.cfg.metrics.num_stage)
+        # run epoch
+        super().run_epoch()
+
+    def evaluate(self):
+        &#34;&#34;&#34;Evaluate stage.
+        Runs audio reconstruction evaluation.
+        &#34;&#34;&#34;
+        self.model.eval()
+        evaluate_stage_name = f&#39;{self.current_stage}&#39;
+        loader = self.dataloaders[&#39;evaluate&#39;]
+        updates = len(loader)
+        lp = self.log_progress(f&#39;{evaluate_stage_name} estimate&#39;, loader, total=updates, updates=self.log_updates)
+
+        metrics = {}
+        n = 1
+        for idx, batch in enumerate(lp):
+            x = batch.to(self.device)
+            with torch.no_grad():
+                y_pred = self.regenerate(x)
+
+            y_pred = y_pred.cpu()
+            y = batch.cpu()  # should already be on CPU but just in case
+            rvm = self.rvm(y_pred, y)
+            lp.update(**rvm)
+            if len(metrics) == 0:
+                metrics = rvm
+            else:
+                for key in rvm.keys():
+                    metrics[key] = (metrics[key] * n + rvm[key]) / (n + 1)
+        metrics = flashy.distrib.average_metrics(metrics)
+        return metrics
+
+    @torch.no_grad()
+    def regenerate(self, wav: torch.Tensor, step_list: tp.Optional[list] = None):
+        &#34;&#34;&#34;Regenerate the given waveform.&#34;&#34;&#34;
+        condition = self.get_condition(wav)
+        initial = self.schedule.get_initial_noise(self.data_processor.process_data(wav))  # sampling rate changes.
+        result = self.schedule.generate_subsampled(self.model, initial=initial, condition=condition,
+                                                   step_list=step_list)
+        result = self.data_processor.inverse_process(result)
+        return result
+
+    def generate(self):
+        &#34;&#34;&#34;Generate stage.&#34;&#34;&#34;
+        sample_manager = SampleManager(self.xp)
+        self.model.eval()
+        generate_stage_name = f&#39;{self.current_stage}&#39;
+
+        loader = self.dataloaders[&#39;generate&#39;]
+        updates = len(loader)
+        lp = self.log_progress(generate_stage_name, loader, total=updates, updates=self.log_updates)
+
+        for batch in lp:
+            reference, _ = batch
+            reference = reference.to(self.device)
+            estimate = self.regenerate(reference)
+            reference = reference.cpu()
+            estimate = estimate.cpu()
+            sample_manager.add_samples(estimate, self.epoch, ground_truth_wavs=reference)
+        flashy.distrib.barrier()</code></pre>
+</details>
+<div class="desc"><p>Solver for compression task.</p>
+<p>The diffusion task allows for MultiBand diffusion model training.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>cfg</code></strong> :&ensp;<code>DictConfig</code></dt>
+<dd>Configuration.</dd>
+</dl></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="audiocraft.solvers.base.StandardSolver" href="base.html#audiocraft.solvers.base.StandardSolver">StandardSolver</a></li>
+<li>abc.ABC</li>
+<li>flashy.solver.BaseSolver</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="audiocraft.solvers.diffusion.DiffusionSolver.build_dataloaders"><code class="name flex">
+<span>def <span class="ident">build_dataloaders</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def build_dataloaders(self):
+    &#34;&#34;&#34;Build audio dataloaders for each stage.&#34;&#34;&#34;
+    self.dataloaders = builders.get_audio_datasets(self.cfg)</code></pre>
+</details>
+<div class="desc"><p>Build audio dataloaders for each stage.</p></div>
+</dd>
+<dt id="audiocraft.solvers.diffusion.DiffusionSolver.build_model"><code class="name flex">
+<span>def <span class="ident">build_model</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def build_model(self):
+    &#34;&#34;&#34;Build model and optimizer as well as optional Exponential Moving Average of the model.
+    &#34;&#34;&#34;
+    # Model and optimizer
+    self.model = models.builders.get_diffusion_model(self.cfg).to(self.device)
+    self.optimizer = builders.get_optimizer(self.model.parameters(), self.cfg.optim)
+    self.register_stateful(&#39;model&#39;, &#39;optimizer&#39;)
+    self.register_best_state(&#39;model&#39;)
+    self.register_ema(&#39;model&#39;)</code></pre>
+</details>
+<div class="desc"><p>Build model and optimizer as well as optional Exponential Moving Average of the model.</p></div>
+</dd>
+<dt id="audiocraft.solvers.diffusion.DiffusionSolver.evaluate"><code class="name flex">
+<span>def <span class="ident">evaluate</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def evaluate(self):
+    &#34;&#34;&#34;Evaluate stage.
+    Runs audio reconstruction evaluation.
+    &#34;&#34;&#34;
+    self.model.eval()
+    evaluate_stage_name = f&#39;{self.current_stage}&#39;
+    loader = self.dataloaders[&#39;evaluate&#39;]
+    updates = len(loader)
+    lp = self.log_progress(f&#39;{evaluate_stage_name} estimate&#39;, loader, total=updates, updates=self.log_updates)
+
+    metrics = {}
+    n = 1
+    for idx, batch in enumerate(lp):
+        x = batch.to(self.device)
+        with torch.no_grad():
+            y_pred = self.regenerate(x)
+
+        y_pred = y_pred.cpu()
+        y = batch.cpu()  # should already be on CPU but just in case
+        rvm = self.rvm(y_pred, y)
+        lp.update(**rvm)
+        if len(metrics) == 0:
+            metrics = rvm
+        else:
+            for key in rvm.keys():
+                metrics[key] = (metrics[key] * n + rvm[key]) / (n + 1)
+    metrics = flashy.distrib.average_metrics(metrics)
+    return metrics</code></pre>
+</details>
+<div class="desc"><p>Evaluate stage.
+Runs audio reconstruction evaluation.</p></div>
+</dd>
+<dt id="audiocraft.solvers.diffusion.DiffusionSolver.get_condition"><code class="name flex">
+<span>def <span class="ident">get_condition</span></span>(<span>self, wav: torch.Tensor) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@torch.no_grad()
+def get_condition(self, wav: torch.Tensor) -&gt; torch.Tensor:
+    codes, scale = self.codec_model.encode(wav)
+    assert scale is None, &#34;Scaled compression models not supported.&#34;
+    emb = self.codec_model.decode_latent(codes)
+    return emb</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.solvers.diffusion.DiffusionSolver.regenerate"><code class="name flex">
+<span>def <span class="ident">regenerate</span></span>(<span>self, wav: torch.Tensor, step_list: list | None = None)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@torch.no_grad()
+def regenerate(self, wav: torch.Tensor, step_list: tp.Optional[list] = None):
+    &#34;&#34;&#34;Regenerate the given waveform.&#34;&#34;&#34;
+    condition = self.get_condition(wav)
+    initial = self.schedule.get_initial_noise(self.data_processor.process_data(wav))  # sampling rate changes.
+    result = self.schedule.generate_subsampled(self.model, initial=initial, condition=condition,
+                                               step_list=step_list)
+    result = self.data_processor.inverse_process(result)
+    return result</code></pre>
+</details>
+<div class="desc"><p>Regenerate the given waveform.</p></div>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="audiocraft.solvers.base.StandardSolver" href="base.html#audiocraft.solvers.base.StandardSolver">StandardSolver</a></b></code>:
+<ul class="hlist">
+<li><code><a title="audiocraft.solvers.base.StandardSolver.autocast" href="base.html#audiocraft.solvers.base.StandardSolver.autocast">autocast</a></code></li>
+<li><code><a title="audiocraft.solvers.base.StandardSolver.best_metric_name" href="base.html#audiocraft.solvers.base.StandardSolver.best_metric_name">best_metric_name</a></code></li>
+<li><code><a title="audiocraft.solvers.base.StandardSolver.commit" href="base.html#audiocraft.solvers.base.StandardSolver.commit">commit</a></code></li>
+<li><code><a title="audiocraft.solvers.base.StandardSolver.common_train_valid" href="base.html#audiocraft.solvers.base.StandardSolver.common_train_valid">common_train_valid</a></code></li>
+<li><code><a title="audiocraft.solvers.base.StandardSolver.generate" href="base.html#audiocraft.solvers.base.StandardSolver.generate">generate</a></code></li>
+<li><code><a title="audiocraft.solvers.base.StandardSolver.get_eval_solver_from_sig" href="base.html#audiocraft.solvers.base.StandardSolver.get_eval_solver_from_sig">get_eval_solver_from_sig</a></code></li>
+<li><code><a title="audiocraft.solvers.base.StandardSolver.initialize_ema" href="base.html#audiocraft.solvers.base.StandardSolver.initialize_ema">initialize_ema</a></code></li>
+<li><code><a title="audiocraft.solvers.base.StandardSolver.load_checkpoints" href="base.html#audiocraft.solvers.base.StandardSolver.load_checkpoints">load_checkpoints</a></code></li>
+<li><code><a title="audiocraft.solvers.base.StandardSolver.log_model_summary" href="base.html#audiocraft.solvers.base.StandardSolver.log_model_summary">log_model_summary</a></code></li>
+<li><code><a title="audiocraft.solvers.base.StandardSolver.register_best_state" href="base.html#audiocraft.solvers.base.StandardSolver.register_best_state">register_best_state</a></code></li>
+<li><code><a title="audiocraft.solvers.base.StandardSolver.register_ema" href="base.html#audiocraft.solvers.base.StandardSolver.register_ema">register_ema</a></code></li>
+<li><code><a title="audiocraft.solvers.base.StandardSolver.restore" href="base.html#audiocraft.solvers.base.StandardSolver.restore">restore</a></code></li>
+<li><code><a title="audiocraft.solvers.base.StandardSolver.run" href="base.html#audiocraft.solvers.base.StandardSolver.run">run</a></code></li>
+<li><code><a title="audiocraft.solvers.base.StandardSolver.run_epoch" href="base.html#audiocraft.solvers.base.StandardSolver.run_epoch">run_epoch</a></code></li>
+<li><code><a title="audiocraft.solvers.base.StandardSolver.run_one_stage" href="base.html#audiocraft.solvers.base.StandardSolver.run_one_stage">run_one_stage</a></code></li>
+<li><code><a title="audiocraft.solvers.base.StandardSolver.run_step" href="base.html#audiocraft.solvers.base.StandardSolver.run_step">run_step</a></code></li>
+<li><code><a title="audiocraft.solvers.base.StandardSolver.save_checkpoints" href="base.html#audiocraft.solvers.base.StandardSolver.save_checkpoints">save_checkpoints</a></code></li>
+<li><code><a title="audiocraft.solvers.base.StandardSolver.should_run_stage" href="base.html#audiocraft.solvers.base.StandardSolver.should_run_stage">should_run_stage</a></code></li>
+<li><code><a title="audiocraft.solvers.base.StandardSolver.should_stop_training" href="base.html#audiocraft.solvers.base.StandardSolver.should_stop_training">should_stop_training</a></code></li>
+<li><code><a title="audiocraft.solvers.base.StandardSolver.show" href="base.html#audiocraft.solvers.base.StandardSolver.show">show</a></code></li>
+<li><code><a title="audiocraft.solvers.base.StandardSolver.train" href="base.html#audiocraft.solvers.base.StandardSolver.train">train</a></code></li>
+<li><code><a title="audiocraft.solvers.base.StandardSolver.update_best_state_from_stage" href="base.html#audiocraft.solvers.base.StandardSolver.update_best_state_from_stage">update_best_state_from_stage</a></code></li>
+<li><code><a title="audiocraft.solvers.base.StandardSolver.valid" href="base.html#audiocraft.solvers.base.StandardSolver.valid">valid</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="audiocraft.solvers.diffusion.PerStageMetrics"><code class="flex name class">
+<span>class <span class="ident">PerStageMetrics</span></span>
+<span>(</span><span>num_steps: int, num_stages: int = 4)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class PerStageMetrics:
+    &#34;&#34;&#34;Handle prompting the metrics per stage.
+    It outputs the metrics per range of diffusion states.
+    e.g. avg loss when t in [250, 500]
+    &#34;&#34;&#34;
+    def __init__(self, num_steps: int, num_stages: int = 4):
+        self.num_steps = num_steps
+        self.num_stages = num_stages
+
+    def __call__(self, losses: dict, step: tp.Union[int, torch.Tensor]):
+        if type(step) is int:
+            stage = int((step / self.num_steps) * self.num_stages)
+            return {f&#34;{name}_{stage}&#34;: loss for name, loss in losses.items()}
+        elif type(step) is torch.Tensor:
+            stage_tensor = ((step / self.num_steps) * self.num_stages).long()
+            out: tp.Dict[str, float] = {}
+            for stage_idx in range(self.num_stages):
+                mask = (stage_tensor == stage_idx)
+                N = mask.sum()
+                stage_out = {}
+                if N &gt; 0:  # pass if no elements in the stage
+                    for name, loss in losses.items():
+                        stage_loss = (mask * loss).sum() / N
+                        stage_out[f&#34;{name}_{stage_idx}&#34;] = stage_loss
+                out = {**out, **stage_out}
+            return out</code></pre>
+</details>
+<div class="desc"><p>Handle prompting the metrics per stage.
+It outputs the metrics per range of diffusion states.
+e.g. avg loss when t in [250, 500]</p></div>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="audiocraft.solvers" href="index.html">audiocraft.solvers</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="audiocraft.solvers.diffusion.DataProcess" href="#audiocraft.solvers.diffusion.DataProcess">DataProcess</a></code></h4>
+<ul class="">
+<li><code><a title="audiocraft.solvers.diffusion.DataProcess.inverse_process" href="#audiocraft.solvers.diffusion.DataProcess.inverse_process">inverse_process</a></code></li>
+<li><code><a title="audiocraft.solvers.diffusion.DataProcess.process_data" href="#audiocraft.solvers.diffusion.DataProcess.process_data">process_data</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="audiocraft.solvers.diffusion.DiffusionSolver" href="#audiocraft.solvers.diffusion.DiffusionSolver">DiffusionSolver</a></code></h4>
+<ul class="">
+<li><code><a title="audiocraft.solvers.diffusion.DiffusionSolver.build_dataloaders" href="#audiocraft.solvers.diffusion.DiffusionSolver.build_dataloaders">build_dataloaders</a></code></li>
+<li><code><a title="audiocraft.solvers.diffusion.DiffusionSolver.build_model" href="#audiocraft.solvers.diffusion.DiffusionSolver.build_model">build_model</a></code></li>
+<li><code><a title="audiocraft.solvers.diffusion.DiffusionSolver.evaluate" href="#audiocraft.solvers.diffusion.DiffusionSolver.evaluate">evaluate</a></code></li>
+<li><code><a title="audiocraft.solvers.diffusion.DiffusionSolver.get_condition" href="#audiocraft.solvers.diffusion.DiffusionSolver.get_condition">get_condition</a></code></li>
+<li><code><a title="audiocraft.solvers.diffusion.DiffusionSolver.regenerate" href="#audiocraft.solvers.diffusion.DiffusionSolver.regenerate">regenerate</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="audiocraft.solvers.diffusion.PerStageMetrics" href="#audiocraft.solvers.diffusion.PerStageMetrics">PerStageMetrics</a></code></h4>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.5</a>.</p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,1570 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.5">
+<title>audiocraft.models.encodec API documentation</title>
+<meta name="description" content="Compression models or wrapper around existing models.
+Also defines the main interface that a model must follow to be usable as an audio tokenizer.">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>audiocraft.models.encodec</code></h1>
+</header>
+<section id="section-intro">
+<p>Compression models or wrapper around existing models.
+Also defines the main interface that a model must follow to be usable as an audio tokenizer.</p>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="audiocraft.models.encodec.CompressionModel"><code class="flex name class">
+<span>class <span class="ident">CompressionModel</span></span>
+<span>(</span><span>*args, **kwargs)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class CompressionModel(ABC, nn.Module):
+    &#34;&#34;&#34;Base API for all compression models that aim at being used as audio tokenizers
+    with a language model.
+    &#34;&#34;&#34;
+
+    @abstractmethod
+    def forward(self, x: torch.Tensor) -&gt; qt.QuantizedResult:
+        ...
+
+    @abstractmethod
+    def encode(self, x: torch.Tensor) -&gt; tp.Tuple[torch.Tensor, tp.Optional[torch.Tensor]]:
+        &#34;&#34;&#34;See `EncodecModel.encode`.&#34;&#34;&#34;
+        ...
+
+    @abstractmethod
+    def decode(self, codes: torch.Tensor, scale: tp.Optional[torch.Tensor] = None):
+        &#34;&#34;&#34;See `EncodecModel.decode`.&#34;&#34;&#34;
+        ...
+
+    @abstractmethod
+    def decode_latent(self, codes: torch.Tensor):
+        &#34;&#34;&#34;Decode from the discrete codes to continuous latent space.&#34;&#34;&#34;
+        ...
+
+    @property
+    @abstractmethod
+    def channels(self) -&gt; int:
+        ...
+
+    @property
+    @abstractmethod
+    def frame_rate(self) -&gt; float:
+        ...
+
+    @property
+    @abstractmethod
+    def sample_rate(self) -&gt; int:
+        ...
+
+    @property
+    @abstractmethod
+    def cardinality(self) -&gt; int:
+        ...
+
+    @property
+    @abstractmethod
+    def num_codebooks(self) -&gt; int:
+        ...
+
+    @property
+    @abstractmethod
+    def total_codebooks(self) -&gt; int:
+        ...
+
+    @abstractmethod
+    def set_num_codebooks(self, n: int):
+        &#34;&#34;&#34;Set the active number of codebooks used by the quantizer.&#34;&#34;&#34;
+        ...
+
+    @staticmethod
+    def get_pretrained(
+            name: str, device: tp.Union[torch.device, str] = &#39;cpu&#39;
+            ) -&gt; &#39;CompressionModel&#39;:
+        &#34;&#34;&#34;Instantiate a CompressionModel from a given pretrained model.
+
+        Args:
+            name (Path or str): name of the pretrained model. See after.
+            device (torch.device or str): Device on which the model is loaded.
+
+        Pretrained models:
+            - dac_44khz (https://github.com/descriptinc/descript-audio-codec)
+            - dac_24khz (same)
+            - facebook/encodec_24khz (https://huggingface.co/facebook/encodec_24khz)
+            - facebook/encodec_32khz (https://huggingface.co/facebook/encodec_32khz)
+            - your own model on Hugging Face. Export instructions to come...
+        &#34;&#34;&#34;
+
+        from . import builders, loaders
+        model: CompressionModel
+        if name in [&#39;dac_44khz&#39;, &#39;dac_24khz&#39;]:
+            model_type = name.split(&#39;_&#39;)[1]
+            logger.info(&#34;Getting pretrained compression model from DAC %s&#34;, model_type)
+            model = DAC(model_type)
+        elif name in [&#39;debug_compression_model&#39;]:
+            logger.info(&#34;Getting pretrained compression model for debug&#34;)
+            model = builders.get_debug_compression_model()
+        elif Path(name).exists():
+            # We assume here if the path exists that it is in fact an AC checkpoint
+            # that was exported using `audiocraft.utils.export` functions.
+            model = loaders.load_compression_model(name, device=device)
+        else:
+            logger.info(&#34;Getting pretrained compression model from HF %s&#34;, name)
+            hf_model = HFEncodecModel.from_pretrained(name)
+            model = HFEncodecCompressionModel(hf_model).to(device)
+        return model.to(device).eval()</code></pre>
+</details>
+<div class="desc"><p>Base API for all compression models that aim at being used as audio tokenizers
+with a language model.</p>
+<p>Initializes internal Module state, shared by both nn.Module and ScriptModule.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>abc.ABC</li>
+<li>torch.nn.modules.module.Module</li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="audiocraft.models.encodec.DAC" href="#audiocraft.models.encodec.DAC">DAC</a></li>
+<li><a title="audiocraft.models.encodec.EncodecModel" href="#audiocraft.models.encodec.EncodecModel">EncodecModel</a></li>
+<li><a title="audiocraft.models.encodec.HFEncodecCompressionModel" href="#audiocraft.models.encodec.HFEncodecCompressionModel">HFEncodecCompressionModel</a></li>
+<li><a title="audiocraft.models.encodec.InterleaveStereoCompressionModel" href="#audiocraft.models.encodec.InterleaveStereoCompressionModel">InterleaveStereoCompressionModel</a></li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="audiocraft.models.encodec.CompressionModel.call_super_init"><code class="name">var <span class="ident">call_super_init</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.models.encodec.CompressionModel.dump_patches"><code class="name">var <span class="ident">dump_patches</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.models.encodec.CompressionModel.training"><code class="name">var <span class="ident">training</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Static methods</h3>
+<dl>
+<dt id="audiocraft.models.encodec.CompressionModel.get_pretrained"><code class="name flex">
+<span>def <span class="ident">get_pretrained</span></span>(<span>name: str, device: torch.device | str = 'cpu') ‑> <a title="audiocraft.models.encodec.CompressionModel" href="#audiocraft.models.encodec.CompressionModel">CompressionModel</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def get_pretrained(
+        name: str, device: tp.Union[torch.device, str] = &#39;cpu&#39;
+        ) -&gt; &#39;CompressionModel&#39;:
+    &#34;&#34;&#34;Instantiate a CompressionModel from a given pretrained model.
+
+    Args:
+        name (Path or str): name of the pretrained model. See after.
+        device (torch.device or str): Device on which the model is loaded.
+
+    Pretrained models:
+        - dac_44khz (https://github.com/descriptinc/descript-audio-codec)
+        - dac_24khz (same)
+        - facebook/encodec_24khz (https://huggingface.co/facebook/encodec_24khz)
+        - facebook/encodec_32khz (https://huggingface.co/facebook/encodec_32khz)
+        - your own model on Hugging Face. Export instructions to come...
+    &#34;&#34;&#34;
+
+    from . import builders, loaders
+    model: CompressionModel
+    if name in [&#39;dac_44khz&#39;, &#39;dac_24khz&#39;]:
+        model_type = name.split(&#39;_&#39;)[1]
+        logger.info(&#34;Getting pretrained compression model from DAC %s&#34;, model_type)
+        model = DAC(model_type)
+    elif name in [&#39;debug_compression_model&#39;]:
+        logger.info(&#34;Getting pretrained compression model for debug&#34;)
+        model = builders.get_debug_compression_model()
+    elif Path(name).exists():
+        # We assume here if the path exists that it is in fact an AC checkpoint
+        # that was exported using `audiocraft.utils.export` functions.
+        model = loaders.load_compression_model(name, device=device)
+    else:
+        logger.info(&#34;Getting pretrained compression model from HF %s&#34;, name)
+        hf_model = HFEncodecModel.from_pretrained(name)
+        model = HFEncodecCompressionModel(hf_model).to(device)
+    return model.to(device).eval()</code></pre>
+</details>
+<div class="desc"><p>Instantiate a CompressionModel from a given pretrained model.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>name</code></strong> :&ensp;<code>Path</code> or <code>str</code></dt>
+<dd>name of the pretrained model. See after.</dd>
+<dt><strong><code>device</code></strong> :&ensp;<code>torch.device</code> or <code>str</code></dt>
+<dd>Device on which the model is loaded.</dd>
+</dl>
+<p>Pretrained models:
+- dac_44khz (<a href="https://github.com/descriptinc/descript-audio-codec">https://github.com/descriptinc/descript-audio-codec</a>)
+- dac_24khz (same)
+- facebook/encodec_24khz (<a href="https://huggingface.co/facebook/encodec_24khz">https://huggingface.co/facebook/encodec_24khz</a>)
+- facebook/encodec_32khz (<a href="https://huggingface.co/facebook/encodec_32khz">https://huggingface.co/facebook/encodec_32khz</a>)
+- your own model on Hugging Face. Export instructions to come&hellip;</p></div>
+</dd>
+</dl>
+<h3>Instance variables</h3>
+<dl>
+<dt id="audiocraft.models.encodec.CompressionModel.cardinality"><code class="name">prop <span class="ident">cardinality</span> : int</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+@abstractmethod
+def cardinality(self) -&gt; int:
+    ...</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.models.encodec.CompressionModel.channels"><code class="name">prop <span class="ident">channels</span> : int</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+@abstractmethod
+def channels(self) -&gt; int:
+    ...</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.models.encodec.CompressionModel.frame_rate"><code class="name">prop <span class="ident">frame_rate</span> : float</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+@abstractmethod
+def frame_rate(self) -&gt; float:
+    ...</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.models.encodec.CompressionModel.num_codebooks"><code class="name">prop <span class="ident">num_codebooks</span> : int</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+@abstractmethod
+def num_codebooks(self) -&gt; int:
+    ...</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.models.encodec.CompressionModel.sample_rate"><code class="name">prop <span class="ident">sample_rate</span> : int</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+@abstractmethod
+def sample_rate(self) -&gt; int:
+    ...</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.models.encodec.CompressionModel.total_codebooks"><code class="name">prop <span class="ident">total_codebooks</span> : int</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+@abstractmethod
+def total_codebooks(self) -&gt; int:
+    ...</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="audiocraft.models.encodec.CompressionModel.decode"><code class="name flex">
+<span>def <span class="ident">decode</span></span>(<span>self, codes: torch.Tensor, scale: torch.Tensor | None = None)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@abstractmethod
+def decode(self, codes: torch.Tensor, scale: tp.Optional[torch.Tensor] = None):
+    &#34;&#34;&#34;See `EncodecModel.decode`.&#34;&#34;&#34;
+    ...</code></pre>
+</details>
+<div class="desc"><p>See <code><a title="audiocraft.models.encodec.EncodecModel.decode" href="#audiocraft.models.encodec.EncodecModel.decode">EncodecModel.decode()</a></code>.</p></div>
+</dd>
+<dt id="audiocraft.models.encodec.CompressionModel.decode_latent"><code class="name flex">
+<span>def <span class="ident">decode_latent</span></span>(<span>self, codes: torch.Tensor)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@abstractmethod
+def decode_latent(self, codes: torch.Tensor):
+    &#34;&#34;&#34;Decode from the discrete codes to continuous latent space.&#34;&#34;&#34;
+    ...</code></pre>
+</details>
+<div class="desc"><p>Decode from the discrete codes to continuous latent space.</p></div>
+</dd>
+<dt id="audiocraft.models.encodec.CompressionModel.encode"><code class="name flex">
+<span>def <span class="ident">encode</span></span>(<span>self, x: torch.Tensor) ‑> Tuple[torch.Tensor, torch.Tensor | None]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@abstractmethod
+def encode(self, x: torch.Tensor) -&gt; tp.Tuple[torch.Tensor, tp.Optional[torch.Tensor]]:
+    &#34;&#34;&#34;See `EncodecModel.encode`.&#34;&#34;&#34;
+    ...</code></pre>
+</details>
+<div class="desc"><p>See <code><a title="audiocraft.models.encodec.EncodecModel.encode" href="#audiocraft.models.encodec.EncodecModel.encode">EncodecModel.encode()</a></code>.</p></div>
+</dd>
+<dt id="audiocraft.models.encodec.CompressionModel.forward"><code class="name flex">
+<span>def <span class="ident">forward</span></span>(<span>self, x: torch.Tensor) ‑> <a title="audiocraft.quantization.base.QuantizedResult" href="../quantization/base.html#audiocraft.quantization.base.QuantizedResult">QuantizedResult</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@abstractmethod
+def forward(self, x: torch.Tensor) -&gt; qt.QuantizedResult:
+    ...</code></pre>
+</details>
+<div class="desc"><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the :class:<code>Module</code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div></div>
+</dd>
+<dt id="audiocraft.models.encodec.CompressionModel.set_num_codebooks"><code class="name flex">
+<span>def <span class="ident">set_num_codebooks</span></span>(<span>self, n: int)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@abstractmethod
+def set_num_codebooks(self, n: int):
+    &#34;&#34;&#34;Set the active number of codebooks used by the quantizer.&#34;&#34;&#34;
+    ...</code></pre>
+</details>
+<div class="desc"><p>Set the active number of codebooks used by the quantizer.</p></div>
+</dd>
+</dl>
+</dd>
+<dt id="audiocraft.models.encodec.DAC"><code class="flex name class">
+<span>class <span class="ident">DAC</span></span>
+<span>(</span><span>model_type: str = '44khz')</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class DAC(CompressionModel):
+    def __init__(self, model_type: str = &#34;44khz&#34;):
+        super().__init__()
+        try:
+            import dac.utils
+        except ImportError:
+            raise RuntimeError(&#34;Could not import dac, make sure it is installed, &#34;
+                               &#34;please run `pip install descript-audio-codec`&#34;)
+        self.model = dac.utils.load_model(model_type=model_type)
+        self.n_quantizers = self.total_codebooks
+        self.model.eval()
+
+    def forward(self, x: torch.Tensor) -&gt; qt.QuantizedResult:
+        # We don&#39;t support training with this.
+        raise NotImplementedError(&#34;Forward and training with DAC not supported.&#34;)
+
+    def encode(self, x: torch.Tensor) -&gt; tp.Tuple[torch.Tensor, tp.Optional[torch.Tensor]]:
+        codes = self.model.encode(x, self.n_quantizers)[1]
+        return codes[:, :self.n_quantizers], None
+
+    def decode(self, codes: torch.Tensor, scale: tp.Optional[torch.Tensor] = None):
+        assert scale is None
+        z_q = self.decode_latent(codes)
+        return self.model.decode(z_q)
+
+    def decode_latent(self, codes: torch.Tensor):
+        &#34;&#34;&#34;Decode from the discrete codes to continuous latent space.&#34;&#34;&#34;
+        return self.model.quantizer.from_codes(codes)[0]
+
+    @property
+    def channels(self) -&gt; int:
+        return 1
+
+    @property
+    def frame_rate(self) -&gt; float:
+        return self.model.sample_rate / self.model.hop_length
+
+    @property
+    def sample_rate(self) -&gt; int:
+        return self.model.sample_rate
+
+    @property
+    def cardinality(self) -&gt; int:
+        return self.model.codebook_size
+
+    @property
+    def num_codebooks(self) -&gt; int:
+        return self.n_quantizers
+
+    @property
+    def total_codebooks(self) -&gt; int:
+        return self.model.n_codebooks
+
+    def set_num_codebooks(self, n: int):
+        &#34;&#34;&#34;Set the active number of codebooks used by the quantizer.
+        &#34;&#34;&#34;
+        assert n &gt;= 1
+        assert n &lt;= self.total_codebooks
+        self.n_quantizers = n</code></pre>
+</details>
+<div class="desc"><p>Base API for all compression models that aim at being used as audio tokenizers
+with a language model.</p>
+<p>Initializes internal Module state, shared by both nn.Module and ScriptModule.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="audiocraft.models.encodec.CompressionModel" href="#audiocraft.models.encodec.CompressionModel">CompressionModel</a></li>
+<li>abc.ABC</li>
+<li>torch.nn.modules.module.Module</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="audiocraft.models.encodec.DAC.call_super_init"><code class="name">var <span class="ident">call_super_init</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.models.encodec.DAC.dump_patches"><code class="name">var <span class="ident">dump_patches</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.models.encodec.DAC.training"><code class="name">var <span class="ident">training</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Instance variables</h3>
+<dl>
+<dt id="audiocraft.models.encodec.DAC.cardinality"><code class="name">prop <span class="ident">cardinality</span> : int</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def cardinality(self) -&gt; int:
+    return self.model.codebook_size</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.models.encodec.DAC.channels"><code class="name">prop <span class="ident">channels</span> : int</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def channels(self) -&gt; int:
+    return 1</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.models.encodec.DAC.frame_rate"><code class="name">prop <span class="ident">frame_rate</span> : float</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def frame_rate(self) -&gt; float:
+    return self.model.sample_rate / self.model.hop_length</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.models.encodec.DAC.num_codebooks"><code class="name">prop <span class="ident">num_codebooks</span> : int</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def num_codebooks(self) -&gt; int:
+    return self.n_quantizers</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.models.encodec.DAC.sample_rate"><code class="name">prop <span class="ident">sample_rate</span> : int</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def sample_rate(self) -&gt; int:
+    return self.model.sample_rate</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.models.encodec.DAC.total_codebooks"><code class="name">prop <span class="ident">total_codebooks</span> : int</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def total_codebooks(self) -&gt; int:
+    return self.model.n_codebooks</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="audiocraft.models.encodec.CompressionModel" href="#audiocraft.models.encodec.CompressionModel">CompressionModel</a></b></code>:
+<ul class="hlist">
+<li><code><a title="audiocraft.models.encodec.CompressionModel.decode" href="#audiocraft.models.encodec.CompressionModel.decode">decode</a></code></li>
+<li><code><a title="audiocraft.models.encodec.CompressionModel.decode_latent" href="#audiocraft.models.encodec.CompressionModel.decode_latent">decode_latent</a></code></li>
+<li><code><a title="audiocraft.models.encodec.CompressionModel.encode" href="#audiocraft.models.encodec.CompressionModel.encode">encode</a></code></li>
+<li><code><a title="audiocraft.models.encodec.CompressionModel.forward" href="#audiocraft.models.encodec.CompressionModel.forward">forward</a></code></li>
+<li><code><a title="audiocraft.models.encodec.CompressionModel.get_pretrained" href="#audiocraft.models.encodec.CompressionModel.get_pretrained">get_pretrained</a></code></li>
+<li><code><a title="audiocraft.models.encodec.CompressionModel.set_num_codebooks" href="#audiocraft.models.encodec.CompressionModel.set_num_codebooks">set_num_codebooks</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="audiocraft.models.encodec.EncodecModel"><code class="flex name class">
+<span>class <span class="ident">EncodecModel</span></span>
+<span>(</span><span>encoder: torch.nn.modules.module.Module,<br>decoder: torch.nn.modules.module.Module,<br>quantizer: <a title="audiocraft.quantization.base.BaseQuantizer" href="../quantization/base.html#audiocraft.quantization.base.BaseQuantizer">BaseQuantizer</a>,<br>frame_rate: int,<br>sample_rate: int,<br>channels: int,<br>causal: bool = False,<br>renormalize: bool = False)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class EncodecModel(CompressionModel):
+    &#34;&#34;&#34;Encodec model operating on the raw waveform.
+
+    Args:
+        encoder (nn.Module): Encoder network.
+        decoder (nn.Module): Decoder network.
+        quantizer (qt.BaseQuantizer): Quantizer network.
+        frame_rate (int): Frame rate for the latent representation.
+        sample_rate (int): Audio sample rate.
+        channels (int): Number of audio channels.
+        causal (bool): Whether to use a causal version of the model.
+        renormalize (bool): Whether to renormalize the audio before running the model.
+    &#34;&#34;&#34;
+    # we need assignment to override the property in the abstract class,
+    # I couldn&#39;t find a better way...
+    frame_rate: float = 0
+    sample_rate: int = 0
+    channels: int = 0
+
+    def __init__(self,
+                 encoder: nn.Module,
+                 decoder: nn.Module,
+                 quantizer: qt.BaseQuantizer,
+                 frame_rate: int,
+                 sample_rate: int,
+                 channels: int,
+                 causal: bool = False,
+                 renormalize: bool = False):
+        super().__init__()
+        self.encoder = encoder
+        self.decoder = decoder
+        self.quantizer = quantizer
+        self.frame_rate = frame_rate
+        self.sample_rate = sample_rate
+        self.channels = channels
+        self.renormalize = renormalize
+        self.causal = causal
+        if self.causal:
+            # we force disabling here to avoid handling linear overlap of segments
+            # as supported in original EnCodec codebase.
+            assert not self.renormalize, &#39;Causal model does not support renormalize&#39;
+
+    @property
+    def total_codebooks(self):
+        &#34;&#34;&#34;Total number of quantizer codebooks available.&#34;&#34;&#34;
+        return self.quantizer.total_codebooks
+
+    @property
+    def num_codebooks(self):
+        &#34;&#34;&#34;Active number of codebooks used by the quantizer.&#34;&#34;&#34;
+        return self.quantizer.num_codebooks
+
+    def set_num_codebooks(self, n: int):
+        &#34;&#34;&#34;Set the active number of codebooks used by the quantizer.&#34;&#34;&#34;
+        self.quantizer.set_num_codebooks(n)
+
+    @property
+    def cardinality(self):
+        &#34;&#34;&#34;Cardinality of each codebook.&#34;&#34;&#34;
+        return self.quantizer.bins
+
+    def preprocess(self, x: torch.Tensor) -&gt; tp.Tuple[torch.Tensor, tp.Optional[torch.Tensor]]:
+        scale: tp.Optional[torch.Tensor]
+        if self.renormalize:
+            mono = x.mean(dim=1, keepdim=True)
+            volume = mono.pow(2).mean(dim=2, keepdim=True).sqrt()
+            scale = 1e-8 + volume
+            x = x / scale
+            scale = scale.view(-1, 1)
+        else:
+            scale = None
+        return x, scale
+
+    def postprocess(self,
+                    x: torch.Tensor,
+                    scale: tp.Optional[torch.Tensor] = None) -&gt; torch.Tensor:
+        if scale is not None:
+            assert self.renormalize
+            x = x * scale.view(-1, 1, 1)
+        return x
+
+    def forward(self, x: torch.Tensor) -&gt; qt.QuantizedResult:
+        assert x.dim() == 3
+        length = x.shape[-1]
+        x, scale = self.preprocess(x)
+
+        emb = self.encoder(x)
+        q_res = self.quantizer(emb, self.frame_rate)
+        out = self.decoder(q_res.x)
+
+        # remove extra padding added by the encoder and decoder
+        assert out.shape[-1] &gt;= length, (out.shape[-1], length)
+        out = out[..., :length]
+
+        q_res.x = self.postprocess(out, scale)
+
+        return q_res
+
+    def encode(self, x: torch.Tensor) -&gt; tp.Tuple[torch.Tensor, tp.Optional[torch.Tensor]]:
+        &#34;&#34;&#34;Encode the given input tensor to quantized representation along with scale parameter.
+
+        Args:
+            x (torch.Tensor): Float tensor of shape [B, C, T]
+
+        Returns:
+            codes, scale (tuple of torch.Tensor, torch.Tensor): Tuple composed of:
+                codes: a float tensor of shape [B, K, T] with K the number of codebooks used and T the timestep.
+                scale: a float tensor containing the scale for audio renormalization.
+        &#34;&#34;&#34;
+        assert x.dim() == 3
+        x, scale = self.preprocess(x)
+        emb = self.encoder(x)
+        codes = self.quantizer.encode(emb)
+        return codes, scale
+
+    def decode(self, codes: torch.Tensor, scale: tp.Optional[torch.Tensor] = None):
+        &#34;&#34;&#34;Decode the given codes to a reconstructed representation, using the scale to perform
+        audio denormalization if needed.
+
+        Args:
+            codes (torch.Tensor): Int tensor of shape [B, K, T]
+            scale (torch.Tensor, optional): Float tensor containing the scale value.
+
+        Returns:
+            out (torch.Tensor): Float tensor of shape [B, C, T], the reconstructed audio.
+        &#34;&#34;&#34;
+        emb = self.decode_latent(codes)
+        out = self.decoder(emb)
+        out = self.postprocess(out, scale)
+        # out contains extra padding added by the encoder and decoder
+        return out
+
+    def decode_latent(self, codes: torch.Tensor):
+        &#34;&#34;&#34;Decode from the discrete codes to continuous latent space.&#34;&#34;&#34;
+        return self.quantizer.decode(codes)</code></pre>
+</details>
+<div class="desc"><p>Encodec model operating on the raw waveform.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>encoder</code></strong> :&ensp;<code>nn.Module</code></dt>
+<dd>Encoder network.</dd>
+<dt><strong><code>decoder</code></strong> :&ensp;<code>nn.Module</code></dt>
+<dd>Decoder network.</dd>
+<dt><strong><code>quantizer</code></strong> :&ensp;<code>qt.BaseQuantizer</code></dt>
+<dd>Quantizer network.</dd>
+<dt><strong><code>frame_rate</code></strong> :&ensp;<code>int</code></dt>
+<dd>Frame rate for the latent representation.</dd>
+<dt><strong><code>sample_rate</code></strong> :&ensp;<code>int</code></dt>
+<dd>Audio sample rate.</dd>
+<dt><strong><code>channels</code></strong> :&ensp;<code>int</code></dt>
+<dd>Number of audio channels.</dd>
+<dt><strong><code>causal</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Whether to use a causal version of the model.</dd>
+<dt><strong><code>renormalize</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Whether to renormalize the audio before running the model.</dd>
+</dl>
+<p>Initializes internal Module state, shared by both nn.Module and ScriptModule.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="audiocraft.models.encodec.CompressionModel" href="#audiocraft.models.encodec.CompressionModel">CompressionModel</a></li>
+<li>abc.ABC</li>
+<li>torch.nn.modules.module.Module</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="audiocraft.models.encodec.EncodecModel.channels"><code class="name">var <span class="ident">channels</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.models.encodec.EncodecModel.frame_rate"><code class="name">var <span class="ident">frame_rate</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.models.encodec.EncodecModel.sample_rate"><code class="name">var <span class="ident">sample_rate</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Instance variables</h3>
+<dl>
+<dt id="audiocraft.models.encodec.EncodecModel.cardinality"><code class="name">prop <span class="ident">cardinality</span></code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def cardinality(self):
+    &#34;&#34;&#34;Cardinality of each codebook.&#34;&#34;&#34;
+    return self.quantizer.bins</code></pre>
+</details>
+<div class="desc"><p>Cardinality of each codebook.</p></div>
+</dd>
+<dt id="audiocraft.models.encodec.EncodecModel.num_codebooks"><code class="name">prop <span class="ident">num_codebooks</span></code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def num_codebooks(self):
+    &#34;&#34;&#34;Active number of codebooks used by the quantizer.&#34;&#34;&#34;
+    return self.quantizer.num_codebooks</code></pre>
+</details>
+<div class="desc"><p>Active number of codebooks used by the quantizer.</p></div>
+</dd>
+<dt id="audiocraft.models.encodec.EncodecModel.total_codebooks"><code class="name">prop <span class="ident">total_codebooks</span></code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def total_codebooks(self):
+    &#34;&#34;&#34;Total number of quantizer codebooks available.&#34;&#34;&#34;
+    return self.quantizer.total_codebooks</code></pre>
+</details>
+<div class="desc"><p>Total number of quantizer codebooks available.</p></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="audiocraft.models.encodec.EncodecModel.decode"><code class="name flex">
+<span>def <span class="ident">decode</span></span>(<span>self, codes: torch.Tensor, scale: torch.Tensor | None = None)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def decode(self, codes: torch.Tensor, scale: tp.Optional[torch.Tensor] = None):
+    &#34;&#34;&#34;Decode the given codes to a reconstructed representation, using the scale to perform
+    audio denormalization if needed.
+
+    Args:
+        codes (torch.Tensor): Int tensor of shape [B, K, T]
+        scale (torch.Tensor, optional): Float tensor containing the scale value.
+
+    Returns:
+        out (torch.Tensor): Float tensor of shape [B, C, T], the reconstructed audio.
+    &#34;&#34;&#34;
+    emb = self.decode_latent(codes)
+    out = self.decoder(emb)
+    out = self.postprocess(out, scale)
+    # out contains extra padding added by the encoder and decoder
+    return out</code></pre>
+</details>
+<div class="desc"><p>Decode the given codes to a reconstructed representation, using the scale to perform
+audio denormalization if needed.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>codes</code></strong> :&ensp;<code>torch.Tensor</code></dt>
+<dd>Int tensor of shape [B, K, T]</dd>
+<dt><strong><code>scale</code></strong> :&ensp;<code>torch.Tensor</code>, optional</dt>
+<dd>Float tensor containing the scale value.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>out (torch.Tensor): Float tensor of shape [B, C, T], the reconstructed audio.</p></div>
+</dd>
+<dt id="audiocraft.models.encodec.EncodecModel.encode"><code class="name flex">
+<span>def <span class="ident">encode</span></span>(<span>self, x: torch.Tensor) ‑> Tuple[torch.Tensor, torch.Tensor | None]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def encode(self, x: torch.Tensor) -&gt; tp.Tuple[torch.Tensor, tp.Optional[torch.Tensor]]:
+    &#34;&#34;&#34;Encode the given input tensor to quantized representation along with scale parameter.
+
+    Args:
+        x (torch.Tensor): Float tensor of shape [B, C, T]
+
+    Returns:
+        codes, scale (tuple of torch.Tensor, torch.Tensor): Tuple composed of:
+            codes: a float tensor of shape [B, K, T] with K the number of codebooks used and T the timestep.
+            scale: a float tensor containing the scale for audio renormalization.
+    &#34;&#34;&#34;
+    assert x.dim() == 3
+    x, scale = self.preprocess(x)
+    emb = self.encoder(x)
+    codes = self.quantizer.encode(emb)
+    return codes, scale</code></pre>
+</details>
+<div class="desc"><p>Encode the given input tensor to quantized representation along with scale parameter.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>x</code></strong> :&ensp;<code>torch.Tensor</code></dt>
+<dd>Float tensor of shape [B, C, T]</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt>codes, scale (tuple of torch.Tensor, torch.Tensor): Tuple composed of:</dt>
+<dt><code>
+codes</code></dt>
+<dd>a float tensor of shape [B, K, T] with K the number of codebooks used and T the timestep.
+scale: a float tensor containing the scale for audio renormalization.</dd>
+</dl></div>
+</dd>
+<dt id="audiocraft.models.encodec.EncodecModel.postprocess"><code class="name flex">
+<span>def <span class="ident">postprocess</span></span>(<span>self, x: torch.Tensor, scale: torch.Tensor | None = None) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def postprocess(self,
+                x: torch.Tensor,
+                scale: tp.Optional[torch.Tensor] = None) -&gt; torch.Tensor:
+    if scale is not None:
+        assert self.renormalize
+        x = x * scale.view(-1, 1, 1)
+    return x</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.models.encodec.EncodecModel.preprocess"><code class="name flex">
+<span>def <span class="ident">preprocess</span></span>(<span>self, x: torch.Tensor) ‑> Tuple[torch.Tensor, torch.Tensor | None]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def preprocess(self, x: torch.Tensor) -&gt; tp.Tuple[torch.Tensor, tp.Optional[torch.Tensor]]:
+    scale: tp.Optional[torch.Tensor]
+    if self.renormalize:
+        mono = x.mean(dim=1, keepdim=True)
+        volume = mono.pow(2).mean(dim=2, keepdim=True).sqrt()
+        scale = 1e-8 + volume
+        x = x / scale
+        scale = scale.view(-1, 1)
+    else:
+        scale = None
+    return x, scale</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="audiocraft.models.encodec.CompressionModel" href="#audiocraft.models.encodec.CompressionModel">CompressionModel</a></b></code>:
+<ul class="hlist">
+<li><code><a title="audiocraft.models.encodec.CompressionModel.decode_latent" href="#audiocraft.models.encodec.CompressionModel.decode_latent">decode_latent</a></code></li>
+<li><code><a title="audiocraft.models.encodec.CompressionModel.forward" href="#audiocraft.models.encodec.CompressionModel.forward">forward</a></code></li>
+<li><code><a title="audiocraft.models.encodec.CompressionModel.get_pretrained" href="#audiocraft.models.encodec.CompressionModel.get_pretrained">get_pretrained</a></code></li>
+<li><code><a title="audiocraft.models.encodec.CompressionModel.set_num_codebooks" href="#audiocraft.models.encodec.CompressionModel.set_num_codebooks">set_num_codebooks</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="audiocraft.models.encodec.HFEncodecCompressionModel"><code class="flex name class">
+<span>class <span class="ident">HFEncodecCompressionModel</span></span>
+<span>(</span><span>model: transformers.models.encodec.modeling_encodec.EncodecModel)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class HFEncodecCompressionModel(CompressionModel):
+    &#34;&#34;&#34;Wrapper around HuggingFace Encodec.
+    &#34;&#34;&#34;
+    def __init__(self, model: HFEncodecModel):
+        super().__init__()
+        self.model = model
+        bws = self.model.config.target_bandwidths
+        num_codebooks = [
+            bw * 1000 / (self.frame_rate * math.log2(self.cardinality))
+            for bw in bws
+        ]
+        deltas = [nc - int(nc) for nc in num_codebooks]
+        # Checking we didn&#39;t do some bad maths and we indeed have integers!
+        assert all(deltas) &lt;= 1e-3, deltas
+        self.possible_num_codebooks = [int(nc) for nc in num_codebooks]
+        self.set_num_codebooks(max(self.possible_num_codebooks))
+
+    def forward(self, x: torch.Tensor) -&gt; qt.QuantizedResult:
+        # We don&#39;t support training with this.
+        raise NotImplementedError(&#34;Forward and training with HF EncodecModel not supported.&#34;)
+
+    def encode(self, x: torch.Tensor) -&gt; tp.Tuple[torch.Tensor, tp.Optional[torch.Tensor]]:
+        bandwidth_index = self.possible_num_codebooks.index(self.num_codebooks)
+        bandwidth = self.model.config.target_bandwidths[bandwidth_index]
+        res = self.model.encode(x, None, bandwidth)
+        assert len(res[0]) == 1
+        assert len(res[1]) == 1
+        return res[0][0], res[1][0]
+
+    def decode(self, codes: torch.Tensor, scale: tp.Optional[torch.Tensor] = None):
+        if scale is None:
+            scales = [None]  # type: ignore
+        else:
+            scales = scale  # type: ignore
+        res = self.model.decode(codes[None], scales)
+        return res[0]
+
+    def decode_latent(self, codes: torch.Tensor):
+        &#34;&#34;&#34;Decode from the discrete codes to continuous latent space.&#34;&#34;&#34;
+        return self.model.quantizer.decode(codes.transpose(0, 1))
+
+    @property
+    def channels(self) -&gt; int:
+        return self.model.config.audio_channels
+
+    @property
+    def frame_rate(self) -&gt; float:
+        hop_length = int(np.prod(self.model.config.upsampling_ratios))
+        return self.sample_rate / hop_length
+
+    @property
+    def sample_rate(self) -&gt; int:
+        return self.model.config.sampling_rate
+
+    @property
+    def cardinality(self) -&gt; int:
+        return self.model.config.codebook_size
+
+    @property
+    def num_codebooks(self) -&gt; int:
+        return self._num_codebooks
+
+    @property
+    def total_codebooks(self) -&gt; int:
+        return max(self.possible_num_codebooks)
+
+    def set_num_codebooks(self, n: int):
+        &#34;&#34;&#34;Set the active number of codebooks used by the quantizer.
+        &#34;&#34;&#34;
+        if n not in self.possible_num_codebooks:
+            raise ValueError(f&#34;Allowed values for num codebooks: {self.possible_num_codebooks}&#34;)
+        self._num_codebooks = n</code></pre>
+</details>
+<div class="desc"><p>Wrapper around HuggingFace Encodec.</p>
+<p>Initializes internal Module state, shared by both nn.Module and ScriptModule.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="audiocraft.models.encodec.CompressionModel" href="#audiocraft.models.encodec.CompressionModel">CompressionModel</a></li>
+<li>abc.ABC</li>
+<li>torch.nn.modules.module.Module</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="audiocraft.models.encodec.HFEncodecCompressionModel.call_super_init"><code class="name">var <span class="ident">call_super_init</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.models.encodec.HFEncodecCompressionModel.dump_patches"><code class="name">var <span class="ident">dump_patches</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.models.encodec.HFEncodecCompressionModel.training"><code class="name">var <span class="ident">training</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Instance variables</h3>
+<dl>
+<dt id="audiocraft.models.encodec.HFEncodecCompressionModel.cardinality"><code class="name">prop <span class="ident">cardinality</span> : int</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def cardinality(self) -&gt; int:
+    return self.model.config.codebook_size</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.models.encodec.HFEncodecCompressionModel.channels"><code class="name">prop <span class="ident">channels</span> : int</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def channels(self) -&gt; int:
+    return self.model.config.audio_channels</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.models.encodec.HFEncodecCompressionModel.frame_rate"><code class="name">prop <span class="ident">frame_rate</span> : float</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def frame_rate(self) -&gt; float:
+    hop_length = int(np.prod(self.model.config.upsampling_ratios))
+    return self.sample_rate / hop_length</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.models.encodec.HFEncodecCompressionModel.num_codebooks"><code class="name">prop <span class="ident">num_codebooks</span> : int</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def num_codebooks(self) -&gt; int:
+    return self._num_codebooks</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.models.encodec.HFEncodecCompressionModel.sample_rate"><code class="name">prop <span class="ident">sample_rate</span> : int</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def sample_rate(self) -&gt; int:
+    return self.model.config.sampling_rate</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.models.encodec.HFEncodecCompressionModel.total_codebooks"><code class="name">prop <span class="ident">total_codebooks</span> : int</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def total_codebooks(self) -&gt; int:
+    return max(self.possible_num_codebooks)</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="audiocraft.models.encodec.CompressionModel" href="#audiocraft.models.encodec.CompressionModel">CompressionModel</a></b></code>:
+<ul class="hlist">
+<li><code><a title="audiocraft.models.encodec.CompressionModel.decode" href="#audiocraft.models.encodec.CompressionModel.decode">decode</a></code></li>
+<li><code><a title="audiocraft.models.encodec.CompressionModel.decode_latent" href="#audiocraft.models.encodec.CompressionModel.decode_latent">decode_latent</a></code></li>
+<li><code><a title="audiocraft.models.encodec.CompressionModel.encode" href="#audiocraft.models.encodec.CompressionModel.encode">encode</a></code></li>
+<li><code><a title="audiocraft.models.encodec.CompressionModel.forward" href="#audiocraft.models.encodec.CompressionModel.forward">forward</a></code></li>
+<li><code><a title="audiocraft.models.encodec.CompressionModel.get_pretrained" href="#audiocraft.models.encodec.CompressionModel.get_pretrained">get_pretrained</a></code></li>
+<li><code><a title="audiocraft.models.encodec.CompressionModel.set_num_codebooks" href="#audiocraft.models.encodec.CompressionModel.set_num_codebooks">set_num_codebooks</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="audiocraft.models.encodec.InterleaveStereoCompressionModel"><code class="flex name class">
+<span>class <span class="ident">InterleaveStereoCompressionModel</span></span>
+<span>(</span><span>model: <a title="audiocraft.models.encodec.CompressionModel" href="#audiocraft.models.encodec.CompressionModel">CompressionModel</a>,<br>per_timestep: bool = False)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class InterleaveStereoCompressionModel(CompressionModel):
+    &#34;&#34;&#34;Wraps a CompressionModel to support stereo inputs. The wrapped model
+    will be applied independently to the left and right channels, and both codebooks
+    will be interleaved. If the wrapped model returns a representation `[B, K ,T]` per
+    channel, then the output will be `[B, K * 2, T]`  or `[B, K, T * 2]` depending on
+    `per_timestep`.
+
+    Args:
+        model (CompressionModel): Compression model to wrap.
+        per_timestep (bool): Whether to interleave on the timestep dimension
+            or on the codebooks dimension.
+    &#34;&#34;&#34;
+    def __init__(self, model: CompressionModel, per_timestep: bool = False):
+        super().__init__()
+        self.model = model
+        self.per_timestep = per_timestep
+        assert self.model.channels == 1, &#34;Wrapped model is expected to be for monophonic audio&#34;
+
+    @property
+    def total_codebooks(self):
+        return self.model.total_codebooks
+
+    @property
+    def num_codebooks(self):
+        &#34;&#34;&#34;Active number of codebooks used by the quantizer.
+
+        ..Warning:: this reports the number of codebooks after the interleaving
+        of the codebooks!
+        &#34;&#34;&#34;
+        return self.model.num_codebooks if self.per_timestep else self.model.num_codebooks * 2
+
+    def set_num_codebooks(self, n: int):
+        &#34;&#34;&#34;Set the active number of codebooks used by the quantizer.
+
+        ..Warning:: this sets the number of codebooks before the interleaving!
+        &#34;&#34;&#34;
+        self.model.set_num_codebooks(n)
+
+    @property
+    def num_virtual_steps(self) -&gt; float:
+        &#34;&#34;&#34;Return the number of virtual steps, e.g. one real step
+        will be split into that many steps.
+        &#34;&#34;&#34;
+        return 2 if self.per_timestep else 1
+
+    @property
+    def frame_rate(self) -&gt; float:
+        return self.model.frame_rate * self.num_virtual_steps
+
+    @property
+    def sample_rate(self) -&gt; int:
+        return self.model.sample_rate
+
+    @property
+    def channels(self) -&gt; int:
+        return 2
+
+    @property
+    def cardinality(self):
+        &#34;&#34;&#34;Cardinality of each codebook.
+        &#34;&#34;&#34;
+        return self.model.cardinality
+
+    def forward(self, x: torch.Tensor) -&gt; qt.QuantizedResult:
+        raise NotImplementedError(&#34;Not supported, use encode and decode.&#34;)
+
+    def encode(self, x: torch.Tensor) -&gt; tp.Tuple[torch.Tensor, tp.Optional[torch.Tensor]]:
+        B, C, T = x.shape
+        assert C == self.channels, f&#34;Expecting stereo audio but audio num channels is {C}&#34;
+
+        indices_c0, scales_c0 = self.model.encode(x[:, 0, ...].unsqueeze(1))
+        indices_c1, scales_c1 = self.model.encode(x[:, 1, ...].unsqueeze(1))
+        indices = torch.stack([indices_c0, indices_c1], dim=0)
+        scales: tp.Optional[torch.Tensor] = None
+        if scales_c0 is not None and scales_c1 is not None:
+            scales = torch.stack([scales_c0, scales_c1], dim=1)
+
+        if self.per_timestep:
+            indices = rearrange(indices, &#39;c b k t -&gt; b k (t c)&#39;, c=2)
+        else:
+            indices = rearrange(indices, &#39;c b k t -&gt; b (k c) t&#39;, c=2)
+
+        return (indices, scales)
+
+    def get_left_right_codes(self, codes: torch.Tensor) -&gt; tp.Tuple[torch.Tensor, torch.Tensor]:
+        if self.per_timestep:
+            codes = rearrange(codes, &#39;b k (t c) -&gt; c b k t&#39;, c=2)
+        else:
+            codes = rearrange(codes, &#39;b (k c) t -&gt; c b k t&#39;, c=2)
+        return codes[0], codes[1]
+
+    def decode(self, codes: torch.Tensor, scale: tp.Optional[torch.Tensor] = None):
+        B, K, T = codes.shape
+        assert T % self.num_virtual_steps == 0, &#34;Provided codes&#39; number of timesteps does not match&#34;
+        assert K == self.num_codebooks, &#34;Provided codes&#39; number of codebooks does not match&#34;
+
+        scale_c0, scale_c1 = None, None
+        if scale is not None:
+            assert scale.size(0) == B and scale.size(1) == 2, f&#34;Scale has unexpected shape: {scale.shape}&#34;
+            scale_c0 = scale[0, ...]
+            scale_c1 = scale[1, ...]
+
+        codes_c0, codes_c1 = self.get_left_right_codes(codes)
+        audio_c0 = self.model.decode(codes_c0, scale_c0)
+        audio_c1 = self.model.decode(codes_c1, scale_c1)
+        return torch.cat([audio_c0, audio_c1], dim=1)
+
+    def decode_latent(self, codes: torch.Tensor):
+        &#34;&#34;&#34;Decode from the discrete codes to continuous latent space.&#34;&#34;&#34;
+        raise NotImplementedError(&#34;Not supported by interleaved stereo wrapped models.&#34;)</code></pre>
+</details>
+<div class="desc"><p>Wraps a CompressionModel to support stereo inputs. The wrapped model
+will be applied independently to the left and right channels, and both codebooks
+will be interleaved. If the wrapped model returns a representation <code>[B, K ,T]</code> per
+channel, then the output will be <code>[B, K * 2, T]</code>
+or <code>[B, K, T * 2]</code> depending on
+<code>per_timestep</code>.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>model</code></strong> :&ensp;<code><a title="audiocraft.models.encodec.CompressionModel" href="#audiocraft.models.encodec.CompressionModel">CompressionModel</a></code></dt>
+<dd>Compression model to wrap.</dd>
+<dt><strong><code>per_timestep</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Whether to interleave on the timestep dimension
+or on the codebooks dimension.</dd>
+</dl>
+<p>Initializes internal Module state, shared by both nn.Module and ScriptModule.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="audiocraft.models.encodec.CompressionModel" href="#audiocraft.models.encodec.CompressionModel">CompressionModel</a></li>
+<li>abc.ABC</li>
+<li>torch.nn.modules.module.Module</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="audiocraft.models.encodec.InterleaveStereoCompressionModel.call_super_init"><code class="name">var <span class="ident">call_super_init</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.models.encodec.InterleaveStereoCompressionModel.dump_patches"><code class="name">var <span class="ident">dump_patches</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.models.encodec.InterleaveStereoCompressionModel.training"><code class="name">var <span class="ident">training</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Instance variables</h3>
+<dl>
+<dt id="audiocraft.models.encodec.InterleaveStereoCompressionModel.cardinality"><code class="name">prop <span class="ident">cardinality</span></code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def cardinality(self):
+    &#34;&#34;&#34;Cardinality of each codebook.
+    &#34;&#34;&#34;
+    return self.model.cardinality</code></pre>
+</details>
+<div class="desc"><p>Cardinality of each codebook.</p></div>
+</dd>
+<dt id="audiocraft.models.encodec.InterleaveStereoCompressionModel.channels"><code class="name">prop <span class="ident">channels</span> : int</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def channels(self) -&gt; int:
+    return 2</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.models.encodec.InterleaveStereoCompressionModel.frame_rate"><code class="name">prop <span class="ident">frame_rate</span> : float</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def frame_rate(self) -&gt; float:
+    return self.model.frame_rate * self.num_virtual_steps</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.models.encodec.InterleaveStereoCompressionModel.num_codebooks"><code class="name">prop <span class="ident">num_codebooks</span></code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def num_codebooks(self):
+    &#34;&#34;&#34;Active number of codebooks used by the quantizer.
+
+    ..Warning:: this reports the number of codebooks after the interleaving
+    of the codebooks!
+    &#34;&#34;&#34;
+    return self.model.num_codebooks if self.per_timestep else self.model.num_codebooks * 2</code></pre>
+</details>
+<div class="desc"><p>Active number of codebooks used by the quantizer.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning:&ensp;this reports the number of codebooks after the interleaving</p>
+</div>
+<p>of the codebooks!</p></div>
+</dd>
+<dt id="audiocraft.models.encodec.InterleaveStereoCompressionModel.num_virtual_steps"><code class="name">prop <span class="ident">num_virtual_steps</span> : float</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def num_virtual_steps(self) -&gt; float:
+    &#34;&#34;&#34;Return the number of virtual steps, e.g. one real step
+    will be split into that many steps.
+    &#34;&#34;&#34;
+    return 2 if self.per_timestep else 1</code></pre>
+</details>
+<div class="desc"><p>Return the number of virtual steps, e.g. one real step
+will be split into that many steps.</p></div>
+</dd>
+<dt id="audiocraft.models.encodec.InterleaveStereoCompressionModel.sample_rate"><code class="name">prop <span class="ident">sample_rate</span> : int</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def sample_rate(self) -&gt; int:
+    return self.model.sample_rate</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.models.encodec.InterleaveStereoCompressionModel.total_codebooks"><code class="name">prop <span class="ident">total_codebooks</span></code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def total_codebooks(self):
+    return self.model.total_codebooks</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="audiocraft.models.encodec.InterleaveStereoCompressionModel.get_left_right_codes"><code class="name flex">
+<span>def <span class="ident">get_left_right_codes</span></span>(<span>self, codes: torch.Tensor) ‑> Tuple[torch.Tensor, torch.Tensor]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_left_right_codes(self, codes: torch.Tensor) -&gt; tp.Tuple[torch.Tensor, torch.Tensor]:
+    if self.per_timestep:
+        codes = rearrange(codes, &#39;b k (t c) -&gt; c b k t&#39;, c=2)
+    else:
+        codes = rearrange(codes, &#39;b (k c) t -&gt; c b k t&#39;, c=2)
+    return codes[0], codes[1]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.models.encodec.InterleaveStereoCompressionModel.set_num_codebooks"><code class="name flex">
+<span>def <span class="ident">set_num_codebooks</span></span>(<span>self, n: int)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def set_num_codebooks(self, n: int):
+    &#34;&#34;&#34;Set the active number of codebooks used by the quantizer.
+
+    ..Warning:: this sets the number of codebooks before the interleaving!
+    &#34;&#34;&#34;
+    self.model.set_num_codebooks(n)</code></pre>
+</details>
+<div class="desc"><p>Set the active number of codebooks used by the quantizer.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning:&ensp;this sets the number of codebooks before the interleaving!</p>
+</div></div>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="audiocraft.models.encodec.CompressionModel" href="#audiocraft.models.encodec.CompressionModel">CompressionModel</a></b></code>:
+<ul class="hlist">
+<li><code><a title="audiocraft.models.encodec.CompressionModel.decode" href="#audiocraft.models.encodec.CompressionModel.decode">decode</a></code></li>
+<li><code><a title="audiocraft.models.encodec.CompressionModel.decode_latent" href="#audiocraft.models.encodec.CompressionModel.decode_latent">decode_latent</a></code></li>
+<li><code><a title="audiocraft.models.encodec.CompressionModel.encode" href="#audiocraft.models.encodec.CompressionModel.encode">encode</a></code></li>
+<li><code><a title="audiocraft.models.encodec.CompressionModel.forward" href="#audiocraft.models.encodec.CompressionModel.forward">forward</a></code></li>
+<li><code><a title="audiocraft.models.encodec.CompressionModel.get_pretrained" href="#audiocraft.models.encodec.CompressionModel.get_pretrained">get_pretrained</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="audiocraft.models" href="index.html">audiocraft.models</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="audiocraft.models.encodec.CompressionModel" href="#audiocraft.models.encodec.CompressionModel">CompressionModel</a></code></h4>
+<ul class="two-column">
+<li><code><a title="audiocraft.models.encodec.CompressionModel.call_super_init" href="#audiocraft.models.encodec.CompressionModel.call_super_init">call_super_init</a></code></li>
+<li><code><a title="audiocraft.models.encodec.CompressionModel.cardinality" href="#audiocraft.models.encodec.CompressionModel.cardinality">cardinality</a></code></li>
+<li><code><a title="audiocraft.models.encodec.CompressionModel.channels" href="#audiocraft.models.encodec.CompressionModel.channels">channels</a></code></li>
+<li><code><a title="audiocraft.models.encodec.CompressionModel.decode" href="#audiocraft.models.encodec.CompressionModel.decode">decode</a></code></li>
+<li><code><a title="audiocraft.models.encodec.CompressionModel.decode_latent" href="#audiocraft.models.encodec.CompressionModel.decode_latent">decode_latent</a></code></li>
+<li><code><a title="audiocraft.models.encodec.CompressionModel.dump_patches" href="#audiocraft.models.encodec.CompressionModel.dump_patches">dump_patches</a></code></li>
+<li><code><a title="audiocraft.models.encodec.CompressionModel.encode" href="#audiocraft.models.encodec.CompressionModel.encode">encode</a></code></li>
+<li><code><a title="audiocraft.models.encodec.CompressionModel.forward" href="#audiocraft.models.encodec.CompressionModel.forward">forward</a></code></li>
+<li><code><a title="audiocraft.models.encodec.CompressionModel.frame_rate" href="#audiocraft.models.encodec.CompressionModel.frame_rate">frame_rate</a></code></li>
+<li><code><a title="audiocraft.models.encodec.CompressionModel.get_pretrained" href="#audiocraft.models.encodec.CompressionModel.get_pretrained">get_pretrained</a></code></li>
+<li><code><a title="audiocraft.models.encodec.CompressionModel.num_codebooks" href="#audiocraft.models.encodec.CompressionModel.num_codebooks">num_codebooks</a></code></li>
+<li><code><a title="audiocraft.models.encodec.CompressionModel.sample_rate" href="#audiocraft.models.encodec.CompressionModel.sample_rate">sample_rate</a></code></li>
+<li><code><a title="audiocraft.models.encodec.CompressionModel.set_num_codebooks" href="#audiocraft.models.encodec.CompressionModel.set_num_codebooks">set_num_codebooks</a></code></li>
+<li><code><a title="audiocraft.models.encodec.CompressionModel.total_codebooks" href="#audiocraft.models.encodec.CompressionModel.total_codebooks">total_codebooks</a></code></li>
+<li><code><a title="audiocraft.models.encodec.CompressionModel.training" href="#audiocraft.models.encodec.CompressionModel.training">training</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="audiocraft.models.encodec.DAC" href="#audiocraft.models.encodec.DAC">DAC</a></code></h4>
+<ul class="two-column">
+<li><code><a title="audiocraft.models.encodec.DAC.call_super_init" href="#audiocraft.models.encodec.DAC.call_super_init">call_super_init</a></code></li>
+<li><code><a title="audiocraft.models.encodec.DAC.cardinality" href="#audiocraft.models.encodec.DAC.cardinality">cardinality</a></code></li>
+<li><code><a title="audiocraft.models.encodec.DAC.channels" href="#audiocraft.models.encodec.DAC.channels">channels</a></code></li>
+<li><code><a title="audiocraft.models.encodec.DAC.dump_patches" href="#audiocraft.models.encodec.DAC.dump_patches">dump_patches</a></code></li>
+<li><code><a title="audiocraft.models.encodec.DAC.frame_rate" href="#audiocraft.models.encodec.DAC.frame_rate">frame_rate</a></code></li>
+<li><code><a title="audiocraft.models.encodec.DAC.num_codebooks" href="#audiocraft.models.encodec.DAC.num_codebooks">num_codebooks</a></code></li>
+<li><code><a title="audiocraft.models.encodec.DAC.sample_rate" href="#audiocraft.models.encodec.DAC.sample_rate">sample_rate</a></code></li>
+<li><code><a title="audiocraft.models.encodec.DAC.total_codebooks" href="#audiocraft.models.encodec.DAC.total_codebooks">total_codebooks</a></code></li>
+<li><code><a title="audiocraft.models.encodec.DAC.training" href="#audiocraft.models.encodec.DAC.training">training</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="audiocraft.models.encodec.EncodecModel" href="#audiocraft.models.encodec.EncodecModel">EncodecModel</a></code></h4>
+<ul class="two-column">
+<li><code><a title="audiocraft.models.encodec.EncodecModel.cardinality" href="#audiocraft.models.encodec.EncodecModel.cardinality">cardinality</a></code></li>
+<li><code><a title="audiocraft.models.encodec.EncodecModel.channels" href="#audiocraft.models.encodec.EncodecModel.channels">channels</a></code></li>
+<li><code><a title="audiocraft.models.encodec.EncodecModel.decode" href="#audiocraft.models.encodec.EncodecModel.decode">decode</a></code></li>
+<li><code><a title="audiocraft.models.encodec.EncodecModel.encode" href="#audiocraft.models.encodec.EncodecModel.encode">encode</a></code></li>
+<li><code><a title="audiocraft.models.encodec.EncodecModel.frame_rate" href="#audiocraft.models.encodec.EncodecModel.frame_rate">frame_rate</a></code></li>
+<li><code><a title="audiocraft.models.encodec.EncodecModel.num_codebooks" href="#audiocraft.models.encodec.EncodecModel.num_codebooks">num_codebooks</a></code></li>
+<li><code><a title="audiocraft.models.encodec.EncodecModel.postprocess" href="#audiocraft.models.encodec.EncodecModel.postprocess">postprocess</a></code></li>
+<li><code><a title="audiocraft.models.encodec.EncodecModel.preprocess" href="#audiocraft.models.encodec.EncodecModel.preprocess">preprocess</a></code></li>
+<li><code><a title="audiocraft.models.encodec.EncodecModel.sample_rate" href="#audiocraft.models.encodec.EncodecModel.sample_rate">sample_rate</a></code></li>
+<li><code><a title="audiocraft.models.encodec.EncodecModel.total_codebooks" href="#audiocraft.models.encodec.EncodecModel.total_codebooks">total_codebooks</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="audiocraft.models.encodec.HFEncodecCompressionModel" href="#audiocraft.models.encodec.HFEncodecCompressionModel">HFEncodecCompressionModel</a></code></h4>
+<ul class="two-column">
+<li><code><a title="audiocraft.models.encodec.HFEncodecCompressionModel.call_super_init" href="#audiocraft.models.encodec.HFEncodecCompressionModel.call_super_init">call_super_init</a></code></li>
+<li><code><a title="audiocraft.models.encodec.HFEncodecCompressionModel.cardinality" href="#audiocraft.models.encodec.HFEncodecCompressionModel.cardinality">cardinality</a></code></li>
+<li><code><a title="audiocraft.models.encodec.HFEncodecCompressionModel.channels" href="#audiocraft.models.encodec.HFEncodecCompressionModel.channels">channels</a></code></li>
+<li><code><a title="audiocraft.models.encodec.HFEncodecCompressionModel.dump_patches" href="#audiocraft.models.encodec.HFEncodecCompressionModel.dump_patches">dump_patches</a></code></li>
+<li><code><a title="audiocraft.models.encodec.HFEncodecCompressionModel.frame_rate" href="#audiocraft.models.encodec.HFEncodecCompressionModel.frame_rate">frame_rate</a></code></li>
+<li><code><a title="audiocraft.models.encodec.HFEncodecCompressionModel.num_codebooks" href="#audiocraft.models.encodec.HFEncodecCompressionModel.num_codebooks">num_codebooks</a></code></li>
+<li><code><a title="audiocraft.models.encodec.HFEncodecCompressionModel.sample_rate" href="#audiocraft.models.encodec.HFEncodecCompressionModel.sample_rate">sample_rate</a></code></li>
+<li><code><a title="audiocraft.models.encodec.HFEncodecCompressionModel.total_codebooks" href="#audiocraft.models.encodec.HFEncodecCompressionModel.total_codebooks">total_codebooks</a></code></li>
+<li><code><a title="audiocraft.models.encodec.HFEncodecCompressionModel.training" href="#audiocraft.models.encodec.HFEncodecCompressionModel.training">training</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="audiocraft.models.encodec.InterleaveStereoCompressionModel" href="#audiocraft.models.encodec.InterleaveStereoCompressionModel">InterleaveStereoCompressionModel</a></code></h4>
+<ul class="">
+<li><code><a title="audiocraft.models.encodec.InterleaveStereoCompressionModel.call_super_init" href="#audiocraft.models.encodec.InterleaveStereoCompressionModel.call_super_init">call_super_init</a></code></li>
+<li><code><a title="audiocraft.models.encodec.InterleaveStereoCompressionModel.cardinality" href="#audiocraft.models.encodec.InterleaveStereoCompressionModel.cardinality">cardinality</a></code></li>
+<li><code><a title="audiocraft.models.encodec.InterleaveStereoCompressionModel.channels" href="#audiocraft.models.encodec.InterleaveStereoCompressionModel.channels">channels</a></code></li>
+<li><code><a title="audiocraft.models.encodec.InterleaveStereoCompressionModel.dump_patches" href="#audiocraft.models.encodec.InterleaveStereoCompressionModel.dump_patches">dump_patches</a></code></li>
+<li><code><a title="audiocraft.models.encodec.InterleaveStereoCompressionModel.frame_rate" href="#audiocraft.models.encodec.InterleaveStereoCompressionModel.frame_rate">frame_rate</a></code></li>
+<li><code><a title="audiocraft.models.encodec.InterleaveStereoCompressionModel.get_left_right_codes" href="#audiocraft.models.encodec.InterleaveStereoCompressionModel.get_left_right_codes">get_left_right_codes</a></code></li>
+<li><code><a title="audiocraft.models.encodec.InterleaveStereoCompressionModel.num_codebooks" href="#audiocraft.models.encodec.InterleaveStereoCompressionModel.num_codebooks">num_codebooks</a></code></li>
+<li><code><a title="audiocraft.models.encodec.InterleaveStereoCompressionModel.num_virtual_steps" href="#audiocraft.models.encodec.InterleaveStereoCompressionModel.num_virtual_steps">num_virtual_steps</a></code></li>
+<li><code><a title="audiocraft.models.encodec.InterleaveStereoCompressionModel.sample_rate" href="#audiocraft.models.encodec.InterleaveStereoCompressionModel.sample_rate">sample_rate</a></code></li>
+<li><code><a title="audiocraft.models.encodec.InterleaveStereoCompressionModel.set_num_codebooks" href="#audiocraft.models.encodec.InterleaveStereoCompressionModel.set_num_codebooks">set_num_codebooks</a></code></li>
+<li><code><a title="audiocraft.models.encodec.InterleaveStereoCompressionModel.total_codebooks" href="#audiocraft.models.encodec.InterleaveStereoCompressionModel.total_codebooks">total_codebooks</a></code></li>
+<li><code><a title="audiocraft.models.encodec.InterleaveStereoCompressionModel.training" href="#audiocraft.models.encodec.InterleaveStereoCompressionModel.training">training</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.5</a>.</p>
+</footer>
+</body>
+</html>

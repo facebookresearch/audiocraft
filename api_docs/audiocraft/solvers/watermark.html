@@ -1,0 +1,1280 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.5">
+<title>audiocraft.solvers.watermark API documentation</title>
+<meta name="description" content="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>audiocraft.solvers.watermark</code></h1>
+</header>
+<section id="section-intro">
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="audiocraft.solvers.watermark.compute_FNR"><code class="name flex">
+<span>def <span class="ident">compute_FNR</span></span>(<span>positive)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def compute_FNR(positive):
+    N = (positive[:, 0, :].mean(dim=1) &gt; 0.5).sum()
+    fpr = N / (positive.size(0))
+    return fpr</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.solvers.watermark.compute_FPR"><code class="name flex">
+<span>def <span class="ident">compute_FPR</span></span>(<span>negative)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def compute_FPR(negative):
+    N = (negative[:, 1, :].mean(dim=1) &gt; 0.5).sum()
+    fpr = N / (negative.size(0))
+    return fpr</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.solvers.watermark.compute_accuracy"><code class="name flex">
+<span>def <span class="ident">compute_accuracy</span></span>(<span>positive, negative)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def compute_accuracy(positive, negative):
+    N = (positive[:, 1, :].mean(dim=1) &gt; 0.5).sum() + (
+        negative[:, 0, :].mean(dim=1) &gt; 0.5
+    ).sum()
+    acc = N / (2 * positive.size(0))
+    return acc</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.solvers.watermark.compute_bit_acc"><code class="name flex">
+<span>def <span class="ident">compute_bit_acc</span></span>(<span>positive, original, mask=None)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def compute_bit_acc(positive, original, mask=None):
+    &#34;&#34;&#34;Compute bit accuracy.
+    Args:
+        positive: detector outputs [bsz, 2+nbits, time_steps]
+        original: original message (0 or 1) [bsz, nbits]
+        mask: mask of the watermark [bsz, 1, time_steps]
+    &#34;&#34;&#34;
+    decoded = positive[:, 2:, :]  # b 2+nbits t -&gt; b nbits t
+    if mask is not None:
+        # cut last dim of positive to keep only where mask is 1
+        new_shape = [*decoded.shape[:-1], -1]  # b nbits t -&gt; b nbits -1
+        decoded = torch.masked_select(decoded, mask == 1).reshape(new_shape)
+    # average decision over time, then threshold
+    decoded = decoded.mean(dim=-1) &gt; 0  # b nbits
+    return _bit_acc(decoded, original)</code></pre>
+</details>
+<div class="desc"><p>Compute bit accuracy.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>positive</code></strong></dt>
+<dd>detector outputs [bsz, 2+nbits, time_steps]</dd>
+<dt><strong><code>original</code></strong></dt>
+<dd>original message (0 or 1) [bsz, nbits]</dd>
+<dt><strong><code>mask</code></strong></dt>
+<dd>mask of the watermark [bsz, 1, time_steps]</dd>
+</dl></div>
+</dd>
+<dt id="audiocraft.solvers.watermark.evaluate_audio_watermark"><code class="name flex">
+<span>def <span class="ident">evaluate_audio_watermark</span></span>(<span>y_pred: torch.Tensor, y: torch.Tensor, cfg: omegaconf.dictconfig.DictConfig) ‑> dict</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def evaluate_audio_watermark(
+    y_pred: torch.Tensor,
+    y: torch.Tensor,
+    cfg: DictConfig,
+) -&gt; dict:
+    &#34;&#34;&#34;Audio reconstruction evaluation method that can be conveniently pickled.&#34;&#34;&#34;
+    metrics = {}
+    if cfg.evaluate.metrics.visqol:
+        visqol = builders.get_visqol(cfg.metrics.visqol)
+        metrics[&#34;visqol&#34;] = visqol(y_pred, y, cfg.sample_rate)
+    sisnr = ScaleInvariantSignalNoiseRatio().to(y.device)
+    stoi = ShortTimeObjectiveIntelligibility(fs=cfg.sample_rate)
+    metrics[&#34;sisnr&#34;] = sisnr(y_pred, y)
+    metrics[&#34;stoi&#34;] = stoi(y_pred, y)
+    metrics[&#34;pesq&#34;] = tensor_pesq(y_pred, y, sr=cfg.sample_rate)
+    return metrics</code></pre>
+</details>
+<div class="desc"><p>Audio reconstruction evaluation method that can be conveniently pickled.</p></div>
+</dd>
+<dt id="audiocraft.solvers.watermark.evaluate_augmentations"><code class="name flex">
+<span>def <span class="ident">evaluate_augmentations</span></span>(<span>positive: torch.Tensor,<br>negative: torch.Tensor,<br>augmentation_name: str,<br>message: torch.Tensor) ‑> dict</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def evaluate_augmentations(
+    positive: torch.Tensor,
+    negative: torch.Tensor,
+    augmentation_name: str,
+    message: torch.Tensor,
+) -&gt; dict:
+    &#34;&#34;&#34;calculating evaluation metrics but take name of the augmentation
+    method that has been done before getting positive and negative results&#34;&#34;&#34;
+    metrics = {}
+    metrics[f&#34;aug_{augmentation_name}_acc&#34;] = compute_accuracy(positive, negative)
+    metrics[f&#34;aug_{augmentation_name}_fpr&#34;] = compute_FPR(negative)
+    metrics[f&#34;aug_{augmentation_name}_fnr&#34;] = compute_FNR(positive)
+    if message.shape[0] != 0:
+        metrics[f&#34;aug_{augmentation_name}_bit_acc&#34;] = compute_bit_acc(positive, message)
+
+    # add one metric which is average overall score of all augmentations
+    metrics[&#34;all_aug_acc&#34;] = compute_accuracy(positive, negative)
+
+    return metrics</code></pre>
+</details>
+<div class="desc"><p>calculating evaluation metrics but take name of the augmentation
+method that has been done before getting positive and negative results</p></div>
+</dd>
+<dt id="audiocraft.solvers.watermark.evaluate_localizations"><code class="name flex">
+<span>def <span class="ident">evaluate_localizations</span></span>(<span>predictions, true_predictions, name)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def evaluate_localizations(predictions, true_predictions, name):
+    metrics = {}
+    # predictions are output of the detector shape [bsz, 2, frames]
+    # true_predictions is output of the mix method shape [bsz, 2, frames]
+    metrics[f&#34;localization_acc_{name}&#34;] = (
+        ((predictions[:, 1, :] &gt; 0.5) == true_predictions[:, 1, :])
+        .float()
+        .mean()
+        .item()
+    )
+    metrics[f&#34;localization_miou_{name}&#34;] = calculate_miou(
+        predictions[:, 1, :], true_predictions[:, 1, :]
+    )
+    return metrics</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.solvers.watermark.get_encodec_audio_effect"><code class="name flex">
+<span>def <span class="ident">get_encodec_audio_effect</span></span>(<span>encodec_cfg: omegaconf.dictconfig.DictConfig, sr: int) ‑> Dict</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_encodec_audio_effect(encodec_cfg: DictConfig, sr: int) -&gt; tp.Dict:
+    &#34;&#34;&#34;
+    Construct encodec-based compression data agumentation. This method is
+    is put here instead of in `audiocraft.utils.audio_effects` because
+    it depends on the package `audiocraft.solvers`, which is one layer
+    higher than `audiocraft.utils`, so we avoid the circle dependency
+    from any solvers using `audiocraft.utils.audio_effects` to do the
+    augmentation
+    &#34;&#34;&#34;
+    from ..solvers.compression import CompressionSolver
+
+    codec_model = CompressionSolver.model_from_checkpoint(encodec_cfg.ckpt)
+    codec_model.train()
+    return {
+        f&#34;encodec_nq={n_q}&#34;: partial(
+            compress_with_encodec,
+            model=codec_model,
+            n_q=n_q,
+            sample_rate=sr,
+        )
+        for n_q in encodec_cfg.n_qs
+    }</code></pre>
+</details>
+<div class="desc"><p>Construct encodec-based compression data agumentation. This method is
+is put here instead of in <code><a title="audiocraft.utils.audio_effects" href="../utils/audio_effects.html">audiocraft.utils.audio_effects</a></code> because
+it depends on the package <code><a title="audiocraft.solvers" href="index.html">audiocraft.solvers</a></code>, which is one layer
+higher than <code><a title="audiocraft.utils" href="../utils/index.html">audiocraft.utils</a></code>, so we avoid the circle dependency
+from any solvers using <code><a title="audiocraft.utils.audio_effects" href="../utils/audio_effects.html">audiocraft.utils.audio_effects</a></code> to do the
+augmentation</p></div>
+</dd>
+<dt id="audiocraft.solvers.watermark.random_message"><code class="name flex">
+<span>def <span class="ident">random_message</span></span>(<span>nbits: int, batch_size: int) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def random_message(nbits: int, batch_size: int) -&gt; torch.Tensor:
+    &#34;&#34;&#34;Return random message as 0/1 tensor.&#34;&#34;&#34;
+    if nbits == 0:
+        return torch.tensor([])
+    return torch.randint(0, 2, (batch_size, nbits))</code></pre>
+</details>
+<div class="desc"><p>Return random message as 0/1 tensor.</p></div>
+</dd>
+<dt id="audiocraft.solvers.watermark.tensor_pesq"><code class="name flex">
+<span>def <span class="ident">tensor_pesq</span></span>(<span>y_pred: torch.Tensor, y: torch.Tensor, sr: int)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def tensor_pesq(y_pred: torch.Tensor, y: torch.Tensor, sr: int):
+    # pesq returns error if no speech is detected, so we catch it
+    return PesqMetric(sr)(y_pred, y).item()</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="audiocraft.solvers.watermark.WatermarkSolver"><code class="flex name class">
+<span>class <span class="ident">WatermarkSolver</span></span>
+<span>(</span><span>cfg: omegaconf.dictconfig.DictConfig)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class WatermarkSolver(base.StandardSolver):
+    &#34;&#34;&#34;Solver for different watermarking models&#34;&#34;&#34;
+
+    def __init__(self, cfg: DictConfig):
+        super().__init__(cfg)
+        self.rng: torch.Generator  # set at each epoch
+        self.model: WMModel
+        if hasattr(cfg, &#34;fsdp&#34;):
+            assert not getattr(
+                cfg.fsdp, &#34;use&#34;, False
+            ), &#34;FSDP not supported by WatermarkSolver.&#34;
+        self._init_losses()
+        self._init_augmentations()
+        self.balancer = builders.get_balancer(self.loss_weights, self.cfg.balancer)
+        self.path_specs = os.path.join(self.folder, &#34;spectrograms&#34;)
+        os.makedirs(self.path_specs, exist_ok=True)
+
+    def _init_losses(self):
+        assert hasattr(self.cfg, &#34;losses&#34;) and isinstance(
+            self.cfg.losses, (DictConfig, tp.Mapping)
+        ), &#34;WatermarkSolver must declare training losses in the config&#34;
+
+        self.adv_losses = builders.get_adversarial_losses(self.cfg)  # noqa
+        self.register_stateful(&#34;adv_losses&#34;)
+
+        self.aux_losses = nn.ModuleDict()  # noqa
+        self.info_losses = nn.ModuleDict()  # noqa
+        self.wm_losses = nn.ModuleDict()  # noqa
+        loss_weights = {}
+        for loss_name, weight in self.cfg.losses.items():
+
+            # explicitly skip this loss calculation by setting a -1 as weight
+            # if weight == 0 it will be calculated but kept as info
+            if weight == -1:
+                continue
+
+            if loss_name in [&#34;adv&#34;, &#34;feat&#34;]:
+                for adv_name, _ in self.adv_losses.items():
+                    loss_weights[f&#34;{loss_name}_{adv_name}&#34;] = weight
+            elif weight &gt; 0:
+                if loss_name[:3] == &#34;wm_&#34;:
+                    self.wm_losses[loss_name] = builders.get_loss(
+                        loss_name, self.cfg
+                    ).to(self.device)
+                    loss_weights[loss_name] = weight
+                else:
+                    self.aux_losses[loss_name] = builders.get_loss(
+                        loss_name, self.cfg
+                    ).to(self.device)
+                    loss_weights[loss_name] = weight
+            else:
+                self.info_losses[loss_name] = builders.get_loss(loss_name, self.cfg).to(
+                    self.device
+                )
+
+        self.loss_weights = loss_weights  # noqa
+
+    def _init_augmentations(self):
+        if not hasattr(self.cfg, &#34;aug_weights&#34;) or not hasattr(
+            self.cfg, &#34;audio_effects&#34;
+        ):
+            return
+
+        aug_weights = {}
+        cfg_audio_effects = dict(self.cfg.audio_effects)
+
+        # Handle `encodec` augmentation separately as this requires loading a
+        # CompressionSolver checkpoint
+        encodec_cfg = cfg_audio_effects.pop(&#34;encodec&#34;, None)
+        if encodec_cfg:
+            encodec_effects = get_encodec_audio_effect(
+                encodec_cfg, self.cfg.sample_rate
+            )
+            for aug_name in encodec_effects.keys():
+                aug_weights[aug_name] = getattr(self.cfg.aug_weights, &#34;encodec&#34;, -1)
+        else:
+            encodec_effects = {}
+
+        other_effects = get_audio_effects(self.cfg)  # noqa
+        for name in other_effects.keys():
+            aug_weights[name] = self.cfg.aug_weights.get(name, -1)
+
+        self.aug_weights = aug_weights  # noqa
+        self.augmentations = {**encodec_effects, **other_effects}  # noqa
+
+    @property
+    def best_metric_name(self) -&gt; tp.Optional[str]:
+        # best model is the last for the watermark model for now
+        return None
+
+    def build_model(self):
+        &#34;&#34;&#34;Instantiate model and optimizer.&#34;&#34;&#34;
+        # Model and optimizer
+        self.model = get_watermark_model(self.cfg)
+        # Need two optimizers ?
+        self.optimizer = builders.get_optimizer(self.model.parameters(), self.cfg.optim)
+        self.register_stateful(&#34;model&#34;, &#34;optimizer&#34;)
+        self.register_best_state(&#34;model&#34;)
+        self.register_ema(&#34;model&#34;)
+
+    def build_dataloaders(self):
+        &#34;&#34;&#34;Instantiate audio dataloaders for each stage.&#34;&#34;&#34;
+        self.dataloaders = builders.get_audio_datasets(self.cfg)
+
+    def show(self):
+        &#34;&#34;&#34;Show the Watermark model and employed adversarial loss.&#34;&#34;&#34;
+        self.log_model_summary(self.model)
+        self.logger.info(&#34;Sould print losses here:&#34;)
+
+    def crop(
+        self, signal: torch.Tensor, watermark: torch.Tensor
+    ) -&gt; tp.Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+        &#34;&#34;&#34;
+        Applies a transformation to modify the watermarked signal to train localization.
+        It can be one of the following:
+            - zero padding: add zeros at the begining and the end of the signal
+            - crop: crop the watermark apply a watermark only on some parts of the signal
+            - shuffle: replace some part of the audio with other non watermarked parts
+                from the batch
+        In every cases the function returns a mask that contains indicates the parts that are or
+        not watermarked
+
+        Args:
+            watermark (torch.Tensor): The watermark to apply on the signal.
+            signal (torch.Tensor): clean signal
+        Returns:
+            watermark (torch.Tensor): modified watermark
+            signal (torch.Tensor): modified signal
+            mask (torch.Tensor): mask indicating which portion is still watermarked
+        &#34;&#34;&#34;
+        assert (
+            self.cfg.crop.prob + self.cfg.crop.shuffle_prob + self.cfg.crop.pad_prob
+            &lt;= 1
+        ), f&#34;The sum of the probabilities {self.cfg.crop.prob=} {self.cfg.crop.shuffle_prob=} \
+                {self.cfg.crop.pad_prob=} should be less than 1&#34;
+        mask = torch.ones_like(watermark)
+        p = torch.rand(1)
+        if p &lt; self.cfg.crop.pad_prob:  # Pad with some probability
+            start = int(torch.rand(1) * 0.33 * watermark.size(-1))
+            finish = int((0.66 + torch.rand(1) * 0.33) * watermark.size(-1))
+            mask[:, :, :start] = 0
+            mask[:, :, finish:] = 0
+            if torch.rand(1) &gt; 0.5:
+                mask = 1 - mask
+            signal *= mask  # pad signal
+
+        elif (
+            p &lt; self.cfg.crop.prob + self.cfg.crop.pad_prob + self.cfg.crop.shuffle_prob
+        ):
+            # Define a mask, then crop or shuffle
+            mask_size = round(watermark.shape[-1] * self.cfg.crop.size)
+            n_windows = int(
+                torch.randint(1, self.cfg.crop.max_n_windows + 1, (1,)).item()
+            )
+            window_size = int(mask_size / n_windows)
+            for _ in range(n_windows):  # Create multiple windows in the mask
+                mask_start = torch.randint(0, watermark.shape[-1] - window_size, (1,))
+                mask[:, :, mask_start: mask_start + window_size] = (
+                    0  # Apply window to mask
+                )
+            # inverse the mask half the time
+            if torch.rand(1) &gt; 0.5:
+                mask = 1 - mask
+
+            if p &lt; self.cfg.crop.pad_prob + self.cfg.crop.shuffle_prob:  # shuffle
+                # shuffle
+                signal_cloned = signal.clone().detach()  # detach to be sure
+                shuffle_idx = torch.randint(0, signal.size(0), (signal.size(0),))
+                signal = signal * mask + signal_cloned[shuffle_idx] * (
+                    1 - mask
+                )  # shuffle signal where not wm
+
+        watermark *= mask  # Apply mask to the watermark
+        return signal, watermark, mask
+
+    def run_step(self, idx: int, batch: torch.Tensor, metrics: dict):
+        &#34;&#34;&#34;Perform one training or valid step on a given batch.&#34;&#34;&#34;
+        x = batch.to(self.device)
+        y = x.clone()
+        nbits = getattr(self.model, &#34;nbits&#34;)
+        message = random_message(nbits, y.shape[0]).to(self.device)
+        watermark = self.model.get_watermark(x, message=message)
+        y, watermark, mask = self.crop(y, watermark)
+
+        y_wm = y + watermark
+
+        if (
+            self.cfg.losses.adv != 0 or self.cfg.losses.feat != 0
+        ) and self.is_training:  # train quality adv
+            d_losses: dict = {}
+            if (
+                len(self.adv_losses) &gt; 0
+                and torch.rand(1, generator=self.rng).item()
+                &lt;= 1 / self.cfg.adversarial.every
+            ):
+                for adv_name, adversary in self.adv_losses.items():
+                    disc_loss = adversary.train_adv(y_wm, y)
+                    d_losses[f&#34;d_{adv_name}&#34;] = disc_loss
+                metrics[&#34;d_loss&#34;] = torch.sum(torch.stack(list(d_losses.values())))
+            metrics.update(d_losses)
+
+        balanced_losses: dict = {}
+        other_losses: dict = {}
+
+        # adversarial losses
+        if self.cfg.losses.adv != 0 or self.cfg.losses.feat != 0:
+            for adv_name, adversary in self.adv_losses.items():
+                adv_loss, feat_loss = adversary(y_wm, y)
+                balanced_losses[f&#34;adv_{adv_name}&#34;] = adv_loss
+                balanced_losses[f&#34;feat_{adv_name}&#34;] = feat_loss
+
+        # auxiliary losses on quality/similarity
+        for loss_name, criterion in self.aux_losses.items():
+            loss = criterion(y_wm, y)
+            balanced_losses[loss_name] = loss
+
+        # apply augmentations
+        mode = &#34;all&#34; if self.cfg.select_aug_mode == &#34;all&#34; else &#34;weighted&#34;
+        selected_augs = select_audio_effects(
+            self.augmentations,
+            self.aug_weights,
+            mode=mode,
+            max_length=self.cfg.n_max_aug,
+        )
+        N_augs = len(selected_augs)
+        for (
+            augmentation_name,
+            augmentation_method,
+        ) in selected_augs.items():
+            # concatenate to use the augmentation function only once
+            y_y_wm = torch.cat([y, y_wm], dim=0)
+            aug_cat, mask_aug = augmentation_method(y_y_wm, mask=mask)
+            aug_y = aug_cat[: y.size(0)]
+            aug_y_wm = aug_cat[y.size(0):]
+            positive = self.model.detect_watermark(aug_y_wm)
+            negative = self.model.detect_watermark(aug_y)
+            for loss_name, criterion in self.wm_losses.items():
+                loss = criterion(positive, negative, mask_aug, message)
+                other_losses[f&#34;{loss_name}_{augmentation_name}&#34;] = loss
+
+        # weighted losses
+        metrics.update(balanced_losses)
+        metrics.update(other_losses)
+        if self.is_training:  # something is weird about the loss balancer not
+            other_loss = torch.tensor(0.0, device=self.device)
+            for name, o_loss in other_losses.items():
+                if &#34;wm_detection&#34; in name:
+                    # here we include the detection losses for augmentation
+                    other_loss += (self.loss_weights[&#34;wm_detection&#34;] / N_augs) * o_loss
+                elif &#34;wm_mb&#34; in name:
+                    other_loss += (self.loss_weights[&#34;wm_mb&#34;] / N_augs) * o_loss
+                else:
+                    other_loss += self.loss_weights[name] * o_loss
+            if other_loss.requires_grad:
+                other_loss.backward(retain_graph=True)
+                ratio1 = sum(
+                    p.grad.data.norm(p=2).pow(2)
+                    for p in self.model.parameters()
+                    if p.grad is not None
+                )
+                assert isinstance(ratio1, torch.Tensor)
+                metrics[&#34;ratio1&#34;] = ratio1.sqrt()
+
+            # balancer losses backward, returns effective training loss
+            # with effective weights at the current batch.
+            metrics[&#34;g_loss&#34;] = self.balancer.backward(balanced_losses, y_wm)
+            # add metrics corresponding to weight ratios
+            metrics.update(self.balancer.metrics)
+            ratio2 = sum(
+                p.grad.data.norm(p=2).pow(2)
+                for p in self.model.parameters()
+                if p.grad is not None
+            )
+            assert isinstance(ratio2, torch.Tensor)
+            metrics[&#34;ratio2&#34;] = ratio2.sqrt()
+
+            # optim
+            flashy.distrib.sync_model(self.model)
+            if self.cfg.optim.max_norm:
+                torch.nn.utils.clip_grad_norm_(
+                    self.model.parameters(), self.cfg.optim.max_norm
+                )
+
+            self.optimizer.step()
+            self.optimizer.zero_grad()
+
+        # informative losses only
+        info_losses: dict = {}
+        with torch.no_grad():
+            for loss_name, criterion in self.info_losses.items():
+                loss = criterion(y_wm, y)
+                info_losses[loss_name] = loss
+            # pesq
+            metrics[&#34;pesq&#34;] = tensor_pesq(y_wm, y, sr=self.cfg.sample_rate)
+            # max allocated memory
+            metrics[&#34;max_mem&#34;] = torch.cuda.max_memory_allocated() / 1e9
+
+        metrics.update(info_losses)
+        if self.cfg.losses.adv != 0 or self.cfg.losses.feat != 0:
+            # aggregated GAN losses: this is useful to report adv and feat across different adversarial loss setups
+            adv_losses = [
+                loss
+                for loss_name, loss in metrics.items()
+                if loss_name.startswith(&#34;adv&#34;)
+            ]
+            if len(adv_losses) &gt; 0:
+                metrics[&#34;adv&#34;] = torch.sum(torch.stack(adv_losses))
+            feat_losses = [
+                loss
+                for loss_name, loss in metrics.items()
+                if loss_name.startswith(&#34;feat&#34;)
+            ]
+            if len(feat_losses) &gt; 0:
+                metrics[&#34;feat&#34;] = torch.sum(torch.stack(feat_losses))
+
+        return metrics
+
+    def run_epoch(self):
+        # reset random seed at the beginning of the epoch
+        self.rng = torch.Generator()
+        self.rng.manual_seed(1234 + self.epoch)
+        # run epoch
+        super().run_epoch()
+
+    def evaluate(self) -&gt; dict:
+        &#34;&#34;&#34;Evaluate stage. Runs audio reconstruction evaluation.&#34;&#34;&#34;
+        self.model.eval()
+        evaluate_stage_name = str(self.current_stage)
+
+        loader = self.dataloaders[&#34;evaluate&#34;]
+        updates = len(loader)
+        lp = self.log_progress(
+            f&#34;{evaluate_stage_name} inference&#34;,
+            loader,
+            total=updates,
+            updates=self.log_updates,
+        )
+        average = flashy.averager()
+
+        pendings = []
+        ctx = multiprocessing.get_context(&#34;spawn&#34;)
+        with get_pool_executor(self.cfg.evaluate.num_workers, mp_context=ctx) as pool:
+            for batch in lp:
+                x = batch.to(self.device)
+                with torch.no_grad():
+                    message = random_message(self.model.nbits, x.shape[0])
+                    watermark = self.model.get_watermark(x, message)
+                    x_wm = x + watermark
+                y_pred = x_wm.cpu()
+                y = batch.cpu()  # should already be on CPU but just in case
+                pendings.append(
+                    pool.submit(
+                        evaluate_audio_watermark,
+                        y_pred,
+                        y,
+                        self.cfg,
+                    )
+                )
+                # evaluate augmentations
+                # evaluation is run on all the augmentations
+                for (
+                    augmentation_name,
+                    augmentation_method,
+                ) in self.augmentations.items():
+                    # if (
+                    #     &#34;mp3&#34; in augmentation_name
+                    #     and idx &gt;= 8
+                    #     and self.cfg.evaluate.every &lt;= 2
+                    # ):
+                    #     # When evaluating often do not compute mp3 on the full eval dset to make things faster
+                    #     continue
+                    with torch.no_grad():
+                        aug_positive = self.model.detect_watermark(
+                            augmentation_method(x_wm)
+                        )
+                        aug_negative = self.model.detect_watermark(
+                            augmentation_method(x)
+                        )
+
+                    pendings.append(
+                        pool.submit(
+                            evaluate_augmentations,
+                            aug_positive.cpu(),
+                            aug_negative.cpu(),
+                            augmentation_name,
+                            message.cpu(),
+                        )
+                    )
+                # end eval of augmentations
+
+                # evaluate localization cropping
+                for window_size in np.linspace(0.1, 0.9, 9):
+
+                    mixed, true_predictions = mix(x, x_wm, window_size=window_size)
+                    model_predictions = self.model.detect_watermark(mixed)
+                    pendings.append(
+                        pool.submit(
+                            evaluate_localizations,
+                            model_predictions.cpu(),
+                            true_predictions.cpu(),
+                            f&#34;crop_{window_size:0.1f}&#34;,
+                        )
+                    )
+                    mixed, true_predictions = mix(
+                        x, x_wm, window_size=window_size, shuffle=True
+                    )
+                    model_predictions = self.model.detect_watermark(mixed)
+                    pendings.append(
+                        pool.submit(
+                            evaluate_localizations,
+                            model_predictions.cpu(),
+                            true_predictions.cpu(),
+                            f&#34;shuffle_{window_size:0.1f}&#34;,
+                        )
+                    )
+                # evaluate localization padding
+                mixed, true_predictions = pad(x_wm)
+                model_predictions = self.model.detect_watermark(mixed)
+                pendings.append(
+                    pool.submit(
+                        evaluate_localizations,
+                        model_predictions.cpu(),
+                        true_predictions.cpu(),
+                        &#34;padding&#34;,
+                    )
+                )
+                mixed, true_predictions = pad(x_wm, central=True)
+                model_predictions = self.model.detect_watermark(mixed)
+                pendings.append(
+                    pool.submit(
+                        evaluate_localizations,
+                        model_predictions.cpu(),
+                        true_predictions.cpu(),
+                        &#34;central_padding&#34;,
+                    )
+                )
+                # end of evaluate localization
+
+            metrics_lp = self.log_progress(
+                f&#34;{evaluate_stage_name} metrics&#34;, pendings, updates=self.log_updates
+            )
+            for pending in metrics_lp:
+                metrics = pending.result()
+                metrics = average(metrics)
+
+        metrics = flashy.distrib.average_metrics(metrics, len(loader))
+        if self.cfg.select_aug_mode == &#34;use_eval_acc&#34;:
+            # Adjust augmentation weights based on evaluation loss.
+            # Higher accuracy results in lower probability of selecting this augmentation.
+            for name in self.augmentations.keys():
+                if (
+                    self.aug_weights[name] != -1
+                ):  # keep weight to -1 for unwanted augmentations
+                    # set to 0.05 to ensure that an augmentation is never completely removed during a full epoch.
+                    self.aug_weights[name] = max(1 - metrics[f&#34;aug_{name}_acc&#34;], 0.05)
+        return metrics
+
+    def generate(self):
+        &#34;&#34;&#34;Generate stage.&#34;&#34;&#34;
+        self.model.eval()
+        sample_manager = SampleManager(self.xp, map_reference_to_sample_id=True)
+        generate_stage_name = str(self.current_stage)
+
+        loader = self.dataloaders[&#34;generate&#34;]
+        updates = len(loader)
+        lp = self.log_progress(
+            generate_stage_name, loader, total=updates, updates=self.log_updates
+        )
+        path_dir = os.path.join(self.path_specs, f&#34;epoch={self.epoch}&#34;)
+        os.makedirs(path_dir, exist_ok=True)
+        first_batch = True
+        for batch in lp:
+            reference, _ = batch
+            reference = reference.to(self.device)
+            with torch.no_grad():
+                message = random_message(self.model.nbits, reference.shape[0])
+                watermark = self.model.get_watermark(reference, message)
+                x_wm = reference + watermark
+
+            reference = reference.cpu()
+            sample_manager.add_samples(
+                x_wm.cpu(), self.epoch, ground_truth_wavs=reference
+            )
+            if first_batch and flashy.distrib.is_rank_zero():
+                for i in range(reference.size(0)):
+                    ys = [
+                        reference.cpu()[i].squeeze(0).numpy(),
+                        x_wm.cpu()[i].squeeze(0).numpy(),
+                        watermark.cpu()[i].squeeze(0).numpy(),
+                    ]
+                    path = os.path.join(path_dir, f&#34;spec_{i}.pdf&#34;)
+                    save_spectrograms(
+                        ys,
+                        names=[&#34;Ground Truth&#34;, &#34;Audio Watermarked&#34;, &#34;Watermark&#34;],
+                        sr=self.cfg.sample_rate,
+                        path=path,
+                    )
+                first_batch = False
+        flashy.distrib.barrier()
+
+    def load_from_pretrained(self, name: str) -&gt; dict:
+        raise ValueError(&#34;No pretrained model&#34;)
+
+    @staticmethod
+    def model_from_checkpoint(
+        checkpoint_path: tp.Union[Path, str],
+        device: tp.Union[torch.device, str] = &#34;cpu&#34;,
+    ) -&gt; &#34;WMModel&#34;:
+        &#34;&#34;&#34;Instantiate a WatermarkModel from a given checkpoint path or dora sig.
+
+        Args:
+            checkpoint_path (Path or str): Path to checkpoint or dora sig from where the checkpoint is resolved.
+            device (torch.device or str): Device on which the model is loaded.
+        &#34;&#34;&#34;
+        checkpoint_path = str(checkpoint_path)
+        logger = logging.getLogger(__name__)
+        logger.info(f&#34;Loading WatermarkModel from checkpoint: {checkpoint_path}&#34;)
+        _checkpoint_path = checkpoint.resolve_checkpoint_path(
+            checkpoint_path, use_fsdp=False
+        )
+        assert (
+            _checkpoint_path is not None
+        ), f&#34;Could not resolve WatermarkModel checkpoint path: {checkpoint_path}&#34;
+        state = checkpoint.load_checkpoint(_checkpoint_path)
+        assert (
+            state is not None and &#34;xp.cfg&#34; in state
+        ), f&#34;Could not load WatermarkModel from ckpt: {checkpoint_path}&#34;
+        cfg = state[&#34;xp.cfg&#34;]
+        cfg.device = device
+        watermarking_model = get_watermark_model(cfg).to(device)
+
+        assert &#34;best_state&#34; in state and state[&#34;best_state&#34;] != {}
+        assert (
+            &#34;exported&#34; not in state
+        ), &#34;When loading an exported checkpoint, use the //pretrained/ prefix.&#34;
+        watermarking_model.load_state_dict(state[&#34;best_state&#34;][&#34;model&#34;])
+        watermarking_model.eval()
+        logger.info(&#34;Watermarking model loaded!&#34;)
+        return watermarking_model</code></pre>
+</details>
+<div class="desc"><p>Solver for different watermarking models</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="audiocraft.solvers.base.StandardSolver" href="base.html#audiocraft.solvers.base.StandardSolver">StandardSolver</a></li>
+<li>abc.ABC</li>
+<li>flashy.solver.BaseSolver</li>
+</ul>
+<h3>Static methods</h3>
+<dl>
+<dt id="audiocraft.solvers.watermark.WatermarkSolver.model_from_checkpoint"><code class="name flex">
+<span>def <span class="ident">model_from_checkpoint</span></span>(<span>checkpoint_path: str | pathlib.Path, device: torch.device | str = 'cpu') ‑> WMModel</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def model_from_checkpoint(
+    checkpoint_path: tp.Union[Path, str],
+    device: tp.Union[torch.device, str] = &#34;cpu&#34;,
+) -&gt; &#34;WMModel&#34;:
+    &#34;&#34;&#34;Instantiate a WatermarkModel from a given checkpoint path or dora sig.
+
+    Args:
+        checkpoint_path (Path or str): Path to checkpoint or dora sig from where the checkpoint is resolved.
+        device (torch.device or str): Device on which the model is loaded.
+    &#34;&#34;&#34;
+    checkpoint_path = str(checkpoint_path)
+    logger = logging.getLogger(__name__)
+    logger.info(f&#34;Loading WatermarkModel from checkpoint: {checkpoint_path}&#34;)
+    _checkpoint_path = checkpoint.resolve_checkpoint_path(
+        checkpoint_path, use_fsdp=False
+    )
+    assert (
+        _checkpoint_path is not None
+    ), f&#34;Could not resolve WatermarkModel checkpoint path: {checkpoint_path}&#34;
+    state = checkpoint.load_checkpoint(_checkpoint_path)
+    assert (
+        state is not None and &#34;xp.cfg&#34; in state
+    ), f&#34;Could not load WatermarkModel from ckpt: {checkpoint_path}&#34;
+    cfg = state[&#34;xp.cfg&#34;]
+    cfg.device = device
+    watermarking_model = get_watermark_model(cfg).to(device)
+
+    assert &#34;best_state&#34; in state and state[&#34;best_state&#34;] != {}
+    assert (
+        &#34;exported&#34; not in state
+    ), &#34;When loading an exported checkpoint, use the //pretrained/ prefix.&#34;
+    watermarking_model.load_state_dict(state[&#34;best_state&#34;][&#34;model&#34;])
+    watermarking_model.eval()
+    logger.info(&#34;Watermarking model loaded!&#34;)
+    return watermarking_model</code></pre>
+</details>
+<div class="desc"><p>Instantiate a WatermarkModel from a given checkpoint path or dora sig.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>checkpoint_path</code></strong> :&ensp;<code>Path</code> or <code>str</code></dt>
+<dd>Path to checkpoint or dora sig from where the checkpoint is resolved.</dd>
+<dt><strong><code>device</code></strong> :&ensp;<code>torch.device</code> or <code>str</code></dt>
+<dd>Device on which the model is loaded.</dd>
+</dl></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="audiocraft.solvers.watermark.WatermarkSolver.build_dataloaders"><code class="name flex">
+<span>def <span class="ident">build_dataloaders</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def build_dataloaders(self):
+    &#34;&#34;&#34;Instantiate audio dataloaders for each stage.&#34;&#34;&#34;
+    self.dataloaders = builders.get_audio_datasets(self.cfg)</code></pre>
+</details>
+<div class="desc"><p>Instantiate audio dataloaders for each stage.</p></div>
+</dd>
+<dt id="audiocraft.solvers.watermark.WatermarkSolver.build_model"><code class="name flex">
+<span>def <span class="ident">build_model</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def build_model(self):
+    &#34;&#34;&#34;Instantiate model and optimizer.&#34;&#34;&#34;
+    # Model and optimizer
+    self.model = get_watermark_model(self.cfg)
+    # Need two optimizers ?
+    self.optimizer = builders.get_optimizer(self.model.parameters(), self.cfg.optim)
+    self.register_stateful(&#34;model&#34;, &#34;optimizer&#34;)
+    self.register_best_state(&#34;model&#34;)
+    self.register_ema(&#34;model&#34;)</code></pre>
+</details>
+<div class="desc"><p>Instantiate model and optimizer.</p></div>
+</dd>
+<dt id="audiocraft.solvers.watermark.WatermarkSolver.crop"><code class="name flex">
+<span>def <span class="ident">crop</span></span>(<span>self, signal: torch.Tensor, watermark: torch.Tensor) ‑> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def crop(
+    self, signal: torch.Tensor, watermark: torch.Tensor
+) -&gt; tp.Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+    &#34;&#34;&#34;
+    Applies a transformation to modify the watermarked signal to train localization.
+    It can be one of the following:
+        - zero padding: add zeros at the begining and the end of the signal
+        - crop: crop the watermark apply a watermark only on some parts of the signal
+        - shuffle: replace some part of the audio with other non watermarked parts
+            from the batch
+    In every cases the function returns a mask that contains indicates the parts that are or
+    not watermarked
+
+    Args:
+        watermark (torch.Tensor): The watermark to apply on the signal.
+        signal (torch.Tensor): clean signal
+    Returns:
+        watermark (torch.Tensor): modified watermark
+        signal (torch.Tensor): modified signal
+        mask (torch.Tensor): mask indicating which portion is still watermarked
+    &#34;&#34;&#34;
+    assert (
+        self.cfg.crop.prob + self.cfg.crop.shuffle_prob + self.cfg.crop.pad_prob
+        &lt;= 1
+    ), f&#34;The sum of the probabilities {self.cfg.crop.prob=} {self.cfg.crop.shuffle_prob=} \
+            {self.cfg.crop.pad_prob=} should be less than 1&#34;
+    mask = torch.ones_like(watermark)
+    p = torch.rand(1)
+    if p &lt; self.cfg.crop.pad_prob:  # Pad with some probability
+        start = int(torch.rand(1) * 0.33 * watermark.size(-1))
+        finish = int((0.66 + torch.rand(1) * 0.33) * watermark.size(-1))
+        mask[:, :, :start] = 0
+        mask[:, :, finish:] = 0
+        if torch.rand(1) &gt; 0.5:
+            mask = 1 - mask
+        signal *= mask  # pad signal
+
+    elif (
+        p &lt; self.cfg.crop.prob + self.cfg.crop.pad_prob + self.cfg.crop.shuffle_prob
+    ):
+        # Define a mask, then crop or shuffle
+        mask_size = round(watermark.shape[-1] * self.cfg.crop.size)
+        n_windows = int(
+            torch.randint(1, self.cfg.crop.max_n_windows + 1, (1,)).item()
+        )
+        window_size = int(mask_size / n_windows)
+        for _ in range(n_windows):  # Create multiple windows in the mask
+            mask_start = torch.randint(0, watermark.shape[-1] - window_size, (1,))
+            mask[:, :, mask_start: mask_start + window_size] = (
+                0  # Apply window to mask
+            )
+        # inverse the mask half the time
+        if torch.rand(1) &gt; 0.5:
+            mask = 1 - mask
+
+        if p &lt; self.cfg.crop.pad_prob + self.cfg.crop.shuffle_prob:  # shuffle
+            # shuffle
+            signal_cloned = signal.clone().detach()  # detach to be sure
+            shuffle_idx = torch.randint(0, signal.size(0), (signal.size(0),))
+            signal = signal * mask + signal_cloned[shuffle_idx] * (
+                1 - mask
+            )  # shuffle signal where not wm
+
+    watermark *= mask  # Apply mask to the watermark
+    return signal, watermark, mask</code></pre>
+</details>
+<div class="desc"><p>Applies a transformation to modify the watermarked signal to train localization.
+It can be one of the following:
+- zero padding: add zeros at the begining and the end of the signal
+- crop: crop the watermark apply a watermark only on some parts of the signal
+- shuffle: replace some part of the audio with other non watermarked parts
+from the batch
+In every cases the function returns a mask that contains indicates the parts that are or
+not watermarked</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>watermark</code></strong> :&ensp;<code>torch.Tensor</code></dt>
+<dd>The watermark to apply on the signal.</dd>
+<dt><strong><code>signal</code></strong> :&ensp;<code>torch.Tensor</code></dt>
+<dd>clean signal</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>watermark (torch.Tensor): modified watermark
+signal (torch.Tensor): modified signal
+mask (torch.Tensor): mask indicating which portion is still watermarked</p></div>
+</dd>
+<dt id="audiocraft.solvers.watermark.WatermarkSolver.evaluate"><code class="name flex">
+<span>def <span class="ident">evaluate</span></span>(<span>self) ‑> dict</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def evaluate(self) -&gt; dict:
+    &#34;&#34;&#34;Evaluate stage. Runs audio reconstruction evaluation.&#34;&#34;&#34;
+    self.model.eval()
+    evaluate_stage_name = str(self.current_stage)
+
+    loader = self.dataloaders[&#34;evaluate&#34;]
+    updates = len(loader)
+    lp = self.log_progress(
+        f&#34;{evaluate_stage_name} inference&#34;,
+        loader,
+        total=updates,
+        updates=self.log_updates,
+    )
+    average = flashy.averager()
+
+    pendings = []
+    ctx = multiprocessing.get_context(&#34;spawn&#34;)
+    with get_pool_executor(self.cfg.evaluate.num_workers, mp_context=ctx) as pool:
+        for batch in lp:
+            x = batch.to(self.device)
+            with torch.no_grad():
+                message = random_message(self.model.nbits, x.shape[0])
+                watermark = self.model.get_watermark(x, message)
+                x_wm = x + watermark
+            y_pred = x_wm.cpu()
+            y = batch.cpu()  # should already be on CPU but just in case
+            pendings.append(
+                pool.submit(
+                    evaluate_audio_watermark,
+                    y_pred,
+                    y,
+                    self.cfg,
+                )
+            )
+            # evaluate augmentations
+            # evaluation is run on all the augmentations
+            for (
+                augmentation_name,
+                augmentation_method,
+            ) in self.augmentations.items():
+                # if (
+                #     &#34;mp3&#34; in augmentation_name
+                #     and idx &gt;= 8
+                #     and self.cfg.evaluate.every &lt;= 2
+                # ):
+                #     # When evaluating often do not compute mp3 on the full eval dset to make things faster
+                #     continue
+                with torch.no_grad():
+                    aug_positive = self.model.detect_watermark(
+                        augmentation_method(x_wm)
+                    )
+                    aug_negative = self.model.detect_watermark(
+                        augmentation_method(x)
+                    )
+
+                pendings.append(
+                    pool.submit(
+                        evaluate_augmentations,
+                        aug_positive.cpu(),
+                        aug_negative.cpu(),
+                        augmentation_name,
+                        message.cpu(),
+                    )
+                )
+            # end eval of augmentations
+
+            # evaluate localization cropping
+            for window_size in np.linspace(0.1, 0.9, 9):
+
+                mixed, true_predictions = mix(x, x_wm, window_size=window_size)
+                model_predictions = self.model.detect_watermark(mixed)
+                pendings.append(
+                    pool.submit(
+                        evaluate_localizations,
+                        model_predictions.cpu(),
+                        true_predictions.cpu(),
+                        f&#34;crop_{window_size:0.1f}&#34;,
+                    )
+                )
+                mixed, true_predictions = mix(
+                    x, x_wm, window_size=window_size, shuffle=True
+                )
+                model_predictions = self.model.detect_watermark(mixed)
+                pendings.append(
+                    pool.submit(
+                        evaluate_localizations,
+                        model_predictions.cpu(),
+                        true_predictions.cpu(),
+                        f&#34;shuffle_{window_size:0.1f}&#34;,
+                    )
+                )
+            # evaluate localization padding
+            mixed, true_predictions = pad(x_wm)
+            model_predictions = self.model.detect_watermark(mixed)
+            pendings.append(
+                pool.submit(
+                    evaluate_localizations,
+                    model_predictions.cpu(),
+                    true_predictions.cpu(),
+                    &#34;padding&#34;,
+                )
+            )
+            mixed, true_predictions = pad(x_wm, central=True)
+            model_predictions = self.model.detect_watermark(mixed)
+            pendings.append(
+                pool.submit(
+                    evaluate_localizations,
+                    model_predictions.cpu(),
+                    true_predictions.cpu(),
+                    &#34;central_padding&#34;,
+                )
+            )
+            # end of evaluate localization
+
+        metrics_lp = self.log_progress(
+            f&#34;{evaluate_stage_name} metrics&#34;, pendings, updates=self.log_updates
+        )
+        for pending in metrics_lp:
+            metrics = pending.result()
+            metrics = average(metrics)
+
+    metrics = flashy.distrib.average_metrics(metrics, len(loader))
+    if self.cfg.select_aug_mode == &#34;use_eval_acc&#34;:
+        # Adjust augmentation weights based on evaluation loss.
+        # Higher accuracy results in lower probability of selecting this augmentation.
+        for name in self.augmentations.keys():
+            if (
+                self.aug_weights[name] != -1
+            ):  # keep weight to -1 for unwanted augmentations
+                # set to 0.05 to ensure that an augmentation is never completely removed during a full epoch.
+                self.aug_weights[name] = max(1 - metrics[f&#34;aug_{name}_acc&#34;], 0.05)
+    return metrics</code></pre>
+</details>
+<div class="desc"><p>Evaluate stage. Runs audio reconstruction evaluation.</p></div>
+</dd>
+<dt id="audiocraft.solvers.watermark.WatermarkSolver.load_from_pretrained"><code class="name flex">
+<span>def <span class="ident">load_from_pretrained</span></span>(<span>self, name: str) ‑> dict</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def load_from_pretrained(self, name: str) -&gt; dict:
+    raise ValueError(&#34;No pretrained model&#34;)</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.solvers.watermark.WatermarkSolver.show"><code class="name flex">
+<span>def <span class="ident">show</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def show(self):
+    &#34;&#34;&#34;Show the Watermark model and employed adversarial loss.&#34;&#34;&#34;
+    self.log_model_summary(self.model)
+    self.logger.info(&#34;Sould print losses here:&#34;)</code></pre>
+</details>
+<div class="desc"><p>Show the Watermark model and employed adversarial loss.</p></div>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="audiocraft.solvers.base.StandardSolver" href="base.html#audiocraft.solvers.base.StandardSolver">StandardSolver</a></b></code>:
+<ul class="hlist">
+<li><code><a title="audiocraft.solvers.base.StandardSolver.autocast" href="base.html#audiocraft.solvers.base.StandardSolver.autocast">autocast</a></code></li>
+<li><code><a title="audiocraft.solvers.base.StandardSolver.best_metric_name" href="base.html#audiocraft.solvers.base.StandardSolver.best_metric_name">best_metric_name</a></code></li>
+<li><code><a title="audiocraft.solvers.base.StandardSolver.commit" href="base.html#audiocraft.solvers.base.StandardSolver.commit">commit</a></code></li>
+<li><code><a title="audiocraft.solvers.base.StandardSolver.common_train_valid" href="base.html#audiocraft.solvers.base.StandardSolver.common_train_valid">common_train_valid</a></code></li>
+<li><code><a title="audiocraft.solvers.base.StandardSolver.generate" href="base.html#audiocraft.solvers.base.StandardSolver.generate">generate</a></code></li>
+<li><code><a title="audiocraft.solvers.base.StandardSolver.get_eval_solver_from_sig" href="base.html#audiocraft.solvers.base.StandardSolver.get_eval_solver_from_sig">get_eval_solver_from_sig</a></code></li>
+<li><code><a title="audiocraft.solvers.base.StandardSolver.initialize_ema" href="base.html#audiocraft.solvers.base.StandardSolver.initialize_ema">initialize_ema</a></code></li>
+<li><code><a title="audiocraft.solvers.base.StandardSolver.load_checkpoints" href="base.html#audiocraft.solvers.base.StandardSolver.load_checkpoints">load_checkpoints</a></code></li>
+<li><code><a title="audiocraft.solvers.base.StandardSolver.log_model_summary" href="base.html#audiocraft.solvers.base.StandardSolver.log_model_summary">log_model_summary</a></code></li>
+<li><code><a title="audiocraft.solvers.base.StandardSolver.register_best_state" href="base.html#audiocraft.solvers.base.StandardSolver.register_best_state">register_best_state</a></code></li>
+<li><code><a title="audiocraft.solvers.base.StandardSolver.register_ema" href="base.html#audiocraft.solvers.base.StandardSolver.register_ema">register_ema</a></code></li>
+<li><code><a title="audiocraft.solvers.base.StandardSolver.restore" href="base.html#audiocraft.solvers.base.StandardSolver.restore">restore</a></code></li>
+<li><code><a title="audiocraft.solvers.base.StandardSolver.run" href="base.html#audiocraft.solvers.base.StandardSolver.run">run</a></code></li>
+<li><code><a title="audiocraft.solvers.base.StandardSolver.run_epoch" href="base.html#audiocraft.solvers.base.StandardSolver.run_epoch">run_epoch</a></code></li>
+<li><code><a title="audiocraft.solvers.base.StandardSolver.run_one_stage" href="base.html#audiocraft.solvers.base.StandardSolver.run_one_stage">run_one_stage</a></code></li>
+<li><code><a title="audiocraft.solvers.base.StandardSolver.run_step" href="base.html#audiocraft.solvers.base.StandardSolver.run_step">run_step</a></code></li>
+<li><code><a title="audiocraft.solvers.base.StandardSolver.save_checkpoints" href="base.html#audiocraft.solvers.base.StandardSolver.save_checkpoints">save_checkpoints</a></code></li>
+<li><code><a title="audiocraft.solvers.base.StandardSolver.should_run_stage" href="base.html#audiocraft.solvers.base.StandardSolver.should_run_stage">should_run_stage</a></code></li>
+<li><code><a title="audiocraft.solvers.base.StandardSolver.should_stop_training" href="base.html#audiocraft.solvers.base.StandardSolver.should_stop_training">should_stop_training</a></code></li>
+<li><code><a title="audiocraft.solvers.base.StandardSolver.train" href="base.html#audiocraft.solvers.base.StandardSolver.train">train</a></code></li>
+<li><code><a title="audiocraft.solvers.base.StandardSolver.update_best_state_from_stage" href="base.html#audiocraft.solvers.base.StandardSolver.update_best_state_from_stage">update_best_state_from_stage</a></code></li>
+<li><code><a title="audiocraft.solvers.base.StandardSolver.valid" href="base.html#audiocraft.solvers.base.StandardSolver.valid">valid</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="audiocraft.solvers" href="index.html">audiocraft.solvers</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="audiocraft.solvers.watermark.compute_FNR" href="#audiocraft.solvers.watermark.compute_FNR">compute_FNR</a></code></li>
+<li><code><a title="audiocraft.solvers.watermark.compute_FPR" href="#audiocraft.solvers.watermark.compute_FPR">compute_FPR</a></code></li>
+<li><code><a title="audiocraft.solvers.watermark.compute_accuracy" href="#audiocraft.solvers.watermark.compute_accuracy">compute_accuracy</a></code></li>
+<li><code><a title="audiocraft.solvers.watermark.compute_bit_acc" href="#audiocraft.solvers.watermark.compute_bit_acc">compute_bit_acc</a></code></li>
+<li><code><a title="audiocraft.solvers.watermark.evaluate_audio_watermark" href="#audiocraft.solvers.watermark.evaluate_audio_watermark">evaluate_audio_watermark</a></code></li>
+<li><code><a title="audiocraft.solvers.watermark.evaluate_augmentations" href="#audiocraft.solvers.watermark.evaluate_augmentations">evaluate_augmentations</a></code></li>
+<li><code><a title="audiocraft.solvers.watermark.evaluate_localizations" href="#audiocraft.solvers.watermark.evaluate_localizations">evaluate_localizations</a></code></li>
+<li><code><a title="audiocraft.solvers.watermark.get_encodec_audio_effect" href="#audiocraft.solvers.watermark.get_encodec_audio_effect">get_encodec_audio_effect</a></code></li>
+<li><code><a title="audiocraft.solvers.watermark.random_message" href="#audiocraft.solvers.watermark.random_message">random_message</a></code></li>
+<li><code><a title="audiocraft.solvers.watermark.tensor_pesq" href="#audiocraft.solvers.watermark.tensor_pesq">tensor_pesq</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="audiocraft.solvers.watermark.WatermarkSolver" href="#audiocraft.solvers.watermark.WatermarkSolver">WatermarkSolver</a></code></h4>
+<ul class="">
+<li><code><a title="audiocraft.solvers.watermark.WatermarkSolver.build_dataloaders" href="#audiocraft.solvers.watermark.WatermarkSolver.build_dataloaders">build_dataloaders</a></code></li>
+<li><code><a title="audiocraft.solvers.watermark.WatermarkSolver.build_model" href="#audiocraft.solvers.watermark.WatermarkSolver.build_model">build_model</a></code></li>
+<li><code><a title="audiocraft.solvers.watermark.WatermarkSolver.crop" href="#audiocraft.solvers.watermark.WatermarkSolver.crop">crop</a></code></li>
+<li><code><a title="audiocraft.solvers.watermark.WatermarkSolver.evaluate" href="#audiocraft.solvers.watermark.WatermarkSolver.evaluate">evaluate</a></code></li>
+<li><code><a title="audiocraft.solvers.watermark.WatermarkSolver.load_from_pretrained" href="#audiocraft.solvers.watermark.WatermarkSolver.load_from_pretrained">load_from_pretrained</a></code></li>
+<li><code><a title="audiocraft.solvers.watermark.WatermarkSolver.model_from_checkpoint" href="#audiocraft.solvers.watermark.WatermarkSolver.model_from_checkpoint">model_from_checkpoint</a></code></li>
+<li><code><a title="audiocraft.solvers.watermark.WatermarkSolver.show" href="#audiocraft.solvers.watermark.WatermarkSolver.show">show</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.5</a>.</p>
+</footer>
+</body>
+</html>

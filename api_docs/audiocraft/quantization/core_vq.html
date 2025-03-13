@@ -1,0 +1,1154 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.5">
+<title>audiocraft.quantization.core_vq API documentation</title>
+<meta name="description" content="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>audiocraft.quantization.core_vq</code></h1>
+</header>
+<section id="section-intro">
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="audiocraft.quantization.core_vq.default"><code class="name flex">
+<span>def <span class="ident">default</span></span>(<span>val: Any, d: Any) ‑> Any</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def default(val: tp.Any, d: tp.Any) -&gt; tp.Any:
+    return val if exists(val) else d</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.quantization.core_vq.ema_inplace"><code class="name flex">
+<span>def <span class="ident">ema_inplace</span></span>(<span>moving_avg, new, decay: float)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def ema_inplace(moving_avg, new, decay: float):
+    moving_avg.data.mul_(decay).add_(new, alpha=(1 - decay))</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.quantization.core_vq.exists"><code class="name flex">
+<span>def <span class="ident">exists</span></span>(<span>val: Any | None) ‑> bool</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def exists(val: tp.Optional[tp.Any]) -&gt; bool:
+    return val is not None</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.quantization.core_vq.kmeans"><code class="name flex">
+<span>def <span class="ident">kmeans</span></span>(<span>samples, num_clusters: int, num_iters: int = 10)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def kmeans(samples, num_clusters: int, num_iters: int = 10):
+    dim, dtype = samples.shape[-1], samples.dtype
+
+    means = sample_vectors(samples, num_clusters)
+
+    for _ in range(num_iters):
+        diffs = rearrange(samples, &#34;n d -&gt; n () d&#34;) - rearrange(
+            means, &#34;c d -&gt; () c d&#34;
+        )
+        dists = -(diffs ** 2).sum(dim=-1)
+
+        buckets = dists.max(dim=-1).indices
+        bins = torch.bincount(buckets, minlength=num_clusters)
+        zero_mask = bins == 0
+        bins_min_clamped = bins.masked_fill(zero_mask, 1)
+
+        new_means = buckets.new_zeros(num_clusters, dim, dtype=dtype)
+        new_means.scatter_add_(0, repeat(buckets, &#34;n -&gt; n d&#34;, d=dim), samples)
+        new_means = new_means / bins_min_clamped[..., None]
+
+        means = torch.where(zero_mask[..., None], means, new_means)
+
+    return means, bins</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.quantization.core_vq.l2norm"><code class="name flex">
+<span>def <span class="ident">l2norm</span></span>(<span>t)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def l2norm(t):
+    return F.normalize(t, p=2, dim=-1)</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.quantization.core_vq.laplace_smoothing"><code class="name flex">
+<span>def <span class="ident">laplace_smoothing</span></span>(<span>x, n_categories: int, epsilon: float = 1e-05)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def laplace_smoothing(x, n_categories: int, epsilon: float = 1e-5):
+    return (x + epsilon) / (x.sum() + n_categories * epsilon)</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.quantization.core_vq.orthogonal_loss_fn"><code class="name flex">
+<span>def <span class="ident">orthogonal_loss_fn</span></span>(<span>t)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def orthogonal_loss_fn(t):
+    # eq (2) from https://arxiv.org/abs/2112.00384
+    n = t.shape[0]
+    normed_codes = l2norm(t)
+    identity = torch.eye(n, device=t.device)
+    cosine_sim = einsum(&#34;i d, j d -&gt; i j&#34;, normed_codes, normed_codes)
+    return ((cosine_sim - identity) ** 2).sum() / (n ** 2)</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.quantization.core_vq.sample_vectors"><code class="name flex">
+<span>def <span class="ident">sample_vectors</span></span>(<span>samples, num: int)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sample_vectors(samples, num: int):
+    num_samples, device = samples.shape[0], samples.device
+
+    if num_samples &gt;= num:
+        indices = torch.randperm(num_samples, device=device)[:num]
+    else:
+        indices = torch.randint(0, num_samples, (num,), device=device)
+
+    return samples[indices]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.quantization.core_vq.uniform_init"><code class="name flex">
+<span>def <span class="ident">uniform_init</span></span>(<span>*shape: int)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def uniform_init(*shape: int):
+    t = torch.empty(shape)
+    nn.init.kaiming_uniform_(t)
+    return t</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="audiocraft.quantization.core_vq.EuclideanCodebook"><code class="flex name class">
+<span>class <span class="ident">EuclideanCodebook</span></span>
+<span>(</span><span>dim: int,<br>codebook_size: int,<br>kmeans_init: int = False,<br>kmeans_iters: int = 10,<br>decay: float = 0.8,<br>epsilon: float = 1e-05,<br>threshold_ema_dead_code: float = 2.0)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class EuclideanCodebook(nn.Module):
+    &#34;&#34;&#34;Codebook with Euclidean distance.
+
+    Args:
+        dim (int): Dimension.
+        codebook_size (int): Codebook size.
+        kmeans_init (bool): Whether to use k-means to initialize the codebooks.
+            If set to true, run the k-means algorithm on the first training batch and use
+            the learned centroids as initialization.
+        kmeans_iters (int): Number of iterations used for k-means algorithm at initialization.
+        decay (float): Decay for exponential moving average over the codebooks.
+        epsilon (float): Epsilon value for numerical stability.
+        threshold_ema_dead_code (int): Threshold for dead code expiration. Replace any codes
+            that have an exponential moving average cluster size less than the specified threshold with
+            randomly selected vector from the current batch.
+    &#34;&#34;&#34;
+    def __init__(
+        self,
+        dim: int,
+        codebook_size: int,
+        kmeans_init: int = False,
+        kmeans_iters: int = 10,
+        decay: float = 0.8,
+        epsilon: float = 1e-5,
+        threshold_ema_dead_code: float = 2.,
+    ):
+        super().__init__()
+        self.decay = decay
+        init_fn: tp.Union[tp.Callable[..., torch.Tensor], tp.Any] = uniform_init if not kmeans_init else torch.zeros
+        embed = init_fn(codebook_size, dim)
+
+        self.codebook_size = codebook_size
+
+        self.kmeans_iters = kmeans_iters
+        self.epsilon = epsilon
+        self.threshold_ema_dead_code = threshold_ema_dead_code
+
+        self.register_buffer(&#34;inited&#34;, torch.Tensor([not kmeans_init]))
+        self.register_buffer(&#34;cluster_size&#34;, torch.zeros(codebook_size))
+        self.register_buffer(&#34;embed&#34;, embed)
+        self.register_buffer(&#34;embed_avg&#34;, embed.clone())
+
+    @torch.jit.ignore
+    def init_embed_(self, data):
+        if self.inited:
+            return
+
+        embed, cluster_size = kmeans(data, self.codebook_size, self.kmeans_iters)
+        self.embed.data.copy_(embed)
+        self.embed_avg.data.copy_(embed.clone())
+        self.cluster_size.data.copy_(cluster_size)
+        self.inited.data.copy_(torch.Tensor([True]))
+        # Make sure all buffers across workers are in sync after initialization
+        flashy.distrib.broadcast_tensors(self.buffers())
+
+    def replace_(self, samples, mask):
+        modified_codebook = torch.where(
+            mask[..., None], sample_vectors(samples, self.codebook_size), self.embed
+        )
+        self.embed.data.copy_(modified_codebook)
+
+    def expire_codes_(self, batch_samples):
+        if self.threshold_ema_dead_code == 0:
+            return
+
+        expired_codes = self.cluster_size &lt; self.threshold_ema_dead_code
+        if not torch.any(expired_codes):
+            return
+
+        batch_samples = rearrange(batch_samples, &#34;... d -&gt; (...) d&#34;)
+        self.replace_(batch_samples, mask=expired_codes)
+        flashy.distrib.broadcast_tensors(self.buffers())
+
+    def preprocess(self, x):
+        x = rearrange(x, &#34;... d -&gt; (...) d&#34;)
+        return x
+
+    def quantize(self, x):
+        embed = self.embed.t()
+        dist = -(
+            x.pow(2).sum(1, keepdim=True)
+            - 2 * x @ embed
+            + embed.pow(2).sum(0, keepdim=True)
+        )
+        embed_ind = dist.max(dim=-1).indices
+        return embed_ind
+
+    def postprocess_emb(self, embed_ind, shape):
+        return embed_ind.view(*shape[:-1])
+
+    def dequantize(self, embed_ind):
+        quantize = F.embedding(embed_ind, self.embed)
+        return quantize
+
+    def encode(self, x):
+        shape = x.shape
+        # pre-process
+        x = self.preprocess(x)
+        # quantize
+        embed_ind = self.quantize(x)
+        # post-process
+        embed_ind = self.postprocess_emb(embed_ind, shape)
+        return embed_ind
+
+    def decode(self, embed_ind):
+        quantize = self.dequantize(embed_ind)
+        return quantize
+
+    def forward(self, x):
+        shape, dtype = x.shape, x.dtype
+        x = self.preprocess(x)
+        self.init_embed_(x)
+
+        embed_ind = self.quantize(x)
+        embed_onehot = F.one_hot(embed_ind, self.codebook_size).type(dtype)
+        embed_ind = self.postprocess_emb(embed_ind, shape)
+        quantize = self.dequantize(embed_ind)
+
+        if self.training:
+            # We do the expiry of code at that point as buffers are in sync
+            # and all the workers will take the same decision.
+            self.expire_codes_(x)
+            ema_inplace(self.cluster_size, embed_onehot.sum(0), self.decay)
+            embed_sum = x.t() @ embed_onehot
+            ema_inplace(self.embed_avg, embed_sum.t(), self.decay)
+            cluster_size = (
+                laplace_smoothing(self.cluster_size, self.codebook_size, self.epsilon)
+                * self.cluster_size.sum()
+            )
+            embed_normalized = self.embed_avg / cluster_size.unsqueeze(1)
+            self.embed.data.copy_(embed_normalized)
+
+        return quantize, embed_ind</code></pre>
+</details>
+<div class="desc"><p>Codebook with Euclidean distance.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>dim</code></strong> :&ensp;<code>int</code></dt>
+<dd>Dimension.</dd>
+<dt><strong><code>codebook_size</code></strong> :&ensp;<code>int</code></dt>
+<dd>Codebook size.</dd>
+<dt><strong><code>kmeans_init</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Whether to use k-means to initialize the codebooks.
+If set to true, run the k-means algorithm on the first training batch and use
+the learned centroids as initialization.</dd>
+<dt><strong><code>kmeans_iters</code></strong> :&ensp;<code>int</code></dt>
+<dd>Number of iterations used for k-means algorithm at initialization.</dd>
+<dt><strong><code>decay</code></strong> :&ensp;<code>float</code></dt>
+<dd>Decay for exponential moving average over the codebooks.</dd>
+<dt><strong><code>epsilon</code></strong> :&ensp;<code>float</code></dt>
+<dd>Epsilon value for numerical stability.</dd>
+<dt><strong><code>threshold_ema_dead_code</code></strong> :&ensp;<code>int</code></dt>
+<dd>Threshold for dead code expiration. Replace any codes
+that have an exponential moving average cluster size less than the specified threshold with
+randomly selected vector from the current batch.</dd>
+</dl>
+<p>Initializes internal Module state, shared by both nn.Module and ScriptModule.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>torch.nn.modules.module.Module</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="audiocraft.quantization.core_vq.EuclideanCodebook.call_super_init"><code class="name">var <span class="ident">call_super_init</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.quantization.core_vq.EuclideanCodebook.dump_patches"><code class="name">var <span class="ident">dump_patches</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.quantization.core_vq.EuclideanCodebook.training"><code class="name">var <span class="ident">training</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="audiocraft.quantization.core_vq.EuclideanCodebook.decode"><code class="name flex">
+<span>def <span class="ident">decode</span></span>(<span>self, embed_ind)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def decode(self, embed_ind):
+    quantize = self.dequantize(embed_ind)
+    return quantize</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.quantization.core_vq.EuclideanCodebook.dequantize"><code class="name flex">
+<span>def <span class="ident">dequantize</span></span>(<span>self, embed_ind)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def dequantize(self, embed_ind):
+    quantize = F.embedding(embed_ind, self.embed)
+    return quantize</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.quantization.core_vq.EuclideanCodebook.encode"><code class="name flex">
+<span>def <span class="ident">encode</span></span>(<span>self, x)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def encode(self, x):
+    shape = x.shape
+    # pre-process
+    x = self.preprocess(x)
+    # quantize
+    embed_ind = self.quantize(x)
+    # post-process
+    embed_ind = self.postprocess_emb(embed_ind, shape)
+    return embed_ind</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.quantization.core_vq.EuclideanCodebook.expire_codes_"><code class="name flex">
+<span>def <span class="ident">expire_codes_</span></span>(<span>self, batch_samples)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def expire_codes_(self, batch_samples):
+    if self.threshold_ema_dead_code == 0:
+        return
+
+    expired_codes = self.cluster_size &lt; self.threshold_ema_dead_code
+    if not torch.any(expired_codes):
+        return
+
+    batch_samples = rearrange(batch_samples, &#34;... d -&gt; (...) d&#34;)
+    self.replace_(batch_samples, mask=expired_codes)
+    flashy.distrib.broadcast_tensors(self.buffers())</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.quantization.core_vq.EuclideanCodebook.forward"><code class="name flex">
+<span>def <span class="ident">forward</span></span>(<span>self, x) ‑> Callable[..., Any]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def forward(self, x):
+    shape, dtype = x.shape, x.dtype
+    x = self.preprocess(x)
+    self.init_embed_(x)
+
+    embed_ind = self.quantize(x)
+    embed_onehot = F.one_hot(embed_ind, self.codebook_size).type(dtype)
+    embed_ind = self.postprocess_emb(embed_ind, shape)
+    quantize = self.dequantize(embed_ind)
+
+    if self.training:
+        # We do the expiry of code at that point as buffers are in sync
+        # and all the workers will take the same decision.
+        self.expire_codes_(x)
+        ema_inplace(self.cluster_size, embed_onehot.sum(0), self.decay)
+        embed_sum = x.t() @ embed_onehot
+        ema_inplace(self.embed_avg, embed_sum.t(), self.decay)
+        cluster_size = (
+            laplace_smoothing(self.cluster_size, self.codebook_size, self.epsilon)
+            * self.cluster_size.sum()
+        )
+        embed_normalized = self.embed_avg / cluster_size.unsqueeze(1)
+        self.embed.data.copy_(embed_normalized)
+
+    return quantize, embed_ind</code></pre>
+</details>
+<div class="desc"><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the :class:<code>Module</code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div></div>
+</dd>
+<dt id="audiocraft.quantization.core_vq.EuclideanCodebook.init_embed_"><code class="name flex">
+<span>def <span class="ident">init_embed_</span></span>(<span>self, data)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@torch.jit.ignore
+def init_embed_(self, data):
+    if self.inited:
+        return
+
+    embed, cluster_size = kmeans(data, self.codebook_size, self.kmeans_iters)
+    self.embed.data.copy_(embed)
+    self.embed_avg.data.copy_(embed.clone())
+    self.cluster_size.data.copy_(cluster_size)
+    self.inited.data.copy_(torch.Tensor([True]))
+    # Make sure all buffers across workers are in sync after initialization
+    flashy.distrib.broadcast_tensors(self.buffers())</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.quantization.core_vq.EuclideanCodebook.postprocess_emb"><code class="name flex">
+<span>def <span class="ident">postprocess_emb</span></span>(<span>self, embed_ind, shape)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def postprocess_emb(self, embed_ind, shape):
+    return embed_ind.view(*shape[:-1])</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.quantization.core_vq.EuclideanCodebook.preprocess"><code class="name flex">
+<span>def <span class="ident">preprocess</span></span>(<span>self, x)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def preprocess(self, x):
+    x = rearrange(x, &#34;... d -&gt; (...) d&#34;)
+    return x</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.quantization.core_vq.EuclideanCodebook.quantize"><code class="name flex">
+<span>def <span class="ident">quantize</span></span>(<span>self, x)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def quantize(self, x):
+    embed = self.embed.t()
+    dist = -(
+        x.pow(2).sum(1, keepdim=True)
+        - 2 * x @ embed
+        + embed.pow(2).sum(0, keepdim=True)
+    )
+    embed_ind = dist.max(dim=-1).indices
+    return embed_ind</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.quantization.core_vq.EuclideanCodebook.replace_"><code class="name flex">
+<span>def <span class="ident">replace_</span></span>(<span>self, samples, mask)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def replace_(self, samples, mask):
+    modified_codebook = torch.where(
+        mask[..., None], sample_vectors(samples, self.codebook_size), self.embed
+    )
+    self.embed.data.copy_(modified_codebook)</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="audiocraft.quantization.core_vq.ResidualVectorQuantization"><code class="flex name class">
+<span>class <span class="ident">ResidualVectorQuantization</span></span>
+<span>(</span><span>*, num_quantizers, **kwargs)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ResidualVectorQuantization(nn.Module):
+    &#34;&#34;&#34;Residual vector quantization implementation.
+
+    Follows Algorithm 1. in https://arxiv.org/pdf/2107.03312.pdf
+    &#34;&#34;&#34;
+    def __init__(self, *, num_quantizers, **kwargs):
+        super().__init__()
+        self.layers = nn.ModuleList(
+            [VectorQuantization(**kwargs) for _ in range(num_quantizers)]
+        )
+
+    def forward(self, x, n_q: tp.Optional[int] = None):
+        quantized_out = 0.0
+        residual = x
+
+        all_losses = []
+        all_indices = []
+
+        n_q = n_q or len(self.layers)
+
+        for i, layer in enumerate(self.layers[:n_q]):
+            quantized, indices, loss = layer(residual)
+            quantized = quantized.detach()
+            residual = residual - quantized
+            quantized_out = quantized_out + quantized
+            all_indices.append(indices)
+            all_losses.append(loss)
+
+        if self.training:
+            # Solving subtle bug with STE and RVQ: https://github.com/facebookresearch/encodec/issues/25
+            quantized_out = x + (quantized_out - x).detach()
+
+        out_losses, out_indices = map(torch.stack, (all_losses, all_indices))
+        return quantized_out, out_indices, out_losses
+
+    def encode(self, x: torch.Tensor, n_q: tp.Optional[int] = None) -&gt; torch.Tensor:
+        residual = x
+        all_indices = []
+        n_q = n_q or len(self.layers)
+        for layer in self.layers[:n_q]:
+            indices = layer.encode(residual)
+            quantized = layer.decode(indices)
+            residual = residual - quantized
+            all_indices.append(indices)
+        out_indices = torch.stack(all_indices)
+        return out_indices
+
+    def decode(self, q_indices: torch.Tensor) -&gt; torch.Tensor:
+        quantized_out = torch.tensor(0.0, device=q_indices.device)
+        for i, indices in enumerate(q_indices):
+            layer = self.layers[i]
+            quantized = layer.decode(indices)
+            quantized_out = quantized_out + quantized
+        return quantized_out</code></pre>
+</details>
+<div class="desc"><p>Residual vector quantization implementation.</p>
+<p>Follows Algorithm 1. in <a href="https://arxiv.org/pdf/2107.03312.pdf">https://arxiv.org/pdf/2107.03312.pdf</a></p>
+<p>Initializes internal Module state, shared by both nn.Module and ScriptModule.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>torch.nn.modules.module.Module</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="audiocraft.quantization.core_vq.ResidualVectorQuantization.call_super_init"><code class="name">var <span class="ident">call_super_init</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.quantization.core_vq.ResidualVectorQuantization.dump_patches"><code class="name">var <span class="ident">dump_patches</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.quantization.core_vq.ResidualVectorQuantization.training"><code class="name">var <span class="ident">training</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="audiocraft.quantization.core_vq.ResidualVectorQuantization.decode"><code class="name flex">
+<span>def <span class="ident">decode</span></span>(<span>self, q_indices: torch.Tensor) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def decode(self, q_indices: torch.Tensor) -&gt; torch.Tensor:
+    quantized_out = torch.tensor(0.0, device=q_indices.device)
+    for i, indices in enumerate(q_indices):
+        layer = self.layers[i]
+        quantized = layer.decode(indices)
+        quantized_out = quantized_out + quantized
+    return quantized_out</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.quantization.core_vq.ResidualVectorQuantization.encode"><code class="name flex">
+<span>def <span class="ident">encode</span></span>(<span>self, x: torch.Tensor, n_q: int | None = None) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def encode(self, x: torch.Tensor, n_q: tp.Optional[int] = None) -&gt; torch.Tensor:
+    residual = x
+    all_indices = []
+    n_q = n_q or len(self.layers)
+    for layer in self.layers[:n_q]:
+        indices = layer.encode(residual)
+        quantized = layer.decode(indices)
+        residual = residual - quantized
+        all_indices.append(indices)
+    out_indices = torch.stack(all_indices)
+    return out_indices</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.quantization.core_vq.ResidualVectorQuantization.forward"><code class="name flex">
+<span>def <span class="ident">forward</span></span>(<span>self, x, n_q: int | None = None) ‑> Callable[..., Any]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def forward(self, x, n_q: tp.Optional[int] = None):
+    quantized_out = 0.0
+    residual = x
+
+    all_losses = []
+    all_indices = []
+
+    n_q = n_q or len(self.layers)
+
+    for i, layer in enumerate(self.layers[:n_q]):
+        quantized, indices, loss = layer(residual)
+        quantized = quantized.detach()
+        residual = residual - quantized
+        quantized_out = quantized_out + quantized
+        all_indices.append(indices)
+        all_losses.append(loss)
+
+    if self.training:
+        # Solving subtle bug with STE and RVQ: https://github.com/facebookresearch/encodec/issues/25
+        quantized_out = x + (quantized_out - x).detach()
+
+    out_losses, out_indices = map(torch.stack, (all_losses, all_indices))
+    return quantized_out, out_indices, out_losses</code></pre>
+</details>
+<div class="desc"><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the :class:<code>Module</code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div></div>
+</dd>
+</dl>
+</dd>
+<dt id="audiocraft.quantization.core_vq.VectorQuantization"><code class="flex name class">
+<span>class <span class="ident">VectorQuantization</span></span>
+<span>(</span><span>dim: int,<br>codebook_size: int,<br>codebook_dim: int | None = None,<br>decay: float = 0.8,<br>epsilon: float = 1e-05,<br>kmeans_init: bool = False,<br>kmeans_iters: int = 10,<br>threshold_ema_dead_code: float = 2.0,<br>channels_last: bool = False,<br>commitment_weight: float = 1.0,<br>orthogonal_reg_weight: float = 0.0,<br>orthogonal_reg_active_codes_only: bool = False,<br>orthogonal_reg_max_codes: int | None = None)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class VectorQuantization(nn.Module):
+    &#34;&#34;&#34;Vector quantization implementation.
+    Currently supports only euclidean distance.
+
+    Args:
+        dim (int): Dimension
+        codebook_size (int): Codebook size
+        codebook_dim (int): Codebook dimension. If not defined, uses the specified dimension in dim.
+        decay (float): Decay for exponential moving average over the codebooks.
+        epsilon (float): Epsilon value for numerical stability.
+        kmeans_init (bool): Whether to use kmeans to initialize the codebooks.
+        kmeans_iters (int): Number of iterations used for kmeans initialization.
+        channels_last (bool): Channels are the last dimension in the input tensors.
+        commitment_weight (float): Weight for commitment loss.
+        orthogonal_reg_weight (float): Orthogonal regularization weights.
+        orthogonal_reg_active_codes_only (bool): Apply orthogonal regularization only on active codes.
+        orthogonal_reg_max_codes (optional int): Maximum number of codes to consider
+            for orthogonal regularization.
+        threshold_ema_dead_code (float): Threshold for dead code expiration. Replace any codes
+            that have an exponential moving average cluster size less than the specified threshold with
+            randomly selected vector from the current batch.
+    &#34;&#34;&#34;
+    def __init__(
+        self,
+        dim: int,
+        codebook_size: int,
+        codebook_dim: tp.Optional[int] = None,
+        decay: float = 0.8,
+        epsilon: float = 1e-5,
+        kmeans_init: bool = False,
+        kmeans_iters: int = 10,
+        threshold_ema_dead_code: float = 2.,
+        channels_last: bool = False,
+        commitment_weight: float = 1.,
+        orthogonal_reg_weight: float = 0.0,
+        orthogonal_reg_active_codes_only: bool = False,
+        orthogonal_reg_max_codes: tp.Optional[int] = None,
+    ):
+        super().__init__()
+        _codebook_dim: int = default(codebook_dim, dim)
+
+        requires_projection = _codebook_dim != dim
+        self.project_in = (nn.Linear(dim, _codebook_dim) if requires_projection else nn.Identity())
+        self.project_out = (nn.Linear(_codebook_dim, dim) if requires_projection else nn.Identity())
+
+        self.epsilon = epsilon
+        self.commitment_weight = commitment_weight
+
+        self.orthogonal_reg_weight = orthogonal_reg_weight
+        self.orthogonal_reg_active_codes_only = orthogonal_reg_active_codes_only
+        self.orthogonal_reg_max_codes = orthogonal_reg_max_codes
+
+        self._codebook = EuclideanCodebook(dim=_codebook_dim, codebook_size=codebook_size,
+                                           kmeans_init=kmeans_init, kmeans_iters=kmeans_iters,
+                                           decay=decay, epsilon=epsilon,
+                                           threshold_ema_dead_code=threshold_ema_dead_code)
+        self.codebook_size = codebook_size
+
+        self.channels_last = channels_last
+
+    @property
+    def codebook(self):
+        return self._codebook.embed
+
+    @property
+    def inited(self):
+        return self._codebook.inited
+
+    def _preprocess(self, x):
+        if not self.channels_last:
+            x = rearrange(x, &#34;b d n -&gt; b n d&#34;)
+        return x
+
+    def _postprocess(self, quantize):
+        if not self.channels_last:
+            quantize = rearrange(quantize, &#34;b n d -&gt; b d n&#34;)
+        return quantize
+
+    def encode(self, x):
+        x = self._preprocess(x)
+        x = self.project_in(x)
+        embed_in = self._codebook.encode(x)
+        return embed_in
+
+    def decode(self, embed_ind):
+        quantize = self._codebook.decode(embed_ind)
+        quantize = self.project_out(quantize)
+        quantize = self._postprocess(quantize)
+        return quantize
+
+    def forward(self, x):
+        device = x.device
+        x = self._preprocess(x)
+
+        x = self.project_in(x)
+        quantize, embed_ind = self._codebook(x)
+
+        if self.training:
+            quantize = x + (quantize - x).detach()
+
+        loss = torch.tensor([0.0], device=device, requires_grad=self.training)
+
+        if self.training:
+            if self.commitment_weight &gt; 0:
+                commit_loss = F.mse_loss(quantize.detach(), x)
+                loss = loss + commit_loss * self.commitment_weight
+
+            if self.orthogonal_reg_weight &gt; 0:
+                codebook = self.codebook
+
+                if self.orthogonal_reg_active_codes_only:
+                    # only calculate orthogonal loss for the activated codes for this batch
+                    unique_code_ids = torch.unique(embed_ind)
+                    codebook = codebook[unique_code_ids]
+
+                num_codes = codebook.shape[0]
+                if exists(self.orthogonal_reg_max_codes) and num_codes &gt; self.orthogonal_reg_max_codes:
+                    rand_ids = torch.randperm(num_codes, device=device)[:self.orthogonal_reg_max_codes]
+                    codebook = codebook[rand_ids]
+
+                orthogonal_reg_loss = orthogonal_loss_fn(codebook)
+                loss = loss + orthogonal_reg_loss * self.orthogonal_reg_weight
+
+        quantize = self.project_out(quantize)
+        quantize = self._postprocess(quantize)
+
+        return quantize, embed_ind, loss</code></pre>
+</details>
+<div class="desc"><p>Vector quantization implementation.
+Currently supports only euclidean distance.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>dim</code></strong> :&ensp;<code>int</code></dt>
+<dd>Dimension</dd>
+<dt><strong><code>codebook_size</code></strong> :&ensp;<code>int</code></dt>
+<dd>Codebook size</dd>
+<dt><strong><code>codebook_dim</code></strong> :&ensp;<code>int</code></dt>
+<dd>Codebook dimension. If not defined, uses the specified dimension in dim.</dd>
+<dt><strong><code>decay</code></strong> :&ensp;<code>float</code></dt>
+<dd>Decay for exponential moving average over the codebooks.</dd>
+<dt><strong><code>epsilon</code></strong> :&ensp;<code>float</code></dt>
+<dd>Epsilon value for numerical stability.</dd>
+<dt><strong><code>kmeans_init</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Whether to use kmeans to initialize the codebooks.</dd>
+<dt><strong><code>kmeans_iters</code></strong> :&ensp;<code>int</code></dt>
+<dd>Number of iterations used for kmeans initialization.</dd>
+<dt><strong><code>channels_last</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Channels are the last dimension in the input tensors.</dd>
+<dt><strong><code>commitment_weight</code></strong> :&ensp;<code>float</code></dt>
+<dd>Weight for commitment loss.</dd>
+<dt><strong><code>orthogonal_reg_weight</code></strong> :&ensp;<code>float</code></dt>
+<dd>Orthogonal regularization weights.</dd>
+<dt><strong><code>orthogonal_reg_active_codes_only</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Apply orthogonal regularization only on active codes.</dd>
+<dt><strong><code>orthogonal_reg_max_codes</code></strong> :&ensp;<code>optional int</code></dt>
+<dd>Maximum number of codes to consider
+for orthogonal regularization.</dd>
+<dt><strong><code>threshold_ema_dead_code</code></strong> :&ensp;<code>float</code></dt>
+<dd>Threshold for dead code expiration. Replace any codes
+that have an exponential moving average cluster size less than the specified threshold with
+randomly selected vector from the current batch.</dd>
+</dl>
+<p>Initializes internal Module state, shared by both nn.Module and ScriptModule.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>torch.nn.modules.module.Module</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="audiocraft.quantization.core_vq.VectorQuantization.call_super_init"><code class="name">var <span class="ident">call_super_init</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.quantization.core_vq.VectorQuantization.dump_patches"><code class="name">var <span class="ident">dump_patches</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.quantization.core_vq.VectorQuantization.training"><code class="name">var <span class="ident">training</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Instance variables</h3>
+<dl>
+<dt id="audiocraft.quantization.core_vq.VectorQuantization.codebook"><code class="name">prop <span class="ident">codebook</span></code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def codebook(self):
+    return self._codebook.embed</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.quantization.core_vq.VectorQuantization.inited"><code class="name">prop <span class="ident">inited</span></code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def inited(self):
+    return self._codebook.inited</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="audiocraft.quantization.core_vq.VectorQuantization.decode"><code class="name flex">
+<span>def <span class="ident">decode</span></span>(<span>self, embed_ind)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def decode(self, embed_ind):
+    quantize = self._codebook.decode(embed_ind)
+    quantize = self.project_out(quantize)
+    quantize = self._postprocess(quantize)
+    return quantize</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.quantization.core_vq.VectorQuantization.encode"><code class="name flex">
+<span>def <span class="ident">encode</span></span>(<span>self, x)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def encode(self, x):
+    x = self._preprocess(x)
+    x = self.project_in(x)
+    embed_in = self._codebook.encode(x)
+    return embed_in</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.quantization.core_vq.VectorQuantization.forward"><code class="name flex">
+<span>def <span class="ident">forward</span></span>(<span>self, x) ‑> Callable[..., Any]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def forward(self, x):
+    device = x.device
+    x = self._preprocess(x)
+
+    x = self.project_in(x)
+    quantize, embed_ind = self._codebook(x)
+
+    if self.training:
+        quantize = x + (quantize - x).detach()
+
+    loss = torch.tensor([0.0], device=device, requires_grad=self.training)
+
+    if self.training:
+        if self.commitment_weight &gt; 0:
+            commit_loss = F.mse_loss(quantize.detach(), x)
+            loss = loss + commit_loss * self.commitment_weight
+
+        if self.orthogonal_reg_weight &gt; 0:
+            codebook = self.codebook
+
+            if self.orthogonal_reg_active_codes_only:
+                # only calculate orthogonal loss for the activated codes for this batch
+                unique_code_ids = torch.unique(embed_ind)
+                codebook = codebook[unique_code_ids]
+
+            num_codes = codebook.shape[0]
+            if exists(self.orthogonal_reg_max_codes) and num_codes &gt; self.orthogonal_reg_max_codes:
+                rand_ids = torch.randperm(num_codes, device=device)[:self.orthogonal_reg_max_codes]
+                codebook = codebook[rand_ids]
+
+            orthogonal_reg_loss = orthogonal_loss_fn(codebook)
+            loss = loss + orthogonal_reg_loss * self.orthogonal_reg_weight
+
+    quantize = self.project_out(quantize)
+    quantize = self._postprocess(quantize)
+
+    return quantize, embed_ind, loss</code></pre>
+</details>
+<div class="desc"><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the :class:<code>Module</code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="audiocraft.quantization" href="index.html">audiocraft.quantization</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="two-column">
+<li><code><a title="audiocraft.quantization.core_vq.default" href="#audiocraft.quantization.core_vq.default">default</a></code></li>
+<li><code><a title="audiocraft.quantization.core_vq.ema_inplace" href="#audiocraft.quantization.core_vq.ema_inplace">ema_inplace</a></code></li>
+<li><code><a title="audiocraft.quantization.core_vq.exists" href="#audiocraft.quantization.core_vq.exists">exists</a></code></li>
+<li><code><a title="audiocraft.quantization.core_vq.kmeans" href="#audiocraft.quantization.core_vq.kmeans">kmeans</a></code></li>
+<li><code><a title="audiocraft.quantization.core_vq.l2norm" href="#audiocraft.quantization.core_vq.l2norm">l2norm</a></code></li>
+<li><code><a title="audiocraft.quantization.core_vq.laplace_smoothing" href="#audiocraft.quantization.core_vq.laplace_smoothing">laplace_smoothing</a></code></li>
+<li><code><a title="audiocraft.quantization.core_vq.orthogonal_loss_fn" href="#audiocraft.quantization.core_vq.orthogonal_loss_fn">orthogonal_loss_fn</a></code></li>
+<li><code><a title="audiocraft.quantization.core_vq.sample_vectors" href="#audiocraft.quantization.core_vq.sample_vectors">sample_vectors</a></code></li>
+<li><code><a title="audiocraft.quantization.core_vq.uniform_init" href="#audiocraft.quantization.core_vq.uniform_init">uniform_init</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="audiocraft.quantization.core_vq.EuclideanCodebook" href="#audiocraft.quantization.core_vq.EuclideanCodebook">EuclideanCodebook</a></code></h4>
+<ul class="two-column">
+<li><code><a title="audiocraft.quantization.core_vq.EuclideanCodebook.call_super_init" href="#audiocraft.quantization.core_vq.EuclideanCodebook.call_super_init">call_super_init</a></code></li>
+<li><code><a title="audiocraft.quantization.core_vq.EuclideanCodebook.decode" href="#audiocraft.quantization.core_vq.EuclideanCodebook.decode">decode</a></code></li>
+<li><code><a title="audiocraft.quantization.core_vq.EuclideanCodebook.dequantize" href="#audiocraft.quantization.core_vq.EuclideanCodebook.dequantize">dequantize</a></code></li>
+<li><code><a title="audiocraft.quantization.core_vq.EuclideanCodebook.dump_patches" href="#audiocraft.quantization.core_vq.EuclideanCodebook.dump_patches">dump_patches</a></code></li>
+<li><code><a title="audiocraft.quantization.core_vq.EuclideanCodebook.encode" href="#audiocraft.quantization.core_vq.EuclideanCodebook.encode">encode</a></code></li>
+<li><code><a title="audiocraft.quantization.core_vq.EuclideanCodebook.expire_codes_" href="#audiocraft.quantization.core_vq.EuclideanCodebook.expire_codes_">expire_codes_</a></code></li>
+<li><code><a title="audiocraft.quantization.core_vq.EuclideanCodebook.forward" href="#audiocraft.quantization.core_vq.EuclideanCodebook.forward">forward</a></code></li>
+<li><code><a title="audiocraft.quantization.core_vq.EuclideanCodebook.init_embed_" href="#audiocraft.quantization.core_vq.EuclideanCodebook.init_embed_">init_embed_</a></code></li>
+<li><code><a title="audiocraft.quantization.core_vq.EuclideanCodebook.postprocess_emb" href="#audiocraft.quantization.core_vq.EuclideanCodebook.postprocess_emb">postprocess_emb</a></code></li>
+<li><code><a title="audiocraft.quantization.core_vq.EuclideanCodebook.preprocess" href="#audiocraft.quantization.core_vq.EuclideanCodebook.preprocess">preprocess</a></code></li>
+<li><code><a title="audiocraft.quantization.core_vq.EuclideanCodebook.quantize" href="#audiocraft.quantization.core_vq.EuclideanCodebook.quantize">quantize</a></code></li>
+<li><code><a title="audiocraft.quantization.core_vq.EuclideanCodebook.replace_" href="#audiocraft.quantization.core_vq.EuclideanCodebook.replace_">replace_</a></code></li>
+<li><code><a title="audiocraft.quantization.core_vq.EuclideanCodebook.training" href="#audiocraft.quantization.core_vq.EuclideanCodebook.training">training</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="audiocraft.quantization.core_vq.ResidualVectorQuantization" href="#audiocraft.quantization.core_vq.ResidualVectorQuantization">ResidualVectorQuantization</a></code></h4>
+<ul class="two-column">
+<li><code><a title="audiocraft.quantization.core_vq.ResidualVectorQuantization.call_super_init" href="#audiocraft.quantization.core_vq.ResidualVectorQuantization.call_super_init">call_super_init</a></code></li>
+<li><code><a title="audiocraft.quantization.core_vq.ResidualVectorQuantization.decode" href="#audiocraft.quantization.core_vq.ResidualVectorQuantization.decode">decode</a></code></li>
+<li><code><a title="audiocraft.quantization.core_vq.ResidualVectorQuantization.dump_patches" href="#audiocraft.quantization.core_vq.ResidualVectorQuantization.dump_patches">dump_patches</a></code></li>
+<li><code><a title="audiocraft.quantization.core_vq.ResidualVectorQuantization.encode" href="#audiocraft.quantization.core_vq.ResidualVectorQuantization.encode">encode</a></code></li>
+<li><code><a title="audiocraft.quantization.core_vq.ResidualVectorQuantization.forward" href="#audiocraft.quantization.core_vq.ResidualVectorQuantization.forward">forward</a></code></li>
+<li><code><a title="audiocraft.quantization.core_vq.ResidualVectorQuantization.training" href="#audiocraft.quantization.core_vq.ResidualVectorQuantization.training">training</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="audiocraft.quantization.core_vq.VectorQuantization" href="#audiocraft.quantization.core_vq.VectorQuantization">VectorQuantization</a></code></h4>
+<ul class="two-column">
+<li><code><a title="audiocraft.quantization.core_vq.VectorQuantization.call_super_init" href="#audiocraft.quantization.core_vq.VectorQuantization.call_super_init">call_super_init</a></code></li>
+<li><code><a title="audiocraft.quantization.core_vq.VectorQuantization.codebook" href="#audiocraft.quantization.core_vq.VectorQuantization.codebook">codebook</a></code></li>
+<li><code><a title="audiocraft.quantization.core_vq.VectorQuantization.decode" href="#audiocraft.quantization.core_vq.VectorQuantization.decode">decode</a></code></li>
+<li><code><a title="audiocraft.quantization.core_vq.VectorQuantization.dump_patches" href="#audiocraft.quantization.core_vq.VectorQuantization.dump_patches">dump_patches</a></code></li>
+<li><code><a title="audiocraft.quantization.core_vq.VectorQuantization.encode" href="#audiocraft.quantization.core_vq.VectorQuantization.encode">encode</a></code></li>
+<li><code><a title="audiocraft.quantization.core_vq.VectorQuantization.forward" href="#audiocraft.quantization.core_vq.VectorQuantization.forward">forward</a></code></li>
+<li><code><a title="audiocraft.quantization.core_vq.VectorQuantization.inited" href="#audiocraft.quantization.core_vq.VectorQuantization.inited">inited</a></code></li>
+<li><code><a title="audiocraft.quantization.core_vq.VectorQuantization.training" href="#audiocraft.quantization.core_vq.VectorQuantization.training">training</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.5</a>.</p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,672 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.5">
+<title>audiocraft.solvers.builders API documentation</title>
+<meta name="description" content="All the functions to build the relevant solvers and used objects
+from the Hydra config.">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>audiocraft.solvers.builders</code></h1>
+</header>
+<section id="section-intro">
+<p>All the functions to build the relevant solvers and used objects
+from the Hydra config.</p>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="audiocraft.solvers.builders.get_adversarial_losses"><code class="name flex">
+<span>def <span class="ident">get_adversarial_losses</span></span>(<span>cfg) ‑> torch.nn.modules.container.ModuleDict</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_adversarial_losses(cfg) -&gt; nn.ModuleDict:
+    &#34;&#34;&#34;Initialize dict of adversarial losses from config.&#34;&#34;&#34;
+    device = cfg.device
+    adv_cfg = getattr(cfg, &#39;adversarial&#39;)
+    adversaries = adv_cfg.get(&#39;adversaries&#39;, [])
+    adv_loss_name = adv_cfg[&#39;adv_loss&#39;]
+    feat_loss_name = adv_cfg.get(&#39;feat_loss&#39;)
+    normalize = adv_cfg.get(&#39;normalize&#39;, True)
+    feat_loss: tp.Optional[adversarial.FeatureMatchingLoss] = None
+    if feat_loss_name:
+        assert feat_loss_name in [&#39;l1&#39;, &#39;l2&#39;], f&#34;Feature loss only support L1 or L2 but {feat_loss_name} found.&#34;
+        loss = get_loss(feat_loss_name, cfg)
+        feat_loss = adversarial.FeatureMatchingLoss(loss, normalize)
+    loss = adversarial.get_adv_criterion(adv_loss_name)
+    loss_real = adversarial.get_real_criterion(adv_loss_name)
+    loss_fake = adversarial.get_fake_criterion(adv_loss_name)
+    adv_losses = nn.ModuleDict()
+    for adv_name in adversaries:
+        adversary = get_adversary(adv_name, cfg).to(device)
+        optimizer = get_optimizer(adversary.parameters(), cfg.optim)
+        adv_loss = adversarial.AdversarialLoss(
+            adversary,
+            optimizer,
+            loss=loss,
+            loss_real=loss_real,
+            loss_fake=loss_fake,
+            loss_feat=feat_loss,
+            normalize=normalize
+        )
+        adv_losses[adv_name] = adv_loss
+    return adv_losses</code></pre>
+</details>
+<div class="desc"><p>Initialize dict of adversarial losses from config.</p></div>
+</dd>
+<dt id="audiocraft.solvers.builders.get_adversary"><code class="name flex">
+<span>def <span class="ident">get_adversary</span></span>(<span>name: str, cfg: omegaconf.dictconfig.DictConfig) ‑> torch.nn.modules.module.Module</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_adversary(name: str, cfg: omegaconf.DictConfig) -&gt; nn.Module:
+    &#34;&#34;&#34;Initialize adversary from config.&#34;&#34;&#34;
+    klass = {
+        &#39;msd&#39;: adversarial.MultiScaleDiscriminator,
+        &#39;mpd&#39;: adversarial.MultiPeriodDiscriminator,
+        &#39;msstftd&#39;: adversarial.MultiScaleSTFTDiscriminator,
+    }[name]
+    adv_cfg: tp.Dict[str, tp.Any] = dict(getattr(cfg, name))
+    return klass(**adv_cfg)</code></pre>
+</details>
+<div class="desc"><p>Initialize adversary from config.</p></div>
+</dd>
+<dt id="audiocraft.solvers.builders.get_audio_datasets"><code class="name flex">
+<span>def <span class="ident">get_audio_datasets</span></span>(<span>cfg: omegaconf.dictconfig.DictConfig,<br>dataset_type: <a title="audiocraft.solvers.builders.DatasetType" href="#audiocraft.solvers.builders.DatasetType">DatasetType</a> = DatasetType.AUDIO) ‑> Dict[str, torch.utils.data.dataloader.DataLoader]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_audio_datasets(cfg: omegaconf.DictConfig,
+                       dataset_type: DatasetType = DatasetType.AUDIO) -&gt; tp.Dict[str, torch.utils.data.DataLoader]:
+    &#34;&#34;&#34;Build AudioDataset from configuration.
+
+    Args:
+        cfg (omegaconf.DictConfig): Configuration.
+        dataset_type: The type of dataset to create.
+    Returns:
+        dict[str, torch.utils.data.DataLoader]: Map of dataloader for each data split.
+    &#34;&#34;&#34;
+    dataloaders: dict = {}
+
+    sample_rate = cfg.sample_rate
+    channels = cfg.channels
+    seed = cfg.seed
+    max_sample_rate = cfg.datasource.max_sample_rate
+    max_channels = cfg.datasource.max_channels
+
+    assert cfg.dataset is not None, &#34;Could not find dataset definition in config&#34;
+
+    dataset_cfg = dict_from_config(cfg.dataset)
+    splits_cfg: dict = {}
+    splits_cfg[&#39;train&#39;] = dataset_cfg.pop(&#39;train&#39;)
+    splits_cfg[&#39;valid&#39;] = dataset_cfg.pop(&#39;valid&#39;)
+    splits_cfg[&#39;evaluate&#39;] = dataset_cfg.pop(&#39;evaluate&#39;)
+    splits_cfg[&#39;generate&#39;] = dataset_cfg.pop(&#39;generate&#39;)
+    execute_only_stage = cfg.get(&#39;execute_only&#39;, None)
+
+    for split, path in cfg.datasource.items():
+        if not isinstance(path, str):
+            continue  # skipping this as not a path
+        if execute_only_stage is not None and split != execute_only_stage:
+            continue
+        logger.info(f&#34;Loading audio data split {split}: {str(path)}&#34;)
+        assert (
+            cfg.sample_rate &lt;= max_sample_rate
+        ), f&#34;Expecting a max sample rate of {max_sample_rate} for datasource but {sample_rate} found.&#34;
+        assert (
+            cfg.channels &lt;= max_channels
+        ), f&#34;Expecting a max number of channels of {max_channels} for datasource but {channels} found.&#34;
+
+        split_cfg = splits_cfg[split]
+        split_kwargs = {k: v for k, v in split_cfg.items()}
+        kwargs = {**dataset_cfg, **split_kwargs}  # split kwargs overrides default dataset_cfg
+        kwargs[&#39;sample_rate&#39;] = sample_rate
+        kwargs[&#39;channels&#39;] = channels
+
+        if kwargs.get(&#39;permutation_on_files&#39;) and cfg.optim.updates_per_epoch:
+            kwargs[&#39;num_samples&#39;] = (
+                flashy.distrib.world_size() * cfg.dataset.batch_size * cfg.optim.updates_per_epoch)
+
+        num_samples = kwargs[&#39;num_samples&#39;]
+        shuffle = kwargs[&#39;shuffle&#39;]
+
+        return_info = kwargs.pop(&#39;return_info&#39;)
+        batch_size = kwargs.pop(&#39;batch_size&#39;, None)
+        num_workers = kwargs.pop(&#39;num_workers&#39;)
+
+        if dataset_type == DatasetType.MUSIC:
+            dataset = data.music_dataset.MusicDataset.from_meta(path, **kwargs)
+        elif dataset_type == DatasetType.SOUND:
+            dataset = data.sound_dataset.SoundDataset.from_meta(path, **kwargs)
+        elif dataset_type == DatasetType.AUDIO:
+            dataset = data.info_audio_dataset.InfoAudioDataset.from_meta(path, return_info=return_info, **kwargs)
+        elif dataset_type == DatasetType.JASCO:
+            dataset = data.jasco_dataset.JascoDataset.from_meta(path, return_info=return_info, **kwargs)
+        else:
+            raise ValueError(f&#34;Dataset type is unsupported: {dataset_type}&#34;)
+
+        loader = get_loader(
+            dataset,
+            num_samples,
+            batch_size=batch_size,
+            num_workers=num_workers,
+            seed=seed,
+            collate_fn=dataset.collater if return_info else None,
+            shuffle=shuffle,
+        )
+        dataloaders[split] = loader
+
+    return dataloaders</code></pre>
+</details>
+<div class="desc"><p>Build AudioDataset from configuration.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>cfg</code></strong> :&ensp;<code>omegaconf.DictConfig</code></dt>
+<dd>Configuration.</dd>
+<dt><strong><code>dataset_type</code></strong></dt>
+<dd>The type of dataset to create.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>dict[str, torch.utils.data.DataLoader]</code></dt>
+<dd>Map of dataloader for each data split.</dd>
+</dl></div>
+</dd>
+<dt id="audiocraft.solvers.builders.get_balancer"><code class="name flex">
+<span>def <span class="ident">get_balancer</span></span>(<span>loss_weights: Dict[str, float], cfg: omegaconf.dictconfig.DictConfig) ‑> <a title="audiocraft.losses.balancer.Balancer" href="../losses/balancer.html#audiocraft.losses.balancer.Balancer">Balancer</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_balancer(loss_weights: tp.Dict[str, float], cfg: omegaconf.DictConfig) -&gt; losses.Balancer:
+    &#34;&#34;&#34;Instantiate loss balancer from configuration for the provided weights.&#34;&#34;&#34;
+    kwargs: tp.Dict[str, tp.Any] = dict_from_config(cfg)
+    return losses.Balancer(loss_weights, **kwargs)</code></pre>
+</details>
+<div class="desc"><p>Instantiate loss balancer from configuration for the provided weights.</p></div>
+</dd>
+<dt id="audiocraft.solvers.builders.get_chroma_cosine_similarity"><code class="name flex">
+<span>def <span class="ident">get_chroma_cosine_similarity</span></span>(<span>cfg: omegaconf.dictconfig.DictConfig) ‑> <a title="audiocraft.metrics.chroma_cosinesim.ChromaCosineSimilarityMetric" href="../metrics/chroma_cosinesim.html#audiocraft.metrics.chroma_cosinesim.ChromaCosineSimilarityMetric">ChromaCosineSimilarityMetric</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_chroma_cosine_similarity(cfg: omegaconf.DictConfig) -&gt; metrics.ChromaCosineSimilarityMetric:
+    &#34;&#34;&#34;Instantiate Chroma Cosine Similarity metric from config.&#34;&#34;&#34;
+    assert cfg.model == &#39;chroma_base&#39;, &#34;Only support &#39;chroma_base&#39; method for chroma cosine similarity metric&#34;
+    kwargs = dict_from_config(cfg.get(cfg.model))
+    return metrics.ChromaCosineSimilarityMetric(**kwargs)</code></pre>
+</details>
+<div class="desc"><p>Instantiate Chroma Cosine Similarity metric from config.</p></div>
+</dd>
+<dt id="audiocraft.solvers.builders.get_ema"><code class="name flex">
+<span>def <span class="ident">get_ema</span></span>(<span>module_dict: torch.nn.modules.container.ModuleDict,<br>cfg: omegaconf.dictconfig.DictConfig) ‑> <a title="audiocraft.optim.ema.ModuleDictEMA" href="../optim/ema.html#audiocraft.optim.ema.ModuleDictEMA">ModuleDictEMA</a> | None</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_ema(module_dict: nn.ModuleDict, cfg: omegaconf.DictConfig) -&gt; tp.Optional[optim.ModuleDictEMA]:
+    &#34;&#34;&#34;Initialize Exponential Moving Average.
+
+    Args:
+        module_dict (nn.ModuleDict): ModuleDict for which to compute the EMA.
+        cfg (omegaconf.DictConfig): Optim EMA configuration.
+    Returns:
+        optim.ModuleDictEMA: EMA version of the ModuleDict.
+    &#34;&#34;&#34;
+    kw: tp.Dict[str, tp.Any] = dict(cfg)
+    use = kw.pop(&#39;use&#39;, False)
+    decay = kw.pop(&#39;decay&#39;, None)
+    device = kw.pop(&#39;device&#39;, None)
+    if not use:
+        return None
+    if len(module_dict) == 0:
+        raise ValueError(&#34;Trying to build EMA but an empty module_dict source is provided!&#34;)
+    ema_module = optim.ModuleDictEMA(module_dict, decay=decay, device=device)
+    return ema_module</code></pre>
+</details>
+<div class="desc"><p>Initialize Exponential Moving Average.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>module_dict</code></strong> :&ensp;<code>nn.ModuleDict</code></dt>
+<dd>ModuleDict for which to compute the EMA.</dd>
+<dt><strong><code>cfg</code></strong> :&ensp;<code>omegaconf.DictConfig</code></dt>
+<dd>Optim EMA configuration.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>optim.ModuleDictEMA</code></dt>
+<dd>EMA version of the ModuleDict.</dd>
+</dl></div>
+</dd>
+<dt id="audiocraft.solvers.builders.get_fad"><code class="name flex">
+<span>def <span class="ident">get_fad</span></span>(<span>cfg: omegaconf.dictconfig.DictConfig) ‑> <a title="audiocraft.metrics.fad.FrechetAudioDistanceMetric" href="../metrics/fad.html#audiocraft.metrics.fad.FrechetAudioDistanceMetric">FrechetAudioDistanceMetric</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_fad(cfg: omegaconf.DictConfig) -&gt; metrics.FrechetAudioDistanceMetric:
+    &#34;&#34;&#34;Instantiate Frechet Audio Distance metric from config.&#34;&#34;&#34;
+    kwargs = dict_from_config(cfg.tf)
+    xp = dora.get_xp()
+    kwargs[&#39;log_folder&#39;] = xp.folder
+    return metrics.FrechetAudioDistanceMetric(**kwargs)</code></pre>
+</details>
+<div class="desc"><p>Instantiate Frechet Audio Distance metric from config.</p></div>
+</dd>
+<dt id="audiocraft.solvers.builders.get_kldiv"><code class="name flex">
+<span>def <span class="ident">get_kldiv</span></span>(<span>cfg: omegaconf.dictconfig.DictConfig) ‑> <a title="audiocraft.metrics.kld.KLDivergenceMetric" href="../metrics/kld.html#audiocraft.metrics.kld.KLDivergenceMetric">KLDivergenceMetric</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_kldiv(cfg: omegaconf.DictConfig) -&gt; metrics.KLDivergenceMetric:
+    &#34;&#34;&#34;Instantiate KL-Divergence metric from config.&#34;&#34;&#34;
+    kld_metrics = {
+        &#39;passt&#39;: metrics.PasstKLDivergenceMetric,
+    }
+    klass = kld_metrics[cfg.model]
+    kwargs = dict_from_config(cfg.get(cfg.model))
+    return klass(**kwargs)</code></pre>
+</details>
+<div class="desc"><p>Instantiate KL-Divergence metric from config.</p></div>
+</dd>
+<dt id="audiocraft.solvers.builders.get_loss"><code class="name flex">
+<span>def <span class="ident">get_loss</span></span>(<span>loss_name: str, cfg: omegaconf.dictconfig.DictConfig)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_loss(loss_name: str, cfg: omegaconf.DictConfig):
+    &#34;&#34;&#34;Instantiate loss from configuration.&#34;&#34;&#34;
+    klass = {
+        &#39;l1&#39;: torch.nn.L1Loss,
+        &#39;l2&#39;: torch.nn.MSELoss,
+        &#39;mel&#39;: losses.MelSpectrogramL1Loss,
+        &#39;mrstft&#39;: losses.MRSTFTLoss,
+        &#39;msspec&#39;: losses.MultiScaleMelSpectrogramLoss,
+        &#39;sisnr&#39;: losses.SISNR,
+        &#39;wm_detection&#39;: losses.WMDetectionLoss,
+        &#39;wm_mb&#39;: losses.WMMbLoss,
+        &#39;tf_loudnessratio&#39;: losses.TFLoudnessRatio
+    }[loss_name]
+    kwargs = dict(getattr(cfg, loss_name))
+    return klass(**kwargs)</code></pre>
+</details>
+<div class="desc"><p>Instantiate loss from configuration.</p></div>
+</dd>
+<dt id="audiocraft.solvers.builders.get_lr_scheduler"><code class="name flex">
+<span>def <span class="ident">get_lr_scheduler</span></span>(<span>optimizer: torch.optim.optimizer.Optimizer,<br>cfg: omegaconf.dictconfig.DictConfig,<br>total_updates: int) ‑> torch.optim.lr_scheduler.LRScheduler | None</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_lr_scheduler(optimizer: torch.optim.Optimizer,
+                     cfg: omegaconf.DictConfig,
+                     total_updates: int) -&gt; tp.Optional[LRScheduler]:
+    &#34;&#34;&#34;Build torch learning rate scheduler from config and associated optimizer.
+    Supported learning rate schedulers: ExponentialLRScheduler, PlateauLRScheduler
+
+    Args:
+        optimizer (torch.optim.Optimizer): Optimizer.
+        cfg (DictConfig): Schedule-related configuration.
+        total_updates (int): Total number of updates.
+    Returns:
+        torch.optim.Optimizer.
+    &#34;&#34;&#34;
+    if &#39;lr_scheduler&#39; not in cfg:
+        raise KeyError(&#34;LR Scheduler not found in config&#34;)
+
+    lr_sched: tp.Optional[LRScheduler] = None
+    if cfg.lr_scheduler == &#39;step&#39;:
+        lr_sched = torch.optim.lr_scheduler.StepLR(optimizer, **cfg.step)
+    elif cfg.lr_scheduler == &#39;exponential&#39;:
+        lr_sched = torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma=cfg.exponential)
+    elif cfg.lr_scheduler == &#39;cosine&#39;:
+        kwargs = dict_from_config(cfg.cosine)
+        warmup_steps = kwargs.pop(&#39;warmup&#39;)
+        lr_sched = optim.CosineLRScheduler(
+            optimizer, warmup_steps=warmup_steps, total_steps=total_updates, **kwargs)
+    elif cfg.lr_scheduler == &#39;polynomial_decay&#39;:
+        kwargs = dict_from_config(cfg.polynomial_decay)
+        warmup_steps = kwargs.pop(&#39;warmup&#39;)
+        lr_sched = optim.PolynomialDecayLRScheduler(
+            optimizer, warmup_steps=warmup_steps, total_steps=total_updates, **kwargs)
+    elif cfg.lr_scheduler == &#39;inverse_sqrt&#39;:
+        kwargs = dict_from_config(cfg.inverse_sqrt)
+        warmup_steps = kwargs.pop(&#39;warmup&#39;)
+        lr_sched = optim.InverseSquareRootLRScheduler(optimizer, warmup_steps=warmup_steps, **kwargs)
+    elif cfg.lr_scheduler == &#39;linear_warmup&#39;:
+        kwargs = dict_from_config(cfg.linear_warmup)
+        warmup_steps = kwargs.pop(&#39;warmup&#39;)
+        lr_sched = optim.LinearWarmupLRScheduler(optimizer, warmup_steps=warmup_steps, **kwargs)
+    elif cfg.lr_scheduler is not None:
+        raise ValueError(f&#34;Unsupported LR Scheduler: {cfg.lr_scheduler}&#34;)
+    return lr_sched</code></pre>
+</details>
+<div class="desc"><p>Build torch learning rate scheduler from config and associated optimizer.
+Supported learning rate schedulers: ExponentialLRScheduler, PlateauLRScheduler</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>optimizer</code></strong> :&ensp;<code>torch.optim.Optimizer</code></dt>
+<dd>Optimizer.</dd>
+<dt><strong><code>cfg</code></strong> :&ensp;<code>DictConfig</code></dt>
+<dd>Schedule-related configuration.</dd>
+<dt><strong><code>total_updates</code></strong> :&ensp;<code>int</code></dt>
+<dd>Total number of updates.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>torch.optim.Optimizer.</p></div>
+</dd>
+<dt id="audiocraft.solvers.builders.get_optim_parameter_groups"><code class="name flex">
+<span>def <span class="ident">get_optim_parameter_groups</span></span>(<span>model: torch.nn.modules.module.Module)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_optim_parameter_groups(model: nn.Module):
+    &#34;&#34;&#34;Create parameter groups for the model using the appropriate method
+    if defined for each modules, to create the different groups.
+
+    Args:
+        model (nn.Module): torch model
+    Returns:
+        List of parameter groups
+    &#34;&#34;&#34;
+    seen_params: tp.Set[nn.parameter.Parameter] = set()
+    other_params = []
+    groups = []
+    for name, module in model.named_modules():
+        if hasattr(module, &#39;make_optim_group&#39;):
+            group = module.make_optim_group()
+            params = set(group[&#39;params&#39;])
+            assert params.isdisjoint(seen_params)
+            seen_params |= set(params)
+            groups.append(group)
+    for param in model.parameters():
+        if param not in seen_params:
+            other_params.append(param)
+    groups.insert(0, {&#39;params&#39;: other_params})
+    parameters = groups
+    return parameters</code></pre>
+</details>
+<div class="desc"><p>Create parameter groups for the model using the appropriate method
+if defined for each modules, to create the different groups.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>model</code></strong> :&ensp;<code>nn.Module</code></dt>
+<dd>torch model</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>List of parameter groups</p></div>
+</dd>
+<dt id="audiocraft.solvers.builders.get_optimizer"><code class="name flex">
+<span>def <span class="ident">get_optimizer</span></span>(<span>params: torch.nn.modules.module.Module | Iterable[torch.Tensor],<br>cfg: omegaconf.dictconfig.DictConfig) ‑> torch.optim.optimizer.Optimizer</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_optimizer(params: tp.Union[nn.Module, tp.Iterable[torch.Tensor]], cfg: omegaconf.DictConfig) -&gt; Optimizer:
+    &#34;&#34;&#34;Build torch optimizer from config and set of parameters.
+    Supported optimizers: Adam, AdamW
+
+    Args:
+        params (nn.Module or iterable of torch.Tensor): Parameters to optimize.
+        cfg (DictConfig): Optimization-related configuration.
+    Returns:
+        torch.optim.Optimizer.
+    &#34;&#34;&#34;
+    if &#39;optimizer&#39; not in cfg:
+        if getattr(cfg, &#39;optim&#39;, None) is not None:
+            raise KeyError(&#34;Optimizer not found in config. Try instantiating optimizer from cfg.optim?&#34;)
+        else:
+            raise KeyError(&#34;Optimizer not found in config.&#34;)
+
+    parameters = get_optim_parameter_groups(params) if isinstance(params, nn.Module) else params
+    optimizer: torch.optim.Optimizer
+    if cfg.optimizer == &#39;adam&#39;:
+        optimizer = torch.optim.Adam(parameters, lr=cfg.lr, **cfg.adam)
+    elif cfg.optimizer == &#39;adamw&#39;:
+        optimizer = torch.optim.AdamW(parameters, lr=cfg.lr, **cfg.adam)
+    elif cfg.optimizer == &#39;dadam&#39;:
+        optimizer = optim.DAdaptAdam(parameters, lr=cfg.lr, **cfg.adam)
+    else:
+        raise ValueError(f&#34;Unsupported Optimizer: {cfg.optimizer}&#34;)
+    return optimizer</code></pre>
+</details>
+<div class="desc"><p>Build torch optimizer from config and set of parameters.
+Supported optimizers: Adam, AdamW</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>params</code></strong> :&ensp;<code>nn.Module</code> or <code>iterable</code> of <code>torch.Tensor</code></dt>
+<dd>Parameters to optimize.</dd>
+<dt><strong><code>cfg</code></strong> :&ensp;<code>DictConfig</code></dt>
+<dd>Optimization-related configuration.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>torch.optim.Optimizer.</p></div>
+</dd>
+<dt id="audiocraft.solvers.builders.get_solver"><code class="name flex">
+<span>def <span class="ident">get_solver</span></span>(<span>cfg: omegaconf.dictconfig.DictConfig) ‑> <a title="audiocraft.solvers.base.StandardSolver" href="base.html#audiocraft.solvers.base.StandardSolver">StandardSolver</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_solver(cfg: omegaconf.DictConfig) -&gt; StandardSolver:
+    &#34;&#34;&#34;Instantiate solver from config.&#34;&#34;&#34;
+    from .audiogen import AudioGenSolver
+    from .compression import CompressionSolver
+    from .musicgen import MusicGenSolver
+    from .diffusion import DiffusionSolver
+    from .magnet import MagnetSolver, AudioMagnetSolver
+    from .watermark import WatermarkSolver
+    from .jasco import JascoSolver
+    klass = {
+        &#39;compression&#39;: CompressionSolver,
+        &#39;musicgen&#39;: MusicGenSolver,
+        &#39;audiogen&#39;: AudioGenSolver,
+        &#39;magnet&#39;: MagnetSolver,
+        &#39;audio_magnet&#39;: AudioMagnetSolver,
+        &#39;lm&#39;: MusicGenSolver,  # backward compatibility
+        &#39;diffusion&#39;: DiffusionSolver,
+        &#39;sound_lm&#39;: AudioGenSolver,  # backward compatibility
+        &#39;watermarking&#39;: WatermarkSolver,
+        &#39;jasco&#39;: JascoSolver,
+    }[cfg.solver]
+    return klass(cfg)  # type: ignore</code></pre>
+</details>
+<div class="desc"><p>Instantiate solver from config.</p></div>
+</dd>
+<dt id="audiocraft.solvers.builders.get_text_consistency"><code class="name flex">
+<span>def <span class="ident">get_text_consistency</span></span>(<span>cfg: omegaconf.dictconfig.DictConfig) ‑> <a title="audiocraft.metrics.clap_consistency.TextConsistencyMetric" href="../metrics/clap_consistency.html#audiocraft.metrics.clap_consistency.TextConsistencyMetric">TextConsistencyMetric</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_text_consistency(cfg: omegaconf.DictConfig) -&gt; metrics.TextConsistencyMetric:
+    &#34;&#34;&#34;Instantiate Text Consistency metric from config.&#34;&#34;&#34;
+    text_consistency_metrics = {
+        &#39;clap&#39;: metrics.CLAPTextConsistencyMetric
+    }
+    klass = text_consistency_metrics[cfg.model]
+    kwargs = dict_from_config(cfg.get(cfg.model))
+    return klass(**kwargs)</code></pre>
+</details>
+<div class="desc"><p>Instantiate Text Consistency metric from config.</p></div>
+</dd>
+<dt id="audiocraft.solvers.builders.get_visqol"><code class="name flex">
+<span>def <span class="ident">get_visqol</span></span>(<span>cfg: omegaconf.dictconfig.DictConfig) ‑> <a title="audiocraft.metrics.visqol.ViSQOL" href="../metrics/visqol.html#audiocraft.metrics.visqol.ViSQOL">ViSQOL</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_visqol(cfg: omegaconf.DictConfig) -&gt; metrics.ViSQOL:
+    &#34;&#34;&#34;Instantiate ViSQOL metric from config.&#34;&#34;&#34;
+    kwargs = dict_from_config(cfg)
+    return metrics.ViSQOL(**kwargs)</code></pre>
+</details>
+<div class="desc"><p>Instantiate ViSQOL metric from config.</p></div>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="audiocraft.solvers.builders.DatasetType"><code class="flex name class">
+<span>class <span class="ident">DatasetType</span></span>
+<span>(</span><span>value, names=None, *, module=None, qualname=None, type=None, start=1)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class DatasetType(Enum):
+    AUDIO = &#34;audio&#34;
+    MUSIC = &#34;music&#34;
+    SOUND = &#34;sound&#34;
+    JASCO = &#34;jasco&#34;</code></pre>
+</details>
+<div class="desc"><p>An enumeration.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>enum.Enum</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="audiocraft.solvers.builders.DatasetType.AUDIO"><code class="name">var <span class="ident">AUDIO</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.solvers.builders.DatasetType.JASCO"><code class="name">var <span class="ident">JASCO</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.solvers.builders.DatasetType.MUSIC"><code class="name">var <span class="ident">MUSIC</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.solvers.builders.DatasetType.SOUND"><code class="name">var <span class="ident">SOUND</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="audiocraft.solvers" href="index.html">audiocraft.solvers</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="audiocraft.solvers.builders.get_adversarial_losses" href="#audiocraft.solvers.builders.get_adversarial_losses">get_adversarial_losses</a></code></li>
+<li><code><a title="audiocraft.solvers.builders.get_adversary" href="#audiocraft.solvers.builders.get_adversary">get_adversary</a></code></li>
+<li><code><a title="audiocraft.solvers.builders.get_audio_datasets" href="#audiocraft.solvers.builders.get_audio_datasets">get_audio_datasets</a></code></li>
+<li><code><a title="audiocraft.solvers.builders.get_balancer" href="#audiocraft.solvers.builders.get_balancer">get_balancer</a></code></li>
+<li><code><a title="audiocraft.solvers.builders.get_chroma_cosine_similarity" href="#audiocraft.solvers.builders.get_chroma_cosine_similarity">get_chroma_cosine_similarity</a></code></li>
+<li><code><a title="audiocraft.solvers.builders.get_ema" href="#audiocraft.solvers.builders.get_ema">get_ema</a></code></li>
+<li><code><a title="audiocraft.solvers.builders.get_fad" href="#audiocraft.solvers.builders.get_fad">get_fad</a></code></li>
+<li><code><a title="audiocraft.solvers.builders.get_kldiv" href="#audiocraft.solvers.builders.get_kldiv">get_kldiv</a></code></li>
+<li><code><a title="audiocraft.solvers.builders.get_loss" href="#audiocraft.solvers.builders.get_loss">get_loss</a></code></li>
+<li><code><a title="audiocraft.solvers.builders.get_lr_scheduler" href="#audiocraft.solvers.builders.get_lr_scheduler">get_lr_scheduler</a></code></li>
+<li><code><a title="audiocraft.solvers.builders.get_optim_parameter_groups" href="#audiocraft.solvers.builders.get_optim_parameter_groups">get_optim_parameter_groups</a></code></li>
+<li><code><a title="audiocraft.solvers.builders.get_optimizer" href="#audiocraft.solvers.builders.get_optimizer">get_optimizer</a></code></li>
+<li><code><a title="audiocraft.solvers.builders.get_solver" href="#audiocraft.solvers.builders.get_solver">get_solver</a></code></li>
+<li><code><a title="audiocraft.solvers.builders.get_text_consistency" href="#audiocraft.solvers.builders.get_text_consistency">get_text_consistency</a></code></li>
+<li><code><a title="audiocraft.solvers.builders.get_visqol" href="#audiocraft.solvers.builders.get_visqol">get_visqol</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="audiocraft.solvers.builders.DatasetType" href="#audiocraft.solvers.builders.DatasetType">DatasetType</a></code></h4>
+<ul class="">
+<li><code><a title="audiocraft.solvers.builders.DatasetType.AUDIO" href="#audiocraft.solvers.builders.DatasetType.AUDIO">AUDIO</a></code></li>
+<li><code><a title="audiocraft.solvers.builders.DatasetType.JASCO" href="#audiocraft.solvers.builders.DatasetType.JASCO">JASCO</a></code></li>
+<li><code><a title="audiocraft.solvers.builders.DatasetType.MUSIC" href="#audiocraft.solvers.builders.DatasetType.MUSIC">MUSIC</a></code></li>
+<li><code><a title="audiocraft.solvers.builders.DatasetType.SOUND" href="#audiocraft.solvers.builders.DatasetType.SOUND">SOUND</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.5</a>.</p>
+</footer>
+</body>
+</html>

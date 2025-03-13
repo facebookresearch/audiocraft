@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.5">
+<title>audiocraft.modules.watermark API documentation</title>
+<meta name="description" content="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>audiocraft.modules.watermark</code></h1>
+</header>
+<section id="section-intro">
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="audiocraft.modules.watermark.mix"><code class="name flex">
+<span>def <span class="ident">mix</span></span>(<span>x: torch.Tensor,<br>x_wm: torch.Tensor,<br>window_size: float = 0.5,<br>shuffle: bool = False) ‑> Tuple[torch.Tensor, torch.Tensor]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def mix(
+    x: torch.Tensor, x_wm: torch.Tensor, window_size: float = 0.5, shuffle: bool = False
+) -&gt; tp.Tuple[torch.Tensor, torch.Tensor]:
+    &#34;&#34;&#34;
+    Mixes a window of the non-watermarked audio signal &#39;x&#39; into the watermarked audio signal &#39;x_wm&#39;.
+
+    This function takes two tensors of shape [batch, channels, frames], copies a window of &#39;x&#39; with the specified
+    &#39;window_size&#39; into &#39;x_wm&#39;, and returns a new tensor that is a mix between the watermarked (1 - mix_percent %)
+    and non-watermarked audio (mix_percent %).
+
+    Args:
+        x (torch.Tensor): The non-watermarked audio signal tensor.
+        x_wm (torch.Tensor): The watermarked audio signal tensor.
+        window_size (float, optional): The percentage of &#39;x&#39; to copy into &#39;x_wm&#39; (between 0 and 1).
+        shuffle (bool): whether or no keep the mix from the same batch element
+
+    Returns:
+        tuple: A tuple containing two tensors:
+            - mixed_tensor (torch.Tensor): The resulting mixed audio signal tensor.
+            - mask (torch.Tensor): A binary mask where 1 represents watermarked and 0 represents non-watermarked.
+
+    Raises:
+        AssertionError: If &#39;window_size&#39; is not between 0 and 1.
+    &#34;&#34;&#34;
+    assert 0 &lt; window_size &lt;= 1, &#34;window_size should be between 0 and 1&#34;
+
+    # Calculate the maximum starting point for the window
+    max_start_point = x.shape[-1] - int(window_size * x.shape[-1])
+
+    # Generate a random starting point within the adjusted valid range
+    start_point = random.randint(0, max_start_point)
+
+    # Calculate the window size in frames
+    total_frames = x.shape[-1]
+    window_frames = int(window_size * total_frames)
+
+    # Create a mask tensor to identify watermarked and non-watermarked portions
+    # it outputs two classes to match the detector output shape of [bsz, 2, frames]
+    # Copy the random window from &#39;x&#39; to &#39;x_wm&#39;
+    mixed = x_wm.detach().clone()
+
+    true_predictions = torch.cat(
+        [torch.zeros_like(mixed), torch.ones_like(mixed)], dim=1
+    )
+    # non-watermark class correct labels.
+    true_predictions[:, 0, start_point: start_point + window_frames] = 1.0
+    # watermarked class correct labels
+    true_predictions[:, 1, start_point: start_point + window_frames] = 0.0
+
+    if shuffle:
+        # Take the middle part from a random element of the batch
+        shuffle_idx = torch.randint(0, x.size(0), (x.size(0),))
+        mixed[:, :, start_point: start_point + window_frames] = x[shuffle_idx][
+            :, :, start_point: start_point + window_frames
+        ]
+    else:
+        mixed[:, :, start_point: start_point + window_frames] = x[
+            :, :, start_point: start_point + window_frames
+        ]
+
+    return mixed, true_predictions</code></pre>
+</details>
+<div class="desc"><p>Mixes a window of the non-watermarked audio signal 'x' into the watermarked audio signal 'x_wm'.</p>
+<p>This function takes two tensors of shape [batch, channels, frames], copies a window of 'x' with the specified
+'window_size' into 'x_wm', and returns a new tensor that is a mix between the watermarked (1 - mix_percent %)
+and non-watermarked audio (mix_percent %).</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>x</code></strong> :&ensp;<code>torch.Tensor</code></dt>
+<dd>The non-watermarked audio signal tensor.</dd>
+<dt><strong><code>x_wm</code></strong> :&ensp;<code>torch.Tensor</code></dt>
+<dd>The watermarked audio signal tensor.</dd>
+<dt><strong><code>window_size</code></strong> :&ensp;<code>float</code>, optional</dt>
+<dd>The percentage of 'x' to copy into 'x_wm' (between 0 and 1).</dd>
+<dt><strong><code>shuffle</code></strong> :&ensp;<code>bool</code></dt>
+<dd>whether or no keep the mix from the same batch element</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>tuple</code></dt>
+<dd>A tuple containing two tensors:
+- mixed_tensor (torch.Tensor): The resulting mixed audio signal tensor.
+- mask (torch.Tensor): A binary mask where 1 represents watermarked and 0 represents non-watermarked.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>AssertionError</code></dt>
+<dd>If 'window_size' is not between 0 and 1.</dd>
+</dl></div>
+</dd>
+<dt id="audiocraft.modules.watermark.pad"><code class="name flex">
+<span>def <span class="ident">pad</span></span>(<span>x_wm: torch.Tensor, central: bool = False) ‑> Tuple[torch.Tensor, torch.Tensor]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def pad(
+    x_wm: torch.Tensor, central: bool = False
+) -&gt; tp.Tuple[torch.Tensor, torch.Tensor]:
+    &#34;&#34;&#34;Pad a watermarked signal at the begining and the end
+
+    Args:
+        x_wm (torch.Tensor) : watermarked audio
+        central (bool): Whether to mask the middle of the wave (around 34%) or the two tails
+            (beginning and ending frames)
+
+    Returns:
+        padded (torch.Tensor): padded signal
+        true_predictions(torch.Tensor): A binary mask where 1 represents
+        watermarked and 0 represents non-watermarked.&#34;&#34;&#34;
+    # keep at leat 34% of watermarked signal
+    max_start = int(0.33 * x_wm.size(-1))
+    min_end = int(0.66 * x_wm.size(-1))
+    starts = torch.randint(0, max_start, size=(x_wm.size(0),))
+    ends = torch.randint(min_end, x_wm.size(-1), size=(x_wm.size(0),))
+    mask = torch.zeros_like(x_wm)
+    for i in range(x_wm.size(0)):
+        mask[i, :, starts[i]: ends[i]] = 1
+    if central:
+        mask = 1 - mask
+    padded = x_wm * mask
+    true_predictions = torch.cat([1 - mask, mask], dim=1)
+    return padded, true_predictions</code></pre>
+</details>
+<div class="desc"><p>Pad a watermarked signal at the begining and the end</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt>x_wm (torch.Tensor) : watermarked audio</dt>
+<dt><strong><code>central</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Whether to mask the middle of the wave (around 34%) or the two tails
+(beginning and ending frames)</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>padded (torch.Tensor): padded signal
+true_predictions(torch.Tensor): A binary mask where 1 represents
+watermarked and 0 represents non-watermarked.</p></div>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="audiocraft.modules" href="index.html">audiocraft.modules</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="audiocraft.modules.watermark.mix" href="#audiocraft.modules.watermark.mix">mix</a></code></li>
+<li><code><a title="audiocraft.modules.watermark.pad" href="#audiocraft.modules.watermark.pad">pad</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.5</a>.</p>
+</footer>
+</body>
+</html>

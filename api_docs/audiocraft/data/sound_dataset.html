@@ -1,0 +1,658 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.5">
+<title>audiocraft.data.sound_dataset API documentation</title>
+<meta name="description" content="Dataset of audio with a simple description.">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>audiocraft.data.sound_dataset</code></h1>
+</header>
+<section id="section-intro">
+<p>Dataset of audio with a simple description.</p>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="audiocraft.data.sound_dataset.is_clipped"><code class="name flex">
+<span>def <span class="ident">is_clipped</span></span>(<span>audio: torch.Tensor, clipping_threshold: float = 0.99) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_clipped(audio: torch.Tensor, clipping_threshold: float = 0.99) -&gt; torch.Tensor:
+    return (abs(audio) &gt; clipping_threshold).any(1)</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.data.sound_dataset.mix_pair"><code class="name flex">
+<span>def <span class="ident">mix_pair</span></span>(<span>src: torch.Tensor, dst: torch.Tensor, min_overlap: float) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def mix_pair(src: torch.Tensor, dst: torch.Tensor, min_overlap: float) -&gt; torch.Tensor:
+    start = random.randint(0, int(src.shape[1] * (1 - min_overlap)))
+    remainder = src.shape[1] - start
+    if dst.shape[1] &gt; remainder:
+        src[:, start:] = src[:, start:] + dst[:, :remainder]
+    else:
+        src[:, start:start+dst.shape[1]] = src[:, start:start+dst.shape[1]] + dst
+    return src</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.data.sound_dataset.mix_samples"><code class="name flex">
+<span>def <span class="ident">mix_samples</span></span>(<span>wavs: torch.Tensor,<br>infos: List[<a title="audiocraft.data.sound_dataset.SoundInfo" href="#audiocraft.data.sound_dataset.SoundInfo">SoundInfo</a>],<br>aug_p: float,<br>mix_p: float,<br>snr_low: int,<br>snr_high: int,<br>min_overlap: float)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def mix_samples(wavs: torch.Tensor, infos: tp.List[SoundInfo], aug_p: float, mix_p: float,
+                snr_low: int, snr_high: int, min_overlap: float):
+    &#34;&#34;&#34;Mix samples within a batch, summing the waveforms and concatenating the text infos.
+
+    Args:
+        wavs (torch.Tensor): Audio tensors of shape [B, C, T].
+        infos (list[SoundInfo]): List of SoundInfo items corresponding to the audio.
+        aug_p (float): Augmentation probability.
+        mix_p (float): Proportion of items in the batch to mix (and merge) together.
+        snr_low (int): Lowerbound for sampling SNR.
+        snr_high (int): Upperbound for sampling SNR.
+        min_overlap (float): Minimum overlap between mixed samples.
+    Returns:
+        tuple[torch.Tensor, list[SoundInfo]]: A tuple containing the mixed wavs
+            and mixed SoundInfo for the given batch.
+    &#34;&#34;&#34;
+    # no mixing to perform within the batch
+    if mix_p == 0:
+        return wavs, infos
+
+    if random.uniform(0, 1) &lt; aug_p:
+        # perform all augmentations on waveforms as [B, T]
+        # randomly picking pairs of audio to mix
+        assert wavs.size(1) == 1, f&#34;Mix samples requires monophonic audio but C={wavs.size(1)}&#34;
+        wavs = wavs.mean(dim=1, keepdim=False)
+        B, T = wavs.shape
+        k = int(mix_p * B)
+        mixed_sources_idx = torch.randperm(B)[:k]
+        mixed_targets_idx = torch.randperm(B)[:k]
+        aug_wavs = snr_mix(
+            wavs[mixed_sources_idx],
+            wavs[mixed_targets_idx],
+            snr_low,
+            snr_high,
+            min_overlap,
+        )
+        # mixing textual descriptions in metadata
+        descriptions = [info.description for info in infos]
+        aug_infos = []
+        for i, j in zip(mixed_sources_idx, mixed_targets_idx):
+            text = mix_text(descriptions[i], descriptions[j])
+            m = replace(infos[i])
+            m.description = text
+            aug_infos.append(m)
+
+        # back to [B, C, T]
+        aug_wavs = aug_wavs.unsqueeze(1)
+        assert aug_wavs.shape[0] &gt; 0, &#34;Samples mixing returned empty batch.&#34;
+        assert aug_wavs.dim() == 3, f&#34;Returned wav should be [B, C, T] but dim = {aug_wavs.dim()}&#34;
+        assert aug_wavs.shape[0] == len(aug_infos), &#34;Mismatch between number of wavs and infos in the batch&#34;
+
+        return aug_wavs, aug_infos  # [B, C, T]
+    else:
+        # randomly pick samples in the batch to match
+        # the batch size when performing audio mixing
+        B, C, T = wavs.shape
+        k = int(mix_p * B)
+        wav_idx = torch.randperm(B)[:k]
+        wavs = wavs[wav_idx]
+        infos = [infos[i] for i in wav_idx]
+        assert wavs.shape[0] == len(infos), &#34;Mismatch between number of wavs and infos in the batch&#34;
+
+        return wavs, infos  # [B, C, T]</code></pre>
+</details>
+<div class="desc"><p>Mix samples within a batch, summing the waveforms and concatenating the text infos.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>wavs</code></strong> :&ensp;<code>torch.Tensor</code></dt>
+<dd>Audio tensors of shape [B, C, T].</dd>
+<dt><strong><code>infos</code></strong> :&ensp;<code>list[<a title="audiocraft.data.sound_dataset.SoundInfo" href="#audiocraft.data.sound_dataset.SoundInfo">SoundInfo</a>]</code></dt>
+<dd>List of SoundInfo items corresponding to the audio.</dd>
+<dt><strong><code>aug_p</code></strong> :&ensp;<code>float</code></dt>
+<dd>Augmentation probability.</dd>
+<dt><strong><code>mix_p</code></strong> :&ensp;<code>float</code></dt>
+<dd>Proportion of items in the batch to mix (and merge) together.</dd>
+<dt><strong><code>snr_low</code></strong> :&ensp;<code>int</code></dt>
+<dd>Lowerbound for sampling SNR.</dd>
+<dt><strong><code>snr_high</code></strong> :&ensp;<code>int</code></dt>
+<dd>Upperbound for sampling SNR.</dd>
+<dt><strong><code>min_overlap</code></strong> :&ensp;<code>float</code></dt>
+<dd>Minimum overlap between mixed samples.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>tuple[torch.Tensor, list[<a title="audiocraft.data.sound_dataset.SoundInfo" href="#audiocraft.data.sound_dataset.SoundInfo">SoundInfo</a>]]</code></dt>
+<dd>A tuple containing the mixed wavs
+and mixed SoundInfo for the given batch.</dd>
+</dl></div>
+</dd>
+<dt id="audiocraft.data.sound_dataset.mix_text"><code class="name flex">
+<span>def <span class="ident">mix_text</span></span>(<span>src_text: str, dst_text: str)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def mix_text(src_text: str, dst_text: str):
+    &#34;&#34;&#34;Mix text from different sources by concatenating them.&#34;&#34;&#34;
+    if src_text == dst_text:
+        return src_text
+    return src_text + &#34; &#34; + dst_text</code></pre>
+</details>
+<div class="desc"><p>Mix text from different sources by concatenating them.</p></div>
+</dd>
+<dt id="audiocraft.data.sound_dataset.normalize"><code class="name flex">
+<span>def <span class="ident">normalize</span></span>(<span>audio: torch.Tensor, target_level: int = -25) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def normalize(audio: torch.Tensor, target_level: int = -25) -&gt; torch.Tensor:
+    &#34;&#34;&#34;Normalize the signal to the target level.&#34;&#34;&#34;
+    rms = rms_f(audio)
+    scalar = 10 ** (target_level / 20) / (rms + EPS)
+    audio = audio * scalar.unsqueeze(1)
+    return audio</code></pre>
+</details>
+<div class="desc"><p>Normalize the signal to the target level.</p></div>
+</dd>
+<dt id="audiocraft.data.sound_dataset.rms_f"><code class="name flex">
+<span>def <span class="ident">rms_f</span></span>(<span>x: torch.Tensor) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def rms_f(x: torch.Tensor) -&gt; torch.Tensor:
+    return (x ** 2).mean(1).pow(0.5)</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.data.sound_dataset.snr_mix"><code class="name flex">
+<span>def <span class="ident">snr_mix</span></span>(<span>src: torch.Tensor,<br>dst: torch.Tensor,<br>snr_low: int,<br>snr_high: int,<br>min_overlap: float)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def snr_mix(src: torch.Tensor, dst: torch.Tensor, snr_low: int, snr_high: int, min_overlap: float):
+    if snr_low == snr_high:
+        snr = snr_low
+    else:
+        snr = np.random.randint(snr_low, snr_high)
+    mix = snr_mixer(src, dst, snr, min_overlap)
+    return mix</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.data.sound_dataset.snr_mixer"><code class="name flex">
+<span>def <span class="ident">snr_mixer</span></span>(<span>clean: torch.Tensor,<br>noise: torch.Tensor,<br>snr: int,<br>min_overlap: float,<br>target_level: int = -25,<br>clipping_threshold: float = 0.99) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def snr_mixer(clean: torch.Tensor, noise: torch.Tensor, snr: int, min_overlap: float,
+              target_level: int = -25, clipping_threshold: float = 0.99) -&gt; torch.Tensor:
+    &#34;&#34;&#34;Function to mix clean speech and noise at various SNR levels.
+
+    Args:
+        clean (torch.Tensor): Clean audio source to mix, of shape [B, T].
+        noise (torch.Tensor): Noise audio source to mix, of shape [B, T].
+        snr (int): SNR level when mixing.
+        min_overlap (float): Minimum overlap between the two mixed sources.
+        target_level (int): Gain level in dB.
+        clipping_threshold (float): Threshold for clipping the audio.
+    Returns:
+        torch.Tensor: The mixed audio, of shape [B, T].
+    &#34;&#34;&#34;
+    if clean.shape[1] &gt; noise.shape[1]:
+        noise = torch.nn.functional.pad(noise, (0, clean.shape[1] - noise.shape[1]))
+    else:
+        noise = noise[:, :clean.shape[1]]
+
+    # normalizing to -25 dB FS
+    clean = clean / (clean.max(1)[0].abs().unsqueeze(1) + EPS)
+    clean = normalize(clean, target_level)
+    rmsclean = rms_f(clean)
+
+    noise = noise / (noise.max(1)[0].abs().unsqueeze(1) + EPS)
+    noise = normalize(noise, target_level)
+    rmsnoise = rms_f(noise)
+
+    # set the noise level for a given SNR
+    noisescalar = (rmsclean / (10 ** (snr / 20)) / (rmsnoise + EPS)).unsqueeze(1)
+    noisenewlevel = noise * noisescalar
+
+    # mix noise and clean speech
+    noisyspeech = mix_pair(clean, noisenewlevel, min_overlap)
+
+    # randomly select RMS value between -15 dBFS and -35 dBFS and normalize noisyspeech with that value
+    # there is a chance of clipping that might happen with very less probability, which is not a major issue.
+    noisy_rms_level = np.random.randint(TARGET_LEVEL_LOWER, TARGET_LEVEL_UPPER)
+    rmsnoisy = rms_f(noisyspeech)
+    scalarnoisy = (10 ** (noisy_rms_level / 20) / (rmsnoisy + EPS)).unsqueeze(1)
+    noisyspeech = noisyspeech * scalarnoisy
+    clean = clean * scalarnoisy
+    noisenewlevel = noisenewlevel * scalarnoisy
+
+    # final check to see if there are any amplitudes exceeding +/- 1. If so, normalize all the signals accordingly
+    clipped = is_clipped(noisyspeech)
+    if clipped.any():
+        noisyspeech_maxamplevel = noisyspeech[clipped].max(1)[0].abs().unsqueeze(1) / (clipping_threshold - EPS)
+        noisyspeech[clipped] = noisyspeech[clipped] / noisyspeech_maxamplevel
+
+    return noisyspeech</code></pre>
+</details>
+<div class="desc"><p>Function to mix clean speech and noise at various SNR levels.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>clean</code></strong> :&ensp;<code>torch.Tensor</code></dt>
+<dd>Clean audio source to mix, of shape [B, T].</dd>
+<dt><strong><code>noise</code></strong> :&ensp;<code>torch.Tensor</code></dt>
+<dd>Noise audio source to mix, of shape [B, T].</dd>
+<dt><strong><code>snr</code></strong> :&ensp;<code>int</code></dt>
+<dd>SNR level when mixing.</dd>
+<dt><strong><code>min_overlap</code></strong> :&ensp;<code>float</code></dt>
+<dd>Minimum overlap between the two mixed sources.</dd>
+<dt><strong><code>target_level</code></strong> :&ensp;<code>int</code></dt>
+<dd>Gain level in dB.</dd>
+<dt><strong><code>clipping_threshold</code></strong> :&ensp;<code>float</code></dt>
+<dd>Threshold for clipping the audio.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>torch.Tensor</code></dt>
+<dd>The mixed audio, of shape [B, T].</dd>
+</dl></div>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="audiocraft.data.sound_dataset.SoundDataset"><code class="flex name class">
+<span>class <span class="ident">SoundDataset</span></span>
+<span>(</span><span>*args,<br>info_fields_required: bool = True,<br>external_metadata_source: str | None = None,<br>aug_p: float = 0.0,<br>mix_p: float = 0.0,<br>mix_snr_low: int = -5,<br>mix_snr_high: int = 5,<br>mix_min_overlap: float = 0.5,<br>**kwargs)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class SoundDataset(InfoAudioDataset):
+    &#34;&#34;&#34;Sound audio dataset: Audio dataset with environmental sound-specific metadata.
+
+    Args:
+        info_fields_required (bool): Whether all the mandatory metadata fields should be in the loaded metadata.
+        external_metadata_source (tp.Optional[str]): Folder containing JSON metadata for the corresponding dataset.
+            The metadata files contained in this folder are expected to match the stem of the audio file with
+            a json extension.
+        aug_p (float): Probability of performing audio mixing augmentation on the batch.
+        mix_p (float): Proportion of batch items that are mixed together when applying audio mixing augmentation.
+        mix_snr_low (int): Lowerbound for SNR value sampled for mixing augmentation.
+        mix_snr_high (int): Upperbound for SNR value sampled for mixing augmentation.
+        mix_min_overlap (float): Minimum overlap between audio files when performing mixing augmentation.
+        kwargs: Additional arguments for AudioDataset.
+
+    See `audiocraft.data.info_audio_dataset.InfoAudioDataset` for full initialization arguments.
+    &#34;&#34;&#34;
+    def __init__(
+        self,
+        *args,
+        info_fields_required: bool = True,
+        external_metadata_source: tp.Optional[str] = None,
+        aug_p: float = 0.,
+        mix_p: float = 0.,
+        mix_snr_low: int = -5,
+        mix_snr_high: int = 5,
+        mix_min_overlap: float = 0.5,
+        **kwargs
+    ):
+        kwargs[&#39;return_info&#39;] = True  # We require the info for each song of the dataset.
+        super().__init__(*args, **kwargs)
+        self.info_fields_required = info_fields_required
+        self.external_metadata_source = external_metadata_source
+        self.aug_p = aug_p
+        self.mix_p = mix_p
+        if self.aug_p &gt; 0:
+            assert self.mix_p &gt; 0, &#34;Expecting some mixing proportion mix_p if aug_p &gt; 0&#34;
+            assert self.channels == 1, &#34;SoundDataset with audio mixing considers only monophonic audio&#34;
+        self.mix_snr_low = mix_snr_low
+        self.mix_snr_high = mix_snr_high
+        self.mix_min_overlap = mix_min_overlap
+
+    def _get_info_path(self, path: tp.Union[str, Path]) -&gt; Path:
+        &#34;&#34;&#34;Get path of JSON with metadata (description, etc.).
+        If there exists a JSON with the same name as &#39;path.name&#39;, then it will be used.
+        Else, such JSON will be searched for in an external json source folder if it exists.
+        &#34;&#34;&#34;
+        info_path = Path(path).with_suffix(&#39;.json&#39;)
+        if Path(info_path).exists():
+            return info_path
+        elif self.external_metadata_source and (Path(self.external_metadata_source) / info_path.name).exists():
+            return Path(self.external_metadata_source) / info_path.name
+        else:
+            raise Exception(f&#34;Unable to find a metadata JSON for path: {path}&#34;)
+
+    def __getitem__(self, index):
+        wav, info = super().__getitem__(index)
+        info_data = info.to_dict()
+        info_path = self._get_info_path(info.meta.path)
+        if Path(info_path).exists():
+            with open(info_path, &#39;r&#39;) as json_file:
+                sound_data = json.load(json_file)
+                sound_data.update(info_data)
+                sound_info = SoundInfo.from_dict(sound_data, fields_required=self.info_fields_required)
+                # if there are multiple descriptions, sample one randomly
+                if isinstance(sound_info.description, list):
+                    sound_info.description = random.choice(sound_info.description)
+        else:
+            sound_info = SoundInfo.from_dict(info_data, fields_required=False)
+
+        sound_info.self_wav = WavCondition(
+            wav=wav[None], length=torch.tensor([info.n_frames]),
+            sample_rate=[sound_info.sample_rate], path=[info.meta.path], seek_time=[info.seek_time])
+
+        return wav, sound_info
+
+    def collater(self, samples):
+        # when training, audio mixing is performed in the collate function
+        wav, sound_info = super().collater(samples)  # SoundDataset always returns infos
+        if self.aug_p &gt; 0:
+            wav, sound_info = mix_samples(wav, sound_info, self.aug_p, self.mix_p,
+                                          snr_low=self.mix_snr_low, snr_high=self.mix_snr_high,
+                                          min_overlap=self.mix_min_overlap)
+        return wav, sound_info</code></pre>
+</details>
+<div class="desc"><p>Sound audio dataset: Audio dataset with environmental sound-specific metadata.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>info_fields_required</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Whether all the mandatory metadata fields should be in the loaded metadata.</dd>
+<dt><strong><code>external_metadata_source</code></strong> :&ensp;<code>tp.Optional[str]</code></dt>
+<dd>Folder containing JSON metadata for the corresponding dataset.
+The metadata files contained in this folder are expected to match the stem of the audio file with
+a json extension.</dd>
+<dt><strong><code>aug_p</code></strong> :&ensp;<code>float</code></dt>
+<dd>Probability of performing audio mixing augmentation on the batch.</dd>
+<dt><strong><code>mix_p</code></strong> :&ensp;<code>float</code></dt>
+<dd>Proportion of batch items that are mixed together when applying audio mixing augmentation.</dd>
+<dt><strong><code>mix_snr_low</code></strong> :&ensp;<code>int</code></dt>
+<dd>Lowerbound for SNR value sampled for mixing augmentation.</dd>
+<dt><strong><code>mix_snr_high</code></strong> :&ensp;<code>int</code></dt>
+<dd>Upperbound for SNR value sampled for mixing augmentation.</dd>
+<dt><strong><code>mix_min_overlap</code></strong> :&ensp;<code>float</code></dt>
+<dd>Minimum overlap between audio files when performing mixing augmentation.</dd>
+<dt><strong><code>kwargs</code></strong></dt>
+<dd>Additional arguments for AudioDataset.</dd>
+</dl>
+<p>See <code><a title="audiocraft.data.info_audio_dataset.InfoAudioDataset" href="info_audio_dataset.html#audiocraft.data.info_audio_dataset.InfoAudioDataset">InfoAudioDataset</a></code> for full initialization arguments.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="audiocraft.data.info_audio_dataset.InfoAudioDataset" href="info_audio_dataset.html#audiocraft.data.info_audio_dataset.InfoAudioDataset">InfoAudioDataset</a></li>
+<li><a title="audiocraft.data.audio_dataset.AudioDataset" href="audio_dataset.html#audiocraft.data.audio_dataset.AudioDataset">AudioDataset</a></li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="audiocraft.data.info_audio_dataset.InfoAudioDataset" href="info_audio_dataset.html#audiocraft.data.info_audio_dataset.InfoAudioDataset">InfoAudioDataset</a></b></code>:
+<ul class="hlist">
+<li><code><a title="audiocraft.data.info_audio_dataset.InfoAudioDataset.collater" href="audio_dataset.html#audiocraft.data.audio_dataset.AudioDataset.collater">collater</a></code></li>
+<li><code><a title="audiocraft.data.info_audio_dataset.InfoAudioDataset.from_meta" href="audio_dataset.html#audiocraft.data.audio_dataset.AudioDataset.from_meta">from_meta</a></code></li>
+<li><code><a title="audiocraft.data.info_audio_dataset.InfoAudioDataset.from_path" href="audio_dataset.html#audiocraft.data.audio_dataset.AudioDataset.from_path">from_path</a></code></li>
+<li><code><a title="audiocraft.data.info_audio_dataset.InfoAudioDataset.sample_file" href="audio_dataset.html#audiocraft.data.audio_dataset.AudioDataset.sample_file">sample_file</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="audiocraft.data.sound_dataset.SoundInfo"><code class="flex name class">
+<span>class <span class="ident">SoundInfo</span></span>
+<span>(</span><span>meta: <a title="audiocraft.data.audio_dataset.AudioMeta" href="audio_dataset.html#audiocraft.data.audio_dataset.AudioMeta">AudioMeta</a>,<br>seek_time: float,<br>n_frames: int,<br>total_frames: int,<br>sample_rate: int,<br>channels: int,<br>description: str | None = None,<br>self_wav: torch.Tensor | None = None)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass
+class SoundInfo(SegmentWithAttributes):
+    &#34;&#34;&#34;Segment info augmented with Sound metadata.
+    &#34;&#34;&#34;
+    description: tp.Optional[str] = None
+    self_wav: tp.Optional[torch.Tensor] = None
+
+    @property
+    def has_sound_meta(self) -&gt; bool:
+        return self.description is not None
+
+    def to_condition_attributes(self) -&gt; ConditioningAttributes:
+        out = ConditioningAttributes()
+
+        for _field in fields(self):
+            key, value = _field.name, getattr(self, _field.name)
+            if key == &#39;self_wav&#39;:
+                out.wav[key] = value
+            else:
+                out.text[key] = value
+        return out
+
+    @staticmethod
+    def attribute_getter(attribute):
+        if attribute == &#39;description&#39;:
+            preprocess_func = get_keyword_or_keyword_list
+        else:
+            preprocess_func = None
+        return preprocess_func
+
+    @classmethod
+    def from_dict(cls, dictionary: dict, fields_required: bool = False):
+        _dictionary: tp.Dict[str, tp.Any] = {}
+
+        # allow a subset of attributes to not be loaded from the dictionary
+        # these attributes may be populated later
+        post_init_attributes = [&#39;self_wav&#39;]
+
+        for _field in fields(cls):
+            if _field.name in post_init_attributes:
+                continue
+            elif _field.name not in dictionary:
+                if fields_required:
+                    raise KeyError(f&#34;Unexpected missing key: {_field.name}&#34;)
+            else:
+                preprocess_func: tp.Optional[tp.Callable] = cls.attribute_getter(_field.name)
+                value = dictionary[_field.name]
+                if preprocess_func:
+                    value = preprocess_func(value)
+                _dictionary[_field.name] = value
+        return cls(**_dictionary)</code></pre>
+</details>
+<div class="desc"><p>Segment info augmented with Sound metadata.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="audiocraft.modules.conditioners.SegmentWithAttributes" href="../modules/conditioners.html#audiocraft.modules.conditioners.SegmentWithAttributes">SegmentWithAttributes</a></li>
+<li><a title="audiocraft.data.audio_dataset.SegmentInfo" href="audio_dataset.html#audiocraft.data.audio_dataset.SegmentInfo">SegmentInfo</a></li>
+<li><a title="audiocraft.data.audio_dataset.BaseInfo" href="audio_dataset.html#audiocraft.data.audio_dataset.BaseInfo">BaseInfo</a></li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="audiocraft.data.sound_dataset.SoundInfo.description"><code class="name">var <span class="ident">description</span> : str | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.data.sound_dataset.SoundInfo.self_wav"><code class="name">var <span class="ident">self_wav</span> : torch.Tensor | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Static methods</h3>
+<dl>
+<dt id="audiocraft.data.sound_dataset.SoundInfo.attribute_getter"><code class="name flex">
+<span>def <span class="ident">attribute_getter</span></span>(<span>attribute)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def attribute_getter(attribute):
+    if attribute == &#39;description&#39;:
+        preprocess_func = get_keyword_or_keyword_list
+    else:
+        preprocess_func = None
+    return preprocess_func</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.data.sound_dataset.SoundInfo.from_dict"><code class="name flex">
+<span>def <span class="ident">from_dict</span></span>(<span>dictionary: dict, fields_required: bool = False)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Instance variables</h3>
+<dl>
+<dt id="audiocraft.data.sound_dataset.SoundInfo.has_sound_meta"><code class="name">prop <span class="ident">has_sound_meta</span> : bool</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def has_sound_meta(self) -&gt; bool:
+    return self.description is not None</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="audiocraft.data.sound_dataset.SoundInfo.to_condition_attributes"><code class="name flex">
+<span>def <span class="ident">to_condition_attributes</span></span>(<span>self) ‑> <a title="audiocraft.modules.conditioners.ConditioningAttributes" href="../modules/conditioners.html#audiocraft.modules.conditioners.ConditioningAttributes">ConditioningAttributes</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def to_condition_attributes(self) -&gt; ConditioningAttributes:
+    out = ConditioningAttributes()
+
+    for _field in fields(self):
+        key, value = _field.name, getattr(self, _field.name)
+        if key == &#39;self_wav&#39;:
+            out.wav[key] = value
+        else:
+            out.text[key] = value
+    return out</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="audiocraft.data" href="index.html">audiocraft.data</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="two-column">
+<li><code><a title="audiocraft.data.sound_dataset.is_clipped" href="#audiocraft.data.sound_dataset.is_clipped">is_clipped</a></code></li>
+<li><code><a title="audiocraft.data.sound_dataset.mix_pair" href="#audiocraft.data.sound_dataset.mix_pair">mix_pair</a></code></li>
+<li><code><a title="audiocraft.data.sound_dataset.mix_samples" href="#audiocraft.data.sound_dataset.mix_samples">mix_samples</a></code></li>
+<li><code><a title="audiocraft.data.sound_dataset.mix_text" href="#audiocraft.data.sound_dataset.mix_text">mix_text</a></code></li>
+<li><code><a title="audiocraft.data.sound_dataset.normalize" href="#audiocraft.data.sound_dataset.normalize">normalize</a></code></li>
+<li><code><a title="audiocraft.data.sound_dataset.rms_f" href="#audiocraft.data.sound_dataset.rms_f">rms_f</a></code></li>
+<li><code><a title="audiocraft.data.sound_dataset.snr_mix" href="#audiocraft.data.sound_dataset.snr_mix">snr_mix</a></code></li>
+<li><code><a title="audiocraft.data.sound_dataset.snr_mixer" href="#audiocraft.data.sound_dataset.snr_mixer">snr_mixer</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="audiocraft.data.sound_dataset.SoundDataset" href="#audiocraft.data.sound_dataset.SoundDataset">SoundDataset</a></code></h4>
+</li>
+<li>
+<h4><code><a title="audiocraft.data.sound_dataset.SoundInfo" href="#audiocraft.data.sound_dataset.SoundInfo">SoundInfo</a></code></h4>
+<ul class="">
+<li><code><a title="audiocraft.data.sound_dataset.SoundInfo.attribute_getter" href="#audiocraft.data.sound_dataset.SoundInfo.attribute_getter">attribute_getter</a></code></li>
+<li><code><a title="audiocraft.data.sound_dataset.SoundInfo.description" href="#audiocraft.data.sound_dataset.SoundInfo.description">description</a></code></li>
+<li><code><a title="audiocraft.data.sound_dataset.SoundInfo.from_dict" href="#audiocraft.data.sound_dataset.SoundInfo.from_dict">from_dict</a></code></li>
+<li><code><a title="audiocraft.data.sound_dataset.SoundInfo.has_sound_meta" href="#audiocraft.data.sound_dataset.SoundInfo.has_sound_meta">has_sound_meta</a></code></li>
+<li><code><a title="audiocraft.data.sound_dataset.SoundInfo.self_wav" href="#audiocraft.data.sound_dataset.SoundInfo.self_wav">self_wav</a></code></li>
+<li><code><a title="audiocraft.data.sound_dataset.SoundInfo.to_condition_attributes" href="#audiocraft.data.sound_dataset.SoundInfo.to_condition_attributes">to_condition_attributes</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.5</a>.</p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.5">
+<title>audiocraft.adversarial.discriminators.msstftd API documentation</title>
+<meta name="description" content="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>audiocraft.adversarial.discriminators.msstftd</code></h1>
+</header>
+<section id="section-intro">
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="audiocraft.adversarial.discriminators.msstftd.get_2d_padding"><code class="name flex">
+<span>def <span class="ident">get_2d_padding</span></span>(<span>kernel_size: Tuple[int, int], dilation: Tuple[int, int] = (1, 1))</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_2d_padding(kernel_size: tp.Tuple[int, int], dilation: tp.Tuple[int, int] = (1, 1)):
+    return (((kernel_size[0] - 1) * dilation[0]) // 2, ((kernel_size[1] - 1) * dilation[1]) // 2)</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="audiocraft.adversarial.discriminators.msstftd.DiscriminatorSTFT"><code class="flex name class">
+<span>class <span class="ident">DiscriminatorSTFT</span></span>
+<span>(</span><span>filters: int,<br>in_channels: int = 1,<br>out_channels: int = 1,<br>n_fft: int = 1024,<br>hop_length: int = 256,<br>win_length: int = 1024,<br>max_filters: int = 1024,<br>filters_scale: int = 1,<br>kernel_size: Tuple[int, int] = (3, 9),<br>dilations: List = [1, 2, 4],<br>stride: Tuple[int, int] = (1, 2),<br>normalized: bool = True,<br>norm: str = 'weight_norm',<br>activation: str = 'LeakyReLU',<br>activation_params: dict = {'negative_slope': 0.2})</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class DiscriminatorSTFT(nn.Module):
+    &#34;&#34;&#34;STFT sub-discriminator.
+
+    Args:
+        filters (int): Number of filters in convolutions.
+        in_channels (int): Number of input channels.
+        out_channels (int): Number of output channels.
+        n_fft (int): Size of FFT for each scale.
+        hop_length (int): Length of hop between STFT windows for each scale.
+        kernel_size (tuple of int): Inner Conv2d kernel sizes.
+        stride (tuple of int): Inner Conv2d strides.
+        dilations (list of int): Inner Conv2d dilation on the time dimension.
+        win_length (int): Window size for each scale.
+        normalized (bool): Whether to normalize by magnitude after stft.
+        norm (str): Normalization method.
+        activation (str): Activation function.
+        activation_params (dict): Parameters to provide to the activation function.
+        growth (int): Growth factor for the filters.
+    &#34;&#34;&#34;
+    def __init__(self, filters: int, in_channels: int = 1, out_channels: int = 1,
+                 n_fft: int = 1024, hop_length: int = 256, win_length: int = 1024, max_filters: int = 1024,
+                 filters_scale: int = 1, kernel_size: tp.Tuple[int, int] = (3, 9), dilations: tp.List = [1, 2, 4],
+                 stride: tp.Tuple[int, int] = (1, 2), normalized: bool = True, norm: str = &#39;weight_norm&#39;,
+                 activation: str = &#39;LeakyReLU&#39;, activation_params: dict = {&#39;negative_slope&#39;: 0.2}):
+        super().__init__()
+        assert len(kernel_size) == 2
+        assert len(stride) == 2
+        self.filters = filters
+        self.in_channels = in_channels
+        self.out_channels = out_channels
+        self.n_fft = n_fft
+        self.hop_length = hop_length
+        self.win_length = win_length
+        self.normalized = normalized
+        self.activation = getattr(torch.nn, activation)(**activation_params)
+        self.spec_transform = torchaudio.transforms.Spectrogram(
+            n_fft=self.n_fft, hop_length=self.hop_length, win_length=self.win_length, window_fn=torch.hann_window,
+            normalized=self.normalized, center=False, pad_mode=None, power=None)
+        spec_channels = 2 * self.in_channels
+        self.convs = nn.ModuleList()
+        self.convs.append(
+            NormConv2d(spec_channels, self.filters, kernel_size=kernel_size, padding=get_2d_padding(kernel_size))
+        )
+        in_chs = min(filters_scale * self.filters, max_filters)
+        for i, dilation in enumerate(dilations):
+            out_chs = min((filters_scale ** (i + 1)) * self.filters, max_filters)
+            self.convs.append(NormConv2d(in_chs, out_chs, kernel_size=kernel_size, stride=stride,
+                                         dilation=(dilation, 1), padding=get_2d_padding(kernel_size, (dilation, 1)),
+                                         norm=norm))
+            in_chs = out_chs
+        out_chs = min((filters_scale ** (len(dilations) + 1)) * self.filters, max_filters)
+        self.convs.append(NormConv2d(in_chs, out_chs, kernel_size=(kernel_size[0], kernel_size[0]),
+                                     padding=get_2d_padding((kernel_size[0], kernel_size[0])),
+                                     norm=norm))
+        self.conv_post = NormConv2d(out_chs, self.out_channels,
+                                    kernel_size=(kernel_size[0], kernel_size[0]),
+                                    padding=get_2d_padding((kernel_size[0], kernel_size[0])),
+                                    norm=norm)
+
+    def forward(self, x: torch.Tensor):
+        fmap = []
+        z = self.spec_transform(x)  # [B, 2, Freq, Frames, 2]
+        z = torch.cat([z.real, z.imag], dim=1)
+        z = rearrange(z, &#39;b c w t -&gt; b c t w&#39;)
+        for i, layer in enumerate(self.convs):
+            z = layer(z)
+            z = self.activation(z)
+            fmap.append(z)
+        z = self.conv_post(z)
+        return z, fmap</code></pre>
+</details>
+<div class="desc"><p>STFT sub-discriminator.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>filters</code></strong> :&ensp;<code>int</code></dt>
+<dd>Number of filters in convolutions.</dd>
+<dt><strong><code>in_channels</code></strong> :&ensp;<code>int</code></dt>
+<dd>Number of input channels.</dd>
+<dt><strong><code>out_channels</code></strong> :&ensp;<code>int</code></dt>
+<dd>Number of output channels.</dd>
+<dt><strong><code>n_fft</code></strong> :&ensp;<code>int</code></dt>
+<dd>Size of FFT for each scale.</dd>
+<dt><strong><code>hop_length</code></strong> :&ensp;<code>int</code></dt>
+<dd>Length of hop between STFT windows for each scale.</dd>
+<dt><strong><code>kernel_size</code></strong> :&ensp;<code>tuple</code> of <code>int</code></dt>
+<dd>Inner Conv2d kernel sizes.</dd>
+<dt><strong><code>stride</code></strong> :&ensp;<code>tuple</code> of <code>int</code></dt>
+<dd>Inner Conv2d strides.</dd>
+<dt><strong><code>dilations</code></strong> :&ensp;<code>list</code> of <code>int</code></dt>
+<dd>Inner Conv2d dilation on the time dimension.</dd>
+<dt><strong><code>win_length</code></strong> :&ensp;<code>int</code></dt>
+<dd>Window size for each scale.</dd>
+<dt><strong><code>normalized</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Whether to normalize by magnitude after stft.</dd>
+<dt><strong><code>norm</code></strong> :&ensp;<code>str</code></dt>
+<dd>Normalization method.</dd>
+<dt><strong><code>activation</code></strong> :&ensp;<code>str</code></dt>
+<dd>Activation function.</dd>
+<dt><strong><code>activation_params</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Parameters to provide to the activation function.</dd>
+<dt><strong><code>growth</code></strong> :&ensp;<code>int</code></dt>
+<dd>Growth factor for the filters.</dd>
+</dl>
+<p>Initializes internal Module state, shared by both nn.Module and ScriptModule.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>torch.nn.modules.module.Module</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="audiocraft.adversarial.discriminators.msstftd.DiscriminatorSTFT.call_super_init"><code class="name">var <span class="ident">call_super_init</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.adversarial.discriminators.msstftd.DiscriminatorSTFT.dump_patches"><code class="name">var <span class="ident">dump_patches</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.adversarial.discriminators.msstftd.DiscriminatorSTFT.training"><code class="name">var <span class="ident">training</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="audiocraft.adversarial.discriminators.msstftd.DiscriminatorSTFT.forward"><code class="name flex">
+<span>def <span class="ident">forward</span></span>(<span>self, x: torch.Tensor) ‑> Callable[..., Any]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def forward(self, x: torch.Tensor):
+    fmap = []
+    z = self.spec_transform(x)  # [B, 2, Freq, Frames, 2]
+    z = torch.cat([z.real, z.imag], dim=1)
+    z = rearrange(z, &#39;b c w t -&gt; b c t w&#39;)
+    for i, layer in enumerate(self.convs):
+        z = layer(z)
+        z = self.activation(z)
+        fmap.append(z)
+    z = self.conv_post(z)
+    return z, fmap</code></pre>
+</details>
+<div class="desc"><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the :class:<code>Module</code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div></div>
+</dd>
+</dl>
+</dd>
+<dt id="audiocraft.adversarial.discriminators.msstftd.MultiScaleSTFTDiscriminator"><code class="flex name class">
+<span>class <span class="ident">MultiScaleSTFTDiscriminator</span></span>
+<span>(</span><span>filters: int,<br>in_channels: int = 1,<br>out_channels: int = 1,<br>sep_channels: bool = False,<br>n_ffts: List[int] = [1024, 2048, 512],<br>hop_lengths: List[int] = [256, 512, 128],<br>win_lengths: List[int] = [1024, 2048, 512],<br>**kwargs)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class MultiScaleSTFTDiscriminator(MultiDiscriminator):
+    &#34;&#34;&#34;Multi-Scale STFT (MS-STFT) discriminator.
+
+    Args:
+        filters (int): Number of filters in convolutions.
+        in_channels (int): Number of input channels.
+        out_channels (int): Number of output channels.
+        sep_channels (bool): Separate channels to distinct samples for stereo support.
+        n_ffts (Sequence[int]): Size of FFT for each scale.
+        hop_lengths (Sequence[int]): Length of hop between STFT windows for each scale.
+        win_lengths (Sequence[int]): Window size for each scale.
+        **kwargs: Additional args for STFTDiscriminator.
+    &#34;&#34;&#34;
+    def __init__(self, filters: int, in_channels: int = 1, out_channels: int = 1, sep_channels: bool = False,
+                 n_ffts: tp.List[int] = [1024, 2048, 512], hop_lengths: tp.List[int] = [256, 512, 128],
+                 win_lengths: tp.List[int] = [1024, 2048, 512], **kwargs):
+        super().__init__()
+        assert len(n_ffts) == len(hop_lengths) == len(win_lengths)
+        self.sep_channels = sep_channels
+        self.discriminators = nn.ModuleList([
+            DiscriminatorSTFT(filters, in_channels=in_channels, out_channels=out_channels,
+                              n_fft=n_ffts[i], win_length=win_lengths[i], hop_length=hop_lengths[i], **kwargs)
+            for i in range(len(n_ffts))
+        ])
+
+    @property
+    def num_discriminators(self):
+        return len(self.discriminators)
+
+    def _separate_channels(self, x: torch.Tensor) -&gt; torch.Tensor:
+        B, C, T = x.shape
+        return x.view(-1, 1, T)
+
+    def forward(self, x: torch.Tensor) -&gt; MultiDiscriminatorOutputType:
+        logits = []
+        fmaps = []
+        for disc in self.discriminators:
+            logit, fmap = disc(x)
+            logits.append(logit)
+            fmaps.append(fmap)
+        return logits, fmaps</code></pre>
+</details>
+<div class="desc"><p>Multi-Scale STFT (MS-STFT) discriminator.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>filters</code></strong> :&ensp;<code>int</code></dt>
+<dd>Number of filters in convolutions.</dd>
+<dt><strong><code>in_channels</code></strong> :&ensp;<code>int</code></dt>
+<dd>Number of input channels.</dd>
+<dt><strong><code>out_channels</code></strong> :&ensp;<code>int</code></dt>
+<dd>Number of output channels.</dd>
+<dt><strong><code>sep_channels</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Separate channels to distinct samples for stereo support.</dd>
+<dt><strong><code>n_ffts</code></strong> :&ensp;<code>Sequence[int]</code></dt>
+<dd>Size of FFT for each scale.</dd>
+<dt><strong><code>hop_lengths</code></strong> :&ensp;<code>Sequence[int]</code></dt>
+<dd>Length of hop between STFT windows for each scale.</dd>
+<dt><strong><code>win_lengths</code></strong> :&ensp;<code>Sequence[int]</code></dt>
+<dd>Window size for each scale.</dd>
+<dt><strong><code>**kwargs</code></strong></dt>
+<dd>Additional args for STFTDiscriminator.</dd>
+</dl></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="audiocraft.adversarial.discriminators.base.MultiDiscriminator" href="base.html#audiocraft.adversarial.discriminators.base.MultiDiscriminator">MultiDiscriminator</a></li>
+<li>abc.ABC</li>
+<li>torch.nn.modules.module.Module</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="audiocraft.adversarial.discriminators.msstftd.MultiScaleSTFTDiscriminator.call_super_init"><code class="name">var <span class="ident">call_super_init</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.adversarial.discriminators.msstftd.MultiScaleSTFTDiscriminator.dump_patches"><code class="name">var <span class="ident">dump_patches</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.adversarial.discriminators.msstftd.MultiScaleSTFTDiscriminator.training"><code class="name">var <span class="ident">training</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="audiocraft.adversarial.discriminators.base.MultiDiscriminator" href="base.html#audiocraft.adversarial.discriminators.base.MultiDiscriminator">MultiDiscriminator</a></b></code>:
+<ul class="hlist">
+<li><code><a title="audiocraft.adversarial.discriminators.base.MultiDiscriminator.forward" href="base.html#audiocraft.adversarial.discriminators.base.MultiDiscriminator.forward">forward</a></code></li>
+<li><code><a title="audiocraft.adversarial.discriminators.base.MultiDiscriminator.num_discriminators" href="base.html#audiocraft.adversarial.discriminators.base.MultiDiscriminator.num_discriminators">num_discriminators</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="audiocraft.adversarial.discriminators" href="index.html">audiocraft.adversarial.discriminators</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="audiocraft.adversarial.discriminators.msstftd.get_2d_padding" href="#audiocraft.adversarial.discriminators.msstftd.get_2d_padding">get_2d_padding</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="audiocraft.adversarial.discriminators.msstftd.DiscriminatorSTFT" href="#audiocraft.adversarial.discriminators.msstftd.DiscriminatorSTFT">DiscriminatorSTFT</a></code></h4>
+<ul class="">
+<li><code><a title="audiocraft.adversarial.discriminators.msstftd.DiscriminatorSTFT.call_super_init" href="#audiocraft.adversarial.discriminators.msstftd.DiscriminatorSTFT.call_super_init">call_super_init</a></code></li>
+<li><code><a title="audiocraft.adversarial.discriminators.msstftd.DiscriminatorSTFT.dump_patches" href="#audiocraft.adversarial.discriminators.msstftd.DiscriminatorSTFT.dump_patches">dump_patches</a></code></li>
+<li><code><a title="audiocraft.adversarial.discriminators.msstftd.DiscriminatorSTFT.forward" href="#audiocraft.adversarial.discriminators.msstftd.DiscriminatorSTFT.forward">forward</a></code></li>
+<li><code><a title="audiocraft.adversarial.discriminators.msstftd.DiscriminatorSTFT.training" href="#audiocraft.adversarial.discriminators.msstftd.DiscriminatorSTFT.training">training</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="audiocraft.adversarial.discriminators.msstftd.MultiScaleSTFTDiscriminator" href="#audiocraft.adversarial.discriminators.msstftd.MultiScaleSTFTDiscriminator">MultiScaleSTFTDiscriminator</a></code></h4>
+<ul class="">
+<li><code><a title="audiocraft.adversarial.discriminators.msstftd.MultiScaleSTFTDiscriminator.call_super_init" href="#audiocraft.adversarial.discriminators.msstftd.MultiScaleSTFTDiscriminator.call_super_init">call_super_init</a></code></li>
+<li><code><a title="audiocraft.adversarial.discriminators.msstftd.MultiScaleSTFTDiscriminator.dump_patches" href="#audiocraft.adversarial.discriminators.msstftd.MultiScaleSTFTDiscriminator.dump_patches">dump_patches</a></code></li>
+<li><code><a title="audiocraft.adversarial.discriminators.msstftd.MultiScaleSTFTDiscriminator.training" href="#audiocraft.adversarial.discriminators.msstftd.MultiScaleSTFTDiscriminator.training">training</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.5</a>.</p>
+</footer>
+</body>
+</html>

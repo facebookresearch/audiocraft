@@ -1,0 +1,799 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.5">
+<title>audiocraft.models.unet API documentation</title>
+<meta name="description" content="Pytorch Unet Module used for diffusion.">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>audiocraft.models.unet</code></h1>
+</header>
+<section id="section-intro">
+<p>Pytorch Unet Module used for diffusion.</p>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="audiocraft.models.unet.get_model"><code class="name flex">
+<span>def <span class="ident">get_model</span></span>(<span>cfg, channels: int, side: int, num_steps: int)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_model(cfg, channels: int, side: int, num_steps: int):
+    if cfg.model == &#39;unet&#39;:
+        return DiffusionUnet(
+            chin=channels, num_steps=num_steps, **cfg.diffusion_unet)
+    else:
+        raise RuntimeError(&#39;Not Implemented&#39;)</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="audiocraft.models.unet.BLSTM"><code class="flex name class">
+<span>class <span class="ident">BLSTM</span></span>
+<span>(</span><span>dim, layers=2)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class BLSTM(nn.Module):
+    &#34;&#34;&#34;BiLSTM with same hidden units as input dim.
+    &#34;&#34;&#34;
+    def __init__(self, dim, layers=2):
+        super().__init__()
+        self.lstm = nn.LSTM(bidirectional=True, num_layers=layers, hidden_size=dim, input_size=dim)
+        self.linear = nn.Linear(2 * dim, dim)
+
+    def forward(self, x):
+        x = x.permute(2, 0, 1)
+        x = self.lstm(x)[0]
+        x = self.linear(x)
+        x = x.permute(1, 2, 0)
+        return x</code></pre>
+</details>
+<div class="desc"><p>BiLSTM with same hidden units as input dim.</p>
+<p>Initializes internal Module state, shared by both nn.Module and ScriptModule.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>torch.nn.modules.module.Module</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="audiocraft.models.unet.BLSTM.call_super_init"><code class="name">var <span class="ident">call_super_init</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.models.unet.BLSTM.dump_patches"><code class="name">var <span class="ident">dump_patches</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.models.unet.BLSTM.training"><code class="name">var <span class="ident">training</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="audiocraft.models.unet.BLSTM.forward"><code class="name flex">
+<span>def <span class="ident">forward</span></span>(<span>self, x) ‑> Callable[..., Any]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def forward(self, x):
+    x = x.permute(2, 0, 1)
+    x = self.lstm(x)[0]
+    x = self.linear(x)
+    x = x.permute(1, 2, 0)
+    return x</code></pre>
+</details>
+<div class="desc"><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the :class:<code>Module</code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div></div>
+</dd>
+</dl>
+</dd>
+<dt id="audiocraft.models.unet.DecoderLayer"><code class="flex name class">
+<span>class <span class="ident">DecoderLayer</span></span>
+<span>(</span><span>chin: int,<br>chout: int,<br>kernel: int = 4,<br>stride: int = 2,<br>norm_groups: int = 4,<br>res_blocks: int = 1,<br>activation: Type[torch.nn.modules.module.Module] = torch.nn.modules.activation.ReLU,<br>dropout: float = 0.0)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class DecoderLayer(nn.Module):
+    def __init__(self, chin: int, chout: int, kernel: int = 4, stride: int = 2,
+                 norm_groups: int = 4, res_blocks: int = 1, activation: tp.Type[nn.Module] = nn.ReLU,
+                 dropout: float = 0.):
+        super().__init__()
+        padding = (kernel - stride) // 2
+        self.res_blocks = nn.Sequential(
+            *[ResBlock(chin, norm_groups=norm_groups, dilation=2**idx, dropout=dropout)
+              for idx in range(res_blocks)])
+        self.norm = nn.GroupNorm(norm_groups, chin)
+        ConvTr = nn.ConvTranspose1d
+        self.convtr = ConvTr(chin, chout, kernel, stride, padding, bias=False)
+        self.activation = activation()
+
+    def forward(self, x: torch.Tensor) -&gt; torch.Tensor:
+        x = self.res_blocks(x)
+        x = self.norm(x)
+        x = self.activation(x)
+        x = self.convtr(x)
+        return x</code></pre>
+</details>
+<div class="desc"><p>Base class for all neural network modules.</p>
+<p>Your models should also subclass this class.</p>
+<p>Modules can also contain other Modules, allowing to nest them in
+a tree structure. You can assign the submodules as regular attributes::</p>
+<pre><code>import torch.nn as nn
+import torch.nn.functional as F
+
+class Model(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.conv1 = nn.Conv2d(1, 20, 5)
+        self.conv2 = nn.Conv2d(20, 20, 5)
+
+    def forward(self, x):
+        x = F.relu(self.conv1(x))
+        return F.relu(self.conv2(x))
+</code></pre>
+<p>Submodules assigned in this way will be registered, and will have their
+parameters converted too when you call :meth:<code>to</code>, etc.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>As per the example above, an <code>__init__()</code> call to the parent class
+must be made before assignment on the child.</p>
+</div>
+<p>:ivar training: Boolean represents whether this module is in training or
+evaluation mode.
+:vartype training: bool</p>
+<p>Initializes internal Module state, shared by both nn.Module and ScriptModule.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>torch.nn.modules.module.Module</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="audiocraft.models.unet.DecoderLayer.call_super_init"><code class="name">var <span class="ident">call_super_init</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.models.unet.DecoderLayer.dump_patches"><code class="name">var <span class="ident">dump_patches</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.models.unet.DecoderLayer.training"><code class="name">var <span class="ident">training</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="audiocraft.models.unet.DecoderLayer.forward"><code class="name flex">
+<span>def <span class="ident">forward</span></span>(<span>self, x: torch.Tensor) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def forward(self, x: torch.Tensor) -&gt; torch.Tensor:
+    x = self.res_blocks(x)
+    x = self.norm(x)
+    x = self.activation(x)
+    x = self.convtr(x)
+    return x</code></pre>
+</details>
+<div class="desc"><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the :class:<code>Module</code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div></div>
+</dd>
+</dl>
+</dd>
+<dt id="audiocraft.models.unet.DiffusionUnet"><code class="flex name class">
+<span>class <span class="ident">DiffusionUnet</span></span>
+<span>(</span><span>chin: int = 3,<br>hidden: int = 24,<br>depth: int = 3,<br>growth: float = 2.0,<br>max_channels: int = 10000,<br>num_steps: int = 1000,<br>emb_all_layers=False,<br>cross_attention: bool = False,<br>bilstm: bool = False,<br>transformer: bool = False,<br>codec_dim: int | None = None,<br>**kwargs)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class DiffusionUnet(nn.Module):
+    def __init__(self, chin: int = 3, hidden: int = 24, depth: int = 3, growth: float = 2.,
+                 max_channels: int = 10_000, num_steps: int = 1000, emb_all_layers=False, cross_attention: bool = False,
+                 bilstm: bool = False, transformer: bool = False,
+                 codec_dim: tp.Optional[int] = None, **kwargs):
+        super().__init__()
+        self.encoders = nn.ModuleList()
+        self.decoders = nn.ModuleList()
+        self.embeddings: tp.Optional[nn.ModuleList] = None
+        self.embedding = nn.Embedding(num_steps, hidden)
+        if emb_all_layers:
+            self.embeddings = nn.ModuleList()
+        self.condition_embedding: tp.Optional[nn.Module] = None
+        for d in range(depth):
+            encoder = EncoderLayer(chin, hidden, **kwargs)
+            decoder = DecoderLayer(hidden, chin, **kwargs)
+            self.encoders.append(encoder)
+            self.decoders.insert(0, decoder)
+            if emb_all_layers and d &gt; 0:
+                assert self.embeddings is not None
+                self.embeddings.append(nn.Embedding(num_steps, hidden))
+            chin = hidden
+            hidden = min(int(chin * growth), max_channels)
+        self.bilstm: tp.Optional[nn.Module]
+        if bilstm:
+            self.bilstm = BLSTM(chin)
+        else:
+            self.bilstm = None
+        self.use_transformer = transformer
+        self.cross_attention = False
+        if transformer:
+            self.cross_attention = cross_attention
+            self.transformer = StreamingTransformer(chin, 8, 6, bias_ff=False, bias_attn=False,
+                                                    cross_attention=cross_attention)
+
+        self.use_codec = False
+        if codec_dim is not None:
+            self.conv_codec = nn.Conv1d(codec_dim, chin, 1)
+            self.use_codec = True
+
+    def forward(self, x: torch.Tensor, step: tp.Union[int, torch.Tensor], condition: tp.Optional[torch.Tensor] = None):
+        skips = []
+        bs = x.size(0)
+        z = x
+        view_args = [1]
+        if type(step) is torch.Tensor:
+            step_tensor = step
+        else:
+            step_tensor = torch.tensor([step], device=x.device, dtype=torch.long).expand(bs)
+
+        for idx, encoder in enumerate(self.encoders):
+            z = encoder(z)
+            if idx == 0:
+                z = z + self.embedding(step_tensor).view(bs, -1, *view_args).expand_as(z)
+            elif self.embeddings is not None:
+                z = z + self.embeddings[idx - 1](step_tensor).view(bs, -1, *view_args).expand_as(z)
+
+            skips.append(z)
+
+        if self.use_codec:  # insert condition in the bottleneck
+            assert condition is not None, &#34;Model defined for conditionnal generation&#34;
+            condition_emb = self.conv_codec(condition)  # reshape to the bottleneck dim
+            assert condition_emb.size(-1) &lt;= 2 * z.size(-1), \
+                f&#34;You are downsampling the conditionning with factor &gt;=2 : {condition_emb.size(-1)=} and {z.size(-1)=}&#34;
+            if not self.cross_attention:
+
+                condition_emb = torch.nn.functional.interpolate(condition_emb, z.size(-1))
+                assert z.size() == condition_emb.size()
+                z += condition_emb
+                cross_attention_src = None
+            else:
+                cross_attention_src = condition_emb.permute(0, 2, 1)  # B, T, C
+                B, T, C = cross_attention_src.shape
+                positions = torch.arange(T, device=x.device).view(1, -1, 1)
+                pos_emb = create_sin_embedding(positions, C, max_period=10_000, dtype=cross_attention_src.dtype)
+                cross_attention_src = cross_attention_src + pos_emb
+        if self.use_transformer:
+            z = self.transformer(z.permute(0, 2, 1), cross_attention_src=cross_attention_src).permute(0, 2, 1)
+        else:
+            if self.bilstm is None:
+                z = torch.zeros_like(z)
+            else:
+                z = self.bilstm(z)
+
+        for decoder in self.decoders:
+            s = skips.pop(-1)
+            z = z[:, :, :s.shape[2]]
+            z = z + s
+            z = decoder(z)
+
+        z = z[:, :, :x.shape[2]]
+        return Output(z)</code></pre>
+</details>
+<div class="desc"><p>Base class for all neural network modules.</p>
+<p>Your models should also subclass this class.</p>
+<p>Modules can also contain other Modules, allowing to nest them in
+a tree structure. You can assign the submodules as regular attributes::</p>
+<pre><code>import torch.nn as nn
+import torch.nn.functional as F
+
+class Model(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.conv1 = nn.Conv2d(1, 20, 5)
+        self.conv2 = nn.Conv2d(20, 20, 5)
+
+    def forward(self, x):
+        x = F.relu(self.conv1(x))
+        return F.relu(self.conv2(x))
+</code></pre>
+<p>Submodules assigned in this way will be registered, and will have their
+parameters converted too when you call :meth:<code>to</code>, etc.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>As per the example above, an <code>__init__()</code> call to the parent class
+must be made before assignment on the child.</p>
+</div>
+<p>:ivar training: Boolean represents whether this module is in training or
+evaluation mode.
+:vartype training: bool</p>
+<p>Initializes internal Module state, shared by both nn.Module and ScriptModule.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>torch.nn.modules.module.Module</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="audiocraft.models.unet.DiffusionUnet.call_super_init"><code class="name">var <span class="ident">call_super_init</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.models.unet.DiffusionUnet.dump_patches"><code class="name">var <span class="ident">dump_patches</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.models.unet.DiffusionUnet.training"><code class="name">var <span class="ident">training</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="audiocraft.models.unet.DiffusionUnet.forward"><code class="name flex">
+<span>def <span class="ident">forward</span></span>(<span>self,<br>x: torch.Tensor,<br>step: int | torch.Tensor,<br>condition: torch.Tensor | None = None) ‑> Callable[..., Any]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def forward(self, x: torch.Tensor, step: tp.Union[int, torch.Tensor], condition: tp.Optional[torch.Tensor] = None):
+    skips = []
+    bs = x.size(0)
+    z = x
+    view_args = [1]
+    if type(step) is torch.Tensor:
+        step_tensor = step
+    else:
+        step_tensor = torch.tensor([step], device=x.device, dtype=torch.long).expand(bs)
+
+    for idx, encoder in enumerate(self.encoders):
+        z = encoder(z)
+        if idx == 0:
+            z = z + self.embedding(step_tensor).view(bs, -1, *view_args).expand_as(z)
+        elif self.embeddings is not None:
+            z = z + self.embeddings[idx - 1](step_tensor).view(bs, -1, *view_args).expand_as(z)
+
+        skips.append(z)
+
+    if self.use_codec:  # insert condition in the bottleneck
+        assert condition is not None, &#34;Model defined for conditionnal generation&#34;
+        condition_emb = self.conv_codec(condition)  # reshape to the bottleneck dim
+        assert condition_emb.size(-1) &lt;= 2 * z.size(-1), \
+            f&#34;You are downsampling the conditionning with factor &gt;=2 : {condition_emb.size(-1)=} and {z.size(-1)=}&#34;
+        if not self.cross_attention:
+
+            condition_emb = torch.nn.functional.interpolate(condition_emb, z.size(-1))
+            assert z.size() == condition_emb.size()
+            z += condition_emb
+            cross_attention_src = None
+        else:
+            cross_attention_src = condition_emb.permute(0, 2, 1)  # B, T, C
+            B, T, C = cross_attention_src.shape
+            positions = torch.arange(T, device=x.device).view(1, -1, 1)
+            pos_emb = create_sin_embedding(positions, C, max_period=10_000, dtype=cross_attention_src.dtype)
+            cross_attention_src = cross_attention_src + pos_emb
+    if self.use_transformer:
+        z = self.transformer(z.permute(0, 2, 1), cross_attention_src=cross_attention_src).permute(0, 2, 1)
+    else:
+        if self.bilstm is None:
+            z = torch.zeros_like(z)
+        else:
+            z = self.bilstm(z)
+
+    for decoder in self.decoders:
+        s = skips.pop(-1)
+        z = z[:, :, :s.shape[2]]
+        z = z + s
+        z = decoder(z)
+
+    z = z[:, :, :x.shape[2]]
+    return Output(z)</code></pre>
+</details>
+<div class="desc"><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the :class:<code>Module</code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div></div>
+</dd>
+</dl>
+</dd>
+<dt id="audiocraft.models.unet.EncoderLayer"><code class="flex name class">
+<span>class <span class="ident">EncoderLayer</span></span>
+<span>(</span><span>chin: int,<br>chout: int,<br>kernel: int = 4,<br>stride: int = 2,<br>norm_groups: int = 4,<br>res_blocks: int = 1,<br>activation: Type[torch.nn.modules.module.Module] = torch.nn.modules.activation.ReLU,<br>dropout: float = 0.0)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class EncoderLayer(nn.Module):
+    def __init__(self, chin: int, chout: int, kernel: int = 4, stride: int = 2,
+                 norm_groups: int = 4, res_blocks: int = 1, activation: tp.Type[nn.Module] = nn.ReLU,
+                 dropout: float = 0.):
+        super().__init__()
+        padding = (kernel - stride) // 2
+        Conv = nn.Conv1d
+        self.conv = Conv(chin, chout, kernel, stride, padding, bias=False)
+        self.norm = nn.GroupNorm(norm_groups, chout)
+        self.activation = activation()
+        self.res_blocks = nn.Sequential(
+            *[ResBlock(chout, norm_groups=norm_groups, dilation=2**idx, dropout=dropout)
+              for idx in range(res_blocks)])
+
+    def forward(self, x: torch.Tensor) -&gt; torch.Tensor:
+        B, C, T = x.shape
+        stride, = self.conv.stride
+        pad = (stride - (T % stride)) % stride
+        x = F.pad(x, (0, pad))
+
+        x = self.conv(x)
+        x = self.norm(x)
+        x = self.activation(x)
+        x = self.res_blocks(x)
+        return x</code></pre>
+</details>
+<div class="desc"><p>Base class for all neural network modules.</p>
+<p>Your models should also subclass this class.</p>
+<p>Modules can also contain other Modules, allowing to nest them in
+a tree structure. You can assign the submodules as regular attributes::</p>
+<pre><code>import torch.nn as nn
+import torch.nn.functional as F
+
+class Model(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.conv1 = nn.Conv2d(1, 20, 5)
+        self.conv2 = nn.Conv2d(20, 20, 5)
+
+    def forward(self, x):
+        x = F.relu(self.conv1(x))
+        return F.relu(self.conv2(x))
+</code></pre>
+<p>Submodules assigned in this way will be registered, and will have their
+parameters converted too when you call :meth:<code>to</code>, etc.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>As per the example above, an <code>__init__()</code> call to the parent class
+must be made before assignment on the child.</p>
+</div>
+<p>:ivar training: Boolean represents whether this module is in training or
+evaluation mode.
+:vartype training: bool</p>
+<p>Initializes internal Module state, shared by both nn.Module and ScriptModule.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>torch.nn.modules.module.Module</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="audiocraft.models.unet.EncoderLayer.call_super_init"><code class="name">var <span class="ident">call_super_init</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.models.unet.EncoderLayer.dump_patches"><code class="name">var <span class="ident">dump_patches</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.models.unet.EncoderLayer.training"><code class="name">var <span class="ident">training</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="audiocraft.models.unet.EncoderLayer.forward"><code class="name flex">
+<span>def <span class="ident">forward</span></span>(<span>self, x: torch.Tensor) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def forward(self, x: torch.Tensor) -&gt; torch.Tensor:
+    B, C, T = x.shape
+    stride, = self.conv.stride
+    pad = (stride - (T % stride)) % stride
+    x = F.pad(x, (0, pad))
+
+    x = self.conv(x)
+    x = self.norm(x)
+    x = self.activation(x)
+    x = self.res_blocks(x)
+    return x</code></pre>
+</details>
+<div class="desc"><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the :class:<code>Module</code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div></div>
+</dd>
+</dl>
+</dd>
+<dt id="audiocraft.models.unet.Output"><code class="flex name class">
+<span>class <span class="ident">Output</span></span>
+<span>(</span><span>sample: torch.Tensor)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass
+class Output:
+    sample: torch.Tensor</code></pre>
+</details>
+<div class="desc"><p>Output(sample: torch.Tensor)</p></div>
+<h3>Class variables</h3>
+<dl>
+<dt id="audiocraft.models.unet.Output.sample"><code class="name">var <span class="ident">sample</span> : torch.Tensor</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="audiocraft.models.unet.ResBlock"><code class="flex name class">
+<span>class <span class="ident">ResBlock</span></span>
+<span>(</span><span>channels: int,<br>kernel: int = 3,<br>norm_groups: int = 4,<br>dilation: int = 1,<br>activation: Type[torch.nn.modules.module.Module] = torch.nn.modules.activation.ReLU,<br>dropout: float = 0.0)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ResBlock(nn.Module):
+    def __init__(self, channels: int, kernel: int = 3, norm_groups: int = 4,
+                 dilation: int = 1, activation: tp.Type[nn.Module] = nn.ReLU,
+                 dropout: float = 0.):
+        super().__init__()
+        stride = 1
+        padding = dilation * (kernel - stride) // 2
+        Conv = nn.Conv1d
+        Drop = nn.Dropout1d
+        self.norm1 = nn.GroupNorm(norm_groups, channels)
+        self.conv1 = Conv(channels, channels, kernel, 1, padding, dilation=dilation)
+        self.activation1 = activation()
+        self.dropout1 = Drop(dropout)
+
+        self.norm2 = nn.GroupNorm(norm_groups, channels)
+        self.conv2 = Conv(channels, channels, kernel, 1, padding, dilation=dilation)
+        self.activation2 = activation()
+        self.dropout2 = Drop(dropout)
+
+    def forward(self, x):
+        h = self.dropout1(self.conv1(self.activation1(self.norm1(x))))
+        h = self.dropout2(self.conv2(self.activation2(self.norm2(h))))
+        return x + h</code></pre>
+</details>
+<div class="desc"><p>Base class for all neural network modules.</p>
+<p>Your models should also subclass this class.</p>
+<p>Modules can also contain other Modules, allowing to nest them in
+a tree structure. You can assign the submodules as regular attributes::</p>
+<pre><code>import torch.nn as nn
+import torch.nn.functional as F
+
+class Model(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.conv1 = nn.Conv2d(1, 20, 5)
+        self.conv2 = nn.Conv2d(20, 20, 5)
+
+    def forward(self, x):
+        x = F.relu(self.conv1(x))
+        return F.relu(self.conv2(x))
+</code></pre>
+<p>Submodules assigned in this way will be registered, and will have their
+parameters converted too when you call :meth:<code>to</code>, etc.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>As per the example above, an <code>__init__()</code> call to the parent class
+must be made before assignment on the child.</p>
+</div>
+<p>:ivar training: Boolean represents whether this module is in training or
+evaluation mode.
+:vartype training: bool</p>
+<p>Initializes internal Module state, shared by both nn.Module and ScriptModule.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>torch.nn.modules.module.Module</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="audiocraft.models.unet.ResBlock.call_super_init"><code class="name">var <span class="ident">call_super_init</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.models.unet.ResBlock.dump_patches"><code class="name">var <span class="ident">dump_patches</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.models.unet.ResBlock.training"><code class="name">var <span class="ident">training</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="audiocraft.models.unet.ResBlock.forward"><code class="name flex">
+<span>def <span class="ident">forward</span></span>(<span>self, x) ‑> Callable[..., Any]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def forward(self, x):
+    h = self.dropout1(self.conv1(self.activation1(self.norm1(x))))
+    h = self.dropout2(self.conv2(self.activation2(self.norm2(h))))
+    return x + h</code></pre>
+</details>
+<div class="desc"><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the :class:<code>Module</code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="audiocraft.models" href="index.html">audiocraft.models</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="audiocraft.models.unet.get_model" href="#audiocraft.models.unet.get_model">get_model</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="audiocraft.models.unet.BLSTM" href="#audiocraft.models.unet.BLSTM">BLSTM</a></code></h4>
+<ul class="">
+<li><code><a title="audiocraft.models.unet.BLSTM.call_super_init" href="#audiocraft.models.unet.BLSTM.call_super_init">call_super_init</a></code></li>
+<li><code><a title="audiocraft.models.unet.BLSTM.dump_patches" href="#audiocraft.models.unet.BLSTM.dump_patches">dump_patches</a></code></li>
+<li><code><a title="audiocraft.models.unet.BLSTM.forward" href="#audiocraft.models.unet.BLSTM.forward">forward</a></code></li>
+<li><code><a title="audiocraft.models.unet.BLSTM.training" href="#audiocraft.models.unet.BLSTM.training">training</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="audiocraft.models.unet.DecoderLayer" href="#audiocraft.models.unet.DecoderLayer">DecoderLayer</a></code></h4>
+<ul class="">
+<li><code><a title="audiocraft.models.unet.DecoderLayer.call_super_init" href="#audiocraft.models.unet.DecoderLayer.call_super_init">call_super_init</a></code></li>
+<li><code><a title="audiocraft.models.unet.DecoderLayer.dump_patches" href="#audiocraft.models.unet.DecoderLayer.dump_patches">dump_patches</a></code></li>
+<li><code><a title="audiocraft.models.unet.DecoderLayer.forward" href="#audiocraft.models.unet.DecoderLayer.forward">forward</a></code></li>
+<li><code><a title="audiocraft.models.unet.DecoderLayer.training" href="#audiocraft.models.unet.DecoderLayer.training">training</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="audiocraft.models.unet.DiffusionUnet" href="#audiocraft.models.unet.DiffusionUnet">DiffusionUnet</a></code></h4>
+<ul class="">
+<li><code><a title="audiocraft.models.unet.DiffusionUnet.call_super_init" href="#audiocraft.models.unet.DiffusionUnet.call_super_init">call_super_init</a></code></li>
+<li><code><a title="audiocraft.models.unet.DiffusionUnet.dump_patches" href="#audiocraft.models.unet.DiffusionUnet.dump_patches">dump_patches</a></code></li>
+<li><code><a title="audiocraft.models.unet.DiffusionUnet.forward" href="#audiocraft.models.unet.DiffusionUnet.forward">forward</a></code></li>
+<li><code><a title="audiocraft.models.unet.DiffusionUnet.training" href="#audiocraft.models.unet.DiffusionUnet.training">training</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="audiocraft.models.unet.EncoderLayer" href="#audiocraft.models.unet.EncoderLayer">EncoderLayer</a></code></h4>
+<ul class="">
+<li><code><a title="audiocraft.models.unet.EncoderLayer.call_super_init" href="#audiocraft.models.unet.EncoderLayer.call_super_init">call_super_init</a></code></li>
+<li><code><a title="audiocraft.models.unet.EncoderLayer.dump_patches" href="#audiocraft.models.unet.EncoderLayer.dump_patches">dump_patches</a></code></li>
+<li><code><a title="audiocraft.models.unet.EncoderLayer.forward" href="#audiocraft.models.unet.EncoderLayer.forward">forward</a></code></li>
+<li><code><a title="audiocraft.models.unet.EncoderLayer.training" href="#audiocraft.models.unet.EncoderLayer.training">training</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="audiocraft.models.unet.Output" href="#audiocraft.models.unet.Output">Output</a></code></h4>
+<ul class="">
+<li><code><a title="audiocraft.models.unet.Output.sample" href="#audiocraft.models.unet.Output.sample">sample</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="audiocraft.models.unet.ResBlock" href="#audiocraft.models.unet.ResBlock">ResBlock</a></code></h4>
+<ul class="">
+<li><code><a title="audiocraft.models.unet.ResBlock.call_super_init" href="#audiocraft.models.unet.ResBlock.call_super_init">call_super_init</a></code></li>
+<li><code><a title="audiocraft.models.unet.ResBlock.dump_patches" href="#audiocraft.models.unet.ResBlock.dump_patches">dump_patches</a></code></li>
+<li><code><a title="audiocraft.models.unet.ResBlock.forward" href="#audiocraft.models.unet.ResBlock.forward">forward</a></code></li>
+<li><code><a title="audiocraft.models.unet.ResBlock.training" href="#audiocraft.models.unet.ResBlock.training">training</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.5</a>.</p>
+</footer>
+</body>
+</html>

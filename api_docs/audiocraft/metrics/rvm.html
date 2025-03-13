@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.5">
+<title>audiocraft.metrics.rvm API documentation</title>
+<meta name="description" content="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>audiocraft.metrics.rvm</code></h1>
+</header>
+<section id="section-intro">
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="audiocraft.metrics.rvm.db_to_scale"><code class="name flex">
+<span>def <span class="ident">db_to_scale</span></span>(<span>volume: float | torch.Tensor)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def db_to_scale(volume: tp.Union[float, torch.Tensor]):
+    return 10 ** (volume / 20)</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.metrics.rvm.scale_to_db"><code class="name flex">
+<span>def <span class="ident">scale_to_db</span></span>(<span>scale: torch.Tensor, min_volume: float = -120)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def scale_to_db(scale: torch.Tensor, min_volume: float = -120):
+    min_scale = db_to_scale(min_volume)
+    return 20 * torch.log10(scale.clamp(min=min_scale))</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="audiocraft.metrics.rvm.RelativeVolumeMel"><code class="flex name class">
+<span>class <span class="ident">RelativeVolumeMel</span></span>
+<span>(</span><span>sample_rate: int = 24000,<br>n_mels: int = 80,<br>n_fft: int = 512,<br>hop_length: int = 128,<br>min_relative_volume: float = -25,<br>max_relative_volume: float = 25,<br>max_initial_gain: float = 25,<br>min_activity_volume: float = -25,<br>num_aggregated_bands: int = 4)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class RelativeVolumeMel(nn.Module):
+    &#34;&#34;&#34;Relative volume melspectrogram measure.
+
+    Computes a measure of distance over two mel spectrogram that is interpretable in terms
+    of decibels. Given `x_ref` and `x_est` two waveforms of shape `[*, T]`, it will
+    first renormalize both by the ground truth of `x_ref`.
+
+    ..Warning:: This class returns the volume of the distortion at the spectrogram level,
+        e.g. low negative values reflects lower distortion levels. For a SNR (like reported
+        in the MultiBandDiffusion paper), just take `-rvm`.
+
+    Then it computes the mel spectrogram `z_ref` and `z_est` and compute volume of the difference
+    relative to the volume of `z_ref` for each time-frequency bin. It further adds some limits, e.g.
+    clamping the values between -25 and 25 dB (controlled by `min_relative_volume` and `max_relative_volume`)
+    with the goal of avoiding the loss being dominated by parts where the reference is almost silent.
+    Indeed, volumes in dB can take unbounded values both towards -oo and +oo, which can make the final
+    average metric harder to interpret. Besides, anything below -30 dB of attenuation would sound extremely
+    good (for a neural network output, although sound engineers typically aim for much lower attenuations).
+    Similarly, anything above +30 dB would just be completely missing the target, and there is no point
+    in measuring by exactly how much it missed it. -25, 25 is a more conservative range, but also more
+    in line with what neural nets currently can achieve.
+
+    For instance, a Relative Volume Mel (RVM) score of -10 dB means that on average, the delta between
+    the target and reference mel-spec is 10 dB lower than the reference mel-spec value.
+
+    The metric can be aggregated over a given frequency band in order have different insights for
+    different region of the spectrum. `num_aggregated_bands` controls the number of bands.
+
+    ..Warning:: While this function is optimized for interpretability, nothing was done to ensure it
+        is numerically stable when computing its gradient. We thus advise against using it as a training loss.
+
+    Args:
+        sample_rate (int): Sample rate of the input audio.
+        n_mels (int): Number of mel bands to use.
+        n_fft (int): Number of frequency bins for the STFT.
+        hop_length (int): Hop length of the STFT and the mel-spectrogram.
+        min_relative_volume (float): The error `z_ref - z_est` volume is given relative to
+            the volume of `z_ref`. If error is smaller than -25 dB of `z_ref`, then it is clamped.
+        max_relative_volume (float): Same as `min_relative_volume` but clamping if the error is larger than that.
+        max_initial_gain (float): When rescaling the audio at the very beginning, we will limit the gain
+            to that amount, to avoid rescaling near silence. Given in dB.
+        min_activity_volume (float): When computing the reference level from `z_ref`, will clamp low volume
+            bins to that amount. This is effectively our &#34;zero&#34; level for the reference mel-spectrogram,
+            and anything below that will be considered equally.
+        num_aggregated_bands (int): Number of bands to keep when computing the average RVM value.
+            For instance, a value of 3 would give 3 scores, roughly for low, mid and high freqs.
+    &#34;&#34;&#34;
+    def __init__(self, sample_rate: int = 24000, n_mels: int = 80, n_fft: int = 512,
+                 hop_length: int = 128, min_relative_volume: float = -25,
+                 max_relative_volume: float = 25, max_initial_gain: float = 25,
+                 min_activity_volume: float = -25,
+                 num_aggregated_bands: int = 4) -&gt; None:
+        super().__init__()
+        self.melspec = torchaudio.transforms.MelSpectrogram(
+            n_mels=n_mels, n_fft=n_fft, hop_length=hop_length,
+            normalized=True, sample_rate=sample_rate, power=2)
+        self.min_relative_volume = min_relative_volume
+        self.max_relative_volume = max_relative_volume
+        self.max_initial_gain = max_initial_gain
+        self.min_activity_volume = min_activity_volume
+        self.num_aggregated_bands = num_aggregated_bands
+
+    def forward(self, estimate: torch.Tensor, ground_truth: torch.Tensor) -&gt; tp.Dict[str, torch.Tensor]:
+        &#34;&#34;&#34;Compute RVM metric between estimate and reference samples.
+
+        Args:
+            estimate (torch.Tensor): Estimate sample.
+            ground_truth (torch.Tensor): Reference sample.
+
+        Returns:
+            dict[str, torch.Tensor]: Metrics with keys `rvm` for the overall average, and `rvm_{k}`
+            for the RVM over the k-th band (k=0..num_aggregated_bands - 1).
+        &#34;&#34;&#34;
+        min_scale = db_to_scale(-self.max_initial_gain)
+        std = ground_truth.pow(2).mean().sqrt().clamp(min=min_scale)
+        z_gt = self.melspec(ground_truth / std).sqrt()
+        z_est = self.melspec(estimate / std).sqrt()
+
+        delta = z_gt - z_est
+        ref_db = scale_to_db(z_gt, self.min_activity_volume)
+        delta_db = scale_to_db(delta.abs(), min_volume=-120)
+        relative_db = (delta_db - ref_db).clamp(self.min_relative_volume, self.max_relative_volume)
+        dims = list(range(relative_db.dim()))
+        dims.remove(dims[-2])
+        losses_per_band = relative_db.mean(dim=dims)
+        aggregated = [chunk.mean() for chunk in losses_per_band.chunk(self.num_aggregated_bands, dim=0)]
+        metrics = {f&#39;rvm_{index}&#39;: value for index, value in enumerate(aggregated)}
+        metrics[&#39;rvm&#39;] = losses_per_band.mean()
+        return metrics</code></pre>
+</details>
+<div class="desc"><p>Relative volume melspectrogram measure.</p>
+<p>Computes a measure of distance over two mel spectrogram that is interpretable in terms
+of decibels. Given <code>x_ref</code> and <code>x_est</code> two waveforms of shape <code>[*, T]</code>, it will
+first renormalize both by the ground truth of <code>x_ref</code>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning:&ensp;This class returns the volume of the distortion at the spectrogram level,</p>
+<p>e.g. low negative values reflects lower distortion levels. For a SNR (like reported
+in the MultiBandDiffusion paper), just take <code>-rvm</code>.</p>
+</div>
+<p>Then it computes the mel spectrogram <code>z_ref</code> and <code>z_est</code> and compute volume of the difference
+relative to the volume of <code>z_ref</code> for each time-frequency bin. It further adds some limits, e.g.
+clamping the values between -25 and 25 dB (controlled by <code>min_relative_volume</code> and <code>max_relative_volume</code>)
+with the goal of avoiding the loss being dominated by parts where the reference is almost silent.
+Indeed, volumes in dB can take unbounded values both towards -oo and +oo, which can make the final
+average metric harder to interpret. Besides, anything below -30 dB of attenuation would sound extremely
+good (for a neural network output, although sound engineers typically aim for much lower attenuations).
+Similarly, anything above +30 dB would just be completely missing the target, and there is no point
+in measuring by exactly how much it missed it. -25, 25 is a more conservative range, but also more
+in line with what neural nets currently can achieve.</p>
+<p>For instance, a Relative Volume Mel (RVM) score of -10 dB means that on average, the delta between
+the target and reference mel-spec is 10 dB lower than the reference mel-spec value.</p>
+<p>The metric can be aggregated over a given frequency band in order have different insights for
+different region of the spectrum. <code>num_aggregated_bands</code> controls the number of bands.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning:&ensp;While this function is optimized for interpretability, nothing was done to ensure it</p>
+<p>is numerically stable when computing its gradient. We thus advise against using it as a training loss.</p>
+</div>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>sample_rate</code></strong> :&ensp;<code>int</code></dt>
+<dd>Sample rate of the input audio.</dd>
+<dt><strong><code>n_mels</code></strong> :&ensp;<code>int</code></dt>
+<dd>Number of mel bands to use.</dd>
+<dt><strong><code>n_fft</code></strong> :&ensp;<code>int</code></dt>
+<dd>Number of frequency bins for the STFT.</dd>
+<dt><strong><code>hop_length</code></strong> :&ensp;<code>int</code></dt>
+<dd>Hop length of the STFT and the mel-spectrogram.</dd>
+<dt><strong><code>min_relative_volume</code></strong> :&ensp;<code>float</code></dt>
+<dd>The error <code>z_ref - z_est</code> volume is given relative to
+the volume of <code>z_ref</code>. If error is smaller than -25 dB of <code>z_ref</code>, then it is clamped.</dd>
+<dt><strong><code>max_relative_volume</code></strong> :&ensp;<code>float</code></dt>
+<dd>Same as <code>min_relative_volume</code> but clamping if the error is larger than that.</dd>
+<dt><strong><code>max_initial_gain</code></strong> :&ensp;<code>float</code></dt>
+<dd>When rescaling the audio at the very beginning, we will limit the gain
+to that amount, to avoid rescaling near silence. Given in dB.</dd>
+<dt><strong><code>min_activity_volume</code></strong> :&ensp;<code>float</code></dt>
+<dd>When computing the reference level from <code>z_ref</code>, will clamp low volume
+bins to that amount. This is effectively our "zero" level for the reference mel-spectrogram,
+and anything below that will be considered equally.</dd>
+<dt><strong><code>num_aggregated_bands</code></strong> :&ensp;<code>int</code></dt>
+<dd>Number of bands to keep when computing the average RVM value.
+For instance, a value of 3 would give 3 scores, roughly for low, mid and high freqs.</dd>
+</dl>
+<p>Initializes internal Module state, shared by both nn.Module and ScriptModule.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>torch.nn.modules.module.Module</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="audiocraft.metrics.rvm.RelativeVolumeMel.call_super_init"><code class="name">var <span class="ident">call_super_init</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.metrics.rvm.RelativeVolumeMel.dump_patches"><code class="name">var <span class="ident">dump_patches</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.metrics.rvm.RelativeVolumeMel.training"><code class="name">var <span class="ident">training</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="audiocraft.metrics.rvm.RelativeVolumeMel.forward"><code class="name flex">
+<span>def <span class="ident">forward</span></span>(<span>self, estimate: torch.Tensor, ground_truth: torch.Tensor) ‑> Dict[str, torch.Tensor]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def forward(self, estimate: torch.Tensor, ground_truth: torch.Tensor) -&gt; tp.Dict[str, torch.Tensor]:
+    &#34;&#34;&#34;Compute RVM metric between estimate and reference samples.
+
+    Args:
+        estimate (torch.Tensor): Estimate sample.
+        ground_truth (torch.Tensor): Reference sample.
+
+    Returns:
+        dict[str, torch.Tensor]: Metrics with keys `rvm` for the overall average, and `rvm_{k}`
+        for the RVM over the k-th band (k=0..num_aggregated_bands - 1).
+    &#34;&#34;&#34;
+    min_scale = db_to_scale(-self.max_initial_gain)
+    std = ground_truth.pow(2).mean().sqrt().clamp(min=min_scale)
+    z_gt = self.melspec(ground_truth / std).sqrt()
+    z_est = self.melspec(estimate / std).sqrt()
+
+    delta = z_gt - z_est
+    ref_db = scale_to_db(z_gt, self.min_activity_volume)
+    delta_db = scale_to_db(delta.abs(), min_volume=-120)
+    relative_db = (delta_db - ref_db).clamp(self.min_relative_volume, self.max_relative_volume)
+    dims = list(range(relative_db.dim()))
+    dims.remove(dims[-2])
+    losses_per_band = relative_db.mean(dim=dims)
+    aggregated = [chunk.mean() for chunk in losses_per_band.chunk(self.num_aggregated_bands, dim=0)]
+    metrics = {f&#39;rvm_{index}&#39;: value for index, value in enumerate(aggregated)}
+    metrics[&#39;rvm&#39;] = losses_per_band.mean()
+    return metrics</code></pre>
+</details>
+<div class="desc"><p>Compute RVM metric between estimate and reference samples.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>estimate</code></strong> :&ensp;<code>torch.Tensor</code></dt>
+<dd>Estimate sample.</dd>
+<dt><strong><code>ground_truth</code></strong> :&ensp;<code>torch.Tensor</code></dt>
+<dd>Reference sample.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>dict[str, torch.Tensor]</code></dt>
+<dd>Metrics with keys <code>rvm</code> for the overall average, and <code>rvm_{k}</code></dd>
+</dl>
+<p>for the RVM over the k-th band (k=0..num_aggregated_bands - 1).</p></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="audiocraft.metrics" href="index.html">audiocraft.metrics</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="audiocraft.metrics.rvm.db_to_scale" href="#audiocraft.metrics.rvm.db_to_scale">db_to_scale</a></code></li>
+<li><code><a title="audiocraft.metrics.rvm.scale_to_db" href="#audiocraft.metrics.rvm.scale_to_db">scale_to_db</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="audiocraft.metrics.rvm.RelativeVolumeMel" href="#audiocraft.metrics.rvm.RelativeVolumeMel">RelativeVolumeMel</a></code></h4>
+<ul class="">
+<li><code><a title="audiocraft.metrics.rvm.RelativeVolumeMel.call_super_init" href="#audiocraft.metrics.rvm.RelativeVolumeMel.call_super_init">call_super_init</a></code></li>
+<li><code><a title="audiocraft.metrics.rvm.RelativeVolumeMel.dump_patches" href="#audiocraft.metrics.rvm.RelativeVolumeMel.dump_patches">dump_patches</a></code></li>
+<li><code><a title="audiocraft.metrics.rvm.RelativeVolumeMel.forward" href="#audiocraft.metrics.rvm.RelativeVolumeMel.forward">forward</a></code></li>
+<li><code><a title="audiocraft.metrics.rvm.RelativeVolumeMel.training" href="#audiocraft.metrics.rvm.RelativeVolumeMel.training">training</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.5</a>.</p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,670 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.5">
+<title>audiocraft.models.lm_magnet API documentation</title>
+<meta name="description" content="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>audiocraft.models.lm_magnet</code></h1>
+</header>
+<section id="section-intro">
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="audiocraft.models.lm_magnet.MagnetLMModel"><code class="flex name class">
+<span>class <span class="ident">MagnetLMModel</span></span>
+<span>(</span><span>subcodes_context: int = 5,<br>compression_model_framerate: int = 50,<br>segment_duration: int = 10,<br>span_len: int = 3,<br>**kwargs)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class MagnetLMModel(LMModel):
+    &#34;&#34;&#34;Transformer-based, non-autoregressive model, operates on multiple streams of audio tokens (MAGNeT).
+    Args:
+        subcodes_context (int): The number of timesteps attended in the self-attention blocks of codebooks &gt; 0.
+                                When set to -1, attention is unrestricted and all timesteps are attended. Defaults to 5.
+        compression_model_framerate (int): frame rate of the audio tokenizer.
+        segment_duration (int): Sample length in seconds.
+        span_len (int): Determines the length of masking spans. This is the minimal length of consecutive masked tokens,
+                        for both training and inference. Defaults to 3.
+        **kwargs: Additional parameters for the LMModel.
+    &#34;&#34;&#34;
+    def __init__(self, subcodes_context: int = 5, compression_model_framerate: int = 50,
+                 segment_duration: int = 10, span_len: int = 3, **kwargs):
+        super().__init__(**kwargs)
+        self.causal = kwargs[&#39;causal&#39;]
+        self.subcodes_context = subcodes_context
+        self.span_len = span_len
+        self._build_attn_masks(compression_model_framerate=compression_model_framerate,
+                               segment_duration=segment_duration,
+                               num_heads=kwargs[&#39;num_heads&#39;],
+                               device=kwargs[&#39;device&#39;], dtype=kwargs[&#39;dtype&#39;])
+
+    def restricted_context_attn_mask(self, seq_len: int, device: torch.device, dtype: torch.dtype) -&gt; torch.Tensor:
+        &#34;&#34;&#34;Creates a restricted attention mask (local attention map) where the context
+           is determined by self.subcodes_context.
+        Args:
+            seq_len (int): token sequence length.
+            device (torch.device): device of the output tensor.
+            dtype (torch.dtype): data type of the output tensor.
+        Returns:
+            torch.Tensor: The restricted attention mask.
+        &#34;&#34;&#34;
+        # Return a context restricted non-causal att mask
+        queries_pos = torch.arange(seq_len, device=device).view(-1, 1)
+        keys_pos = torch.arange(seq_len, device=device).view(1, -1)
+
+        delta = queries_pos - keys_pos
+        valid = torch.abs(delta) &lt;= self.subcodes_context
+        return torch.where(
+            valid,
+            torch.zeros([], device=device, dtype=dtype),
+            torch.full([], float(&#39;-inf&#39;), device=device, dtype=dtype))
+
+    def _stage_attn_mask(self, stage: int, seq_len: int, num_heads: int,
+                         device: torch.device, dtype: torch.dtype) -&gt; tp.Optional[torch.Tensor]:
+        &#34;&#34;&#34;Creates a restricted attention mask given the stage (codebook index).
+        Args:
+            stage (int): The codebook index. Takes values in [0, n_q].
+            seq_len (int): Token sequence length.
+            num_heads (int): Num transformer attention heads.
+            device (torch.device): device of the output tensor.
+            dtype (torch.dtype): data type of the output tensor.
+        Returns:
+            torch.Tensor: Either a restricted attention mask or None if stage attention is unrestricted.
+        &#34;&#34;&#34;
+        sa_mask = None
+
+        if stage &gt; 0 and self.subcodes_context &gt; -1:
+            # parallel - non-causal - with restricted subcodes context
+            sa_mask = self.restricted_context_attn_mask(seq_len, device=device, dtype=dtype)
+
+        if sa_mask is not None:
+            # Repeat for each attention head
+            sa_mask = sa_mask.repeat((1, num_heads, 1, 1))
+
+            # align8 to enable memory efficient attention
+            MEMORY_EFFICIENT_ATTN_ALIGN_FACTOR = 8
+            seq_len_aligned = \
+                int(np.ceil(seq_len / MEMORY_EFFICIENT_ATTN_ALIGN_FACTOR)) * MEMORY_EFFICIENT_ATTN_ALIGN_FACTOR
+
+            sa_mask_aligned = torch.zeros((1, num_heads, seq_len_aligned, seq_len_aligned), device=device, dtype=dtype)
+            sa_mask_aligned[..., :seq_len, :seq_len] = sa_mask
+            sa_mask = sa_mask_aligned
+
+        return sa_mask
+
+    def _build_attn_masks(self, compression_model_framerate: int, segment_duration: int, num_heads: int,
+                          device: torch.device, dtype: torch.dtype):
+        &#34;&#34;&#34;Construct attention mask per stage. For each of the RVQ codebook levels in the [0, n_q] range,
+           either a local attention map or None would be stored as an entry in the self.attn_mask_per_stage list.
+        Args:
+            compression_model_framerate (int): The frame rate of the tokenizer.
+            segment_duration (int): Sample length in seconds.
+            num_heads (int): Num transformer attention heads.
+            device (torch.device): device of the output tensor.
+            dtype (torch.dtype): data type of the output tensor.
+        &#34;&#34;&#34;
+        seq_len = compression_model_framerate * segment_duration
+        self.attn_mask_per_stage = [self._stage_attn_mask(stage, seq_len, num_heads,
+                                                          device, dtype) for stage in range(self.n_q)]
+
+    @torch.no_grad()
+    def generate(self,
+                 prompt: tp.Optional[torch.Tensor] = None,
+                 conditions: tp.List[ConditioningAttributes] = [],
+                 num_samples: tp.Optional[int] = None,
+                 max_gen_len: int = 256,
+                 use_sampling: bool = True,
+                 temp: float = 1.0,
+                 top_k: int = 250,
+                 top_p: float = 0.0,
+                 cfg_coef: tp.Optional[float] = None,
+                 cfg_coef_beta: tp.Optional[float] = None,
+                 two_step_cfg: tp.Optional[bool] = None,
+                 remove_prompts: bool = False,
+                 check: bool = False,
+                 callback: tp.Optional[tp.Callable[[int, int], None]] = None,
+                 **kwargs) -&gt; torch.Tensor:
+
+        assert cfg_coef is None, &#34;Unsupported in MAGNeT. Use max_cfg_coef,min_cfg_coef instead.&#34;
+        assert two_step_cfg is None, &#34;MAGNeT currently doesn&#39;t support two step classifier-free-guidance.&#34;
+        assert remove_prompts is False, &#34;MAGNeT currently doesn&#39;t support the remove_prompts arg.&#34;
+        assert check is False, &#34;MAGNeT currently doesn&#39;t support the check arg.&#34;
+        assert cfg_coef_beta is None, &#34;MAGNeT currently doesn&#39;t support the cfg_coef_beta arg.&#34;
+        # Call the MAGNeT-specific generation method
+        return self._generate_magnet(prompt=prompt,
+                                     conditions=conditions,
+                                     num_samples=num_samples,
+                                     max_gen_len=max_gen_len,
+                                     use_sampling=use_sampling,
+                                     temp=temp,
+                                     top_k=top_k,
+                                     top_p=top_p,
+                                     callback=callback, **kwargs)
+
+    @torch.no_grad()
+    def _generate_magnet(self,
+                         prompt: tp.Optional[torch.Tensor] = None,
+                         conditions: tp.List[ConditioningAttributes] = [],
+                         num_samples: tp.Optional[int] = None,
+                         max_gen_len: int = 256,
+                         use_sampling: bool = True,
+                         temp: float = 3.0,
+                         top_k: int = 0,
+                         top_p: float = 0.9,
+                         callback: tp.Optional[tp.Callable[[int, int], None]] = None,
+                         max_cfg_coef: float = 10.0,
+                         min_cfg_coef: float = 1.0,
+                         decoding_steps: tp.List[int] = [20, 10, 10, 10],
+                         anneal_temp: bool = True,
+                         span_scoring=&#39;max&#39;,
+                         span_arrangement=&#39;nonoverlap&#39;) -&gt; torch.Tensor:
+        &#34;&#34;&#34;Generate audio tokens given textual conditions, and optionally given audio prompts,
+        by running MAGNeT&#39;s iterative decoding algorithm for each of the n_q RVQ levels.
+        Args:
+            prompt (torch.Tensor): Prompt tokens of shape [B, K, T].
+            conditions (list of ConditioningAttributes): List of conditions.
+            num_samples (int): Number of samples to generate when no prompt and no conditions are given.
+            max_gen_len (int): Maximum generation length.
+            use_sampling (bool): Whether to use a sampling strategy or not.
+            temp (float): Initial sampling temperature.
+            top_k (int): k for &#34;top-k&#34; sampling.
+            top_p (float): p for &#34;top-p&#34; sampling.
+            callback (Callback): Callback function to report generation progress.
+            max_clsfg_coef (float): Initial coefficient used for classifier free guidance.
+            min_clsfg_coef (float): Final coefficient used for classifier free guidance.
+            decoding_steps (list of n_q ints): The number of iterative decoding steps,
+                                            for each of the n_q RVQ codebooks.
+            anneal_temp (bool): When set to True, softmax temperature will be linearly decayed to zero, at each stage.
+            span_scoring (str): Use the maximum probability of each span (&#39;max&#39;)
+                                or the product of probabilities (&#39;prod&#39;).
+            span_arrangement (str): Use either non-overlapping spans (&#39;nonoverlap&#39;) or overlapping spans (&#39;stride1&#39;).
+                                                in the masking scheme.
+        Returns:
+            torch.Tensor: Generated tokens.
+        &#34;&#34;&#34;
+        assert not self.training, &#34;generation shouldn&#39;t be used in training mode.&#34;
+        first_param = next(iter(self.parameters()))
+        device = first_param.device
+
+        # Checking all input shapes are consistent.
+        possible_num_samples = []
+        if num_samples is not None:
+            possible_num_samples.append(num_samples)
+        elif prompt is not None:
+            possible_num_samples.append(prompt.shape[0])
+        elif conditions:
+            possible_num_samples.append(len(conditions))
+        else:
+            possible_num_samples.append(1)
+        assert [x == possible_num_samples[0] for x in possible_num_samples], &#34;Inconsistent inputs shapes&#34;
+        num_samples = possible_num_samples[0]
+
+        # below we create set of conditions: one conditional and one unconditional
+        # to do that we merge the regular condition together with the null condition
+        # we then do 1 forward pass instead of 2.
+        cfg_conditions: tp.Optional[ConditionTensors]
+        if conditions:
+            null_conditions = ClassifierFreeGuidanceDropout(p=1.0)(conditions)
+            conditions = conditions + null_conditions
+            tokenized = self.condition_provider.tokenize(conditions)
+            cfg_conditions = self.condition_provider(tokenized)
+        else:
+            cfg_conditions = {}
+
+        if prompt is None:
+            assert num_samples &gt; 0
+            prompt = torch.zeros((num_samples, self.num_codebooks, 0), dtype=torch.long, device=device)
+
+        B, K, prompt_length = prompt.shape
+        start_offset = prompt_length
+        assert start_offset &lt; max_gen_len
+
+        mask_id = self.special_token_id
+
+        # we generate codes with a fixed sequence length
+        shape = (B, K, max_gen_len)
+
+        gen_codes = torch.full(shape, mask_id, dtype=torch.long, device=device)
+        # filling the gen_codes with the prompt if needed
+        gen_codes[..., :start_offset] = prompt
+        # create the gen_sequence with proper interleaving from the pattern: [B, K, S]
+        gen_sequence = gen_codes
+
+        curr_step = 0
+        for stage, n_steps in zip(range(self.n_q), decoding_steps):
+            gen_sequence, curr_step = self._generate_stage(gen_sequence,
+                                                           cfg_conditions,
+                                                           stage=stage,
+                                                           device=device,
+                                                           prompt_length=prompt_length,
+                                                           prompt=prompt,
+                                                           temp=temp,
+                                                           max_cfg_coef=max_cfg_coef,
+                                                           min_cfg_coef=min_cfg_coef,
+                                                           top_k=top_k,
+                                                           top_p=top_p,
+                                                           timesteps=n_steps,
+                                                           anneal_temp=anneal_temp,
+                                                           span_scoring=span_scoring,
+                                                           use_sampling=use_sampling,
+                                                           span_arrangement=span_arrangement,
+                                                           curr_step=curr_step,
+                                                           total_steps=sum(decoding_steps),
+                                                           callback=callback)
+
+        return gen_sequence
+
+    @torch.no_grad()
+    def _generate_stage(self,
+                        gen_sequence: torch.Tensor,
+                        condition_tensors: tp.Optional[ConditionTensors],
+                        stage: int,
+                        device: torch.device,
+                        prompt_length: int = 0,
+                        prompt: tp.Optional[torch.Tensor] = None,
+                        use_sampling: bool = True,
+                        temp: float = 3.0,
+                        max_cfg_coef: float = 10.0,
+                        min_cfg_coef: float = 1.0,
+                        top_k: int = 0,
+                        top_p: float = 0.0,
+                        timesteps: int = 10,
+                        anneal_temp: bool = True,
+                        span_scoring: str = &#39;max&#39;,
+                        span_arrangement: str = &#39;nonoverlap&#39;,
+                        curr_step: int = 0,
+                        total_steps: int = 0,
+                        callback: tp.Optional[tp.Callable[[int, int], None]] = None) -&gt; tp.Tuple[torch.Tensor, int]:
+        &#34;&#34;&#34;Generate audio tokens of a single RVQ level (stage), given the previously generated stages,
+           and the textual conditions.
+        Args:
+            gen_sequence (torch.Tensor): Previously generated tokens.
+            condition_tensors (tp.Optional[ConditionTensors]): pre-computed conditioning tensors.
+            stage (int): RVQ level to generate.
+            device (torch.device): device of the output tensor.
+            prompt_length (int): Temporal length of the audio prompt.
+            prompt (torch.Tensor): Prompt tokens of shape [B, K, T].
+            use_sampling (bool): Whether to use a sampling strategy or not.
+            temp (float): Initial sampling temperature.
+            max_clsfg_coef (float): Initial coefficient used for classifier free guidance.
+            min_clsfg_coef (float): Final coefficient used for classifier free guidance.
+            top_k (int): k for &#34;top-k&#34; sampling.
+            top_p (float): p for &#34;top-p&#34; sampling.
+            timesteps (int): Number of iterative decoding steps.
+            anneal_temp (bool): When set to True, softmax temperature will be linearly decayed to zero, at each stage.
+            span_scoring (str): Use the maximum probability of each span (&#39;max&#39;)
+                                or the product of probabilities (&#39;prod&#39;).
+            span_arrangement (str): Use either non-overlapping spans (&#39;nonoverlap&#39;) or overlapping spans (&#39;stride1&#39;).
+                                                in the masking scheme.
+            curr_step (int): Global iterative decoding step counter.
+            total_steps (int): Total decoding steps.
+            callback (Callback): Callback function to report generation progress.
+        Returns:
+            tuple(torch.Tensor, int): Generated tokens and the current decoding step counter.
+        &#34;&#34;&#34;
+        B, K, T = gen_sequence.shape
+        shape = (B, 1, T)  # generating a single codebook per stage
+
+        mask_id = self.special_token_id
+        stage_gen_seq = torch.full(shape, mask_id, dtype=torch.long, device=device)
+
+        assert span_arrangement == &#39;nonoverlap&#39; or span_arrangement == &#39;stride1&#39;
+        chunk_masking = self.span_len &gt; 1 and span_arrangement == &#39;nonoverlap&#39;
+
+        DONT_REMASK_ME_SCORE = -1e4
+
+        model = self if self._fsdp is None else self._fsdp
+
+        if chunk_masking:
+            # span-wise scores
+            n_chunks = T // self.span_len
+            if T % self.span_len != 0:
+                # trim sequence ending to achieve a multiple of span_len
+                T = self.span_len * n_chunks
+                gen_sequence = gen_sequence[..., :T]
+                stage_gen_seq = stage_gen_seq[..., :T]
+
+            chunked_shape = (B, 1, n_chunks)
+            n_prompt_chunks = prompt_length // self.span_len
+            scores = torch.zeros(chunked_shape, dtype=torch.float32, device=device)
+            scores[..., :n_prompt_chunks] = DONT_REMASK_ME_SCORE
+            num_chunks_to_gen = n_chunks - n_prompt_chunks
+        else:
+            # token-wise scores
+            scores = torch.zeros(shape, dtype=torch.float32, device=device)
+            scores[..., :prompt_length] = DONT_REMASK_ME_SCORE
+            gen_T = T - prompt_length
+
+        # run MAGNeT iterative decoding for &#34;timesteps&#34; iterations
+        for timestep, steps_left in zip(torch.linspace(0, 1, timesteps, device=device), reversed(range(timesteps))):
+
+            mask_p = torch.cos(timestep * math.pi * 0.5)
+
+            if chunk_masking:
+                num_masked = max(int((mask_p * num_chunks_to_gen).item()), 1)
+            else:
+                num_masked = max(int((mask_p * gen_T).item()), 1)
+
+            # masking
+            run_lps_masking = (span_arrangement == &#39;stride1&#39;) and self.span_len &gt; 1
+            if run_lps_masking:
+                # masking of the k least probable overlapping (stride 1) spans
+                mask = torch.concat((
+                    [self._least_probable_span_masking(scores[[i], :, :], num_masked).to(device)
+                     for i in range(B)]), dim=0)
+                stage_gen_seq[mask] = mask_id
+            else:
+                # masking of the k least probable non-overlapping spans
+                masked = scores.topk(num_masked, dim=-1).indices
+                if chunk_masking:
+                    chunks_mask = torch.full(chunked_shape, False, dtype=torch.bool, device=device)
+                    chunks_mask = chunks_mask.scatter(2, masked, True)
+                    mask = torch.repeat_interleave(chunks_mask, self.span_len, dim=-1)
+                    stage_gen_seq[mask] = mask_id
+                else:
+                    stage_gen_seq = stage_gen_seq.scatter(2, masked, mask_id)
+
+            if prompt is not None:
+                stage_gen_seq[..., :prompt_length] = prompt[:, stage, :].unsqueeze(1)
+
+            gen_sequence[:, [stage], :] = stage_gen_seq
+            if condition_tensors:
+                # duplicate input for classifier free guidance
+                sequence = torch.cat([gen_sequence, gen_sequence], dim=0)
+
+            all_logits = model(sequence, [], condition_tensors, stage=stage)
+
+            if condition_tensors:
+                # classifier free guidance with annealing
+                cond_logits, uncond_logits = all_logits.split(B, dim=0)  # [B, K, T, card]
+                clsfg_coef = float(mask_p) * max_cfg_coef + (1 - float(mask_p)) * min_cfg_coef
+                logits = uncond_logits + (cond_logits - uncond_logits) * clsfg_coef
+            else:
+                logits = all_logits
+
+            # temperature annealing - linear
+            t = temp * (steps_left / timesteps) if anneal_temp else temp
+
+            # sampling
+            logits = logits[:, stage, :, :].unsqueeze(1)
+            probs = torch.softmax(logits / max(t, 1e-2), dim=-1)
+            if use_sampling:
+                if top_p &gt; 0.0:
+                    sampled_tokens = utils.sample_top_p(probs, p=top_p)
+                elif top_k &gt; 0:
+                    sampled_tokens = utils.sample_top_k(probs, k=top_k)
+                else:
+                    sampled_tokens = utils.multinomial(probs, num_samples=1)
+            else:
+                sampled_tokens = torch.argmax(logits, dim=-1, keepdim=True)
+
+            # place mask_id token in each of the masked positions
+            mask = stage_gen_seq == mask_id
+            stage_gen_seq = torch.where(mask, sampled_tokens[..., 0], stage_gen_seq)
+            gen_sequence[:, [stage], :] = stage_gen_seq
+
+            # get probs of sampled tokens
+            sampled_probs = torch.gather(probs, 3, sampled_tokens)[..., 0]
+
+            # span scoring
+            if chunk_masking:
+                if span_scoring == &#39;max&#39;:
+                    # max in linear space
+                    scores = 1 - torch.max(sampled_probs.reshape((B, 1, n_chunks, -1)), dim=-1)[0]
+                elif span_scoring == &#39;prod&#39;:
+                    # prod in log space
+                    scores = torch.sum(-torch.log(sampled_probs).reshape((B, 1, n_chunks, -1)), dim=-1)
+                else:
+                    raise NotImplementedError
+            else:
+                # prod in log space for lps masking (stride1)
+                scores = -torch.log(sampled_probs)
+
+            # Fix unmasked tokens by placing inf probs (-inf scores)
+            if chunk_masking:
+                scores = scores.masked_fill(~chunks_mask, DONT_REMASK_ME_SCORE)
+            else:
+                scores = scores.masked_fill(~mask, DONT_REMASK_ME_SCORE)
+
+            if callback is not None:
+                curr_step += 1
+                callback(curr_step, total_steps)
+
+        return gen_sequence, curr_step
+
+    def _construct_spans_mask(self, span_starts: torch.Tensor, T: int, device: torch.device) -&gt; torch.Tensor:
+        &#34;&#34;&#34;Build a [1x1xT] boolean mask consists of overlapping spans of True values, where
+           span_starts defines the initial index of each span, and the span length is
+           defined by self.span_len.
+        Args:
+            span_starts (torch.Tensor): Boolean mask determines the temporal location of each span start.
+            T (int): Sequence length.
+            device (torch.device): device of the output tensor.
+        Returns:
+            torch.Tensor: Spans mask of shape [1x1xT]
+        &#34;&#34;&#34;
+        mask = torch.full((1, 1, T), False, device=device)
+        mask[:, :, span_starts] = True
+        shifted_mask = mask.clone()
+        for _ in range(self.span_len - 1):
+            shifted_mask = torch.concat((torch.full((1, 1, 1), False, device=device), shifted_mask[:, :, :-1]), dim=-1)
+            mask = torch.logical_or(mask, shifted_mask)
+        return mask
+
+    def _least_probable_span_masking(self, scores: torch.Tensor, num_masked_trg: int) -&gt; torch.Tensor:
+        &#34;&#34;&#34;Construct a [1x1xT] boolean mask, consists of the u least probable spans,
+           where the token probability is determined by -scores, and the total
+           number of masked tokens is as closest as possible to num_masked_trg.
+           Find u using binary search.
+        Args:
+            scores (torch.Tensor): Per token score [-log(prob)]
+            num_masked_trg: int: The desired amount of tokens to be masked.
+        Returns:
+            torch.Tensor: Spans mask of shape [1x1xT]
+        &#34;&#34;&#34;
+        T = scores.shape[-1]
+        device = scores.device
+        scores_unfolded = scores.unfold(2, self.span_len, 1)
+        # Span score is the product of probs (sum in log space)
+        span_scores = scores_unfolded.sum(dim=-1)
+        spans_by_scores = torch.argsort(span_scores[0, 0], descending=True)
+
+        num_masked_trg = max(num_masked_trg, self.span_len)
+
+        # Binary search for u - the number least probable overlapping masked spans s.t.
+        # the total masking rate is the closest to num_masked_trg / T.
+        min_u = num_masked_trg // self.span_len
+        max_u = num_masked_trg - self.span_len + 1
+        mid = round(0.5 * (min_u + max_u))
+
+        if mid == min_u or mid == max_u:
+            return self._construct_spans_mask(spans_by_scores[:mid], T, device)
+
+        while mid &gt; min_u and mid &lt; max_u:
+            mask = self._construct_spans_mask(spans_by_scores[:mid], T, device)
+            n_masked = mask.sum()
+            if n_masked &gt; num_masked_trg:
+                max_u = mid
+                mid = round(0.5 * (min_u + max_u))
+            else:
+                min_u = mid
+                mid = round(0.5 * (min_u + max_u))
+
+        return mask</code></pre>
+</details>
+<div class="desc"><p>Transformer-based, non-autoregressive model, operates on multiple streams of audio tokens (MAGNeT).</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>subcodes_context</code></strong> :&ensp;<code>int</code></dt>
+<dd>The number of timesteps attended in the self-attention blocks of codebooks &gt; 0.
+When set to -1, attention is unrestricted and all timesteps are attended. Defaults to 5.</dd>
+<dt><strong><code>compression_model_framerate</code></strong> :&ensp;<code>int</code></dt>
+<dd>frame rate of the audio tokenizer.</dd>
+<dt><strong><code>segment_duration</code></strong> :&ensp;<code>int</code></dt>
+<dd>Sample length in seconds.</dd>
+<dt><strong><code>span_len</code></strong> :&ensp;<code>int</code></dt>
+<dd>Determines the length of masking spans. This is the minimal length of consecutive masked tokens,
+for both training and inference. Defaults to 3.</dd>
+<dt><strong><code>**kwargs</code></strong></dt>
+<dd>Additional parameters for the LMModel.</dd>
+</dl>
+<p>Initializes internal Module state, shared by both nn.Module and ScriptModule.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="audiocraft.models.lm.LMModel" href="lm.html#audiocraft.models.lm.LMModel">LMModel</a></li>
+<li><a title="audiocraft.modules.streaming.StreamingModule" href="../modules/streaming.html#audiocraft.modules.streaming.StreamingModule">StreamingModule</a></li>
+<li>torch.nn.modules.module.Module</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="audiocraft.models.lm_magnet.MagnetLMModel.call_super_init"><code class="name">var <span class="ident">call_super_init</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.models.lm_magnet.MagnetLMModel.dump_patches"><code class="name">var <span class="ident">dump_patches</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.models.lm_magnet.MagnetLMModel.training"><code class="name">var <span class="ident">training</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="audiocraft.models.lm_magnet.MagnetLMModel.restricted_context_attn_mask"><code class="name flex">
+<span>def <span class="ident">restricted_context_attn_mask</span></span>(<span>self, seq_len: int, device: torch.device, dtype: torch.dtype) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def restricted_context_attn_mask(self, seq_len: int, device: torch.device, dtype: torch.dtype) -&gt; torch.Tensor:
+    &#34;&#34;&#34;Creates a restricted attention mask (local attention map) where the context
+       is determined by self.subcodes_context.
+    Args:
+        seq_len (int): token sequence length.
+        device (torch.device): device of the output tensor.
+        dtype (torch.dtype): data type of the output tensor.
+    Returns:
+        torch.Tensor: The restricted attention mask.
+    &#34;&#34;&#34;
+    # Return a context restricted non-causal att mask
+    queries_pos = torch.arange(seq_len, device=device).view(-1, 1)
+    keys_pos = torch.arange(seq_len, device=device).view(1, -1)
+
+    delta = queries_pos - keys_pos
+    valid = torch.abs(delta) &lt;= self.subcodes_context
+    return torch.where(
+        valid,
+        torch.zeros([], device=device, dtype=dtype),
+        torch.full([], float(&#39;-inf&#39;), device=device, dtype=dtype))</code></pre>
+</details>
+<div class="desc"><p>Creates a restricted attention mask (local attention map) where the context
+is determined by self.subcodes_context.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>seq_len</code></strong> :&ensp;<code>int</code></dt>
+<dd>token sequence length.</dd>
+<dt><strong><code>device</code></strong> :&ensp;<code>torch.device</code></dt>
+<dd>device of the output tensor.</dd>
+<dt><strong><code>dtype</code></strong> :&ensp;<code>torch.dtype</code></dt>
+<dd>data type of the output tensor.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>torch.Tensor</code></dt>
+<dd>The restricted attention mask.</dd>
+</dl></div>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="audiocraft.models.lm.LMModel" href="lm.html#audiocraft.models.lm.LMModel">LMModel</a></b></code>:
+<ul class="hlist">
+<li><code><a title="audiocraft.models.lm.LMModel.compute_predictions" href="lm.html#audiocraft.models.lm.LMModel.compute_predictions">compute_predictions</a></code></li>
+<li><code><a title="audiocraft.models.lm.LMModel.flush" href="../modules/streaming.html#audiocraft.modules.streaming.StreamingModule.flush">flush</a></code></li>
+<li><code><a title="audiocraft.models.lm.LMModel.forward" href="lm.html#audiocraft.models.lm.LMModel.forward">forward</a></code></li>
+<li><code><a title="audiocraft.models.lm.LMModel.generate" href="lm.html#audiocraft.models.lm.LMModel.generate">generate</a></code></li>
+<li><code><a title="audiocraft.models.lm.LMModel.get_streaming_state" href="../modules/streaming.html#audiocraft.modules.streaming.StreamingModule.get_streaming_state">get_streaming_state</a></code></li>
+<li><code><a title="audiocraft.models.lm.LMModel.reset_streaming" href="../modules/streaming.html#audiocraft.modules.streaming.StreamingModule.reset_streaming">reset_streaming</a></code></li>
+<li><code><a title="audiocraft.models.lm.LMModel.set_streaming_state" href="../modules/streaming.html#audiocraft.modules.streaming.StreamingModule.set_streaming_state">set_streaming_state</a></code></li>
+<li><code><a title="audiocraft.models.lm.LMModel.streaming" href="../modules/streaming.html#audiocraft.modules.streaming.StreamingModule.streaming">streaming</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="audiocraft.models" href="index.html">audiocraft.models</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="audiocraft.models.lm_magnet.MagnetLMModel" href="#audiocraft.models.lm_magnet.MagnetLMModel">MagnetLMModel</a></code></h4>
+<ul class="">
+<li><code><a title="audiocraft.models.lm_magnet.MagnetLMModel.call_super_init" href="#audiocraft.models.lm_magnet.MagnetLMModel.call_super_init">call_super_init</a></code></li>
+<li><code><a title="audiocraft.models.lm_magnet.MagnetLMModel.dump_patches" href="#audiocraft.models.lm_magnet.MagnetLMModel.dump_patches">dump_patches</a></code></li>
+<li><code><a title="audiocraft.models.lm_magnet.MagnetLMModel.restricted_context_attn_mask" href="#audiocraft.models.lm_magnet.MagnetLMModel.restricted_context_attn_mask">restricted_context_attn_mask</a></code></li>
+<li><code><a title="audiocraft.models.lm_magnet.MagnetLMModel.training" href="#audiocraft.models.lm_magnet.MagnetLMModel.training">training</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.5</a>.</p>
+</footer>
+</body>
+</html>

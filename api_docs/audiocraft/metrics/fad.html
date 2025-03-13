@@ -1,0 +1,641 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.5">
+<title>audiocraft.metrics.fad API documentation</title>
+<meta name="description" content="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>audiocraft.metrics.fad</code></h1>
+</header>
+<section id="section-intro">
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="audiocraft.metrics.fad.FrechetAudioDistanceMetric"><code class="flex name class">
+<span>class <span class="ident">FrechetAudioDistanceMetric</span></span>
+<span>(</span><span>bin: str | pathlib.Path,<br>model_path: str | pathlib.Path,<br>format: str = 'wav',<br>batch_size: int | None = None,<br>log_folder: pathlib.Path | str | None = None)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class FrechetAudioDistanceMetric(torchmetrics.Metric):
+    &#34;&#34;&#34;Fréchet Audio Distance computation based on official TensorFlow implementation from Google Research.
+
+    From: D.C. Dowson &amp; B.V. Landau The Fréchet distance between
+    multivariate normal distributions
+    https://doi.org/10.1016/0047-259X(82)90077-X
+    The Fréchet distance between two multivariate gaussians,
+    `X ~ N(mu_x, sigma_x)` and `Y ~ N(mu_y, sigma_y)`, is `d^2`.
+    d^2 = (mu_x - mu_y)^2 + Tr(sigma_x + sigma_y - 2 * sqrt(sigma_x*sigma_y))
+        = (mu_x - mu_y)^2 + Tr(sigma_x) + Tr(sigma_y)
+                        - 2 * Tr(sqrt(sigma_x*sigma_y)))
+
+    To use this FAD computation metric, you need to have the proper Frechet Audio Distance tool setup
+    from: https://github.com/google-research/google-research/tree/master/frechet_audio_distance
+    We provide the below instructions as reference but we do not guarantee for further support
+    in frechet_audio_distance installation. This was tested with python 3.10, cuda 11.8, tensorflow 2.12.0.
+
+        We recommend installing the frechet_audio_distance library in a dedicated env (e.g. conda).
+
+        1. Get the code and models following the repository instructions. We used the steps below:
+                git clone git@github.com:google-research/google-research.git
+                git clone git@github.com:tensorflow/models.git
+                mkdir google-research/tensorflow_models
+                touch google-research/tensorflow_models/__init__.py
+                cp -r models/research/audioset google-research/tensorflow_models/
+                touch google-research/tensorflow_models/audioset/__init__.py
+                echo &#34;from .vggish import mel_features, vggish_params, vggish_slim&#34; &gt; \
+                    google-research/tensorflow_models/audioset/__init__.py
+                # we can now remove the tensorflow models repository
+                # rm -r models
+                cd google-research
+           Follow the instructions to download the vggish checkpoint. AudioCraft base configuration
+           assumes it is placed in the AudioCraft reference dir.
+
+           Note that we operate the following changes for the code to work with TensorFlow 2.X and python 3:
+           - Update xrange for range in:
+             https://github.com/google-research/google-research/blob/master/frechet_audio_distance/audioset_model.py
+           - Update `tf_record = tf.python_io.tf_record_iterator(filename).next()` to
+             `tf_record = tf.python_io.tf_record_iterator(filename).__next__()` in
+              https://github.com/google-research/google-research/blob/master/frechet_audio_distance/fad_utils.py
+           - Update `import vggish_params as params` to `from . import vggish_params as params` in:
+             https://github.com/tensorflow/models/blob/master/research/audioset/vggish/vggish_slim.py
+           - Add flag to provide a given batch size for running the AudioSet model in:
+             https://github.com/google-research/google-research/blob/master/frechet_audio_distance/create_embeddings_main.py
+             ```
+             flags.DEFINE_integer(&#39;batch_size&#39;, 64,
+                                  &#39;Number of samples in the batch for AudioSet model.&#39;)
+             ```
+             Ensure you pass the flag to the create_embeddings_beam.create_pipeline function, adding:
+             `batch_size=FLAGS.batch_size` to the provided parameters.
+
+        2. Follow instructions for the library installation and a valid TensorFlow installation
+           ```
+           # e.g. instructions from: https://www.tensorflow.org/install/pip
+           conda install -c conda-forge cudatoolkit=11.8.0
+           python3 -m pip install nvidia-cudnn-cu11==8.6.0.163 tensorflow==2.12.*
+           mkdir -p $CONDA_PREFIX/etc/conda/activate.d
+           echo &#39;CUDNN_PATH=$(dirname $(python -c &#34;import nvidia.cudnn;print(nvidia.cudnn.__file__)&#34;))&#39; \
+             &gt;&gt; $CONDA_PREFIX/etc/conda/activate.d/env_vars.sh
+           echo &#39;export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CONDA_PREFIX/lib/:$CUDNN_PATH/lib&#39; \
+             &gt;&gt; $CONDA_PREFIX/etc/conda/activate.d/env_vars.sh
+           source $CONDA_PREFIX/etc/conda/activate.d/env_vars.sh
+           # Verify install: on a machine with GPU device
+           python3 -c &#34;import tensorflow as tf; print(tf.config.list_physical_devices(&#39;GPU&#39;))&#34;
+           ```
+
+           Now install frechet_audio_distance required dependencies:
+           ```
+           # We assume we already have TensorFlow installed from the above steps
+           pip install apache-beam numpy scipy tf_slim
+           ```
+
+           Finally, follow remaining library instructions to ensure you have a working frechet_audio_distance setup
+           (you may want to specify --model_ckpt flag pointing to the model&#39;s path).
+
+        3. AudioCraft&#39;s FrechetAudioDistanceMetric requires 2 environment variables pointing to the python executable
+           and Tensorflow library path from the above installation steps:
+            export TF_PYTHON_EXE=&#34;&lt;PATH_TO_THE_ENV_PYTHON_BINARY&gt;&#34;
+            export TF_LIBRARY_PATH=&#34;&lt;PATH_TO_THE_ENV_CUDNN_LIBRARY&gt;&#34;
+
+            e.g. assuming we have installed everything in a dedicated conda env
+            with python 3.10 that is currently active:
+            export TF_PYTHON_EXE=&#34;$CONDA_PREFIX/bin/python&#34;
+            export TF_LIBRARY_PATH=&#34;$CONDA_PREFIX/lib/python3.10/site-packages/nvidia/cudnn/lib&#34;
+
+            Finally you may want to export the following variable:
+            export TF_FORCE_GPU_ALLOW_GROWTH=true
+            See: https://www.tensorflow.org/guide/gpu#limiting_gpu_memory_growth
+
+            You can save those environment variables in your training conda env, when currently active:
+            `$CONDA_PREFIX/etc/conda/activate.d/env_vars.sh`
+            e.g. assuming the env with TensorFlow and frechet_audio_distance install is named ac_eval,
+            and the training conda env is named audiocraft:
+            ```
+            # activate training env
+            conda activate audiocraft
+            # get path to all envs
+            CONDA_ENV_DIR=$(dirname $CONDA_PREFIX)
+            # export pointers to evaluation env for using TensorFlow in FrechetAudioDistanceMetric
+            touch $CONDA_PREFIX/etc/conda/activate.d/env_vars.sh
+            echo &#39;export TF_PYTHON_EXE=&#34;$CONDA_ENV_DIR/ac_eval/bin/python&#34;&#39; &gt;&gt; \
+                $CONDA_PREFIX/etc/conda/activate.d/env_vars.sh
+            echo &#39;export TF_LIBRARY_PATH=&#34;$CONDA_ENV_DIR/ac_eval/lib/python3.10/site-packages/nvidia/cudnn/lib&#34;&#39; &gt;&gt; \
+                $CONDA_PREFIX/etc/conda/activate.d/env_vars.sh
+            # optionally:
+            echo &#39;export TF_FORCE_GPU_ALLOW_GROWTH=true&#39; &gt;&gt; $CONDA_PREFIX/etc/conda/activate.d/env_vars.sh
+            # you may need to reactivate the audiocraft env for this to take effect
+            ```
+
+    Args:
+        bin (Path or str): Path to installed frechet audio distance code.
+        model_path (Path or str): Path to Tensorflow checkpoint for the model
+            used to compute statistics over the embedding beams.
+        format (str): Audio format used to save files.
+        log_folder (Path or str, optional): Path where to write process logs.
+    &#34;&#34;&#34;
+    def __init__(self, bin: tp.Union[Path, str], model_path: tp.Union[Path, str],
+                 format: str = &#34;wav&#34;, batch_size: tp.Optional[int] = None,
+                 log_folder: tp.Optional[tp.Union[Path, str]] = None):
+        super().__init__()
+        self.model_sample_rate = VGGISH_SAMPLE_RATE
+        self.model_channels = VGGISH_CHANNELS
+        self.model_path = AudioCraftEnvironment.resolve_reference_path(model_path)
+        assert Path(self.model_path).exists(), f&#34;Could not find provided model checkpoint path at: {self.model_path}&#34;
+        self.format = format
+        self.batch_size = batch_size
+        self.bin = bin
+        self.tf_env = {&#34;PYTHONPATH&#34;: str(self.bin)}
+        self.python_path = os.environ.get(&#39;TF_PYTHON_EXE&#39;) or &#39;python&#39;
+        logger.info(&#34;Python exe for TF is  %s&#34;, self.python_path)
+        if &#39;TF_LIBRARY_PATH&#39; in os.environ:
+            self.tf_env[&#39;LD_LIBRARY_PATH&#39;] = os.environ[&#39;TF_LIBRARY_PATH&#39;]
+        if &#39;TF_FORCE_GPU_ALLOW_GROWTH&#39; in os.environ:
+            self.tf_env[&#39;TF_FORCE_GPU_ALLOW_GROWTH&#39;] = os.environ[&#39;TF_FORCE_GPU_ALLOW_GROWTH&#39;]
+        logger.info(&#34;Env for TF is %r&#34;, self.tf_env)
+        self.reset(log_folder)
+        self.add_state(&#34;total_files&#34;, default=torch.tensor(0.), dist_reduce_fx=&#34;sum&#34;)
+
+    def reset(self, log_folder: tp.Optional[tp.Union[Path, str]] = None):
+        &#34;&#34;&#34;Reset torchmetrics.Metrics state.&#34;&#34;&#34;
+        log_folder = Path(log_folder or tempfile.mkdtemp())
+        self.tmp_dir = log_folder / &#39;fad&#39;
+        self.tmp_dir.mkdir(exist_ok=True)
+        self.samples_tests_dir = self.tmp_dir / &#39;tests&#39;
+        self.samples_tests_dir.mkdir(exist_ok=True)
+        self.samples_background_dir = self.tmp_dir / &#39;background&#39;
+        self.samples_background_dir.mkdir(exist_ok=True)
+        self.manifest_tests = self.tmp_dir / &#39;files_tests.cvs&#39;
+        self.manifest_background = self.tmp_dir / &#39;files_background.cvs&#39;
+        self.stats_tests_dir = self.tmp_dir / &#39;stats_tests&#39;
+        self.stats_background_dir = self.tmp_dir / &#39;stats_background&#39;
+        self.counter = 0
+
+    def update(self, preds: torch.Tensor, targets: torch.Tensor,
+               sizes: torch.Tensor, sample_rates: torch.Tensor,
+               stems: tp.Optional[tp.List[str]] = None):
+        &#34;&#34;&#34;Update torchmetrics.Metrics by saving the audio and updating the manifest file.&#34;&#34;&#34;
+        assert preds.shape == targets.shape, f&#34;preds={preds.shape} != targets={targets.shape}&#34;
+        num_samples = preds.shape[0]
+        assert num_samples == sizes.size(0) and num_samples == sample_rates.size(0)
+        assert stems is None or num_samples == len(set(stems))
+        for i in range(num_samples):
+            self.total_files += 1  # type: ignore
+            self.counter += 1
+            wav_len = int(sizes[i].item())
+            sample_rate = int(sample_rates[i].item())
+            pred_wav = preds[i]
+            target_wav = targets[i]
+            pred_wav = pred_wav[..., :wav_len]
+            target_wav = target_wav[..., :wav_len]
+            stem_name = stems[i] if stems is not None else f&#39;sample_{self.counter}_{flashy.distrib.rank()}&#39;
+            # dump audio files
+            try:
+                pred_wav = convert_audio(
+                    pred_wav.unsqueeze(0), from_rate=sample_rate,
+                    to_rate=self.model_sample_rate, to_channels=1).squeeze(0)
+                audio_write(
+                    self.samples_tests_dir / stem_name, pred_wav, sample_rate=self.model_sample_rate,
+                    format=self.format, strategy=&#34;peak&#34;)
+            except Exception as e:
+                logger.error(f&#34;Exception occured when saving tests files for FAD computation: {repr(e)} - {e}&#34;)
+            try:
+                # for the ground truth audio, we enforce the &#39;peak&#39; strategy to avoid modifying
+                # the original audio when writing it
+                target_wav = convert_audio(
+                    target_wav.unsqueeze(0), from_rate=sample_rate,
+                    to_rate=self.model_sample_rate, to_channels=1).squeeze(0)
+                audio_write(
+                    self.samples_background_dir / stem_name, target_wav, sample_rate=self.model_sample_rate,
+                    format=self.format, strategy=&#34;peak&#34;)
+            except Exception as e:
+                logger.error(f&#34;Exception occured when saving background files for FAD computation: {repr(e)} - {e}&#34;)
+
+    def _get_samples_name(self, is_background: bool):
+        return &#39;background&#39; if is_background else &#39;tests&#39;
+
+    def _create_embedding_beams(self, is_background: bool, gpu_index: tp.Optional[int] = None):
+        if is_background:
+            input_samples_dir = self.samples_background_dir
+            input_filename = self.manifest_background
+            stats_name = self.stats_background_dir
+        else:
+            input_samples_dir = self.samples_tests_dir
+            input_filename = self.manifest_tests
+            stats_name = self.stats_tests_dir
+        beams_name = self._get_samples_name(is_background)
+        log_file = self.tmp_dir / f&#39;fad_logs_create_beams_{beams_name}.log&#39;
+
+        logger.info(f&#34;Scanning samples folder to fetch list of files: {input_samples_dir}&#34;)
+        with open(input_filename, &#34;w&#34;) as fout:
+            for path in Path(input_samples_dir).glob(f&#34;*.{self.format}&#34;):
+                fout.write(f&#34;{str(path)}\n&#34;)
+
+        cmd = [
+            self.python_path, &#34;-m&#34;,
+            &#34;frechet_audio_distance.create_embeddings_main&#34;,
+            &#34;--model_ckpt&#34;, f&#34;{self.model_path}&#34;,
+            &#34;--input_files&#34;, f&#34;{str(input_filename)}&#34;,
+            &#34;--stats&#34;, f&#34;{str(stats_name)}&#34;,
+        ]
+        if self.batch_size is not None:
+            cmd += [&#34;--batch_size&#34;, str(self.batch_size)]
+        logger.info(f&#34;Launching frechet_audio_distance embeddings main method: {&#39; &#39;.join(cmd)} on {beams_name}&#34;)
+        env = os.environ
+        if gpu_index is not None:
+            env[&#34;CUDA_VISIBLE_DEVICES&#34;] = str(gpu_index)
+        process = subprocess.Popen(
+            cmd, stdout=open(log_file, &#34;w&#34;), env={**env, **self.tf_env}, stderr=subprocess.STDOUT)
+        return process, log_file
+
+    def _compute_fad_score(self, gpu_index: tp.Optional[int] = None):
+        cmd = [
+            self.python_path, &#34;-m&#34;, &#34;frechet_audio_distance.compute_fad&#34;,
+            &#34;--test_stats&#34;, f&#34;{str(self.stats_tests_dir)}&#34;,
+            &#34;--background_stats&#34;, f&#34;{str(self.stats_background_dir)}&#34;,
+        ]
+        logger.info(f&#34;Launching frechet_audio_distance compute fad method: {&#39; &#39;.join(cmd)}&#34;)
+        env = os.environ
+        if gpu_index is not None:
+            env[&#34;CUDA_VISIBLE_DEVICES&#34;] = str(gpu_index)
+        result = subprocess.run(cmd, env={**env, **self.tf_env}, capture_output=True)
+        if result.returncode:
+            logger.error(
+                &#34;Error with FAD computation from stats: \n %s \n %s&#34;,
+                result.stdout.decode(), result.stderr.decode()
+            )
+            raise RuntimeError(&#34;Error while executing FAD computation from stats&#34;)
+        try:
+            # result is &#34;FAD: (d+).(d+)&#34; hence we remove the prefix with (d+) being one digit or more
+            fad_score = float(result.stdout[4:])
+            return fad_score
+        except Exception as e:
+            raise RuntimeError(f&#34;Error parsing FAD score from command stdout: {e}&#34;)
+
+    def _log_process_result(self, returncode: int, log_file: tp.Union[Path, str], is_background: bool) -&gt; None:
+        beams_name = self._get_samples_name(is_background)
+        if returncode:
+            with open(log_file, &#34;r&#34;) as f:
+                error_log = f.read()
+                logger.error(error_log)
+            os._exit(1)
+        else:
+            logger.info(f&#34;Successfully computed embedding beams on {beams_name} samples.&#34;)
+
+    def _parallel_create_embedding_beams(self, num_of_gpus: int):
+        assert num_of_gpus &gt; 0
+        logger.info(&#34;Creating embeddings beams in a parallel manner on different GPUs&#34;)
+        tests_beams_process, tests_beams_log_file = self._create_embedding_beams(is_background=False, gpu_index=0)
+        bg_beams_process, bg_beams_log_file = self._create_embedding_beams(is_background=True, gpu_index=1)
+        tests_beams_code = tests_beams_process.wait()
+        bg_beams_code = bg_beams_process.wait()
+        self._log_process_result(tests_beams_code, tests_beams_log_file, is_background=False)
+        self._log_process_result(bg_beams_code, bg_beams_log_file, is_background=True)
+
+    def _sequential_create_embedding_beams(self):
+        logger.info(&#34;Creating embeddings beams in a sequential manner&#34;)
+        tests_beams_process, tests_beams_log_file = self._create_embedding_beams(is_background=False)
+        tests_beams_code = tests_beams_process.wait()
+        self._log_process_result(tests_beams_code, tests_beams_log_file, is_background=False)
+        bg_beams_process, bg_beams_log_file = self._create_embedding_beams(is_background=True)
+        bg_beams_code = bg_beams_process.wait()
+        self._log_process_result(bg_beams_code, bg_beams_log_file, is_background=True)
+
+    @flashy.distrib.rank_zero_only
+    def _local_compute_frechet_audio_distance(self):
+        &#34;&#34;&#34;Compute Frechet Audio Distance score calling TensorFlow API.&#34;&#34;&#34;
+        num_of_gpus = torch.cuda.device_count() if torch.cuda.is_available() else 0
+        if num_of_gpus &gt; 1:
+            self._parallel_create_embedding_beams(num_of_gpus)
+        else:
+            self._sequential_create_embedding_beams()
+        fad_score = self._compute_fad_score(gpu_index=0)
+        return fad_score
+
+    def compute(self) -&gt; float:
+        &#34;&#34;&#34;Compute metrics.&#34;&#34;&#34;
+        assert self.total_files.item() &gt; 0, &#34;No files dumped for FAD computation!&#34;  # type: ignore
+        fad_score = self._local_compute_frechet_audio_distance()
+        logger.warning(f&#34;FAD score = {fad_score}&#34;)
+        fad_score = flashy.distrib.broadcast_object(fad_score, src=0)
+        return fad_score</code></pre>
+</details>
+<div class="desc"><p>Fréchet Audio Distance computation based on official TensorFlow implementation from Google Research.</p>
+<p>From: D.C. Dowson &amp; B.V. Landau The Fréchet distance between
+multivariate normal distributions
+<a href="https://doi.org/10.1016/0047-259X(82)90077-X">https://doi.org/10.1016/0047-259X(82)90077-X</a>
+The Fréchet distance between two multivariate gaussians,
+<code>X ~ N(mu_x, sigma_x)</code> and <code>Y ~ N(mu_y, sigma_y)</code>, is <code>d^2</code>.
+d^2 = (mu_x - mu_y)^2 + Tr(sigma_x + sigma_y - 2 * sqrt(sigma_x<em>sigma_y))
+= (mu_x - mu_y)^2 + Tr(sigma_x) + Tr(sigma_y)
+- 2 * Tr(sqrt(sigma_x</em>sigma_y)))</p>
+<p>To use this FAD computation metric, you need to have the proper Frechet Audio Distance tool setup
+from: <a href="https://github.com/google-research/google-research/tree/master/frechet_audio_distance">https://github.com/google-research/google-research/tree/master/frechet_audio_distance</a>
+We provide the below instructions as reference but we do not guarantee for further support
+in frechet_audio_distance installation. This was tested with python 3.10, cuda 11.8, tensorflow 2.12.0.</p>
+<pre><code>We recommend installing the frechet_audio_distance library in a dedicated env (e.g. conda).
+
+1. Get the code and models following the repository instructions. We used the steps below:
+        git clone git@github.com:google-research/google-research.git
+        git clone git@github.com:tensorflow/models.git
+        mkdir google-research/tensorflow_models
+        touch google-research/tensorflow_models/__init__.py
+        cp -r models/research/audioset google-research/tensorflow_models/
+        touch google-research/tensorflow_models/audioset/__init__.py
+        echo "from .vggish import mel_features, vggish_params, vggish_slim" &gt;                     google-research/tensorflow_models/audioset/__init__.py
+        # we can now remove the tensorflow models repository
+        # rm -r models
+        cd google-research
+   Follow the instructions to download the vggish checkpoint. AudioCraft base configuration
+   assumes it is placed in the AudioCraft reference dir.
+
+   Note that we operate the following changes for the code to work with TensorFlow 2.X and python 3:
+   - Update xrange for range in:
+     &lt;https://github.com/google-research/google-research/blob/master/frechet_audio_distance/audioset_model.py&gt;
+   - Update `tf_record = tf.python_io.tf_record_iterator(filename).next()` to
+     `tf_record = tf.python_io.tf_record_iterator(filename).__next__()` in
+      &lt;https://github.com/google-research/google-research/blob/master/frechet_audio_distance/fad_utils.py&gt;
+   - Update &lt;code&gt;import vggish\_params as params&lt;/code&gt; to &lt;code&gt;from . import vggish\_params as params&lt;/code&gt; in:
+     &lt;https://github.com/tensorflow/models/blob/master/research/audioset/vggish/vggish_slim.py&gt;
+   - Add flag to provide a given batch size for running the AudioSet model in:
+     &lt;https://github.com/google-research/google-research/blob/master/frechet_audio_distance/create_embeddings_main.py&gt;
+     ```
+     flags.DEFINE_integer('batch_size', 64,
+                          'Number of samples in the batch for AudioSet model.')
+     ```
+     Ensure you pass the flag to the create_embeddings_beam.create_pipeline function, adding:
+     `batch_size=FLAGS.batch_size` to the provided parameters.
+
+2. Follow instructions for the library installation and a valid TensorFlow installation
+   ```
+   # e.g. instructions from: &lt;https://www.tensorflow.org/install/pip&gt;
+   conda install -c conda-forge cudatoolkit=11.8.0
+   python3 -m pip install nvidia-cudnn-cu11==8.6.0.163 tensorflow==2.12.*
+   mkdir -p $CONDA_PREFIX/etc/conda/activate.d
+   echo 'CUDNN_PATH=$(dirname $(python -c "import nvidia.cudnn;print(nvidia.cudnn.__file__)"))'              &gt;&gt; $CONDA_PREFIX/etc/conda/activate.d/env_vars.sh
+   echo 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CONDA_PREFIX/lib/:$CUDNN_PATH/lib'              &gt;&gt; $CONDA_PREFIX/etc/conda/activate.d/env_vars.sh
+   source $CONDA_PREFIX/etc/conda/activate.d/env_vars.sh
+   # Verify install: on a machine with GPU device
+   python3 -c "import tensorflow as tf; print(tf.config.list_physical_devices('GPU'))"
+   ```
+
+   Now install frechet_audio_distance required dependencies:
+   ```
+   # We assume we already have TensorFlow installed from the above steps
+   pip install apache-beam numpy scipy tf_slim
+   ```
+
+   Finally, follow remaining library instructions to ensure you have a working frechet_audio_distance setup
+   (you may want to specify --model_ckpt flag pointing to the model's path).
+
+3. AudioCraft's FrechetAudioDistanceMetric requires 2 environment variables pointing to the python executable
+   and Tensorflow library path from the above installation steps:
+    export TF_PYTHON_EXE="&lt;PATH_TO_THE_ENV_PYTHON_BINARY&gt;"
+    export TF_LIBRARY_PATH="&lt;PATH_TO_THE_ENV_CUDNN_LIBRARY&gt;"
+
+    e.g. assuming we have installed everything in a dedicated conda env
+    with python 3.10 that is currently active:
+    export TF_PYTHON_EXE="$CONDA_PREFIX/bin/python"
+    export TF_LIBRARY_PATH="$CONDA_PREFIX/lib/python3.10/site-packages/nvidia/cudnn/lib"
+
+    Finally you may want to export the following variable:
+    export TF_FORCE_GPU_ALLOW_GROWTH=true
+    See: &lt;https://www.tensorflow.org/guide/gpu#limiting_gpu_memory_growth&gt;
+
+    You can save those environment variables in your training conda env, when currently active:
+    `$CONDA_PREFIX/etc/conda/activate.d/env_vars.sh`
+    e.g. assuming the env with TensorFlow and frechet_audio_distance install is named ac_eval,
+    and the training conda env is named audiocraft:
+    ```
+    # activate training env
+    conda activate audiocraft
+    # get path to all envs
+    CONDA_ENV_DIR=$(dirname $CONDA_PREFIX)
+    # export pointers to evaluation env for using TensorFlow in FrechetAudioDistanceMetric
+    touch $CONDA_PREFIX/etc/conda/activate.d/env_vars.sh
+    echo 'export TF_PYTHON_EXE="$CONDA_ENV_DIR/ac_eval/bin/python"' &gt;&gt;                 $CONDA_PREFIX/etc/conda/activate.d/env_vars.sh
+    echo 'export TF_LIBRARY_PATH="$CONDA_ENV_DIR/ac_eval/lib/python3.10/site-packages/nvidia/cudnn/lib"' &gt;&gt;                 $CONDA_PREFIX/etc/conda/activate.d/env_vars.sh
+    # optionally:
+    echo 'export TF_FORCE_GPU_ALLOW_GROWTH=true' &gt;&gt; $CONDA_PREFIX/etc/conda/activate.d/env_vars.sh
+    # you may need to reactivate the audiocraft env for this to take effect
+    ```
+</code></pre>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>bin</code></strong> :&ensp;<code>Path</code> or <code>str</code></dt>
+<dd>Path to installed frechet audio distance code.</dd>
+<dt><strong><code>model_path</code></strong> :&ensp;<code>Path</code> or <code>str</code></dt>
+<dd>Path to Tensorflow checkpoint for the model
+used to compute statistics over the embedding beams.</dd>
+<dt><strong><code>format</code></strong> :&ensp;<code>str</code></dt>
+<dd>Audio format used to save files.</dd>
+<dt><strong><code>log_folder</code></strong> :&ensp;<code>Path</code> or <code>str</code>, optional</dt>
+<dd>Path where to write process logs.</dd>
+</dl>
+<p>Initializes internal Module state, shared by both nn.Module and ScriptModule.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>torchmetrics.metric.Metric</li>
+<li>torch.nn.modules.module.Module</li>
+<li>abc.ABC</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="audiocraft.metrics.fad.FrechetAudioDistanceMetric.full_state_update"><code class="name">var <span class="ident">full_state_update</span> : bool | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.metrics.fad.FrechetAudioDistanceMetric.higher_is_better"><code class="name">var <span class="ident">higher_is_better</span> : bool | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.metrics.fad.FrechetAudioDistanceMetric.is_differentiable"><code class="name">var <span class="ident">is_differentiable</span> : bool | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.metrics.fad.FrechetAudioDistanceMetric.plot_legend_name"><code class="name">var <span class="ident">plot_legend_name</span> : str | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.metrics.fad.FrechetAudioDistanceMetric.plot_lower_bound"><code class="name">var <span class="ident">plot_lower_bound</span> : float | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.metrics.fad.FrechetAudioDistanceMetric.plot_upper_bound"><code class="name">var <span class="ident">plot_upper_bound</span> : float | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="audiocraft.metrics.fad.FrechetAudioDistanceMetric.compute"><code class="name flex">
+<span>def <span class="ident">compute</span></span>(<span>self) ‑> float</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def compute(self) -&gt; float:
+    &#34;&#34;&#34;Compute metrics.&#34;&#34;&#34;
+    assert self.total_files.item() &gt; 0, &#34;No files dumped for FAD computation!&#34;  # type: ignore
+    fad_score = self._local_compute_frechet_audio_distance()
+    logger.warning(f&#34;FAD score = {fad_score}&#34;)
+    fad_score = flashy.distrib.broadcast_object(fad_score, src=0)
+    return fad_score</code></pre>
+</details>
+<div class="desc"><p>Compute metrics.</p></div>
+</dd>
+<dt id="audiocraft.metrics.fad.FrechetAudioDistanceMetric.reset"><code class="name flex">
+<span>def <span class="ident">reset</span></span>(<span>self, log_folder: pathlib.Path | str | None = None)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def reset(self, log_folder: tp.Optional[tp.Union[Path, str]] = None):
+    &#34;&#34;&#34;Reset torchmetrics.Metrics state.&#34;&#34;&#34;
+    log_folder = Path(log_folder or tempfile.mkdtemp())
+    self.tmp_dir = log_folder / &#39;fad&#39;
+    self.tmp_dir.mkdir(exist_ok=True)
+    self.samples_tests_dir = self.tmp_dir / &#39;tests&#39;
+    self.samples_tests_dir.mkdir(exist_ok=True)
+    self.samples_background_dir = self.tmp_dir / &#39;background&#39;
+    self.samples_background_dir.mkdir(exist_ok=True)
+    self.manifest_tests = self.tmp_dir / &#39;files_tests.cvs&#39;
+    self.manifest_background = self.tmp_dir / &#39;files_background.cvs&#39;
+    self.stats_tests_dir = self.tmp_dir / &#39;stats_tests&#39;
+    self.stats_background_dir = self.tmp_dir / &#39;stats_background&#39;
+    self.counter = 0</code></pre>
+</details>
+<div class="desc"><p>Reset torchmetrics.Metrics state.</p></div>
+</dd>
+<dt id="audiocraft.metrics.fad.FrechetAudioDistanceMetric.update"><code class="name flex">
+<span>def <span class="ident">update</span></span>(<span>self,<br>preds: torch.Tensor,<br>targets: torch.Tensor,<br>sizes: torch.Tensor,<br>sample_rates: torch.Tensor,<br>stems: List[str] | None = None)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def update(self, preds: torch.Tensor, targets: torch.Tensor,
+           sizes: torch.Tensor, sample_rates: torch.Tensor,
+           stems: tp.Optional[tp.List[str]] = None):
+    &#34;&#34;&#34;Update torchmetrics.Metrics by saving the audio and updating the manifest file.&#34;&#34;&#34;
+    assert preds.shape == targets.shape, f&#34;preds={preds.shape} != targets={targets.shape}&#34;
+    num_samples = preds.shape[0]
+    assert num_samples == sizes.size(0) and num_samples == sample_rates.size(0)
+    assert stems is None or num_samples == len(set(stems))
+    for i in range(num_samples):
+        self.total_files += 1  # type: ignore
+        self.counter += 1
+        wav_len = int(sizes[i].item())
+        sample_rate = int(sample_rates[i].item())
+        pred_wav = preds[i]
+        target_wav = targets[i]
+        pred_wav = pred_wav[..., :wav_len]
+        target_wav = target_wav[..., :wav_len]
+        stem_name = stems[i] if stems is not None else f&#39;sample_{self.counter}_{flashy.distrib.rank()}&#39;
+        # dump audio files
+        try:
+            pred_wav = convert_audio(
+                pred_wav.unsqueeze(0), from_rate=sample_rate,
+                to_rate=self.model_sample_rate, to_channels=1).squeeze(0)
+            audio_write(
+                self.samples_tests_dir / stem_name, pred_wav, sample_rate=self.model_sample_rate,
+                format=self.format, strategy=&#34;peak&#34;)
+        except Exception as e:
+            logger.error(f&#34;Exception occured when saving tests files for FAD computation: {repr(e)} - {e}&#34;)
+        try:
+            # for the ground truth audio, we enforce the &#39;peak&#39; strategy to avoid modifying
+            # the original audio when writing it
+            target_wav = convert_audio(
+                target_wav.unsqueeze(0), from_rate=sample_rate,
+                to_rate=self.model_sample_rate, to_channels=1).squeeze(0)
+            audio_write(
+                self.samples_background_dir / stem_name, target_wav, sample_rate=self.model_sample_rate,
+                format=self.format, strategy=&#34;peak&#34;)
+        except Exception as e:
+            logger.error(f&#34;Exception occured when saving background files for FAD computation: {repr(e)} - {e}&#34;)</code></pre>
+</details>
+<div class="desc"><p>Update torchmetrics.Metrics by saving the audio and updating the manifest file.</p></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="audiocraft.metrics" href="index.html">audiocraft.metrics</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="audiocraft.metrics.fad.FrechetAudioDistanceMetric" href="#audiocraft.metrics.fad.FrechetAudioDistanceMetric">FrechetAudioDistanceMetric</a></code></h4>
+<ul class="two-column">
+<li><code><a title="audiocraft.metrics.fad.FrechetAudioDistanceMetric.compute" href="#audiocraft.metrics.fad.FrechetAudioDistanceMetric.compute">compute</a></code></li>
+<li><code><a title="audiocraft.metrics.fad.FrechetAudioDistanceMetric.full_state_update" href="#audiocraft.metrics.fad.FrechetAudioDistanceMetric.full_state_update">full_state_update</a></code></li>
+<li><code><a title="audiocraft.metrics.fad.FrechetAudioDistanceMetric.higher_is_better" href="#audiocraft.metrics.fad.FrechetAudioDistanceMetric.higher_is_better">higher_is_better</a></code></li>
+<li><code><a title="audiocraft.metrics.fad.FrechetAudioDistanceMetric.is_differentiable" href="#audiocraft.metrics.fad.FrechetAudioDistanceMetric.is_differentiable">is_differentiable</a></code></li>
+<li><code><a title="audiocraft.metrics.fad.FrechetAudioDistanceMetric.plot_legend_name" href="#audiocraft.metrics.fad.FrechetAudioDistanceMetric.plot_legend_name">plot_legend_name</a></code></li>
+<li><code><a title="audiocraft.metrics.fad.FrechetAudioDistanceMetric.plot_lower_bound" href="#audiocraft.metrics.fad.FrechetAudioDistanceMetric.plot_lower_bound">plot_lower_bound</a></code></li>
+<li><code><a title="audiocraft.metrics.fad.FrechetAudioDistanceMetric.plot_upper_bound" href="#audiocraft.metrics.fad.FrechetAudioDistanceMetric.plot_upper_bound">plot_upper_bound</a></code></li>
+<li><code><a title="audiocraft.metrics.fad.FrechetAudioDistanceMetric.reset" href="#audiocraft.metrics.fad.FrechetAudioDistanceMetric.reset">reset</a></code></li>
+<li><code><a title="audiocraft.metrics.fad.FrechetAudioDistanceMetric.update" href="#audiocraft.metrics.fad.FrechetAudioDistanceMetric.update">update</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.5</a>.</p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.5">
+<title>audiocraft.utils.checkpoint API documentation</title>
+<meta name="description" content="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>audiocraft.utils.checkpoint</code></h1>
+</header>
+<section id="section-intro">
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="audiocraft.utils.checkpoint.check_sharded_checkpoint"><code class="name flex">
+<span>def <span class="ident">check_sharded_checkpoint</span></span>(<span>checkpoint_path: pathlib.Path, rank0_checkpoint_path: pathlib.Path) ‑> None</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def check_sharded_checkpoint(checkpoint_path: Path, rank0_checkpoint_path: Path) -&gt; None:
+    &#34;&#34;&#34;Check sharded checkpoint state, ensuring the checkpoints are not corrupted.&#34;&#34;&#34;
+    # Finish the work of a previous run that got interrupted while dumping.
+    old_path = Path(str(checkpoint_path) + &#39;.old&#39;)
+    if old_path.exists():
+        raise RuntimeError(
+            f&#34;Old checkpoint {old_path} from previous version of this code exist, cannot safely proceed.&#34;)
+    token = Path(str(rank0_checkpoint_path) + &#39;.tmp.done&#39;)
+    tmp_path = Path(str(checkpoint_path) + &#39;.tmp&#39;)
+    if token.exists():
+        if tmp_path.exists():
+            tmp_path.rename(checkpoint_path)
+    flashy.distrib.barrier()
+    if flashy.distrib.is_rank_zero() and token.exists():
+        token.unlink()</code></pre>
+</details>
+<div class="desc"><p>Check sharded checkpoint state, ensuring the checkpoints are not corrupted.</p></div>
+</dd>
+<dt id="audiocraft.utils.checkpoint.checkpoint_name"><code class="name flex">
+<span>def <span class="ident">checkpoint_name</span></span>(<span>name: str | None = None, rank: int | None = None, use_fsdp: bool = False) ‑> str</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def checkpoint_name(name: tp.Optional[str] = None, rank: tp.Optional[int] = None, use_fsdp: bool = False) -&gt; str:
+    &#34;&#34;&#34;Checkpoint name formatted for all use in AudioCraft codebase and has the following format:
+    `checkpoint_&lt;name&gt;.th(.&lt;rank&gt;)`. By convention, name is expected to be empty for last checkpoint,
+    &#39;best&#39; for the best checkpoint or the epoch number.
+
+    Args:
+        name (str, optional): Name suffix for the checkpoint file stem.
+        rank (optional, int): Rank for distributed processing, retrieved with flashy if not provided.
+        use_fsdp (bool): Whether the calling solver relies on FSDP.
+    Returns:
+        str: The checkpoint name.
+    &#34;&#34;&#34;
+    suffix = &#39;&#39;
+    if rank is None:
+        rank = flashy.distrib.rank()
+    if rank &gt; 0 and use_fsdp:
+        suffix = &#39;.&#39; + str(rank)
+    name_part = &#39;&#39;
+    if name is not None:
+        name_part = f&#39;_{name}&#39;
+    return f&#39;checkpoint{name_part}.th{suffix}&#39;</code></pre>
+</details>
+<div class="desc"><p>Checkpoint name formatted for all use in AudioCraft codebase and has the following format:
+<code>checkpoint_&lt;name&gt;.th(.&lt;rank&gt;)</code>. By convention, name is expected to be empty for last checkpoint,
+'best' for the best checkpoint or the epoch number.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>name</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>Name suffix for the checkpoint file stem.</dd>
+<dt><strong><code>rank</code></strong> :&ensp;<code>optional, int</code></dt>
+<dd>Rank for distributed processing, retrieved with flashy if not provided.</dd>
+<dt><strong><code>use_fsdp</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Whether the calling solver relies on FSDP.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>str</code></dt>
+<dd>The checkpoint name.</dd>
+</dl></div>
+</dd>
+<dt id="audiocraft.utils.checkpoint.flush_stale_checkpoints"><code class="name flex">
+<span>def <span class="ident">flush_stale_checkpoints</span></span>(<span>checkpoint_path: pathlib.Path, keep_last: int | None = None) ‑> None</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def flush_stale_checkpoints(checkpoint_path: Path, keep_last: tp.Optional[int] = None) -&gt; None:
+    &#34;&#34;&#34;Flush checkpoints to only keep last N checkpoints.&#34;&#34;&#34;
+    if keep_last is None or keep_last &lt;= 0:
+        return
+    checkpoint_dir = checkpoint_path.parent
+    suffix = &#39;&#39;
+    if flashy.distrib.rank() &gt; 0:
+        suffix = f&#39;.{flashy.distrib.rank()}&#39;
+    checkpoint_files_with_epoch = []
+    for path in Path(checkpoint_dir).glob(f&#39;checkpoint_*.th{suffix}&#39;):
+        epoch_part = path.name.split(&#39;.&#39;, 1)[0].split(&#39;_&#39;, 1)[1]
+        if epoch_part.isdigit():
+            checkpoint_files_with_epoch.append((path, int(epoch_part)))
+    checkpoint_files = [path for path, _ in list(sorted(checkpoint_files_with_epoch, key=lambda t: t[1]))]
+    total_to_flush = max(0, len(checkpoint_files) - keep_last)
+    files_to_flush = checkpoint_files[:total_to_flush]
+    for path in files_to_flush:
+        logger.debug(&#34;Removing checkpoint: %s&#34;, str(path))
+        path.unlink(missing_ok=True)</code></pre>
+</details>
+<div class="desc"><p>Flush checkpoints to only keep last N checkpoints.</p></div>
+</dd>
+<dt id="audiocraft.utils.checkpoint.is_sharded_checkpoint"><code class="name flex">
+<span>def <span class="ident">is_sharded_checkpoint</span></span>(<span>path: pathlib.Path) ‑> bool</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_sharded_checkpoint(path: Path) -&gt; bool:
+    &#34;&#34;&#34;Whether the checkpoint at the given path corresponds to a sharded checkpoint across rank.&#34;&#34;&#34;
+    return re.search(r&#39;\.th\.\d+$&#39;, path.name) is not None</code></pre>
+</details>
+<div class="desc"><p>Whether the checkpoint at the given path corresponds to a sharded checkpoint across rank.</p></div>
+</dd>
+<dt id="audiocraft.utils.checkpoint.load_checkpoint"><code class="name flex">
+<span>def <span class="ident">load_checkpoint</span></span>(<span>checkpoint_path: pathlib.Path, is_sharded: bool = False) ‑> Any</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def load_checkpoint(checkpoint_path: Path, is_sharded: bool = False) -&gt; tp.Any:
+    &#34;&#34;&#34;Load state from checkpoints at the specified checkpoint path.&#34;&#34;&#34;
+    if is_sharded:
+        rank0_checkpoint_path = checkpoint_path.parent / checkpoint_name(use_fsdp=False)
+        if rank0_checkpoint_path.exists():
+            check_sharded_checkpoint(checkpoint_path, rank0_checkpoint_path)
+    state = torch.load(checkpoint_path, &#39;cpu&#39;)
+    logger.info(&#34;Checkpoint loaded from %s&#34;, checkpoint_path)
+    return state</code></pre>
+</details>
+<div class="desc"><p>Load state from checkpoints at the specified checkpoint path.</p></div>
+</dd>
+<dt id="audiocraft.utils.checkpoint.resolve_checkpoint_path"><code class="name flex">
+<span>def <span class="ident">resolve_checkpoint_path</span></span>(<span>sig_or_path: str | pathlib.Path,<br>name: str | None = None,<br>use_fsdp: bool = False) ‑> pathlib.Path | None</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def resolve_checkpoint_path(sig_or_path: tp.Union[Path, str], name: tp.Optional[str] = None,
+                            use_fsdp: bool = False) -&gt; tp.Optional[Path]:
+    &#34;&#34;&#34;Resolve a given checkpoint path for a provided dora sig or path.
+
+    Args:
+        sig_or_path (Path or str): Checkpoint path or dora signature.
+        name (str, optional): Name suffix for the checkpoint file stem.
+        rank (optional, int): Rank for distributed processing, retrieved with flashy if not provided.
+        use_fsdp (bool): Whether the calling solver relies on FSDP.
+    Returns:
+        Path, optional: Resolved checkpoint path, if it exists.
+    &#34;&#34;&#34;
+    from audiocraft import train
+    xps_root = train.main.dora.dir / &#39;xps&#39;
+    sig_or_path = str(sig_or_path)
+    if sig_or_path.startswith(&#39;//sig/&#39;):
+        sig = sig_or_path[len(&#39;//sig/&#39;):]
+        path = xps_root / sig
+    else:
+        path = Path(sig_or_path)
+        path = AudioCraftEnvironment.resolve_reference_path(path)
+
+    if path.is_dir():
+        path = path / checkpoint_name(name, use_fsdp=use_fsdp)
+
+    if path.exists():
+        return path
+    else:
+        return None</code></pre>
+</details>
+<div class="desc"><p>Resolve a given checkpoint path for a provided dora sig or path.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>sig_or_path</code></strong> :&ensp;<code>Path</code> or <code>str</code></dt>
+<dd>Checkpoint path or dora signature.</dd>
+<dt><strong><code>name</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>Name suffix for the checkpoint file stem.</dd>
+<dt><strong><code>rank</code></strong> :&ensp;<code>optional, int</code></dt>
+<dd>Rank for distributed processing, retrieved with flashy if not provided.</dd>
+<dt><strong><code>use_fsdp</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Whether the calling solver relies on FSDP.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>Path</code>, optional</dt>
+<dd>Resolved checkpoint path, if it exists.</dd>
+</dl></div>
+</dd>
+<dt id="audiocraft.utils.checkpoint.save_checkpoint"><code class="name flex">
+<span>def <span class="ident">save_checkpoint</span></span>(<span>state: Any, checkpoint_path: pathlib.Path, is_sharded: bool = False) ‑> None</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def save_checkpoint(state: tp.Any, checkpoint_path: Path, is_sharded: bool = False) -&gt; None:
+    &#34;&#34;&#34;Save state to disk to the specified checkpoint_path.&#34;&#34;&#34;
+    _safe_save_checkpoint(state, checkpoint_path, is_sharded)
+    logger.info(&#34;Checkpoint saved to %s&#34;, checkpoint_path)</code></pre>
+</details>
+<div class="desc"><p>Save state to disk to the specified checkpoint_path.</p></div>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="audiocraft.utils.checkpoint.CheckpointSource"><code class="flex name class">
+<span>class <span class="ident">CheckpointSource</span></span>
+<span>(</span><span>value, names=None, *, module=None, qualname=None, type=None, start=1)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class CheckpointSource(Enum):
+    CURRENT_XP = &#34;current_xp&#34;
+    PRETRAINED = &#34;pretrained&#34;
+    OTHER = &#34;other&#34;</code></pre>
+</details>
+<div class="desc"><p>An enumeration.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>enum.Enum</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="audiocraft.utils.checkpoint.CheckpointSource.CURRENT_XP"><code class="name">var <span class="ident">CURRENT_XP</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.utils.checkpoint.CheckpointSource.OTHER"><code class="name">var <span class="ident">OTHER</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.utils.checkpoint.CheckpointSource.PRETRAINED"><code class="name">var <span class="ident">PRETRAINED</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="audiocraft.utils" href="index.html">audiocraft.utils</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="audiocraft.utils.checkpoint.check_sharded_checkpoint" href="#audiocraft.utils.checkpoint.check_sharded_checkpoint">check_sharded_checkpoint</a></code></li>
+<li><code><a title="audiocraft.utils.checkpoint.checkpoint_name" href="#audiocraft.utils.checkpoint.checkpoint_name">checkpoint_name</a></code></li>
+<li><code><a title="audiocraft.utils.checkpoint.flush_stale_checkpoints" href="#audiocraft.utils.checkpoint.flush_stale_checkpoints">flush_stale_checkpoints</a></code></li>
+<li><code><a title="audiocraft.utils.checkpoint.is_sharded_checkpoint" href="#audiocraft.utils.checkpoint.is_sharded_checkpoint">is_sharded_checkpoint</a></code></li>
+<li><code><a title="audiocraft.utils.checkpoint.load_checkpoint" href="#audiocraft.utils.checkpoint.load_checkpoint">load_checkpoint</a></code></li>
+<li><code><a title="audiocraft.utils.checkpoint.resolve_checkpoint_path" href="#audiocraft.utils.checkpoint.resolve_checkpoint_path">resolve_checkpoint_path</a></code></li>
+<li><code><a title="audiocraft.utils.checkpoint.save_checkpoint" href="#audiocraft.utils.checkpoint.save_checkpoint">save_checkpoint</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="audiocraft.utils.checkpoint.CheckpointSource" href="#audiocraft.utils.checkpoint.CheckpointSource">CheckpointSource</a></code></h4>
+<ul class="">
+<li><code><a title="audiocraft.utils.checkpoint.CheckpointSource.CURRENT_XP" href="#audiocraft.utils.checkpoint.CheckpointSource.CURRENT_XP">CURRENT_XP</a></code></li>
+<li><code><a title="audiocraft.utils.checkpoint.CheckpointSource.OTHER" href="#audiocraft.utils.checkpoint.CheckpointSource.OTHER">OTHER</a></code></li>
+<li><code><a title="audiocraft.utils.checkpoint.CheckpointSource.PRETRAINED" href="#audiocraft.utils.checkpoint.CheckpointSource.PRETRAINED">PRETRAINED</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.5</a>.</p>
+</footer>
+</body>
+</html>

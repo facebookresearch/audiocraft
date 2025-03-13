@@ -1,0 +1,599 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.5">
+<title>audiocraft.data.jasco_dataset API documentation</title>
+<meta name="description" content="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>audiocraft.data.jasco_dataset</code></h1>
+</header>
+<section id="section-intro">
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="audiocraft.data.jasco_dataset.JascoDataset"><code class="flex name class">
+<span>class <span class="ident">JascoDataset</span></span>
+<span>(</span><span>*args,<br>chords_card: int = 194,<br>compression_model_framerate: float = 50.0,<br>melody_kwargs: Dict[str, Any] | None = {},<br>**kwargs)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class JascoDataset(MusicDataset):
+    &#34;&#34;&#34;JASCO dataset is a MusicDataset with jasco-related symbolic data (chords, melody).
+
+    Args:
+        chords_card (int): The cardinality of the chords, default is 194.
+        compression_model_framerate (int): The framerate for the compression model, default is 50.
+
+    See `audiocraft.data.info_audio_dataset.MusicDataset` for full initialization arguments.
+    &#34;&#34;&#34;
+    @classmethod
+    def from_meta(cls, root: tp.Union[str, Path], **kwargs):
+        &#34;&#34;&#34;Instantiate AudioDataset from a path to a directory containing a manifest as a jsonl file.
+
+        Args:
+            root (str or Path): Path to root folder containing audio files.
+            kwargs: Additional keyword arguments for the AudioDataset.
+        &#34;&#34;&#34;
+        root = Path(root)
+        # a directory is given
+        if root.is_dir():
+            if (root / &#39;data.jsonl&#39;).exists():
+                meta_json = root / &#39;data.jsonl&#39;
+            elif (root / &#39;data.jsonl.gz&#39;).exists():
+                meta_json = root / &#39;data.jsonl.gz&#39;
+            else:
+                raise ValueError(&#34;Don&#39;t know where to read metadata from in the dir. &#34;
+                                 &#34;Expecting either a data.jsonl or data.jsonl.gz file but none found.&#34;)
+        # jsonl file was specified
+        else:
+            assert root.exists() and root.suffix == &#39;.jsonl&#39;, \
+                &#34;Either specified path not exist or it is not a jsonl format&#34;
+            meta_json = root
+            root = root.parent
+        meta = load_audio_meta(meta_json)
+        kwargs[&#39;root&#39;] = root
+        return cls(meta, **kwargs)
+
+    def __init__(self, *args,
+                 chords_card: int = 194,
+                 compression_model_framerate: float = 50.,
+                 melody_kwargs: tp.Optional[tp.Dict[str, tp.Any]] = {},
+                 **kwargs):
+        &#34;&#34;&#34;Dataset class for text-to-music generation with temporal controls as in
+        (JASCO)[https://arxiv.org/pdf/2406.10970]
+
+        Args:
+            chords_card (int, optional): Number of chord ebeddings. Defaults to 194.
+            compression_model_framerate (float, optional): Expected frame rate of the resulted latent. Defaults to 50.
+            melody_kwargs (tp.Optional[tp.Dict[str, tp.Any]], optional): See MelodyData class. Defaults to {}.
+        &#34;&#34;&#34;
+        root = kwargs.pop(&#39;root&#39;)
+        super().__init__(*args, **kwargs)
+
+        chords_mapping_path = root / &#39;chord_to_index_mapping.pkl&#39;
+        chords_path = root / &#39;chords_per_track.pkl&#39;
+        self.mapping_dict = pickle.load(open(chords_mapping_path, &#34;rb&#34;)) if \
+            os.path.exists(chords_mapping_path) else None
+
+        self.chords_per_track = pickle.load(open(chords_path, &#34;rb&#34;)) if \
+            os.path.exists(chords_path) else None
+
+        self.compression_model_framerate = compression_model_framerate
+        self.null_chord_idx = chords_card
+
+        self.melody_module = MelodyData(**melody_kwargs)  # type: ignore
+
+    def _get_relevant_sublist(self, chords, timestamp):
+        &#34;&#34;&#34;
+        Returns the sublist of chords within the specified timestamp and segment length.
+
+        Args:
+            chords (list): A sorted list of tuples containing (time changed, chord).
+            timestamp (float): The timestamp at which to start the sublist.
+
+        Returns:
+            list: A list of chords within the specified timestamp and segment length.
+        &#34;&#34;&#34;
+        end_time = timestamp + self.segment_duration
+
+        # Use binary search to find the starting index of the relevant sublist
+        start_index = bisect.bisect_left(chords, (timestamp,))
+
+        if start_index != 0:
+            prev_chord = chords[start_index - 1]
+        else:
+            prev_chord = (0.0, &#34;N&#34;)
+
+        relevant_chords = []
+
+        for time_changed, chord in chords[start_index:]:
+            if time_changed &gt;= end_time:
+                break
+            relevant_chords.append((time_changed, chord))
+
+        return relevant_chords, prev_chord
+
+    def _get_chords(self, music_info: MusicInfo, effective_segment_dur: float) -&gt; torch.Tensor:
+        if self.chords_per_track is None:
+            # use null chord when there&#39;s no chords in dataset
+            seq_len = math.ceil(self.compression_model_framerate * effective_segment_dur)
+            return torch.ones(seq_len, dtype=int) * self.null_chord_idx  # type: ignore
+
+        fr = self.compression_model_framerate
+
+        idx = music_info.meta.path.split(&#34;/&#34;)[-1].split(&#34;.&#34;)[0]
+        chords = self.chords_per_track[idx]
+
+        min_timestamp = music_info.seek_time
+
+        chords = [(item[1], item[0]) for item in chords]
+        chords, prev_chord = self._get_relevant_sublist(
+            chords, min_timestamp
+        )
+
+        iter_min_timestamp = int(min_timestamp * fr) + 1
+
+        frame_chords = construct_frame_chords(
+            iter_min_timestamp, chords, self.mapping_dict, prev_chord[1],  # type: ignore
+            fr, self.segment_duration  # type: ignore
+        )
+
+        return torch.tensor(frame_chords)
+
+    def __getitem__(self, index):
+        wav, music_info = super().__getitem__(index)
+        assert not wav.isinfinite().any(), f&#34;inf detected in wav file: {music_info}&#34;
+        wav = wav.float()
+
+        # downcast music info to jasco info
+        jasco_info = JascoInfo({k: v for k, v in music_info.__dict__.items()})
+
+        # get chords
+        effective_segment_dur = (wav.shape[-1] / self.sample_rate) if \
+            self.segment_duration is None else self.segment_duration
+        frame_chords = self._get_chords(music_info, effective_segment_dur)
+        jasco_info.chords = SymbolicCondition(frame_chords=frame_chords)
+
+        # get melody
+        jasco_info.melody = SymbolicCondition(melody=self.melody_module(music_info))
+        return wav, jasco_info</code></pre>
+</details>
+<div class="desc"><p>JASCO dataset is a MusicDataset with jasco-related symbolic data (chords, melody).</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>chords_card</code></strong> :&ensp;<code>int</code></dt>
+<dd>The cardinality of the chords, default is 194.</dd>
+<dt><strong><code>compression_model_framerate</code></strong> :&ensp;<code>int</code></dt>
+<dd>The framerate for the compression model, default is 50.</dd>
+</dl>
+<p>See <code>audiocraft.data.info_audio_dataset.MusicDataset</code> for full initialization arguments.</p>
+<p>Dataset class for text-to-music generation with temporal controls as in
+(JASCO)[<a href="https://arxiv.org/pdf/2406.10970]">https://arxiv.org/pdf/2406.10970]</a></p>
+<h2 id="args_1">Args</h2>
+<dl>
+<dt><strong><code>chords_card</code></strong> :&ensp;<code>int</code>, optional</dt>
+<dd>Number of chord ebeddings. Defaults to 194.</dd>
+<dt><strong><code>compression_model_framerate</code></strong> :&ensp;<code>float</code>, optional</dt>
+<dd>Expected frame rate of the resulted latent. Defaults to 50.</dd>
+<dt><strong><code>melody_kwargs</code></strong> :&ensp;<code>tp.Optional[tp.Dict[str, tp.Any]]</code>, optional</dt>
+<dd>See MelodyData class. Defaults to {}.</dd>
+</dl></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="audiocraft.data.music_dataset.MusicDataset" href="music_dataset.html#audiocraft.data.music_dataset.MusicDataset">MusicDataset</a></li>
+<li><a title="audiocraft.data.info_audio_dataset.InfoAudioDataset" href="info_audio_dataset.html#audiocraft.data.info_audio_dataset.InfoAudioDataset">InfoAudioDataset</a></li>
+<li><a title="audiocraft.data.audio_dataset.AudioDataset" href="audio_dataset.html#audiocraft.data.audio_dataset.AudioDataset">AudioDataset</a></li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="audiocraft.data.music_dataset.MusicDataset" href="music_dataset.html#audiocraft.data.music_dataset.MusicDataset">MusicDataset</a></b></code>:
+<ul class="hlist">
+<li><code><a title="audiocraft.data.music_dataset.MusicDataset.collater" href="audio_dataset.html#audiocraft.data.audio_dataset.AudioDataset.collater">collater</a></code></li>
+<li><code><a title="audiocraft.data.music_dataset.MusicDataset.from_meta" href="audio_dataset.html#audiocraft.data.audio_dataset.AudioDataset.from_meta">from_meta</a></code></li>
+<li><code><a title="audiocraft.data.music_dataset.MusicDataset.from_path" href="audio_dataset.html#audiocraft.data.audio_dataset.AudioDataset.from_path">from_path</a></code></li>
+<li><code><a title="audiocraft.data.music_dataset.MusicDataset.sample_file" href="audio_dataset.html#audiocraft.data.audio_dataset.AudioDataset.sample_file">sample_file</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="audiocraft.data.jasco_dataset.JascoInfo"><code class="flex name class">
+<span>class <span class="ident">JascoInfo</span></span>
+<span>(</span><span>meta: <a title="audiocraft.data.audio_dataset.AudioMeta" href="audio_dataset.html#audiocraft.data.audio_dataset.AudioMeta">AudioMeta</a>,<br>seek_time: float,<br>n_frames: int,<br>total_frames: int,<br>sample_rate: int,<br>channels: int,<br>audio_tokens: torch.Tensor | None = None,<br>title: str | None = None,<br>artist: str | None = None,<br>key: str | None = None,<br>bpm: float | None = None,<br>genre: str | None = None,<br>moods: list | None = None,<br>keywords: list | None = None,<br>description: str | None = None,<br>name: str | None = None,<br>instrument: str | None = None,<br>self_wav: <a title="audiocraft.modules.conditioners.WavCondition" href="../modules/conditioners.html#audiocraft.modules.conditioners.WavCondition">WavCondition</a> | None = None,<br>joint_embed: Dict[str, <a title="audiocraft.modules.conditioners.JointEmbedCondition" href="../modules/conditioners.html#audiocraft.modules.conditioners.JointEmbedCondition">JointEmbedCondition</a>] = &lt;factory&gt;,<br>chords: <a title="audiocraft.modules.conditioners.SymbolicCondition" href="../modules/conditioners.html#audiocraft.modules.conditioners.SymbolicCondition">SymbolicCondition</a> | None = None,<br>melody: <a title="audiocraft.modules.conditioners.SymbolicCondition" href="../modules/conditioners.html#audiocraft.modules.conditioners.SymbolicCondition">SymbolicCondition</a> | None = None)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass
+class JascoInfo(MusicInfo):
+    &#34;&#34;&#34;
+    A data class extending MusicInfo for JASCO. The following attributes are added:
+    Attributes:
+        frame_chords (Optional[list]): A list of chords associated with frames in the music piece.
+    &#34;&#34;&#34;
+    chords: tp.Optional[SymbolicCondition] = None
+    melody: tp.Optional[SymbolicCondition] = None
+
+    def to_condition_attributes(self) -&gt; ConditioningAttributes:
+        out = ConditioningAttributes()
+        for _field in fields(self):
+            key, value = _field.name, getattr(self, _field.name)
+            if key == &#39;self_wav&#39;:
+                out.wav[key] = value
+            elif key in {&#39;chords&#39;, &#39;melody&#39;}:
+                out.symbolic[key] = value
+            elif key == &#39;joint_embed&#39;:
+                for embed_attribute, embed_cond in value.items():
+                    out.joint_embed[embed_attribute] = embed_cond
+            else:
+                if isinstance(value, list):
+                    value = &#39; &#39;.join(value)
+                out.text[key] = value
+        return out</code></pre>
+</details>
+<div class="desc"><p>A data class extending MusicInfo for JASCO. The following attributes are added:</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>frame_chords</code></strong> :&ensp;<code>Optional[list]</code></dt>
+<dd>A list of chords associated with frames in the music piece.</dd>
+</dl></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="audiocraft.data.music_dataset.MusicInfo" href="music_dataset.html#audiocraft.data.music_dataset.MusicInfo">MusicInfo</a></li>
+<li><a title="audiocraft.data.info_audio_dataset.AudioInfo" href="info_audio_dataset.html#audiocraft.data.info_audio_dataset.AudioInfo">AudioInfo</a></li>
+<li><a title="audiocraft.modules.conditioners.SegmentWithAttributes" href="../modules/conditioners.html#audiocraft.modules.conditioners.SegmentWithAttributes">SegmentWithAttributes</a></li>
+<li><a title="audiocraft.data.audio_dataset.SegmentInfo" href="audio_dataset.html#audiocraft.data.audio_dataset.SegmentInfo">SegmentInfo</a></li>
+<li><a title="audiocraft.data.audio_dataset.BaseInfo" href="audio_dataset.html#audiocraft.data.audio_dataset.BaseInfo">BaseInfo</a></li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="audiocraft.data.jasco_dataset.JascoInfo.chords"><code class="name">var <span class="ident">chords</span> : <a title="audiocraft.modules.conditioners.SymbolicCondition" href="../modules/conditioners.html#audiocraft.modules.conditioners.SymbolicCondition">SymbolicCondition</a> | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.data.jasco_dataset.JascoInfo.melody"><code class="name">var <span class="ident">melody</span> : <a title="audiocraft.modules.conditioners.SymbolicCondition" href="../modules/conditioners.html#audiocraft.modules.conditioners.SymbolicCondition">SymbolicCondition</a> | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="audiocraft.data.jasco_dataset.JascoInfo.to_condition_attributes"><code class="name flex">
+<span>def <span class="ident">to_condition_attributes</span></span>(<span>self) ‑> <a title="audiocraft.modules.conditioners.ConditioningAttributes" href="../modules/conditioners.html#audiocraft.modules.conditioners.ConditioningAttributes">ConditioningAttributes</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def to_condition_attributes(self) -&gt; ConditioningAttributes:
+    out = ConditioningAttributes()
+    for _field in fields(self):
+        key, value = _field.name, getattr(self, _field.name)
+        if key == &#39;self_wav&#39;:
+            out.wav[key] = value
+        elif key in {&#39;chords&#39;, &#39;melody&#39;}:
+            out.symbolic[key] = value
+        elif key == &#39;joint_embed&#39;:
+            for embed_attribute, embed_cond in value.items():
+                out.joint_embed[embed_attribute] = embed_cond
+        else:
+            if isinstance(value, list):
+                value = &#39; &#39;.join(value)
+            out.text[key] = value
+    return out</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="audiocraft.data.jasco_dataset.MelodyData"><code class="flex name class">
+<span>class <span class="ident">MelodyData</span></span>
+<span>(</span><span>latent_fr: int,<br>segment_duration: float,<br>melody_fr: int = 86,<br>melody_salience_dim: int = 53,<br>chroma_root: str | None = None,<br>override_cache: bool = False,<br>do_argmax: bool = True)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class MelodyData:
+
+    SALIENCE_MODEL_EXPECTED_SAMPLE_RATE = 22050
+    SALIENCE_MODEL_EXPECTED_HOP_SIZE = 256
+
+    def __init__(self,
+                 latent_fr: int,
+                 segment_duration: float,
+                 melody_fr: int = 86,
+                 melody_salience_dim: int = 53,
+                 chroma_root: tp.Optional[str] = None,
+                 override_cache: bool = False,
+                 do_argmax: bool = True):
+        &#34;&#34;&#34;Module to load salience matrix for a given info.
+
+        Args:
+            latent_fr (int): latent frame rate to match (interpolates model frame rate accordingly).
+            segment_duration (float): expected segment duration.
+            melody_fr (int, optional): extracted salience frame rate. Defaults to 86.
+            melody_salience_dim (int, optional): salience dim. Defaults to 53.
+            chroma_root (str, optional): path to root containing salience cache. Defaults to None.
+            override_cache (bool, optional): rewrite cache. Defaults to False.
+            do_argmax (bool, optional): argmax the melody matrix. Defaults to True.
+        &#34;&#34;&#34;
+
+        self.segment_duration = segment_duration
+        self.melody_fr = melody_fr
+        self.latent_fr = latent_fr
+        self.melody_salience_dim = melody_salience_dim
+        self.do_argmax = do_argmax
+        self.tgt_chunk_len = int(latent_fr * segment_duration)
+
+        self.null_op = False
+        if chroma_root is None:
+            self.null_op = True
+        elif not os.path.exists(f&#34;{chroma_root}/cache.pkl&#34;) or override_cache:
+            self.tracks = []
+            for file in librosa.util.find_files(chroma_root, ext=&#39;txt&#39;):
+                with open(file, &#39;r&#39;) as f:
+                    lines = f.readlines()
+                    for line in lines:
+                        self.tracks.append(line.strip())
+
+            # go over tracks and add the corresponding saliency file to self.saliency_files
+            self.saliency_files = []
+            for track in self.tracks:
+                # saliency file name
+                salience_file = f&#34;{chroma_root}/{track.split(&#39;/&#39;)[-1].split(&#39;.&#39;)[0]}_multif0_salience.npz&#34;
+                assert os.path.exists(salience_file), f&#34;File {salience_file} does not exist&#34;
+                self.saliency_files.append(salience_file)
+
+            self.trk2idx = {trk.split(&#39;/&#39;)[-1].split(&#39;.&#39;)[0]: i for i, trk in enumerate(self.tracks)}
+            torch.save({&#39;tracks&#39;: self.tracks,
+                        &#39;saliency_files&#39;: self.saliency_files,
+                        &#39;trk2idx&#39;: self.trk2idx}, f&#34;{chroma_root}/cache.pkl&#34;)
+        else:
+            tmp = torch.load(f&#34;{chroma_root}/cache.pkl&#34;)
+            self.tracks = tmp[&#39;tracks&#39;]
+            self.saliency_files = tmp[&#39;saliency_files&#39;]
+            self.trk2idx = tmp[&#39;trk2idx&#39;]
+        self.model_frame_rate = int(self.SALIENCE_MODEL_EXPECTED_SAMPLE_RATE / self.SALIENCE_MODEL_EXPECTED_HOP_SIZE)
+
+    def load_saliency_from_saliency_dict(self,
+                                         saliency_dict: tp.Dict[str, tp.Any],
+                                         offset: float) -&gt; torch.Tensor:
+        &#34;&#34;&#34;
+        construct the salience matrix and perform linear interpolation w.r.t the temporal axis to match the expected
+        frame rate.
+        &#34;&#34;&#34;
+        # get saliency map for the segment
+        saliency_dict_ = {}
+        l, r = int(offset * self.model_frame_rate), int((offset + self.segment_duration) * self.model_frame_rate)
+        saliency_dict_[&#39;salience&#39;] = saliency_dict[&#39;salience&#39;][:, l: r].T
+        saliency_dict_[&#39;times&#39;] = saliency_dict[&#39;times&#39;][l: r] - offset
+        saliency_dict_[&#39;freqs&#39;] = saliency_dict[&#39;freqs&#39;]
+
+        saliency_dict_[&#39;salience&#39;] = torch.Tensor(saliency_dict_[&#39;salience&#39;]).float().permute(1, 0)  # C, T
+        if saliency_dict_[&#39;salience&#39;].shape[-1] &lt;= int(self.model_frame_rate) / self.latent_fr:  # empty chroma
+            saliency_dict_[&#39;salience&#39;] = torch.zeros((saliency_dict_[&#39;salience&#39;].shape[0], self.tgt_chunk_len))
+        else:
+            salience = torch.nn.functional.interpolate(saliency_dict_[&#39;salience&#39;].unsqueeze(0),
+                                                       scale_factor=self.latent_fr/int(self.model_frame_rate),
+                                                       mode=&#39;linear&#39;).squeeze(0)
+            if salience.shape[-1] &lt; self.tgt_chunk_len:
+                salience = torch.nn.functional.pad(salience,
+                                                   (0, self.tgt_chunk_len - salience.shape[-1]),
+                                                   mode=&#39;constant&#39;,
+                                                   value=0)
+            elif salience.shape[-1] &gt; self.tgt_chunk_len:
+                salience = salience[..., :self.tgt_chunk_len]
+            saliency_dict_[&#39;salience&#39;] = salience
+
+        salience = saliency_dict_[&#39;salience&#39;]
+        if self.do_argmax:
+            binary_mask = torch.zeros_like(salience)
+            binary_mask[torch.argmax(salience, dim=0), torch.arange(salience.shape[-1])] = 1
+            binary_mask *= (salience != 0).float()
+            salience = binary_mask
+        return salience
+
+    def get_null_salience(self) -&gt; torch.Tensor:
+        return torch.zeros((self.melody_salience_dim, self.tgt_chunk_len))
+
+    def __call__(self, x: MusicInfo) -&gt; torch.Tensor:
+        &#34;&#34;&#34;Reads salience matrix from memory, shifted by seek time
+
+        Args:
+            x (MusicInfo): Music info of a single sample
+
+        Returns:
+            torch.Tensor: salience matrix matching the target info
+        &#34;&#34;&#34;
+        fname: str = x.meta.path.split(&#34;/&#34;)[-1].split(&#34;.&#34;)[0] if x.meta.path is not None else &#34;&#34;
+        if x.meta.path is None or x.meta.path == &#34;&#34; or fname not in self.trk2idx:
+            salience = self.get_null_salience()
+        else:
+            assert fname in self.trk2idx, f&#34;Track {fname} not found in the cache&#34;
+            idx = self.trk2idx[fname]
+            saliency_dict = np.load(self.saliency_files[idx], allow_pickle=True)
+            salience = self.load_saliency_from_saliency_dict(saliency_dict, x.seek_time)
+        return salience</code></pre>
+</details>
+<div class="desc"><p>Module to load salience matrix for a given info.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>latent_fr</code></strong> :&ensp;<code>int</code></dt>
+<dd>latent frame rate to match (interpolates model frame rate accordingly).</dd>
+<dt><strong><code>segment_duration</code></strong> :&ensp;<code>float</code></dt>
+<dd>expected segment duration.</dd>
+<dt><strong><code>melody_fr</code></strong> :&ensp;<code>int</code>, optional</dt>
+<dd>extracted salience frame rate. Defaults to 86.</dd>
+<dt><strong><code>melody_salience_dim</code></strong> :&ensp;<code>int</code>, optional</dt>
+<dd>salience dim. Defaults to 53.</dd>
+<dt><strong><code>chroma_root</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>path to root containing salience cache. Defaults to None.</dd>
+<dt><strong><code>override_cache</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>rewrite cache. Defaults to False.</dd>
+<dt><strong><code>do_argmax</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>argmax the melody matrix. Defaults to True.</dd>
+</dl></div>
+<h3>Class variables</h3>
+<dl>
+<dt id="audiocraft.data.jasco_dataset.MelodyData.SALIENCE_MODEL_EXPECTED_HOP_SIZE"><code class="name">var <span class="ident">SALIENCE_MODEL_EXPECTED_HOP_SIZE</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.data.jasco_dataset.MelodyData.SALIENCE_MODEL_EXPECTED_SAMPLE_RATE"><code class="name">var <span class="ident">SALIENCE_MODEL_EXPECTED_SAMPLE_RATE</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="audiocraft.data.jasco_dataset.MelodyData.get_null_salience"><code class="name flex">
+<span>def <span class="ident">get_null_salience</span></span>(<span>self) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_null_salience(self) -&gt; torch.Tensor:
+    return torch.zeros((self.melody_salience_dim, self.tgt_chunk_len))</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.data.jasco_dataset.MelodyData.load_saliency_from_saliency_dict"><code class="name flex">
+<span>def <span class="ident">load_saliency_from_saliency_dict</span></span>(<span>self, saliency_dict: Dict[str, Any], offset: float) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def load_saliency_from_saliency_dict(self,
+                                     saliency_dict: tp.Dict[str, tp.Any],
+                                     offset: float) -&gt; torch.Tensor:
+    &#34;&#34;&#34;
+    construct the salience matrix and perform linear interpolation w.r.t the temporal axis to match the expected
+    frame rate.
+    &#34;&#34;&#34;
+    # get saliency map for the segment
+    saliency_dict_ = {}
+    l, r = int(offset * self.model_frame_rate), int((offset + self.segment_duration) * self.model_frame_rate)
+    saliency_dict_[&#39;salience&#39;] = saliency_dict[&#39;salience&#39;][:, l: r].T
+    saliency_dict_[&#39;times&#39;] = saliency_dict[&#39;times&#39;][l: r] - offset
+    saliency_dict_[&#39;freqs&#39;] = saliency_dict[&#39;freqs&#39;]
+
+    saliency_dict_[&#39;salience&#39;] = torch.Tensor(saliency_dict_[&#39;salience&#39;]).float().permute(1, 0)  # C, T
+    if saliency_dict_[&#39;salience&#39;].shape[-1] &lt;= int(self.model_frame_rate) / self.latent_fr:  # empty chroma
+        saliency_dict_[&#39;salience&#39;] = torch.zeros((saliency_dict_[&#39;salience&#39;].shape[0], self.tgt_chunk_len))
+    else:
+        salience = torch.nn.functional.interpolate(saliency_dict_[&#39;salience&#39;].unsqueeze(0),
+                                                   scale_factor=self.latent_fr/int(self.model_frame_rate),
+                                                   mode=&#39;linear&#39;).squeeze(0)
+        if salience.shape[-1] &lt; self.tgt_chunk_len:
+            salience = torch.nn.functional.pad(salience,
+                                               (0, self.tgt_chunk_len - salience.shape[-1]),
+                                               mode=&#39;constant&#39;,
+                                               value=0)
+        elif salience.shape[-1] &gt; self.tgt_chunk_len:
+            salience = salience[..., :self.tgt_chunk_len]
+        saliency_dict_[&#39;salience&#39;] = salience
+
+    salience = saliency_dict_[&#39;salience&#39;]
+    if self.do_argmax:
+        binary_mask = torch.zeros_like(salience)
+        binary_mask[torch.argmax(salience, dim=0), torch.arange(salience.shape[-1])] = 1
+        binary_mask *= (salience != 0).float()
+        salience = binary_mask
+    return salience</code></pre>
+</details>
+<div class="desc"><p>construct the salience matrix and perform linear interpolation w.r.t the temporal axis to match the expected
+frame rate.</p></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="audiocraft.data" href="index.html">audiocraft.data</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="audiocraft.data.jasco_dataset.JascoDataset" href="#audiocraft.data.jasco_dataset.JascoDataset">JascoDataset</a></code></h4>
+</li>
+<li>
+<h4><code><a title="audiocraft.data.jasco_dataset.JascoInfo" href="#audiocraft.data.jasco_dataset.JascoInfo">JascoInfo</a></code></h4>
+<ul class="">
+<li><code><a title="audiocraft.data.jasco_dataset.JascoInfo.chords" href="#audiocraft.data.jasco_dataset.JascoInfo.chords">chords</a></code></li>
+<li><code><a title="audiocraft.data.jasco_dataset.JascoInfo.melody" href="#audiocraft.data.jasco_dataset.JascoInfo.melody">melody</a></code></li>
+<li><code><a title="audiocraft.data.jasco_dataset.JascoInfo.to_condition_attributes" href="#audiocraft.data.jasco_dataset.JascoInfo.to_condition_attributes">to_condition_attributes</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="audiocraft.data.jasco_dataset.MelodyData" href="#audiocraft.data.jasco_dataset.MelodyData">MelodyData</a></code></h4>
+<ul class="">
+<li><code><a title="audiocraft.data.jasco_dataset.MelodyData.SALIENCE_MODEL_EXPECTED_HOP_SIZE" href="#audiocraft.data.jasco_dataset.MelodyData.SALIENCE_MODEL_EXPECTED_HOP_SIZE">SALIENCE_MODEL_EXPECTED_HOP_SIZE</a></code></li>
+<li><code><a title="audiocraft.data.jasco_dataset.MelodyData.SALIENCE_MODEL_EXPECTED_SAMPLE_RATE" href="#audiocraft.data.jasco_dataset.MelodyData.SALIENCE_MODEL_EXPECTED_SAMPLE_RATE">SALIENCE_MODEL_EXPECTED_SAMPLE_RATE</a></code></li>
+<li><code><a title="audiocraft.data.jasco_dataset.MelodyData.get_null_salience" href="#audiocraft.data.jasco_dataset.MelodyData.get_null_salience">get_null_salience</a></code></li>
+<li><code><a title="audiocraft.data.jasco_dataset.MelodyData.load_saliency_from_saliency_dict" href="#audiocraft.data.jasco_dataset.MelodyData.load_saliency_from_saliency_dict">load_saliency_from_saliency_dict</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.5</a>.</p>
+</footer>
+</body>
+</html>

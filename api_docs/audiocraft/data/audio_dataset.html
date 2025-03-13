@@ -1,0 +1,1073 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.5">
+<title>audiocraft.data.audio_dataset API documentation</title>
+<meta name="description" content="AudioDataset support. In order to handle a larger number of files
+without having to scan again the folders, we precompute some metadata
+(filename, …">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>audiocraft.data.audio_dataset</code></h1>
+</header>
+<section id="section-intro">
+<p>AudioDataset support. In order to handle a larger number of files
+without having to scan again the folders, we precompute some metadata
+(filename, sample rate, duration), and use that to efficiently sample audio segments.</p>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="audiocraft.data.audio_dataset.find_audio_files"><code class="name flex">
+<span>def <span class="ident">find_audio_files</span></span>(<span>path: str | pathlib.Path,<br>exts: List[str] = ['.wav', '.mp3', '.flac', '.ogg', '.m4a'],<br>resolve: bool = True,<br>minimal: bool = True,<br>progress: bool = False,<br>workers: int = 0) ‑> List[<a title="audiocraft.data.audio_dataset.AudioMeta" href="#audiocraft.data.audio_dataset.AudioMeta">AudioMeta</a>]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def find_audio_files(path: tp.Union[Path, str],
+                     exts: tp.List[str] = DEFAULT_EXTS,
+                     resolve: bool = True,
+                     minimal: bool = True,
+                     progress: bool = False,
+                     workers: int = 0) -&gt; tp.List[AudioMeta]:
+    &#34;&#34;&#34;Build a list of AudioMeta from a given path,
+    collecting relevant audio files and fetching meta info.
+
+    Args:
+        path (str or Path): Path to folder containing audio files.
+        exts (list of str): List of file extensions to consider for audio files.
+        minimal (bool): Whether to only load the minimal set of metadata (takes longer if not).
+        progress (bool): Whether to log progress on audio files collection.
+        workers (int): number of parallel workers, if 0, use only the current thread.
+    Returns:
+        list of AudioMeta: List of audio file path and its metadata.
+    &#34;&#34;&#34;
+    audio_files = []
+    futures: tp.List[Future] = []
+    pool: tp.Optional[ThreadPoolExecutor] = None
+    with ExitStack() as stack:
+        if workers &gt; 0:
+            pool = ThreadPoolExecutor(workers)
+            stack.enter_context(pool)
+
+        if progress:
+            print(&#34;Finding audio files...&#34;)
+        for root, folders, files in os.walk(path, followlinks=True):
+            for file in files:
+                full_path = Path(root) / file
+                if full_path.suffix.lower() in exts:
+                    audio_files.append(full_path)
+                    if pool is not None:
+                        futures.append(pool.submit(_get_audio_meta, str(audio_files[-1]), minimal))
+                    if progress:
+                        print(format(len(audio_files), &#34; 8d&#34;), end=&#39;\r&#39;, file=sys.stderr)
+
+        if progress:
+            print(&#34;Getting audio metadata...&#34;)
+        meta: tp.List[AudioMeta] = []
+        for idx, file_path in enumerate(audio_files):
+            try:
+                if pool is None:
+                    m = _get_audio_meta(str(file_path), minimal)
+                else:
+                    m = futures[idx].result()
+                if resolve:
+                    m = _resolve_audio_meta(m)
+            except Exception as err:
+                print(&#34;Error with&#34;, str(file_path), err, file=sys.stderr)
+                continue
+            meta.append(m)
+            if progress:
+                print(format((1 + idx) / len(audio_files), &#34; 3.1%&#34;), end=&#39;\r&#39;, file=sys.stderr)
+    meta.sort()
+    return meta</code></pre>
+</details>
+<div class="desc"><p>Build a list of AudioMeta from a given path,
+collecting relevant audio files and fetching meta info.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>path</code></strong> :&ensp;<code>str</code> or <code>Path</code></dt>
+<dd>Path to folder containing audio files.</dd>
+<dt><strong><code>exts</code></strong> :&ensp;<code>list</code> of <code>str</code></dt>
+<dd>List of file extensions to consider for audio files.</dd>
+<dt><strong><code>minimal</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Whether to only load the minimal set of metadata (takes longer if not).</dd>
+<dt><strong><code>progress</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Whether to log progress on audio files collection.</dd>
+<dt><strong><code>workers</code></strong> :&ensp;<code>int</code></dt>
+<dd>number of parallel workers, if 0, use only the current thread.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>list</code> of <code><a title="audiocraft.data.audio_dataset.AudioMeta" href="#audiocraft.data.audio_dataset.AudioMeta">AudioMeta</a></code></dt>
+<dd>List of audio file path and its metadata.</dd>
+</dl></div>
+</dd>
+<dt id="audiocraft.data.audio_dataset.load_audio_meta"><code class="name flex">
+<span>def <span class="ident">load_audio_meta</span></span>(<span>path: str | pathlib.Path, resolve: bool = True, fast: bool = True) ‑> List[<a title="audiocraft.data.audio_dataset.AudioMeta" href="#audiocraft.data.audio_dataset.AudioMeta">AudioMeta</a>]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def load_audio_meta(path: tp.Union[str, Path],
+                    resolve: bool = True, fast: bool = True) -&gt; tp.List[AudioMeta]:
+    &#34;&#34;&#34;Load list of AudioMeta from an optionally compressed json file.
+
+    Args:
+        path (str or Path): Path to JSON file.
+        resolve (bool): Whether to resolve the path from AudioMeta (default=True).
+        fast (bool): activates some tricks to make things faster.
+    Returns:
+        list of AudioMeta: List of audio file path and its total duration.
+    &#34;&#34;&#34;
+    open_fn = gzip.open if str(path).lower().endswith(&#39;.gz&#39;) else open
+    with open_fn(path, &#39;rb&#39;) as fp:  # type: ignore
+        lines = fp.readlines()
+    meta = []
+    for line in lines:
+        d = json.loads(line)
+        m = AudioMeta.from_dict(d)
+        if resolve:
+            m = _resolve_audio_meta(m, fast=fast)
+        meta.append(m)
+    return meta</code></pre>
+</details>
+<div class="desc"><p>Load list of AudioMeta from an optionally compressed json file.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>path</code></strong> :&ensp;<code>str</code> or <code>Path</code></dt>
+<dd>Path to JSON file.</dd>
+<dt><strong><code>resolve</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Whether to resolve the path from AudioMeta (default=True).</dd>
+<dt><strong><code>fast</code></strong> :&ensp;<code>bool</code></dt>
+<dd>activates some tricks to make things faster.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>list</code> of <code><a title="audiocraft.data.audio_dataset.AudioMeta" href="#audiocraft.data.audio_dataset.AudioMeta">AudioMeta</a></code></dt>
+<dd>List of audio file path and its total duration.</dd>
+</dl></div>
+</dd>
+<dt id="audiocraft.data.audio_dataset.main"><code class="name flex">
+<span>def <span class="ident">main</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def main():
+    logging.basicConfig(stream=sys.stderr, level=logging.INFO)
+    parser = argparse.ArgumentParser(
+        prog=&#39;audio_dataset&#39;,
+        description=&#39;Generate .jsonl files by scanning a folder.&#39;)
+    parser.add_argument(&#39;root&#39;, help=&#39;Root folder with all the audio files&#39;)
+    parser.add_argument(&#39;output_meta_file&#39;,
+                        help=&#39;Output file to store the metadata, &#39;)
+    parser.add_argument(&#39;--complete&#39;,
+                        action=&#39;store_false&#39;, dest=&#39;minimal&#39;, default=True,
+                        help=&#39;Retrieve all metadata, even the one that are expansive &#39;
+                             &#39;to compute (e.g. normalization).&#39;)
+    parser.add_argument(&#39;--resolve&#39;,
+                        action=&#39;store_true&#39;, default=False,
+                        help=&#39;Resolve the paths to be absolute and with no symlinks.&#39;)
+    parser.add_argument(&#39;--workers&#39;,
+                        default=10, type=int,
+                        help=&#39;Number of workers.&#39;)
+    args = parser.parse_args()
+    meta = find_audio_files(args.root, DEFAULT_EXTS, progress=True,
+                            resolve=args.resolve, minimal=args.minimal, workers=args.workers)
+    save_audio_meta(args.output_meta_file, meta)</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.data.audio_dataset.save_audio_meta"><code class="name flex">
+<span>def <span class="ident">save_audio_meta</span></span>(<span>path: str | pathlib.Path,<br>meta: List[<a title="audiocraft.data.audio_dataset.AudioMeta" href="#audiocraft.data.audio_dataset.AudioMeta">AudioMeta</a>])</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def save_audio_meta(path: tp.Union[str, Path], meta: tp.List[AudioMeta]):
+    &#34;&#34;&#34;Save the audio metadata to the file pointer as json.
+
+    Args:
+        path (str or Path): Path to JSON file.
+        metadata (list of BaseAudioMeta): List of audio meta to save.
+    &#34;&#34;&#34;
+    Path(path).parent.mkdir(exist_ok=True, parents=True)
+    open_fn = gzip.open if str(path).lower().endswith(&#39;.gz&#39;) else open
+    with open_fn(path, &#39;wb&#39;) as fp:  # type: ignore
+        for m in meta:
+            json_str = json.dumps(m.to_dict()) + &#39;\n&#39;
+            json_bytes = json_str.encode(&#39;utf-8&#39;)
+            fp.write(json_bytes)</code></pre>
+</details>
+<div class="desc"><p>Save the audio metadata to the file pointer as json.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>path</code></strong> :&ensp;<code>str</code> or <code>Path</code></dt>
+<dd>Path to JSON file.</dd>
+<dt><strong><code>metadata</code></strong> :&ensp;<code>list</code> of <code>BaseAudioMeta</code></dt>
+<dd>List of audio meta to save.</dd>
+</dl></div>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="audiocraft.data.audio_dataset.AudioDataset"><code class="flex name class">
+<span>class <span class="ident">AudioDataset</span></span>
+<span>(</span><span>meta: List[<a title="audiocraft.data.audio_dataset.AudioMeta" href="#audiocraft.data.audio_dataset.AudioMeta">AudioMeta</a>],<br>segment_duration: float | None = None,<br>shuffle: bool = True,<br>num_samples: int = 10000,<br>sample_rate: int = 48000,<br>channels: int = 2,<br>pad: bool = True,<br>sample_on_duration: bool = True,<br>sample_on_weight: bool = True,<br>min_segment_ratio: float = 0.5,<br>max_read_retry: int = 10,<br>return_info: bool = False,<br>min_audio_duration: float | None = None,<br>max_audio_duration: float | None = None,<br>shuffle_seed: int = 0,<br>load_wav: bool = True,<br>permutation_on_files: bool = False)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class AudioDataset:
+    &#34;&#34;&#34;Base audio dataset.
+
+    The dataset takes a list of AudioMeta and create a dataset composed of segments of audio
+    and potentially additional information, by creating random segments from the list of audio
+    files referenced in the metadata and applying minimal data pre-processing such as resampling,
+    mixing of channels, padding, etc.
+
+    If no segment_duration value is provided, the AudioDataset will return the full wav for each
+    audio file. Otherwise, it will randomly sample audio files and create a segment of the specified
+    duration, applying padding if required.
+
+    By default, only the torch Tensor corresponding to the waveform is returned. Setting return_info=True
+    allows to return a tuple containing the torch Tensor and additional metadata on the segment and the
+    original audio meta.
+
+    Note that you can call `start_epoch(epoch)` in order to get
+    a deterministic &#34;randomization&#34; for `shuffle=True`.
+    For a given epoch and dataset index, this will always return the same extract.
+    You can get back some diversity by setting the `shuffle_seed` param.
+
+    Args:
+        meta (list of AudioMeta): List of audio files metadata.
+        segment_duration (float, optional): Optional segment duration of audio to load.
+            If not specified, the dataset will load the full audio segment from the file.
+        shuffle (bool): Set to `True` to have the data reshuffled at every epoch.
+        sample_rate (int): Target sample rate of the loaded audio samples.
+        channels (int): Target number of channels of the loaded audio samples.
+        sample_on_duration (bool): Set to `True` to sample segments with probability
+            dependent on audio file duration. This is only used if `segment_duration` is provided.
+        sample_on_weight (bool): Set to `True` to sample segments using the `weight` entry of
+            `AudioMeta`. If `sample_on_duration` is also True, the actual weight will be the product
+            of the file duration and file weight. This is only used if `segment_duration` is provided.
+        min_segment_ratio (float): Minimum segment ratio to use when the audio file
+            is shorter than the desired segment.
+        max_read_retry (int): Maximum number of retries to sample an audio segment from the dataset.
+        return_info (bool): Whether to return the wav only or return wav along with segment info and metadata.
+        min_audio_duration (float, optional): Minimum audio file duration, in seconds, if provided
+            audio shorter than this will be filtered out.
+        max_audio_duration (float, optional): Maximal audio file duration in seconds, if provided
+            audio longer than this will be filtered out.
+        shuffle_seed (int): can be used to further randomize
+        load_wav (bool): if False, skip loading the wav but returns a tensor of 0
+            with the expected segment_duration (which must be provided if load_wav is False).
+        permutation_on_files (bool): only if `sample_on_weight` and `sample_on_duration`
+            are False. Will ensure a permutation on files when going through the dataset.
+            In that case the epoch number must be provided in order for the model
+            to continue the permutation across epochs. In that case, it is assumed
+            that `num_samples = total_batch_size * num_updates_per_epoch`, with
+            `total_batch_size` the overall batch size accounting for all gpus.
+    &#34;&#34;&#34;
+    def __init__(self,
+                 meta: tp.List[AudioMeta],
+                 segment_duration: tp.Optional[float] = None,
+                 shuffle: bool = True,
+                 num_samples: int = 10_000,
+                 sample_rate: int = 48_000,
+                 channels: int = 2,
+                 pad: bool = True,
+                 sample_on_duration: bool = True,
+                 sample_on_weight: bool = True,
+                 min_segment_ratio: float = 0.5,
+                 max_read_retry: int = 10,
+                 return_info: bool = False,
+                 min_audio_duration: tp.Optional[float] = None,
+                 max_audio_duration: tp.Optional[float] = None,
+                 shuffle_seed: int = 0,
+                 load_wav: bool = True,
+                 permutation_on_files: bool = False,
+                 ):
+        assert len(meta) &gt; 0, &#34;No audio meta provided to AudioDataset. Please check loading of audio meta.&#34;
+        assert segment_duration is None or segment_duration &gt; 0
+        assert segment_duration is None or min_segment_ratio &gt;= 0
+        self.segment_duration = segment_duration
+        self.min_segment_ratio = min_segment_ratio
+        self.max_audio_duration = max_audio_duration
+        self.min_audio_duration = min_audio_duration
+        if self.min_audio_duration is not None and self.max_audio_duration is not None:
+            assert self.min_audio_duration &lt;= self.max_audio_duration
+        self.meta: tp.List[AudioMeta] = self._filter_duration(meta)
+        assert len(self.meta)  # Fail fast if all data has been filtered.
+        self.total_duration = sum(d.duration for d in self.meta)
+
+        if segment_duration is None:
+            num_samples = len(self.meta)
+        self.num_samples = num_samples
+        self.shuffle = shuffle
+        self.sample_rate = sample_rate
+        self.channels = channels
+        self.pad = pad
+        self.sample_on_weight = sample_on_weight
+        self.sample_on_duration = sample_on_duration
+        self.sampling_probabilities = self._get_sampling_probabilities()
+        self.max_read_retry = max_read_retry
+        self.return_info = return_info
+        self.shuffle_seed = shuffle_seed
+        self.current_epoch: tp.Optional[int] = None
+        self.load_wav = load_wav
+        if not load_wav:
+            assert segment_duration is not None
+        self.permutation_on_files = permutation_on_files
+        if permutation_on_files:
+            assert not self.sample_on_duration
+            assert not self.sample_on_weight
+            assert self.shuffle
+
+    def start_epoch(self, epoch: int):
+        self.current_epoch = epoch
+
+    def __len__(self):
+        return self.num_samples
+
+    def _get_sampling_probabilities(self, normalized: bool = True):
+        &#34;&#34;&#34;Return the sampling probabilities for each file inside `self.meta`.&#34;&#34;&#34;
+        scores: tp.List[float] = []
+        for file_meta in self.meta:
+            score = 1.
+            if self.sample_on_weight and file_meta.weight is not None:
+                score *= file_meta.weight
+            if self.sample_on_duration:
+                score *= file_meta.duration
+            scores.append(score)
+        probabilities = torch.tensor(scores)
+        if normalized:
+            probabilities /= probabilities.sum()
+        return probabilities
+
+    @staticmethod
+    @lru_cache(16)
+    def _get_file_permutation(num_files: int, permutation_index: int, base_seed: int):
+        # Used to keep the most recent files permutation in memory implicitely.
+        # will work unless someone is using a lot of Datasets in parallel.
+        rng = torch.Generator()
+        rng.manual_seed(base_seed + permutation_index)
+        return torch.randperm(num_files, generator=rng)
+
+    def sample_file(self, index: int, rng: torch.Generator) -&gt; AudioMeta:
+        &#34;&#34;&#34;Sample a given file from `self.meta`. Can be overridden in subclasses.
+        This is only called if `segment_duration` is not None.
+
+        You must use the provided random number generator `rng` for reproducibility.
+        You can further make use of the index accessed.
+        &#34;&#34;&#34;
+        if self.permutation_on_files:
+            assert self.current_epoch is not None
+            total_index = self.current_epoch * len(self) + index
+            permutation_index = total_index // len(self.meta)
+            relative_index = total_index % len(self.meta)
+            permutation = AudioDataset._get_file_permutation(
+                len(self.meta), permutation_index, self.shuffle_seed)
+            file_index = permutation[relative_index]
+            return self.meta[file_index]
+
+        if not self.sample_on_weight and not self.sample_on_duration:
+            file_index = int(torch.randint(len(self.sampling_probabilities), (1,), generator=rng).item())
+        else:
+            file_index = int(torch.multinomial(self.sampling_probabilities, 1, generator=rng).item())
+
+        return self.meta[file_index]
+
+    def _audio_read(self, path: str, seek_time: float = 0, duration: float = -1):
+        # Override this method in subclass if needed.
+        if self.load_wav:
+            return audio_read(path, seek_time, duration, pad=False)
+        else:
+            assert self.segment_duration is not None
+            n_frames = int(self.sample_rate * self.segment_duration)
+            return torch.zeros(self.channels, n_frames), self.sample_rate
+
+    def __getitem__(self, index: int) -&gt; tp.Union[torch.Tensor, tp.Tuple[torch.Tensor, SegmentInfo]]:
+        if self.segment_duration is None:
+            file_meta = self.meta[index]
+            out, sr = audio_read(file_meta.path)
+            out = convert_audio(out, sr, self.sample_rate, self.channels)
+            n_frames = out.shape[-1]
+            segment_info = SegmentInfo(file_meta, seek_time=0., n_frames=n_frames, total_frames=n_frames,
+                                       sample_rate=self.sample_rate, channels=out.shape[0])
+        else:
+            rng = torch.Generator()
+            if self.shuffle:
+                # We use index, plus extra randomness, either totally random if we don&#39;t know the epoch.
+                # otherwise we make use of the epoch number and optional shuffle_seed.
+                if self.current_epoch is None:
+                    rng.manual_seed(index + self.num_samples * random.randint(0, 2**24))
+                else:
+                    rng.manual_seed(index + self.num_samples * (self.current_epoch + self.shuffle_seed))
+            else:
+                # We only use index
+                rng.manual_seed(index)
+
+            for retry in range(self.max_read_retry):
+                file_meta = self.sample_file(index, rng)
+                # We add some variance in the file position even if audio file is smaller than segment
+                # without ending up with empty segments
+                max_seek = max(0, file_meta.duration - self.segment_duration * self.min_segment_ratio)
+                seek_time = torch.rand(1, generator=rng).item() * max_seek
+                try:
+                    out, sr = audio_read(file_meta.path, seek_time, self.segment_duration, pad=False)
+                    out = convert_audio(out, sr, self.sample_rate, self.channels)
+                    n_frames = out.shape[-1]
+                    target_frames = int(self.segment_duration * self.sample_rate)
+                    if self.pad:
+                        out = F.pad(out, (0, target_frames - n_frames))
+                    segment_info = SegmentInfo(file_meta, seek_time, n_frames=n_frames, total_frames=target_frames,
+                                               sample_rate=self.sample_rate, channels=out.shape[0])
+                except Exception as exc:
+                    logger.warning(&#34;Error opening file %s: %r&#34;, file_meta.path, exc)
+                    if retry == self.max_read_retry - 1:
+                        raise
+                else:
+                    break
+
+        if self.return_info:
+            # Returns the wav and additional information on the wave segment
+            return out, segment_info
+        else:
+            return out
+
+    def collater(self, samples):
+        &#34;&#34;&#34;The collater function has to be provided to the dataloader
+        if AudioDataset has return_info=True in order to properly collate
+        the samples of a batch.
+        &#34;&#34;&#34;
+        if self.segment_duration is None and len(samples) &gt; 1:
+            assert self.pad, &#34;Must allow padding when batching examples of different durations.&#34;
+
+        # In this case the audio reaching the collater is of variable length as segment_duration=None.
+        to_pad = self.segment_duration is None and self.pad
+        if to_pad:
+            max_len = max([wav.shape[-1] for wav, _ in samples])
+
+            def _pad_wav(wav):
+                return F.pad(wav, (0, max_len - wav.shape[-1]))
+
+        if self.return_info:
+            if len(samples) &gt; 0:
+                assert len(samples[0]) == 2
+                assert isinstance(samples[0][0], torch.Tensor)
+                assert isinstance(samples[0][1], SegmentInfo)
+
+            wavs = [wav for wav, _ in samples]
+            segment_infos = [copy.deepcopy(info) for _, info in samples]
+
+            if to_pad:
+                # Each wav could be of a different duration as they are not segmented.
+                for i in range(len(samples)):
+                    # Determines the total length of the signal with padding, so we update here as we pad.
+                    segment_infos[i].total_frames = max_len
+                    wavs[i] = _pad_wav(wavs[i])
+
+            wav = torch.stack(wavs)
+            return wav, segment_infos
+        else:
+            assert isinstance(samples[0], torch.Tensor)
+            if to_pad:
+                samples = [_pad_wav(s) for s in samples]
+            return torch.stack(samples)
+
+    def _filter_duration(self, meta: tp.List[AudioMeta]) -&gt; tp.List[AudioMeta]:
+        &#34;&#34;&#34;Filters out audio files with audio durations that will not allow to sample examples from them.&#34;&#34;&#34;
+        orig_len = len(meta)
+
+        # Filter data that is too short.
+        if self.min_audio_duration is not None:
+            meta = [m for m in meta if m.duration &gt;= self.min_audio_duration]
+
+        # Filter data that is too long.
+        if self.max_audio_duration is not None:
+            meta = [m for m in meta if m.duration &lt;= self.max_audio_duration]
+
+        filtered_len = len(meta)
+        removed_percentage = 100*(1-float(filtered_len)/orig_len)
+        msg = &#39;Removed %.2f percent of the data because it was too short or too long.&#39; % removed_percentage
+        if removed_percentage &lt; 10:
+            logging.debug(msg)
+        else:
+            logging.warning(msg)
+        return meta
+
+    @classmethod
+    def from_meta(cls, root: tp.Union[str, Path], **kwargs):
+        &#34;&#34;&#34;Instantiate AudioDataset from a path to a directory containing a manifest as a jsonl file.
+
+        Args:
+            root (str or Path): Path to root folder containing audio files.
+            kwargs: Additional keyword arguments for the AudioDataset.
+        &#34;&#34;&#34;
+        root = Path(root)
+        if root.is_dir():
+            if (root / &#39;data.jsonl&#39;).exists():
+                root = root / &#39;data.jsonl&#39;
+            elif (root / &#39;data.jsonl.gz&#39;).exists():
+                root = root / &#39;data.jsonl.gz&#39;
+            else:
+                raise ValueError(&#34;Don&#39;t know where to read metadata from in the dir. &#34;
+                                 &#34;Expecting either a data.jsonl or data.jsonl.gz file but none found.&#34;)
+        meta = load_audio_meta(root)
+        return cls(meta, **kwargs)
+
+    @classmethod
+    def from_path(cls, root: tp.Union[str, Path], minimal_meta: bool = True,
+                  exts: tp.List[str] = DEFAULT_EXTS, **kwargs):
+        &#34;&#34;&#34;Instantiate AudioDataset from a path containing (possibly nested) audio files.
+
+        Args:
+            root (str or Path): Path to root folder containing audio files.
+            minimal_meta (bool): Whether to only load minimal metadata or not.
+            exts (list of str): Extensions for audio files.
+            kwargs: Additional keyword arguments for the AudioDataset.
+        &#34;&#34;&#34;
+        root = Path(root)
+        if root.is_file():
+            meta = load_audio_meta(root, resolve=True)
+        else:
+            meta = find_audio_files(root, exts, minimal=minimal_meta, resolve=True)
+        return cls(meta, **kwargs)</code></pre>
+</details>
+<div class="desc"><p>Base audio dataset.</p>
+<p>The dataset takes a list of AudioMeta and create a dataset composed of segments of audio
+and potentially additional information, by creating random segments from the list of audio
+files referenced in the metadata and applying minimal data pre-processing such as resampling,
+mixing of channels, padding, etc.</p>
+<p>If no segment_duration value is provided, the AudioDataset will return the full wav for each
+audio file. Otherwise, it will randomly sample audio files and create a segment of the specified
+duration, applying padding if required.</p>
+<p>By default, only the torch Tensor corresponding to the waveform is returned. Setting return_info=True
+allows to return a tuple containing the torch Tensor and additional metadata on the segment and the
+original audio meta.</p>
+<p>Note that you can call <code>start_epoch(epoch)</code> in order to get
+a deterministic "randomization" for <code>shuffle=True</code>.
+For a given epoch and dataset index, this will always return the same extract.
+You can get back some diversity by setting the <code>shuffle_seed</code> param.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>meta</code></strong> :&ensp;<code>list</code> of <code><a title="audiocraft.data.audio_dataset.AudioMeta" href="#audiocraft.data.audio_dataset.AudioMeta">AudioMeta</a></code></dt>
+<dd>List of audio files metadata.</dd>
+<dt><strong><code>segment_duration</code></strong> :&ensp;<code>float</code>, optional</dt>
+<dd>Optional segment duration of audio to load.
+If not specified, the dataset will load the full audio segment from the file.</dd>
+<dt><strong><code>shuffle</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Set to <code>True</code> to have the data reshuffled at every epoch.</dd>
+<dt><strong><code>sample_rate</code></strong> :&ensp;<code>int</code></dt>
+<dd>Target sample rate of the loaded audio samples.</dd>
+<dt><strong><code>channels</code></strong> :&ensp;<code>int</code></dt>
+<dd>Target number of channels of the loaded audio samples.</dd>
+<dt><strong><code>sample_on_duration</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Set to <code>True</code> to sample segments with probability
+dependent on audio file duration. This is only used if <code>segment_duration</code> is provided.</dd>
+<dt><strong><code>sample_on_weight</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Set to <code>True</code> to sample segments using the <code>weight</code> entry of
+<code><a title="audiocraft.data.audio_dataset.AudioMeta" href="#audiocraft.data.audio_dataset.AudioMeta">AudioMeta</a></code>. If <code>sample_on_duration</code> is also True, the actual weight will be the product
+of the file duration and file weight. This is only used if <code>segment_duration</code> is provided.</dd>
+<dt><strong><code>min_segment_ratio</code></strong> :&ensp;<code>float</code></dt>
+<dd>Minimum segment ratio to use when the audio file
+is shorter than the desired segment.</dd>
+<dt><strong><code>max_read_retry</code></strong> :&ensp;<code>int</code></dt>
+<dd>Maximum number of retries to sample an audio segment from the dataset.</dd>
+<dt><strong><code>return_info</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Whether to return the wav only or return wav along with segment info and metadata.</dd>
+<dt><strong><code>min_audio_duration</code></strong> :&ensp;<code>float</code>, optional</dt>
+<dd>Minimum audio file duration, in seconds, if provided
+audio shorter than this will be filtered out.</dd>
+<dt><strong><code>max_audio_duration</code></strong> :&ensp;<code>float</code>, optional</dt>
+<dd>Maximal audio file duration in seconds, if provided
+audio longer than this will be filtered out.</dd>
+<dt><strong><code>shuffle_seed</code></strong> :&ensp;<code>int</code></dt>
+<dd>can be used to further randomize</dd>
+<dt><strong><code>load_wav</code></strong> :&ensp;<code>bool</code></dt>
+<dd>if False, skip loading the wav but returns a tensor of 0
+with the expected segment_duration (which must be provided if load_wav is False).</dd>
+<dt><strong><code>permutation_on_files</code></strong> :&ensp;<code>bool</code></dt>
+<dd>only if <code>sample_on_weight</code> and <code>sample_on_duration</code>
+are False. Will ensure a permutation on files when going through the dataset.
+In that case the epoch number must be provided in order for the model
+to continue the permutation across epochs. In that case, it is assumed
+that <code>num_samples = total_batch_size * num_updates_per_epoch</code>, with
+<code>total_batch_size</code> the overall batch size accounting for all gpus.</dd>
+</dl></div>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="audiocraft.data.info_audio_dataset.InfoAudioDataset" href="info_audio_dataset.html#audiocraft.data.info_audio_dataset.InfoAudioDataset">InfoAudioDataset</a></li>
+</ul>
+<h3>Static methods</h3>
+<dl>
+<dt id="audiocraft.data.audio_dataset.AudioDataset.from_meta"><code class="name flex">
+<span>def <span class="ident">from_meta</span></span>(<span>root: str | pathlib.Path, **kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Instantiate AudioDataset from a path to a directory containing a manifest as a jsonl file.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>root</code></strong> :&ensp;<code>str</code> or <code>Path</code></dt>
+<dd>Path to root folder containing audio files.</dd>
+<dt><strong><code>kwargs</code></strong></dt>
+<dd>Additional keyword arguments for the AudioDataset.</dd>
+</dl></div>
+</dd>
+<dt id="audiocraft.data.audio_dataset.AudioDataset.from_path"><code class="name flex">
+<span>def <span class="ident">from_path</span></span>(<span>root: str | pathlib.Path,<br>minimal_meta: bool = True,<br>exts: List[str] = ['.wav', '.mp3', '.flac', '.ogg', '.m4a'],<br>**kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Instantiate AudioDataset from a path containing (possibly nested) audio files.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>root</code></strong> :&ensp;<code>str</code> or <code>Path</code></dt>
+<dd>Path to root folder containing audio files.</dd>
+<dt><strong><code>minimal_meta</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Whether to only load minimal metadata or not.</dd>
+<dt><strong><code>exts</code></strong> :&ensp;<code>list</code> of <code>str</code></dt>
+<dd>Extensions for audio files.</dd>
+<dt><strong><code>kwargs</code></strong></dt>
+<dd>Additional keyword arguments for the AudioDataset.</dd>
+</dl></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="audiocraft.data.audio_dataset.AudioDataset.collater"><code class="name flex">
+<span>def <span class="ident">collater</span></span>(<span>self, samples)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def collater(self, samples):
+    &#34;&#34;&#34;The collater function has to be provided to the dataloader
+    if AudioDataset has return_info=True in order to properly collate
+    the samples of a batch.
+    &#34;&#34;&#34;
+    if self.segment_duration is None and len(samples) &gt; 1:
+        assert self.pad, &#34;Must allow padding when batching examples of different durations.&#34;
+
+    # In this case the audio reaching the collater is of variable length as segment_duration=None.
+    to_pad = self.segment_duration is None and self.pad
+    if to_pad:
+        max_len = max([wav.shape[-1] for wav, _ in samples])
+
+        def _pad_wav(wav):
+            return F.pad(wav, (0, max_len - wav.shape[-1]))
+
+    if self.return_info:
+        if len(samples) &gt; 0:
+            assert len(samples[0]) == 2
+            assert isinstance(samples[0][0], torch.Tensor)
+            assert isinstance(samples[0][1], SegmentInfo)
+
+        wavs = [wav for wav, _ in samples]
+        segment_infos = [copy.deepcopy(info) for _, info in samples]
+
+        if to_pad:
+            # Each wav could be of a different duration as they are not segmented.
+            for i in range(len(samples)):
+                # Determines the total length of the signal with padding, so we update here as we pad.
+                segment_infos[i].total_frames = max_len
+                wavs[i] = _pad_wav(wavs[i])
+
+        wav = torch.stack(wavs)
+        return wav, segment_infos
+    else:
+        assert isinstance(samples[0], torch.Tensor)
+        if to_pad:
+            samples = [_pad_wav(s) for s in samples]
+        return torch.stack(samples)</code></pre>
+</details>
+<div class="desc"><p>The collater function has to be provided to the dataloader
+if AudioDataset has return_info=True in order to properly collate
+the samples of a batch.</p></div>
+</dd>
+<dt id="audiocraft.data.audio_dataset.AudioDataset.sample_file"><code class="name flex">
+<span>def <span class="ident">sample_file</span></span>(<span>self, index: int, rng: torch._C.Generator) ‑> <a title="audiocraft.data.audio_dataset.AudioMeta" href="#audiocraft.data.audio_dataset.AudioMeta">AudioMeta</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sample_file(self, index: int, rng: torch.Generator) -&gt; AudioMeta:
+    &#34;&#34;&#34;Sample a given file from `self.meta`. Can be overridden in subclasses.
+    This is only called if `segment_duration` is not None.
+
+    You must use the provided random number generator `rng` for reproducibility.
+    You can further make use of the index accessed.
+    &#34;&#34;&#34;
+    if self.permutation_on_files:
+        assert self.current_epoch is not None
+        total_index = self.current_epoch * len(self) + index
+        permutation_index = total_index // len(self.meta)
+        relative_index = total_index % len(self.meta)
+        permutation = AudioDataset._get_file_permutation(
+            len(self.meta), permutation_index, self.shuffle_seed)
+        file_index = permutation[relative_index]
+        return self.meta[file_index]
+
+    if not self.sample_on_weight and not self.sample_on_duration:
+        file_index = int(torch.randint(len(self.sampling_probabilities), (1,), generator=rng).item())
+    else:
+        file_index = int(torch.multinomial(self.sampling_probabilities, 1, generator=rng).item())
+
+    return self.meta[file_index]</code></pre>
+</details>
+<div class="desc"><p>Sample a given file from <code>self.meta</code>. Can be overridden in subclasses.
+This is only called if <code>segment_duration</code> is not None.</p>
+<p>You must use the provided random number generator <code>rng</code> for reproducibility.
+You can further make use of the index accessed.</p></div>
+</dd>
+<dt id="audiocraft.data.audio_dataset.AudioDataset.start_epoch"><code class="name flex">
+<span>def <span class="ident">start_epoch</span></span>(<span>self, epoch: int)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def start_epoch(self, epoch: int):
+    self.current_epoch = epoch</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="audiocraft.data.audio_dataset.AudioMeta"><code class="flex name class">
+<span>class <span class="ident">AudioMeta</span></span>
+<span>(</span><span>path: str,<br>duration: float,<br>sample_rate: int,<br>amplitude: float | None = None,<br>weight: float | None = None,<br>info_path: <a title="audiocraft.data.zip.PathInZip" href="zip.html#audiocraft.data.zip.PathInZip">PathInZip</a> | None = None)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass(order=True)
+class AudioMeta(BaseInfo):
+    path: str
+    duration: float
+    sample_rate: int
+    amplitude: tp.Optional[float] = None
+    weight: tp.Optional[float] = None
+    # info_path is used to load additional information about the audio file that is stored in zip files.
+    info_path: tp.Optional[PathInZip] = None
+
+    @classmethod
+    def from_dict(cls, dictionary: dict):
+        base = cls._dict2fields(dictionary)
+        if &#39;info_path&#39; in base and base[&#39;info_path&#39;] is not None:
+            base[&#39;info_path&#39;] = PathInZip(base[&#39;info_path&#39;])
+        return cls(**base)
+
+    def to_dict(self):
+        d = super().to_dict()
+        if d[&#39;info_path&#39;] is not None:
+            d[&#39;info_path&#39;] = str(d[&#39;info_path&#39;])
+        return d</code></pre>
+</details>
+<div class="desc"><p>AudioMeta(path: str, duration: float, sample_rate: int, amplitude: Optional[float] = None, weight: Optional[float] = None, info_path: Optional[audiocraft.data.zip.PathInZip] = None)</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="audiocraft.data.audio_dataset.BaseInfo" href="#audiocraft.data.audio_dataset.BaseInfo">BaseInfo</a></li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="audiocraft.data.audio_dataset.AudioMeta.amplitude"><code class="name">var <span class="ident">amplitude</span> : float | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.data.audio_dataset.AudioMeta.duration"><code class="name">var <span class="ident">duration</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.data.audio_dataset.AudioMeta.info_path"><code class="name">var <span class="ident">info_path</span> : <a title="audiocraft.data.zip.PathInZip" href="zip.html#audiocraft.data.zip.PathInZip">PathInZip</a> | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.data.audio_dataset.AudioMeta.path"><code class="name">var <span class="ident">path</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.data.audio_dataset.AudioMeta.sample_rate"><code class="name">var <span class="ident">sample_rate</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.data.audio_dataset.AudioMeta.weight"><code class="name">var <span class="ident">weight</span> : float | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Static methods</h3>
+<dl>
+<dt id="audiocraft.data.audio_dataset.AudioMeta.from_dict"><code class="name flex">
+<span>def <span class="ident">from_dict</span></span>(<span>dictionary: dict)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="audiocraft.data.audio_dataset.AudioMeta.to_dict"><code class="name flex">
+<span>def <span class="ident">to_dict</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def to_dict(self):
+    d = super().to_dict()
+    if d[&#39;info_path&#39;] is not None:
+        d[&#39;info_path&#39;] = str(d[&#39;info_path&#39;])
+    return d</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="audiocraft.data.audio_dataset.BaseInfo"><code class="flex name class">
+<span>class <span class="ident">BaseInfo</span></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass(order=True)
+class BaseInfo:
+
+    @classmethod
+    def _dict2fields(cls, dictionary: dict):
+        return {
+            field.name: dictionary[field.name]
+            for field in fields(cls) if field.name in dictionary
+        }
+
+    @classmethod
+    def from_dict(cls, dictionary: dict):
+        _dictionary = cls._dict2fields(dictionary)
+        return cls(**_dictionary)
+
+    def to_dict(self):
+        return {
+            field.name: self.__getattribute__(field.name)
+            for field in fields(self)
+            }</code></pre>
+</details>
+<div class="desc"><p>BaseInfo()</p></div>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="audiocraft.data.audio_dataset.AudioMeta" href="#audiocraft.data.audio_dataset.AudioMeta">AudioMeta</a></li>
+<li><a title="audiocraft.data.audio_dataset.SegmentInfo" href="#audiocraft.data.audio_dataset.SegmentInfo">SegmentInfo</a></li>
+</ul>
+<h3>Static methods</h3>
+<dl>
+<dt id="audiocraft.data.audio_dataset.BaseInfo.from_dict"><code class="name flex">
+<span>def <span class="ident">from_dict</span></span>(<span>dictionary: dict)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="audiocraft.data.audio_dataset.BaseInfo.to_dict"><code class="name flex">
+<span>def <span class="ident">to_dict</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def to_dict(self):
+    return {
+        field.name: self.__getattribute__(field.name)
+        for field in fields(self)
+        }</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="audiocraft.data.audio_dataset.SegmentInfo"><code class="flex name class">
+<span>class <span class="ident">SegmentInfo</span></span>
+<span>(</span><span>meta: <a title="audiocraft.data.audio_dataset.AudioMeta" href="#audiocraft.data.audio_dataset.AudioMeta">AudioMeta</a>,<br>seek_time: float,<br>n_frames: int,<br>total_frames: int,<br>sample_rate: int,<br>channels: int)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass(order=True)
+class SegmentInfo(BaseInfo):
+    meta: AudioMeta
+    seek_time: float
+    # The following values are given once the audio is processed, e.g.
+    # at the target sample rate and target number of channels.
+    n_frames: int      # actual number of frames without padding
+    total_frames: int  # total number of frames, padding included
+    sample_rate: int   # actual sample rate
+    channels: int      # number of audio channels.</code></pre>
+</details>
+<div class="desc"><p>SegmentInfo(meta: audiocraft.data.audio_dataset.AudioMeta, seek_time: float, n_frames: int, total_frames: int, sample_rate: int, channels: int)</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="audiocraft.data.audio_dataset.BaseInfo" href="#audiocraft.data.audio_dataset.BaseInfo">BaseInfo</a></li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="audiocraft.modules.conditioners.SegmentWithAttributes" href="../modules/conditioners.html#audiocraft.modules.conditioners.SegmentWithAttributes">SegmentWithAttributes</a></li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="audiocraft.data.audio_dataset.SegmentInfo.channels"><code class="name">var <span class="ident">channels</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.data.audio_dataset.SegmentInfo.meta"><code class="name">var <span class="ident">meta</span> : <a title="audiocraft.data.audio_dataset.AudioMeta" href="#audiocraft.data.audio_dataset.AudioMeta">AudioMeta</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.data.audio_dataset.SegmentInfo.n_frames"><code class="name">var <span class="ident">n_frames</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.data.audio_dataset.SegmentInfo.sample_rate"><code class="name">var <span class="ident">sample_rate</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.data.audio_dataset.SegmentInfo.seek_time"><code class="name">var <span class="ident">seek_time</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.data.audio_dataset.SegmentInfo.total_frames"><code class="name">var <span class="ident">total_frames</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="audiocraft.data" href="index.html">audiocraft.data</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="audiocraft.data.audio_dataset.find_audio_files" href="#audiocraft.data.audio_dataset.find_audio_files">find_audio_files</a></code></li>
+<li><code><a title="audiocraft.data.audio_dataset.load_audio_meta" href="#audiocraft.data.audio_dataset.load_audio_meta">load_audio_meta</a></code></li>
+<li><code><a title="audiocraft.data.audio_dataset.main" href="#audiocraft.data.audio_dataset.main">main</a></code></li>
+<li><code><a title="audiocraft.data.audio_dataset.save_audio_meta" href="#audiocraft.data.audio_dataset.save_audio_meta">save_audio_meta</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="audiocraft.data.audio_dataset.AudioDataset" href="#audiocraft.data.audio_dataset.AudioDataset">AudioDataset</a></code></h4>
+<ul class="">
+<li><code><a title="audiocraft.data.audio_dataset.AudioDataset.collater" href="#audiocraft.data.audio_dataset.AudioDataset.collater">collater</a></code></li>
+<li><code><a title="audiocraft.data.audio_dataset.AudioDataset.from_meta" href="#audiocraft.data.audio_dataset.AudioDataset.from_meta">from_meta</a></code></li>
+<li><code><a title="audiocraft.data.audio_dataset.AudioDataset.from_path" href="#audiocraft.data.audio_dataset.AudioDataset.from_path">from_path</a></code></li>
+<li><code><a title="audiocraft.data.audio_dataset.AudioDataset.sample_file" href="#audiocraft.data.audio_dataset.AudioDataset.sample_file">sample_file</a></code></li>
+<li><code><a title="audiocraft.data.audio_dataset.AudioDataset.start_epoch" href="#audiocraft.data.audio_dataset.AudioDataset.start_epoch">start_epoch</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="audiocraft.data.audio_dataset.AudioMeta" href="#audiocraft.data.audio_dataset.AudioMeta">AudioMeta</a></code></h4>
+<ul class="two-column">
+<li><code><a title="audiocraft.data.audio_dataset.AudioMeta.amplitude" href="#audiocraft.data.audio_dataset.AudioMeta.amplitude">amplitude</a></code></li>
+<li><code><a title="audiocraft.data.audio_dataset.AudioMeta.duration" href="#audiocraft.data.audio_dataset.AudioMeta.duration">duration</a></code></li>
+<li><code><a title="audiocraft.data.audio_dataset.AudioMeta.from_dict" href="#audiocraft.data.audio_dataset.AudioMeta.from_dict">from_dict</a></code></li>
+<li><code><a title="audiocraft.data.audio_dataset.AudioMeta.info_path" href="#audiocraft.data.audio_dataset.AudioMeta.info_path">info_path</a></code></li>
+<li><code><a title="audiocraft.data.audio_dataset.AudioMeta.path" href="#audiocraft.data.audio_dataset.AudioMeta.path">path</a></code></li>
+<li><code><a title="audiocraft.data.audio_dataset.AudioMeta.sample_rate" href="#audiocraft.data.audio_dataset.AudioMeta.sample_rate">sample_rate</a></code></li>
+<li><code><a title="audiocraft.data.audio_dataset.AudioMeta.to_dict" href="#audiocraft.data.audio_dataset.AudioMeta.to_dict">to_dict</a></code></li>
+<li><code><a title="audiocraft.data.audio_dataset.AudioMeta.weight" href="#audiocraft.data.audio_dataset.AudioMeta.weight">weight</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="audiocraft.data.audio_dataset.BaseInfo" href="#audiocraft.data.audio_dataset.BaseInfo">BaseInfo</a></code></h4>
+<ul class="">
+<li><code><a title="audiocraft.data.audio_dataset.BaseInfo.from_dict" href="#audiocraft.data.audio_dataset.BaseInfo.from_dict">from_dict</a></code></li>
+<li><code><a title="audiocraft.data.audio_dataset.BaseInfo.to_dict" href="#audiocraft.data.audio_dataset.BaseInfo.to_dict">to_dict</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="audiocraft.data.audio_dataset.SegmentInfo" href="#audiocraft.data.audio_dataset.SegmentInfo">SegmentInfo</a></code></h4>
+<ul class="two-column">
+<li><code><a title="audiocraft.data.audio_dataset.SegmentInfo.channels" href="#audiocraft.data.audio_dataset.SegmentInfo.channels">channels</a></code></li>
+<li><code><a title="audiocraft.data.audio_dataset.SegmentInfo.meta" href="#audiocraft.data.audio_dataset.SegmentInfo.meta">meta</a></code></li>
+<li><code><a title="audiocraft.data.audio_dataset.SegmentInfo.n_frames" href="#audiocraft.data.audio_dataset.SegmentInfo.n_frames">n_frames</a></code></li>
+<li><code><a title="audiocraft.data.audio_dataset.SegmentInfo.sample_rate" href="#audiocraft.data.audio_dataset.SegmentInfo.sample_rate">sample_rate</a></code></li>
+<li><code><a title="audiocraft.data.audio_dataset.SegmentInfo.seek_time" href="#audiocraft.data.audio_dataset.SegmentInfo.seek_time">seek_time</a></code></li>
+<li><code><a title="audiocraft.data.audio_dataset.SegmentInfo.total_frames" href="#audiocraft.data.audio_dataset.SegmentInfo.total_frames">total_frames</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.5</a>.</p>
+</footer>
+</body>
+</html>

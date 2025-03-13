@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.5">
+<title>audiocraft.data.info_audio_dataset API documentation</title>
+<meta name="description" content="Base classes for the datasets that also provide non-audio metadata,
+e.g. description, text transcription etc.">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>audiocraft.data.info_audio_dataset</code></h1>
+</header>
+<section id="section-intro">
+<p>Base classes for the datasets that also provide non-audio metadata,
+e.g. description, text transcription etc.</p>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="audiocraft.data.info_audio_dataset.clusterify_all_meta"><code class="name flex">
+<span>def <span class="ident">clusterify_all_meta</span></span>(<span>meta: List[<a title="audiocraft.data.audio_dataset.AudioMeta" href="audio_dataset.html#audiocraft.data.audio_dataset.AudioMeta">AudioMeta</a>]) ‑> List[<a title="audiocraft.data.audio_dataset.AudioMeta" href="audio_dataset.html#audiocraft.data.audio_dataset.AudioMeta">AudioMeta</a>]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def clusterify_all_meta(meta: tp.List[AudioMeta]) -&gt; tp.List[AudioMeta]:
+    &#34;&#34;&#34;Monkey-patch all meta to match cluster specificities.&#34;&#34;&#34;
+    return [_clusterify_meta(m) for m in meta]</code></pre>
+</details>
+<div class="desc"><p>Monkey-patch all meta to match cluster specificities.</p></div>
+</dd>
+<dt id="audiocraft.data.info_audio_dataset.get_keyword"><code class="name flex">
+<span>def <span class="ident">get_keyword</span></span>(<span>value: str | None) ‑> str | None</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_keyword(value: tp.Optional[str]) -&gt; tp.Optional[str]:
+    &#34;&#34;&#34;Preprocess a single keyword.&#34;&#34;&#34;
+    if value is None or (not isinstance(value, str)) or len(value) == 0 or value == &#39;None&#39;:
+        return None
+    else:
+        return value.strip().lower()</code></pre>
+</details>
+<div class="desc"><p>Preprocess a single keyword.</p></div>
+</dd>
+<dt id="audiocraft.data.info_audio_dataset.get_keyword_list"><code class="name flex">
+<span>def <span class="ident">get_keyword_list</span></span>(<span>values: str | List[str]) ‑> List[str] | None</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_keyword_list(values: tp.Union[str, tp.List[str]]) -&gt; tp.Optional[tp.List[str]]:
+    &#34;&#34;&#34;Preprocess a list of keywords.&#34;&#34;&#34;
+    if isinstance(values, str):
+        values = [v.strip() for v in re.split(r&#39;[,\s]&#39;, values)]
+    elif isinstance(values, float) and math.isnan(values):
+        values = []
+    if not isinstance(values, list):
+        logger.debug(f&#34;Unexpected keyword list {values}&#34;)
+        values = [str(values)]
+
+    kws = [get_keyword(v) for v in values]
+    kw_list = [k for k in kws if k is not None]
+    if len(kw_list) == 0:
+        return None
+    else:
+        return kw_list</code></pre>
+</details>
+<div class="desc"><p>Preprocess a list of keywords.</p></div>
+</dd>
+<dt id="audiocraft.data.info_audio_dataset.get_keyword_or_keyword_list"><code class="name flex">
+<span>def <span class="ident">get_keyword_or_keyword_list</span></span>(<span>value: str | None) ‑> str | List[str] | None</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_keyword_or_keyword_list(value: tp.Optional[str]) -&gt; tp.Union[tp.Optional[str], tp.Optional[tp.List[str]]]:
+    &#34;&#34;&#34;Preprocess a single keyword or possible a list of keywords.&#34;&#34;&#34;
+    if isinstance(value, list):
+        return get_keyword_list(value)
+    else:
+        return get_keyword(value)</code></pre>
+</details>
+<div class="desc"><p>Preprocess a single keyword or possible a list of keywords.</p></div>
+</dd>
+<dt id="audiocraft.data.info_audio_dataset.get_string"><code class="name flex">
+<span>def <span class="ident">get_string</span></span>(<span>value: str | None) ‑> str | None</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_string(value: tp.Optional[str]) -&gt; tp.Optional[str]:
+    &#34;&#34;&#34;Preprocess a single keyword.&#34;&#34;&#34;
+    if value is None or (not isinstance(value, str)) or len(value) == 0 or value == &#39;None&#39;:
+        return None
+    else:
+        return value.strip()</code></pre>
+</details>
+<div class="desc"><p>Preprocess a single keyword.</p></div>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="audiocraft.data.info_audio_dataset.AudioInfo"><code class="flex name class">
+<span>class <span class="ident">AudioInfo</span></span>
+<span>(</span><span>meta: <a title="audiocraft.data.audio_dataset.AudioMeta" href="audio_dataset.html#audiocraft.data.audio_dataset.AudioMeta">AudioMeta</a>,<br>seek_time: float,<br>n_frames: int,<br>total_frames: int,<br>sample_rate: int,<br>channels: int,<br>audio_tokens: torch.Tensor | None = None)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass
+class AudioInfo(SegmentWithAttributes):
+    &#34;&#34;&#34;Dummy SegmentInfo with empty attributes.
+
+    The InfoAudioDataset is expected to return metadata that inherits
+    from SegmentWithAttributes class and can return conditioning attributes.
+
+    This basically guarantees all datasets will be compatible with current
+    solver that contain conditioners requiring this.
+    &#34;&#34;&#34;
+    audio_tokens: tp.Optional[torch.Tensor] = None  # populated when using cached batch for training a LM.
+
+    def to_condition_attributes(self) -&gt; ConditioningAttributes:
+        return ConditioningAttributes()</code></pre>
+</details>
+<div class="desc"><p>Dummy SegmentInfo with empty attributes.</p>
+<p>The InfoAudioDataset is expected to return metadata that inherits
+from SegmentWithAttributes class and can return conditioning attributes.</p>
+<p>This basically guarantees all datasets will be compatible with current
+solver that contain conditioners requiring this.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="audiocraft.modules.conditioners.SegmentWithAttributes" href="../modules/conditioners.html#audiocraft.modules.conditioners.SegmentWithAttributes">SegmentWithAttributes</a></li>
+<li><a title="audiocraft.data.audio_dataset.SegmentInfo" href="audio_dataset.html#audiocraft.data.audio_dataset.SegmentInfo">SegmentInfo</a></li>
+<li><a title="audiocraft.data.audio_dataset.BaseInfo" href="audio_dataset.html#audiocraft.data.audio_dataset.BaseInfo">BaseInfo</a></li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="audiocraft.data.music_dataset.MusicInfo" href="music_dataset.html#audiocraft.data.music_dataset.MusicInfo">MusicInfo</a></li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="audiocraft.data.info_audio_dataset.AudioInfo.audio_tokens"><code class="name">var <span class="ident">audio_tokens</span> : torch.Tensor | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="audiocraft.data.info_audio_dataset.AudioInfo.to_condition_attributes"><code class="name flex">
+<span>def <span class="ident">to_condition_attributes</span></span>(<span>self) ‑> <a title="audiocraft.modules.conditioners.ConditioningAttributes" href="../modules/conditioners.html#audiocraft.modules.conditioners.ConditioningAttributes">ConditioningAttributes</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def to_condition_attributes(self) -&gt; ConditioningAttributes:
+    return ConditioningAttributes()</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="audiocraft.data.info_audio_dataset.InfoAudioDataset"><code class="flex name class">
+<span>class <span class="ident">InfoAudioDataset</span></span>
+<span>(</span><span>meta: List[<a title="audiocraft.data.audio_dataset.AudioMeta" href="audio_dataset.html#audiocraft.data.audio_dataset.AudioMeta">AudioMeta</a>],<br>**kwargs)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class InfoAudioDataset(AudioDataset):
+    &#34;&#34;&#34;AudioDataset that always returns metadata as SegmentWithAttributes along with the audio waveform.
+
+    See `audiocraft.data.audio_dataset.AudioDataset` for initialization arguments.
+    &#34;&#34;&#34;
+    def __init__(self, meta: tp.List[AudioMeta], **kwargs):
+        super().__init__(clusterify_all_meta(meta), **kwargs)
+
+    def __getitem__(self, index: int) -&gt; tp.Union[torch.Tensor, tp.Tuple[torch.Tensor, SegmentWithAttributes]]:
+        if not self.return_info:
+            wav = super().__getitem__(index)
+            assert isinstance(wav, torch.Tensor)
+            return wav
+        wav, meta = super().__getitem__(index)
+        return wav, AudioInfo(**meta.to_dict())</code></pre>
+</details>
+<div class="desc"><p>AudioDataset that always returns metadata as SegmentWithAttributes along with the audio waveform.</p>
+<p>See <code><a title="audiocraft.data.audio_dataset.AudioDataset" href="audio_dataset.html#audiocraft.data.audio_dataset.AudioDataset">AudioDataset</a></code> for initialization arguments.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="audiocraft.data.audio_dataset.AudioDataset" href="audio_dataset.html#audiocraft.data.audio_dataset.AudioDataset">AudioDataset</a></li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="audiocraft.data.music_dataset.MusicDataset" href="music_dataset.html#audiocraft.data.music_dataset.MusicDataset">MusicDataset</a></li>
+<li><a title="audiocraft.data.sound_dataset.SoundDataset" href="sound_dataset.html#audiocraft.data.sound_dataset.SoundDataset">SoundDataset</a></li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="audiocraft.data.audio_dataset.AudioDataset" href="audio_dataset.html#audiocraft.data.audio_dataset.AudioDataset">AudioDataset</a></b></code>:
+<ul class="hlist">
+<li><code><a title="audiocraft.data.audio_dataset.AudioDataset.collater" href="audio_dataset.html#audiocraft.data.audio_dataset.AudioDataset.collater">collater</a></code></li>
+<li><code><a title="audiocraft.data.audio_dataset.AudioDataset.from_meta" href="audio_dataset.html#audiocraft.data.audio_dataset.AudioDataset.from_meta">from_meta</a></code></li>
+<li><code><a title="audiocraft.data.audio_dataset.AudioDataset.from_path" href="audio_dataset.html#audiocraft.data.audio_dataset.AudioDataset.from_path">from_path</a></code></li>
+<li><code><a title="audiocraft.data.audio_dataset.AudioDataset.sample_file" href="audio_dataset.html#audiocraft.data.audio_dataset.AudioDataset.sample_file">sample_file</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="audiocraft.data" href="index.html">audiocraft.data</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="audiocraft.data.info_audio_dataset.clusterify_all_meta" href="#audiocraft.data.info_audio_dataset.clusterify_all_meta">clusterify_all_meta</a></code></li>
+<li><code><a title="audiocraft.data.info_audio_dataset.get_keyword" href="#audiocraft.data.info_audio_dataset.get_keyword">get_keyword</a></code></li>
+<li><code><a title="audiocraft.data.info_audio_dataset.get_keyword_list" href="#audiocraft.data.info_audio_dataset.get_keyword_list">get_keyword_list</a></code></li>
+<li><code><a title="audiocraft.data.info_audio_dataset.get_keyword_or_keyword_list" href="#audiocraft.data.info_audio_dataset.get_keyword_or_keyword_list">get_keyword_or_keyword_list</a></code></li>
+<li><code><a title="audiocraft.data.info_audio_dataset.get_string" href="#audiocraft.data.info_audio_dataset.get_string">get_string</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="audiocraft.data.info_audio_dataset.AudioInfo" href="#audiocraft.data.info_audio_dataset.AudioInfo">AudioInfo</a></code></h4>
+<ul class="">
+<li><code><a title="audiocraft.data.info_audio_dataset.AudioInfo.audio_tokens" href="#audiocraft.data.info_audio_dataset.AudioInfo.audio_tokens">audio_tokens</a></code></li>
+<li><code><a title="audiocraft.data.info_audio_dataset.AudioInfo.to_condition_attributes" href="#audiocraft.data.info_audio_dataset.AudioInfo.to_condition_attributes">to_condition_attributes</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="audiocraft.data.info_audio_dataset.InfoAudioDataset" href="#audiocraft.data.info_audio_dataset.InfoAudioDataset">InfoAudioDataset</a></code></h4>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.5</a>.</p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,732 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.5">
+<title>audiocraft.utils.utils API documentation</title>
+<meta name="description" content="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>audiocraft.utils.utils</code></h1>
+</header>
+<section id="section-intro">
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="audiocraft.utils.utils.collate"><code class="name flex">
+<span>def <span class="ident">collate</span></span>(<span>tensors: List[torch.Tensor], dim: int = 0) ‑> Tuple[torch.Tensor, torch.Tensor]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def collate(tensors: tp.List[torch.Tensor], dim: int = 0) -&gt; tp.Tuple[torch.Tensor, torch.Tensor]:
+    &#34;&#34;&#34;Get a list of tensors and collate them to a single tensor. according to the following logic:
+    - `dim` specifies the time dimension which will be stacked and padded.
+    - The output will contain 1 new dimension (dimension index 0) which will be the size of
+    of the original list.
+
+    Args:
+        tensors (tp.List[torch.Tensor]): List of tensors to collate.
+        dim (int): Dimension which will be stacked and padded.
+    Returns:
+        tp.Tuple[torch.Tensor, torch.Tensor]:
+            torch.Tensor: Stacked and padded tensor. The output will contain 1 new dimension
+                (dimension index 0) which will be the size of the original list.
+            torch.Tensor: Tensor containing length of original tensor sizes (without padding).
+    &#34;&#34;&#34;
+    tensors = [x.transpose(0, dim) for x in tensors]
+    lens = torch.LongTensor([len(x) for x in tensors])
+    padded_tensors = pad_sequence(tensors)
+    padded_tensors = padded_tensors.transpose(0, 1)
+    padded_tensors = padded_tensors.transpose(1, dim + 1)
+    return padded_tensors, lens</code></pre>
+</details>
+<div class="desc"><p>Get a list of tensors and collate them to a single tensor. according to the following logic:
+- <code>dim</code> specifies the time dimension which will be stacked and padded.
+- The output will contain 1 new dimension (dimension index 0) which will be the size of
+of the original list.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>tensors</code></strong> :&ensp;<code>tp.List[torch.Tensor]</code></dt>
+<dd>List of tensors to collate.</dd>
+<dt><strong><code>dim</code></strong> :&ensp;<code>int</code></dt>
+<dd>Dimension which will be stacked and padded.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt>tp.Tuple[torch.Tensor, torch.Tensor]:</dt>
+<dt><code>
+torch.Tensor</code></dt>
+<dd>Stacked and padded tensor. The output will contain 1 new dimension
+(dimension index 0) which will be the size of the original list.
+torch.Tensor: Tensor containing length of original tensor sizes (without padding).</dd>
+</dl></div>
+</dd>
+<dt id="audiocraft.utils.utils.construct_frame_chords"><code class="name flex">
+<span>def <span class="ident">construct_frame_chords</span></span>(<span>min_timestamp: int,<br>chord_changes: List[Tuple[float, str]],<br>mapping_dict: Dict,<br>prev_chord: str,<br>frame_rate: float,<br>segment_duration: float) ‑> List[str]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def construct_frame_chords(
+                    min_timestamp: int,
+                    chord_changes: tp.List[tp.Tuple[float, str]],
+                    mapping_dict: tp.Dict,
+                    prev_chord: str,
+                    frame_rate: float,
+                    segment_duration: float,
+                    ) -&gt; tp.List[str]:
+    &#34;&#34;&#34; Translate symbolic chords [(start_time, tuples),...] into a frame-level int sequence&#34;&#34;&#34;
+
+    frames = [
+        frame / frame_rate
+        for frame in range(
+            min_timestamp, int(min_timestamp + segment_duration * frame_rate)
+        )
+    ]
+
+    frame_chords = []
+    current_chord = prev_chord
+
+    for frame in frames:
+        while chord_changes and frame &gt;= chord_changes[0][0]:
+            current_chord = chord_changes.pop(0)[1]
+        current_chord = &#39;N&#39; if current_chord in {None, &#39;&#39;} else current_chord
+        frame_chords.append(mapping_dict[current_chord])
+
+    return frame_chords</code></pre>
+</details>
+<div class="desc"><p>Translate symbolic chords [(start_time, tuples),&hellip;] into a frame-level int sequence</p></div>
+</dd>
+<dt id="audiocraft.utils.utils.copy_state"><code class="name flex">
+<span>def <span class="ident">copy_state</span></span>(<span>state: Any,<br>device: torch.device | str = 'cpu',<br>dtype: torch.dtype | None = None) ‑> Any</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def copy_state(state: tp.Any, device: tp.Union[torch.device, str] = &#39;cpu&#39;,
+               dtype: tp.Optional[torch.dtype] = None) -&gt; tp.Any:
+    if isinstance(state, torch.Tensor):
+        if dtype is None or not state.is_floating_point():
+            dtype = state.dtype
+        return state.detach().to(device=device, dtype=dtype, copy=True)
+    elif isinstance(state, dict):
+        return {k: copy_state(v, device, dtype) for k, v in state.items()}
+    elif isinstance(state, list):
+        return [copy_state(v, device, dtype) for v in state]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.utils.utils.dict_from_config"><code class="name flex">
+<span>def <span class="ident">dict_from_config</span></span>(<span>cfg: omegaconf.dictconfig.DictConfig) ‑> dict</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def dict_from_config(cfg: omegaconf.DictConfig) -&gt; dict:
+    &#34;&#34;&#34;Convenience function to map an omegaconf configuration to a dictionary.
+
+    Args:
+        cfg (omegaconf.DictConfig): Original configuration to map to dict.
+    Returns:
+        dict: Config as dictionary object.
+    &#34;&#34;&#34;
+    dct = omegaconf.OmegaConf.to_container(cfg, resolve=True)
+    assert isinstance(dct, dict)
+    return dct</code></pre>
+</details>
+<div class="desc"><p>Convenience function to map an omegaconf configuration to a dictionary.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>cfg</code></strong> :&ensp;<code>omegaconf.DictConfig</code></dt>
+<dd>Original configuration to map to dict.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>dict</code></dt>
+<dd>Config as dictionary object.</dd>
+</dl></div>
+</dd>
+<dt id="audiocraft.utils.utils.get_dataset_from_loader"><code class="name flex">
+<span>def <span class="ident">get_dataset_from_loader</span></span>(<span>dataloader)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_dataset_from_loader(dataloader):
+    dataset = dataloader.dataset
+    if isinstance(dataset, torch.utils.data.Subset):
+        return dataset.dataset
+    else:
+        return dataset</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.utils.utils.get_loader"><code class="name flex">
+<span>def <span class="ident">get_loader</span></span>(<span>dataset,<br>num_samples: int | None,<br>batch_size: int,<br>num_workers: int,<br>seed: int,<br>**kwargs) ‑> torch.utils.data.dataloader.DataLoader</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_loader(dataset, num_samples: tp.Optional[int], batch_size: int,
+               num_workers: int, seed: int, **kwargs) -&gt; torch.utils.data.DataLoader:
+    &#34;&#34;&#34;Convenience function to load dataset into a dataloader with optional subset sampling.
+
+    Args:
+        dataset: Dataset to load.
+        num_samples (Optional[int]): Number of samples to limit subset size.
+        batch_size (int): Batch size.
+        num_workers (int): Number of workers for data loading.
+        seed (int): Random seed.
+    &#34;&#34;&#34;
+    if num_samples is not None:
+        dataset = random_subset(dataset, num_samples, seed)
+
+    dataloader = flashy.distrib.loader(
+        dataset,
+        batch_size=batch_size,
+        num_workers=num_workers,
+        **kwargs
+    )
+    return dataloader</code></pre>
+</details>
+<div class="desc"><p>Convenience function to load dataset into a dataloader with optional subset sampling.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>dataset</code></strong></dt>
+<dd>Dataset to load.</dd>
+<dt><strong><code>num_samples</code></strong> :&ensp;<code>Optional[int]</code></dt>
+<dd>Number of samples to limit subset size.</dd>
+<dt><strong><code>batch_size</code></strong> :&ensp;<code>int</code></dt>
+<dd>Batch size.</dd>
+<dt><strong><code>num_workers</code></strong> :&ensp;<code>int</code></dt>
+<dd>Number of workers for data loading.</dd>
+<dt><strong><code>seed</code></strong> :&ensp;<code>int</code></dt>
+<dd>Random seed.</dd>
+</dl></div>
+</dd>
+<dt id="audiocraft.utils.utils.get_pool_executor"><code class="name flex">
+<span>def <span class="ident">get_pool_executor</span></span>(<span>num_workers: int, mp_context=None)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_pool_executor(num_workers: int, mp_context=None):
+    return ProcessPoolExecutor(num_workers, mp_context) if num_workers &gt; 1 else DummyPoolExecutor(1)</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.utils.utils.hash_trick"><code class="name flex">
+<span>def <span class="ident">hash_trick</span></span>(<span>word: str, vocab_size: int) ‑> int</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def hash_trick(word: str, vocab_size: int) -&gt; int:
+    &#34;&#34;&#34;Hash trick to pair each word with an index
+
+    Args:
+        word (str): word we wish to convert to an index
+        vocab_size (int): size of the vocabulary
+    Returns:
+        int: index of the word in the embedding LUT
+    &#34;&#34;&#34;
+    hash = int(hashlib.sha256(word.encode(&#34;utf-8&#34;)).hexdigest(), 16)
+    return hash % vocab_size</code></pre>
+</details>
+<div class="desc"><p>Hash trick to pair each word with an index</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>word</code></strong> :&ensp;<code>str</code></dt>
+<dd>word we wish to convert to an index</dd>
+<dt><strong><code>vocab_size</code></strong> :&ensp;<code>int</code></dt>
+<dd>size of the vocabulary</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>int</code></dt>
+<dd>index of the word in the embedding LUT</dd>
+</dl></div>
+</dd>
+<dt id="audiocraft.utils.utils.is_jsonable"><code class="name flex">
+<span>def <span class="ident">is_jsonable</span></span>(<span>x: Any)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_jsonable(x: tp.Any):
+    &#34;&#34;&#34;Check if an object can be serialized into a json:&#34;&#34;&#34;
+    try:
+        json.dumps(x)
+        return True
+    except (TypeError, OverflowError):
+        return False</code></pre>
+</details>
+<div class="desc"><p>Check if an object can be serialized into a json:</p></div>
+</dd>
+<dt id="audiocraft.utils.utils.length_to_mask"><code class="name flex">
+<span>def <span class="ident">length_to_mask</span></span>(<span>lengths: torch.Tensor, max_len: int | None = None) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def length_to_mask(lengths: torch.Tensor, max_len: tp.Optional[int] = None) -&gt; torch.Tensor:
+    &#34;&#34;&#34;Utility function to convert a tensor of sequence lengths to a mask (useful when working on padded sequences).
+    For example: [3, 5] =&gt; [[1, 1, 1, 0, 0], [1, 1, 1, 1, 1]]
+
+    Args:
+        lengths (torch.Tensor): tensor with lengths
+        max_len (int): can set the max length manually. Defaults to None.
+    Returns:
+        torch.Tensor: mask with 0s where there is pad tokens else 1s
+    &#34;&#34;&#34;
+    assert len(lengths.shape) == 1, &#34;Length shape should be 1 dimensional.&#34;
+    final_length = lengths.max().item() if not max_len else max_len
+    final_length = max(final_length, 1)  # if all seqs are of len zero we don&#39;t want a zero-size tensor
+    return torch.arange(final_length, device=lengths.device)[None, :] &lt; lengths[:, None]</code></pre>
+</details>
+<div class="desc"><p>Utility function to convert a tensor of sequence lengths to a mask (useful when working on padded sequences).
+For example: [3, 5] =&gt; [[1, 1, 1, 0, 0], [1, 1, 1, 1, 1]]</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>lengths</code></strong> :&ensp;<code>torch.Tensor</code></dt>
+<dd>tensor with lengths</dd>
+<dt><strong><code>max_len</code></strong> :&ensp;<code>int</code></dt>
+<dd>can set the max length manually. Defaults to None.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>torch.Tensor</code></dt>
+<dd>mask with 0s where there is pad tokens else 1s</dd>
+</dl></div>
+</dd>
+<dt id="audiocraft.utils.utils.load_clap_state_dict"><code class="name flex">
+<span>def <span class="ident">load_clap_state_dict</span></span>(<span>clap_model, path: str | pathlib.Path)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def load_clap_state_dict(clap_model, path: tp.Union[str, Path]):
+    &#34;&#34;&#34;Wrapper around state dict loading of CLAP model
+    addressing compatibility issues between CLAP and AudioCraft
+    HuggingFace transformer version.
+    See: https://github.com/LAION-AI/CLAP/issues/118
+    &#34;&#34;&#34;
+    from clap_module.factory import load_state_dict  # type: ignore
+    pkg = load_state_dict(path)
+    pkg.pop(&#39;text_branch.embeddings.position_ids&#39;, None)
+    clap_model.model.load_state_dict(pkg)</code></pre>
+</details>
+<div class="desc"><p>Wrapper around state dict loading of CLAP model
+addressing compatibility issues between CLAP and AudioCraft
+HuggingFace transformer version.
+See: <a href="https://github.com/LAION-AI/CLAP/issues/118">https://github.com/LAION-AI/CLAP/issues/118</a></p></div>
+</dd>
+<dt id="audiocraft.utils.utils.model_hash"><code class="name flex">
+<span>def <span class="ident">model_hash</span></span>(<span>model: torch.nn.modules.module.Module) ‑> str</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def model_hash(model: torch.nn.Module) -&gt; str:
+    &#34;&#34;&#34;Return a model hash. This should allow us to track regressions in model init
+    from the logs of past experiments.
+    &#34;&#34;&#34;
+    hasher = hashlib.sha1()
+    for p in model.parameters():
+        hasher.update(p.data.cpu().numpy().tobytes())
+    return hasher.hexdigest()</code></pre>
+</details>
+<div class="desc"><p>Return a model hash. This should allow us to track regressions in model init
+from the logs of past experiments.</p></div>
+</dd>
+<dt id="audiocraft.utils.utils.multinomial"><code class="name flex">
+<span>def <span class="ident">multinomial</span></span>(<span>input: torch.Tensor, num_samples: int, replacement=False, *, generator=None)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def multinomial(input: torch.Tensor, num_samples: int, replacement=False, *, generator=None):
+    &#34;&#34;&#34;torch.multinomial with arbitrary number of dimensions, and number of candidates on the last dimension.
+
+    Args:
+        input (torch.Tensor): The input tensor containing probabilities.
+        num_samples (int): Number of samples to draw.
+        replacement (bool): Whether to draw with replacement or not.
+    Keywords args:
+        generator (torch.Generator): A pseudorandom number generator for sampling.
+    Returns:
+        torch.Tensor: Last dimension contains num_samples indices
+            sampled from the multinomial probability distribution
+            located in the last dimension of tensor input.
+    &#34;&#34;&#34;
+    input_ = input.reshape(-1, input.shape[-1])
+    output_ = torch.multinomial(input_, num_samples=num_samples, replacement=replacement, generator=generator)
+    output = output_.reshape(*list(input.shape[:-1]), -1)
+    return output</code></pre>
+</details>
+<div class="desc"><p>torch.multinomial with arbitrary number of dimensions, and number of candidates on the last dimension.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>input</code></strong> :&ensp;<code>torch.Tensor</code></dt>
+<dd>The input tensor containing probabilities.</dd>
+<dt><strong><code>num_samples</code></strong> :&ensp;<code>int</code></dt>
+<dd>Number of samples to draw.</dd>
+<dt><strong><code>replacement</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Whether to draw with replacement or not.</dd>
+</dl>
+<p>Keywords args:
+generator (torch.Generator): A pseudorandom number generator for sampling.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>torch.Tensor</code></dt>
+<dd>Last dimension contains num_samples indices
+sampled from the multinomial probability distribution
+located in the last dimension of tensor input.</dd>
+</dl></div>
+</dd>
+<dt id="audiocraft.utils.utils.random_subset"><code class="name flex">
+<span>def <span class="ident">random_subset</span></span>(<span>dataset, max_samples: int, seed: int = 42) ‑> torch.utils.data.dataset.Subset</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def random_subset(dataset, max_samples: int, seed: int = 42) -&gt; torch.utils.data.Subset:
+    if max_samples &gt;= len(dataset):
+        return dataset
+
+    generator = torch.Generator().manual_seed(seed)
+    perm = torch.randperm(len(dataset), generator=generator)
+    return torch.utils.data.Subset(dataset, perm[:max_samples].tolist())</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.utils.utils.sample_top_k"><code class="name flex">
+<span>def <span class="ident">sample_top_k</span></span>(<span>probs: torch.Tensor, k: int) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sample_top_k(probs: torch.Tensor, k: int) -&gt; torch.Tensor:
+    &#34;&#34;&#34;Sample next token from top K values along the last dimension of the input probs tensor.
+
+    Args:
+        probs (torch.Tensor): Input probabilities with token candidates on the last dimension.
+        k (int): The k in “top-k”.
+    Returns:
+        torch.Tensor: Sampled tokens.
+    &#34;&#34;&#34;
+    top_k_value, _ = torch.topk(probs, k, dim=-1)
+    min_value_top_k = top_k_value[..., [-1]]
+    probs *= (probs &gt;= min_value_top_k).float()
+    probs.div_(probs.sum(dim=-1, keepdim=True))
+    next_token = multinomial(probs, num_samples=1)
+    return next_token</code></pre>
+</details>
+<div class="desc"><p>Sample next token from top K values along the last dimension of the input probs tensor.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>probs</code></strong> :&ensp;<code>torch.Tensor</code></dt>
+<dd>Input probabilities with token candidates on the last dimension.</dd>
+<dt><strong><code>k</code></strong> :&ensp;<code>int</code></dt>
+<dd>The k in “top-k”.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>torch.Tensor</code></dt>
+<dd>Sampled tokens.</dd>
+</dl></div>
+</dd>
+<dt id="audiocraft.utils.utils.sample_top_p"><code class="name flex">
+<span>def <span class="ident">sample_top_p</span></span>(<span>probs: torch.Tensor, p: float) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sample_top_p(probs: torch.Tensor, p: float) -&gt; torch.Tensor:
+    &#34;&#34;&#34;Sample next token from top P probabilities along the last dimension of the input probs tensor.
+
+    Args:
+        probs (torch.Tensor): Input probabilities with token candidates on the last dimension.
+        p (int): The p in “top-p”.
+    Returns:
+        torch.Tensor: Sampled tokens.
+    &#34;&#34;&#34;
+    probs_sort, probs_idx = torch.sort(probs, dim=-1, descending=True)
+    probs_sum = torch.cumsum(probs_sort, dim=-1)
+    mask = probs_sum - probs_sort &gt; p
+    probs_sort *= (~mask).float()
+    probs_sort.div_(probs_sort.sum(dim=-1, keepdim=True))
+    next_token = multinomial(probs_sort, num_samples=1)
+    next_token = torch.gather(probs_idx, -1, next_token)
+    return next_token</code></pre>
+</details>
+<div class="desc"><p>Sample next token from top P probabilities along the last dimension of the input probs tensor.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>probs</code></strong> :&ensp;<code>torch.Tensor</code></dt>
+<dd>Input probabilities with token candidates on the last dimension.</dd>
+<dt><strong><code>p</code></strong> :&ensp;<code>int</code></dt>
+<dd>The p in “top-p”.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>torch.Tensor</code></dt>
+<dd>Sampled tokens.</dd>
+</dl></div>
+</dd>
+<dt id="audiocraft.utils.utils.swap_state"><code class="name flex">
+<span>def <span class="ident">swap_state</span></span>(<span>model, state, **kwargs)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@contextmanager
+def swap_state(model, state, **kwargs):
+    old_state = copy_state(model.state_dict())
+    model.load_state_dict(state, **kwargs)
+    try:
+        yield
+    finally:
+        model.load_state_dict(old_state)</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.utils.utils.warn_once"><code class="name flex">
+<span>def <span class="ident">warn_once</span></span>(<span>logger, msg)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@lru_cache(None)
+def warn_once(logger, msg):
+    &#34;&#34;&#34;Warn about a given message only once.&#34;&#34;&#34;
+    logger.warning(msg)</code></pre>
+</details>
+<div class="desc"><p>Warn about a given message only once.</p></div>
+</dd>
+<dt id="audiocraft.utils.utils.with_rank_rng"><code class="name flex">
+<span>def <span class="ident">with_rank_rng</span></span>(<span>base_seed: int = 1234)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def with_rank_rng(base_seed: int = 1234):
+    &#34;&#34;&#34;Decorator for a function so that the function will use a Random Number Generator
+    whose state depend on the GPU rank. The original RNG state is restored upon returning.
+
+    Args:
+        base_seed (int): Random seed.
+    &#34;&#34;&#34;
+    def _decorator(fun: tp.Callable):
+        @wraps(fun)
+        def _decorated(*args, **kwargs):
+            state = torch.get_rng_state()
+            seed = base_seed ^ flashy.distrib.rank()
+            torch.manual_seed(seed)
+            logger.debug(&#39;Rank dependent seed set to %d&#39;, seed)
+            try:
+                return fun(*args, **kwargs)
+            finally:
+                torch.set_rng_state(state)
+                logger.debug(&#39;RNG state restored.&#39;)
+        return _decorated
+    return _decorator</code></pre>
+</details>
+<div class="desc"><p>Decorator for a function so that the function will use a Random Number Generator
+whose state depend on the GPU rank. The original RNG state is restored upon returning.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>base_seed</code></strong> :&ensp;<code>int</code></dt>
+<dd>Random seed.</dd>
+</dl></div>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="audiocraft.utils.utils.DummyPoolExecutor"><code class="flex name class">
+<span>class <span class="ident">DummyPoolExecutor</span></span>
+<span>(</span><span>workers, mp_context=None)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class DummyPoolExecutor:
+    &#34;&#34;&#34;Dummy pool executor to use when we actually have only 1 worker.
+    (e.g. instead of ProcessPoolExecutor).
+    &#34;&#34;&#34;
+    class DummyResult:
+        def __init__(self, func, *args, **kwargs):
+            self.func = func
+            self.args = args
+            self.kwargs = kwargs
+
+        def result(self):
+            return self.func(*self.args, **self.kwargs)
+
+    def __init__(self, workers, mp_context=None):
+        pass
+
+    def submit(self, func, *args, **kwargs):
+        return DummyPoolExecutor.DummyResult(func, *args, **kwargs)
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_value, exc_tb):
+        return</code></pre>
+</details>
+<div class="desc"><p>Dummy pool executor to use when we actually have only 1 worker.
+(e.g. instead of ProcessPoolExecutor).</p></div>
+<h3>Class variables</h3>
+<dl>
+<dt id="audiocraft.utils.utils.DummyPoolExecutor.DummyResult"><code class="name">var <span class="ident">DummyResult</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="audiocraft.utils.utils.DummyPoolExecutor.submit"><code class="name flex">
+<span>def <span class="ident">submit</span></span>(<span>self, func, *args, **kwargs)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def submit(self, func, *args, **kwargs):
+    return DummyPoolExecutor.DummyResult(func, *args, **kwargs)</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="audiocraft.utils" href="index.html">audiocraft.utils</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="audiocraft.utils.utils.collate" href="#audiocraft.utils.utils.collate">collate</a></code></li>
+<li><code><a title="audiocraft.utils.utils.construct_frame_chords" href="#audiocraft.utils.utils.construct_frame_chords">construct_frame_chords</a></code></li>
+<li><code><a title="audiocraft.utils.utils.copy_state" href="#audiocraft.utils.utils.copy_state">copy_state</a></code></li>
+<li><code><a title="audiocraft.utils.utils.dict_from_config" href="#audiocraft.utils.utils.dict_from_config">dict_from_config</a></code></li>
+<li><code><a title="audiocraft.utils.utils.get_dataset_from_loader" href="#audiocraft.utils.utils.get_dataset_from_loader">get_dataset_from_loader</a></code></li>
+<li><code><a title="audiocraft.utils.utils.get_loader" href="#audiocraft.utils.utils.get_loader">get_loader</a></code></li>
+<li><code><a title="audiocraft.utils.utils.get_pool_executor" href="#audiocraft.utils.utils.get_pool_executor">get_pool_executor</a></code></li>
+<li><code><a title="audiocraft.utils.utils.hash_trick" href="#audiocraft.utils.utils.hash_trick">hash_trick</a></code></li>
+<li><code><a title="audiocraft.utils.utils.is_jsonable" href="#audiocraft.utils.utils.is_jsonable">is_jsonable</a></code></li>
+<li><code><a title="audiocraft.utils.utils.length_to_mask" href="#audiocraft.utils.utils.length_to_mask">length_to_mask</a></code></li>
+<li><code><a title="audiocraft.utils.utils.load_clap_state_dict" href="#audiocraft.utils.utils.load_clap_state_dict">load_clap_state_dict</a></code></li>
+<li><code><a title="audiocraft.utils.utils.model_hash" href="#audiocraft.utils.utils.model_hash">model_hash</a></code></li>
+<li><code><a title="audiocraft.utils.utils.multinomial" href="#audiocraft.utils.utils.multinomial">multinomial</a></code></li>
+<li><code><a title="audiocraft.utils.utils.random_subset" href="#audiocraft.utils.utils.random_subset">random_subset</a></code></li>
+<li><code><a title="audiocraft.utils.utils.sample_top_k" href="#audiocraft.utils.utils.sample_top_k">sample_top_k</a></code></li>
+<li><code><a title="audiocraft.utils.utils.sample_top_p" href="#audiocraft.utils.utils.sample_top_p">sample_top_p</a></code></li>
+<li><code><a title="audiocraft.utils.utils.swap_state" href="#audiocraft.utils.utils.swap_state">swap_state</a></code></li>
+<li><code><a title="audiocraft.utils.utils.warn_once" href="#audiocraft.utils.utils.warn_once">warn_once</a></code></li>
+<li><code><a title="audiocraft.utils.utils.with_rank_rng" href="#audiocraft.utils.utils.with_rank_rng">with_rank_rng</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="audiocraft.utils.utils.DummyPoolExecutor" href="#audiocraft.utils.utils.DummyPoolExecutor">DummyPoolExecutor</a></code></h4>
+<ul class="">
+<li><code><a title="audiocraft.utils.utils.DummyPoolExecutor.DummyResult" href="#audiocraft.utils.utils.DummyPoolExecutor.DummyResult">DummyResult</a></code></li>
+<li><code><a title="audiocraft.utils.utils.DummyPoolExecutor.submit" href="#audiocraft.utils.utils.DummyPoolExecutor.submit">submit</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.5</a>.</p>
+</footer>
+</body>
+</html>

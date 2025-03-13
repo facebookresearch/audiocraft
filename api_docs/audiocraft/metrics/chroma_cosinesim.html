@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.5">
+<title>audiocraft.metrics.chroma_cosinesim API documentation</title>
+<meta name="description" content="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>audiocraft.metrics.chroma_cosinesim</code></h1>
+</header>
+<section id="section-intro">
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="audiocraft.metrics.chroma_cosinesim.ChromaCosineSimilarityMetric"><code class="flex name class">
+<span>class <span class="ident">ChromaCosineSimilarityMetric</span></span>
+<span>(</span><span>sample_rate: int, n_chroma: int, radix2_exp: int, argmax: bool, eps: float = 1e-08)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ChromaCosineSimilarityMetric(torchmetrics.Metric):
+    &#34;&#34;&#34;Chroma cosine similarity metric.
+
+    This metric extracts a chromagram for a reference waveform and
+    a generated waveform and compares each frame using the cosine similarity
+    function. The output is the mean cosine similarity.
+
+    Args:
+        sample_rate (int): Sample rate used by the chroma extractor.
+        n_chroma (int): Number of chroma used by the chroma extractor.
+        radix2_exp (int): Exponent for the chroma extractor.
+        argmax (bool): Whether the chroma extractor uses argmax.
+        eps (float): Epsilon for cosine similarity computation.
+    &#34;&#34;&#34;
+    def __init__(self, sample_rate: int, n_chroma: int, radix2_exp: int, argmax: bool, eps: float = 1e-8):
+        super().__init__()
+        self.chroma_sample_rate = sample_rate
+        self.n_chroma = n_chroma
+        self.eps = eps
+        self.chroma_extractor = ChromaExtractor(sample_rate=self.chroma_sample_rate, n_chroma=self.n_chroma,
+                                                radix2_exp=radix2_exp, argmax=argmax)
+        self.add_state(&#34;cosine_sum&#34;, default=torch.tensor(0.), dist_reduce_fx=&#34;sum&#34;)
+        self.add_state(&#34;weight&#34;, default=torch.tensor(0.), dist_reduce_fx=&#34;sum&#34;)
+
+    def update(self, preds: torch.Tensor, targets: torch.Tensor,
+               sizes: torch.Tensor, sample_rates: torch.Tensor) -&gt; None:
+        &#34;&#34;&#34;Compute cosine similarity between chromagrams and accumulate scores over the dataset.&#34;&#34;&#34;
+        if preds.size(0) == 0:
+            return
+
+        assert preds.shape == targets.shape, (
+            f&#34;Preds and target shapes mismatch: preds={preds.shape}, targets={targets.shape}&#34;)
+        assert preds.size(0) == sizes.size(0), (
+            f&#34;Number of items in preds ({preds.shape}) mismatch &#34;,
+            f&#34;with sizes ({sizes.shape})&#34;)
+        assert preds.size(0) == sample_rates.size(0), (
+            f&#34;Number of items in preds ({preds.shape}) mismatch &#34;,
+            f&#34;with sample_rates ({sample_rates.shape})&#34;)
+        assert torch.all(sample_rates == sample_rates[0].item()), &#34;All sample rates are not the same in the batch&#34;
+
+        device = self.weight.device
+        preds, targets = preds.to(device), targets.to(device)  # type: ignore
+        sample_rate = sample_rates[0].item()
+        preds = convert_audio(preds, from_rate=sample_rate, to_rate=self.chroma_sample_rate, to_channels=1)
+        targets = convert_audio(targets, from_rate=sample_rate, to_rate=self.chroma_sample_rate, to_channels=1)
+        gt_chroma = self.chroma_extractor(targets)
+        gen_chroma = self.chroma_extractor(preds)
+        chroma_lens = (sizes / self.chroma_extractor.winhop).ceil().int()
+        for i in range(len(gt_chroma)):
+            t = int(chroma_lens[i].item())
+            cosine_sim = torch.nn.functional.cosine_similarity(
+                gt_chroma[i, :t], gen_chroma[i, :t], dim=1, eps=self.eps)
+            self.cosine_sum += cosine_sim.sum(dim=0)  # type: ignore
+            self.weight += torch.tensor(t)  # type: ignore
+
+    def compute(self) -&gt; float:
+        &#34;&#34;&#34;Computes the average cosine similarty across all generated/target chromagrams pairs.&#34;&#34;&#34;
+        assert self.weight.item() &gt; 0, &#34;Unable to compute with total number of comparisons &lt;= 0&#34;  # type: ignore
+        return (self.cosine_sum / self.weight).item()  # type: ignore</code></pre>
+</details>
+<div class="desc"><p>Chroma cosine similarity metric.</p>
+<p>This metric extracts a chromagram for a reference waveform and
+a generated waveform and compares each frame using the cosine similarity
+function. The output is the mean cosine similarity.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>sample_rate</code></strong> :&ensp;<code>int</code></dt>
+<dd>Sample rate used by the chroma extractor.</dd>
+<dt><strong><code>n_chroma</code></strong> :&ensp;<code>int</code></dt>
+<dd>Number of chroma used by the chroma extractor.</dd>
+<dt><strong><code>radix2_exp</code></strong> :&ensp;<code>int</code></dt>
+<dd>Exponent for the chroma extractor.</dd>
+<dt><strong><code>argmax</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Whether the chroma extractor uses argmax.</dd>
+<dt><strong><code>eps</code></strong> :&ensp;<code>float</code></dt>
+<dd>Epsilon for cosine similarity computation.</dd>
+</dl>
+<p>Initializes internal Module state, shared by both nn.Module and ScriptModule.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>torchmetrics.metric.Metric</li>
+<li>torch.nn.modules.module.Module</li>
+<li>abc.ABC</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="audiocraft.metrics.chroma_cosinesim.ChromaCosineSimilarityMetric.full_state_update"><code class="name">var <span class="ident">full_state_update</span> : bool | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.metrics.chroma_cosinesim.ChromaCosineSimilarityMetric.higher_is_better"><code class="name">var <span class="ident">higher_is_better</span> : bool | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.metrics.chroma_cosinesim.ChromaCosineSimilarityMetric.is_differentiable"><code class="name">var <span class="ident">is_differentiable</span> : bool | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.metrics.chroma_cosinesim.ChromaCosineSimilarityMetric.plot_legend_name"><code class="name">var <span class="ident">plot_legend_name</span> : str | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.metrics.chroma_cosinesim.ChromaCosineSimilarityMetric.plot_lower_bound"><code class="name">var <span class="ident">plot_lower_bound</span> : float | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.metrics.chroma_cosinesim.ChromaCosineSimilarityMetric.plot_upper_bound"><code class="name">var <span class="ident">plot_upper_bound</span> : float | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="audiocraft.metrics.chroma_cosinesim.ChromaCosineSimilarityMetric.compute"><code class="name flex">
+<span>def <span class="ident">compute</span></span>(<span>self) ‑> float</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def compute(self) -&gt; float:
+    &#34;&#34;&#34;Computes the average cosine similarty across all generated/target chromagrams pairs.&#34;&#34;&#34;
+    assert self.weight.item() &gt; 0, &#34;Unable to compute with total number of comparisons &lt;= 0&#34;  # type: ignore
+    return (self.cosine_sum / self.weight).item()  # type: ignore</code></pre>
+</details>
+<div class="desc"><p>Computes the average cosine similarty across all generated/target chromagrams pairs.</p></div>
+</dd>
+<dt id="audiocraft.metrics.chroma_cosinesim.ChromaCosineSimilarityMetric.update"><code class="name flex">
+<span>def <span class="ident">update</span></span>(<span>self,<br>preds: torch.Tensor,<br>targets: torch.Tensor,<br>sizes: torch.Tensor,<br>sample_rates: torch.Tensor) ‑> None</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def update(self, preds: torch.Tensor, targets: torch.Tensor,
+           sizes: torch.Tensor, sample_rates: torch.Tensor) -&gt; None:
+    &#34;&#34;&#34;Compute cosine similarity between chromagrams and accumulate scores over the dataset.&#34;&#34;&#34;
+    if preds.size(0) == 0:
+        return
+
+    assert preds.shape == targets.shape, (
+        f&#34;Preds and target shapes mismatch: preds={preds.shape}, targets={targets.shape}&#34;)
+    assert preds.size(0) == sizes.size(0), (
+        f&#34;Number of items in preds ({preds.shape}) mismatch &#34;,
+        f&#34;with sizes ({sizes.shape})&#34;)
+    assert preds.size(0) == sample_rates.size(0), (
+        f&#34;Number of items in preds ({preds.shape}) mismatch &#34;,
+        f&#34;with sample_rates ({sample_rates.shape})&#34;)
+    assert torch.all(sample_rates == sample_rates[0].item()), &#34;All sample rates are not the same in the batch&#34;
+
+    device = self.weight.device
+    preds, targets = preds.to(device), targets.to(device)  # type: ignore
+    sample_rate = sample_rates[0].item()
+    preds = convert_audio(preds, from_rate=sample_rate, to_rate=self.chroma_sample_rate, to_channels=1)
+    targets = convert_audio(targets, from_rate=sample_rate, to_rate=self.chroma_sample_rate, to_channels=1)
+    gt_chroma = self.chroma_extractor(targets)
+    gen_chroma = self.chroma_extractor(preds)
+    chroma_lens = (sizes / self.chroma_extractor.winhop).ceil().int()
+    for i in range(len(gt_chroma)):
+        t = int(chroma_lens[i].item())
+        cosine_sim = torch.nn.functional.cosine_similarity(
+            gt_chroma[i, :t], gen_chroma[i, :t], dim=1, eps=self.eps)
+        self.cosine_sum += cosine_sim.sum(dim=0)  # type: ignore
+        self.weight += torch.tensor(t)  # type: ignore</code></pre>
+</details>
+<div class="desc"><p>Compute cosine similarity between chromagrams and accumulate scores over the dataset.</p></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="audiocraft.metrics" href="index.html">audiocraft.metrics</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="audiocraft.metrics.chroma_cosinesim.ChromaCosineSimilarityMetric" href="#audiocraft.metrics.chroma_cosinesim.ChromaCosineSimilarityMetric">ChromaCosineSimilarityMetric</a></code></h4>
+<ul class="two-column">
+<li><code><a title="audiocraft.metrics.chroma_cosinesim.ChromaCosineSimilarityMetric.compute" href="#audiocraft.metrics.chroma_cosinesim.ChromaCosineSimilarityMetric.compute">compute</a></code></li>
+<li><code><a title="audiocraft.metrics.chroma_cosinesim.ChromaCosineSimilarityMetric.full_state_update" href="#audiocraft.metrics.chroma_cosinesim.ChromaCosineSimilarityMetric.full_state_update">full_state_update</a></code></li>
+<li><code><a title="audiocraft.metrics.chroma_cosinesim.ChromaCosineSimilarityMetric.higher_is_better" href="#audiocraft.metrics.chroma_cosinesim.ChromaCosineSimilarityMetric.higher_is_better">higher_is_better</a></code></li>
+<li><code><a title="audiocraft.metrics.chroma_cosinesim.ChromaCosineSimilarityMetric.is_differentiable" href="#audiocraft.metrics.chroma_cosinesim.ChromaCosineSimilarityMetric.is_differentiable">is_differentiable</a></code></li>
+<li><code><a title="audiocraft.metrics.chroma_cosinesim.ChromaCosineSimilarityMetric.plot_legend_name" href="#audiocraft.metrics.chroma_cosinesim.ChromaCosineSimilarityMetric.plot_legend_name">plot_legend_name</a></code></li>
+<li><code><a title="audiocraft.metrics.chroma_cosinesim.ChromaCosineSimilarityMetric.plot_lower_bound" href="#audiocraft.metrics.chroma_cosinesim.ChromaCosineSimilarityMetric.plot_lower_bound">plot_lower_bound</a></code></li>
+<li><code><a title="audiocraft.metrics.chroma_cosinesim.ChromaCosineSimilarityMetric.plot_upper_bound" href="#audiocraft.metrics.chroma_cosinesim.ChromaCosineSimilarityMetric.plot_upper_bound">plot_upper_bound</a></code></li>
+<li><code><a title="audiocraft.metrics.chroma_cosinesim.ChromaCosineSimilarityMetric.update" href="#audiocraft.metrics.chroma_cosinesim.ChromaCosineSimilarityMetric.update">update</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.5</a>.</p>
+</footer>
+</body>
+</html>

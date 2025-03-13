@@ -1,0 +1,690 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.5">
+<title>audiocraft.solvers.compression API documentation</title>
+<meta name="description" content="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>audiocraft.solvers.compression</code></h1>
+</header>
+<section id="section-intro">
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="audiocraft.solvers.compression.evaluate_audio_reconstruction"><code class="name flex">
+<span>def <span class="ident">evaluate_audio_reconstruction</span></span>(<span>y_pred: torch.Tensor, y: torch.Tensor, cfg: omegaconf.dictconfig.DictConfig) ‑> dict</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def evaluate_audio_reconstruction(y_pred: torch.Tensor, y: torch.Tensor, cfg: omegaconf.DictConfig) -&gt; dict:
+    &#34;&#34;&#34;Audio reconstruction evaluation method that can be conveniently pickled.&#34;&#34;&#34;
+    metrics = {}
+    if cfg.evaluate.metrics.visqol:
+        visqol = builders.get_visqol(cfg.metrics.visqol)
+        metrics[&#39;visqol&#39;] = visqol(y_pred, y, cfg.sample_rate)
+    sisnr = builders.get_loss(&#39;sisnr&#39;, cfg)
+    metrics[&#39;sisnr&#39;] = sisnr(y_pred, y)
+    return metrics</code></pre>
+</details>
+<div class="desc"><p>Audio reconstruction evaluation method that can be conveniently pickled.</p></div>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="audiocraft.solvers.compression.CompressionSolver"><code class="flex name class">
+<span>class <span class="ident">CompressionSolver</span></span>
+<span>(</span><span>cfg: omegaconf.dictconfig.DictConfig)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class CompressionSolver(base.StandardSolver):
+    &#34;&#34;&#34;Solver for compression task.
+
+    The compression task combines a set of perceptual and objective losses
+    to train an EncodecModel (composed of an encoder-decoder and a quantizer)
+    to perform high fidelity audio reconstruction.
+    &#34;&#34;&#34;
+    def __init__(self, cfg: omegaconf.DictConfig):
+        super().__init__(cfg)
+        self.rng: torch.Generator  # set at each epoch
+        self.adv_losses = builders.get_adversarial_losses(self.cfg)
+        self.aux_losses = nn.ModuleDict()
+        self.info_losses = nn.ModuleDict()
+        assert not cfg.fsdp.use, &#34;FSDP not supported by CompressionSolver.&#34;
+        loss_weights = dict()
+        for loss_name, weight in self.cfg.losses.items():
+            if loss_name in [&#39;adv&#39;, &#39;feat&#39;]:
+                for adv_name, _ in self.adv_losses.items():
+                    loss_weights[f&#39;{loss_name}_{adv_name}&#39;] = weight
+            elif weight &gt; 0:
+                self.aux_losses[loss_name] = builders.get_loss(loss_name, self.cfg)
+                loss_weights[loss_name] = weight
+            else:
+                self.info_losses[loss_name] = builders.get_loss(loss_name, self.cfg)
+        self.balancer = builders.get_balancer(loss_weights, self.cfg.balancer)
+        self.register_stateful(&#39;adv_losses&#39;)
+
+    @property
+    def best_metric_name(self) -&gt; tp.Optional[str]:
+        # best model is the last for the compression model
+        return None
+
+    def build_model(self):
+        &#34;&#34;&#34;Instantiate model and optimizer.&#34;&#34;&#34;
+        # Model and optimizer
+        self.model = models.builders.get_compression_model(self.cfg).to(self.device)
+        self.optimizer = builders.get_optimizer(self.model.parameters(), self.cfg.optim)
+        self.register_stateful(&#39;model&#39;, &#39;optimizer&#39;)
+        self.register_best_state(&#39;model&#39;)
+        self.register_ema(&#39;model&#39;)
+
+    def build_dataloaders(self):
+        &#34;&#34;&#34;Instantiate audio dataloaders for each stage.&#34;&#34;&#34;
+        self.dataloaders = builders.get_audio_datasets(self.cfg)
+
+    def show(self):
+        &#34;&#34;&#34;Show the compression model and employed adversarial loss.&#34;&#34;&#34;
+        self.logger.info(f&#34;Compression model with {self.model.quantizer.total_codebooks} codebooks:&#34;)
+        self.log_model_summary(self.model)
+        self.logger.info(&#34;Adversarial loss:&#34;)
+        self.log_model_summary(self.adv_losses)
+        self.logger.info(&#34;Auxiliary losses:&#34;)
+        self.logger.info(self.aux_losses)
+        self.logger.info(&#34;Info losses:&#34;)
+        self.logger.info(self.info_losses)
+
+    def run_step(self, idx: int, batch: torch.Tensor, metrics: dict):
+        &#34;&#34;&#34;Perform one training or valid step on a given batch.&#34;&#34;&#34;
+        x = batch.to(self.device)
+        y = x.clone()
+
+        qres = self.model(x)
+        assert isinstance(qres, quantization.QuantizedResult)
+        y_pred = qres.x
+        # Log bandwidth in kb/s
+        metrics[&#39;bandwidth&#39;] = qres.bandwidth.mean()
+
+        if self.is_training:
+            d_losses: dict = {}
+            if len(self.adv_losses) &gt; 0 and torch.rand(1, generator=self.rng).item() &lt;= 1 / self.cfg.adversarial.every:
+                for adv_name, adversary in self.adv_losses.items():
+                    disc_loss = adversary.train_adv(y_pred, y)
+                    d_losses[f&#39;d_{adv_name}&#39;] = disc_loss
+                metrics[&#39;d_loss&#39;] = torch.sum(torch.stack(list(d_losses.values())))
+            metrics.update(d_losses)
+
+        balanced_losses: dict = {}
+        other_losses: dict = {}
+
+        # penalty from quantization
+        if qres.penalty is not None and qres.penalty.requires_grad:
+            other_losses[&#39;penalty&#39;] = qres.penalty  # penalty term from the quantizer
+
+        # adversarial losses
+        for adv_name, adversary in self.adv_losses.items():
+            adv_loss, feat_loss = adversary(y_pred, y)
+            balanced_losses[f&#39;adv_{adv_name}&#39;] = adv_loss
+            balanced_losses[f&#39;feat_{adv_name}&#39;] = feat_loss
+
+        # auxiliary losses
+        for loss_name, criterion in self.aux_losses.items():
+            loss = criterion(y_pred, y)
+            balanced_losses[loss_name] = loss
+
+        # weighted losses
+        metrics.update(balanced_losses)
+        metrics.update(other_losses)
+        metrics.update(qres.metrics)
+
+        if self.is_training:
+            # backprop losses that are not handled by balancer
+            other_loss = torch.tensor(0., device=self.device)
+            if &#39;penalty&#39; in other_losses:
+                other_loss += other_losses[&#39;penalty&#39;]
+            if other_loss.requires_grad:
+                other_loss.backward(retain_graph=True)
+                ratio1 = sum(p.grad.data.norm(p=2).pow(2)
+                             for p in self.model.parameters() if p.grad is not None)
+                assert isinstance(ratio1, torch.Tensor)
+                metrics[&#39;ratio1&#39;] = ratio1.sqrt()
+
+            # balancer losses backward, returns effective training loss
+            # with effective weights at the current batch.
+            metrics[&#39;g_loss&#39;] = self.balancer.backward(balanced_losses, y_pred)
+            # add metrics corresponding to weight ratios
+            metrics.update(self.balancer.metrics)
+            ratio2 = sum(p.grad.data.norm(p=2).pow(2)
+                         for p in self.model.parameters() if p.grad is not None)
+            assert isinstance(ratio2, torch.Tensor)
+            metrics[&#39;ratio2&#39;] = ratio2.sqrt()
+
+            # optim
+            flashy.distrib.sync_model(self.model)
+            if self.cfg.optim.max_norm:
+                torch.nn.utils.clip_grad_norm_(
+                    self.model.parameters(), self.cfg.optim.max_norm
+                )
+            self.optimizer.step()
+            self.optimizer.zero_grad()
+
+        # informative losses only
+        info_losses: dict = {}
+        with torch.no_grad():
+            for loss_name, criterion in self.info_losses.items():
+                loss = criterion(y_pred, y)
+                info_losses[loss_name] = loss
+
+        metrics.update(info_losses)
+
+        # aggregated GAN losses: this is useful to report adv and feat across different adversarial loss setups
+        adv_losses = [loss for loss_name, loss in metrics.items() if loss_name.startswith(&#39;adv&#39;)]
+        if len(adv_losses) &gt; 0:
+            metrics[&#39;adv&#39;] = torch.sum(torch.stack(adv_losses))
+        feat_losses = [loss for loss_name, loss in metrics.items() if loss_name.startswith(&#39;feat&#39;)]
+        if len(feat_losses) &gt; 0:
+            metrics[&#39;feat&#39;] = torch.sum(torch.stack(feat_losses))
+
+        return metrics
+
+    def run_epoch(self):
+        # reset random seed at the beginning of the epoch
+        self.rng = torch.Generator()
+        self.rng.manual_seed(1234 + self.epoch)
+        # run epoch
+        super().run_epoch()
+
+    def evaluate(self):
+        &#34;&#34;&#34;Evaluate stage. Runs audio reconstruction evaluation.&#34;&#34;&#34;
+        self.model.eval()
+        evaluate_stage_name = str(self.current_stage)
+
+        loader = self.dataloaders[&#39;evaluate&#39;]
+        updates = len(loader)
+        lp = self.log_progress(f&#39;{evaluate_stage_name} inference&#39;, loader, total=updates, updates=self.log_updates)
+        average = flashy.averager()
+
+        pendings = []
+        ctx = multiprocessing.get_context(&#39;spawn&#39;)
+        with get_pool_executor(self.cfg.evaluate.num_workers, mp_context=ctx) as pool:
+            for idx, batch in enumerate(lp):
+                x = batch.to(self.device)
+                with torch.no_grad():
+                    qres = self.model(x)
+
+                y_pred = qres.x.cpu()
+                y = batch.cpu()  # should already be on CPU but just in case
+                pendings.append(pool.submit(evaluate_audio_reconstruction, y_pred, y, self.cfg))
+
+            metrics_lp = self.log_progress(f&#39;{evaluate_stage_name} metrics&#39;, pendings, updates=self.log_updates)
+            for pending in metrics_lp:
+                metrics = pending.result()
+                metrics = average(metrics)
+
+        metrics = flashy.distrib.average_metrics(metrics, len(loader))
+        return metrics
+
+    def generate(self):
+        &#34;&#34;&#34;Generate stage.&#34;&#34;&#34;
+        self.model.eval()
+        sample_manager = SampleManager(self.xp, map_reference_to_sample_id=True)
+        generate_stage_name = str(self.current_stage)
+
+        loader = self.dataloaders[&#39;generate&#39;]
+        updates = len(loader)
+        lp = self.log_progress(generate_stage_name, loader, total=updates, updates=self.log_updates)
+
+        for batch in lp:
+            reference, _ = batch
+            reference = reference.to(self.device)
+            with torch.no_grad():
+                qres = self.model(reference)
+            assert isinstance(qres, quantization.QuantizedResult)
+
+            reference = reference.cpu()
+            estimate = qres.x.cpu()
+            sample_manager.add_samples(estimate, self.epoch, ground_truth_wavs=reference)
+
+        flashy.distrib.barrier()
+
+    def load_from_pretrained(self, name: str) -&gt; dict:
+        model = models.CompressionModel.get_pretrained(name)
+        if isinstance(model, models.DAC):
+            raise RuntimeError(&#34;Cannot fine tune a DAC model.&#34;)
+        elif isinstance(model, models.HFEncodecCompressionModel):
+            self.logger.warning(&#39;Trying to automatically convert a HuggingFace model &#39;
+                                &#39;to AudioCraft, this might fail!&#39;)
+            state = model.model.state_dict()
+            new_state = {}
+            for k, v in state.items():
+                if k.startswith(&#39;decoder.layers&#39;) and &#39;.conv.&#39; in k and &#39;.block.&#39; not in k:
+                    # We need to determine if this a convtr or a regular conv.
+                    layer = int(k.split(&#39;.&#39;)[2])
+                    if isinstance(model.model.decoder.layers[layer].conv, torch.nn.ConvTranspose1d):
+
+                        k = k.replace(&#39;.conv.&#39;, &#39;.convtr.&#39;)
+                k = k.replace(&#39;encoder.layers.&#39;, &#39;encoder.model.&#39;)
+                k = k.replace(&#39;decoder.layers.&#39;, &#39;decoder.model.&#39;)
+                k = k.replace(&#39;conv.&#39;, &#39;conv.conv.&#39;)
+                k = k.replace(&#39;convtr.&#39;, &#39;convtr.convtr.&#39;)
+                k = k.replace(&#39;quantizer.layers.&#39;, &#39;quantizer.vq.layers.&#39;)
+                k = k.replace(&#39;.codebook.&#39;, &#39;._codebook.&#39;)
+                new_state[k] = v
+            state = new_state
+        elif isinstance(model, models.EncodecModel):
+            state = model.state_dict()
+        else:
+            raise RuntimeError(f&#34;Cannot fine tune model type {type(model)}.&#34;)
+        return {
+            &#39;best_state&#39;: {&#39;model&#39;: state}
+        }
+
+    @staticmethod
+    def model_from_checkpoint(checkpoint_path: tp.Union[Path, str],
+                              device: tp.Union[torch.device, str] = &#39;cpu&#39;) -&gt; models.CompressionModel:
+        &#34;&#34;&#34;Instantiate a CompressionModel from a given checkpoint path or dora sig.
+        This method is a convenient endpoint to load a CompressionModel to use in other solvers.
+
+        Args:
+            checkpoint_path (Path or str): Path to checkpoint or dora sig from where the checkpoint is resolved.
+                This also supports pre-trained models by using a path of the form //pretrained/NAME.
+                See `model_from_pretrained` for a list of supported pretrained models.
+            use_ema (bool): Use EMA variant of the model instead of the actual model.
+            device (torch.device or str): Device on which the model is loaded.
+        &#34;&#34;&#34;
+        checkpoint_path = str(checkpoint_path)
+        if checkpoint_path.startswith(&#39;//pretrained/&#39;):
+            name = checkpoint_path.split(&#39;/&#39;, 3)[-1]
+            return models.CompressionModel.get_pretrained(name, device)
+        logger = logging.getLogger(__name__)
+        logger.info(f&#34;Loading compression model from checkpoint: {checkpoint_path}&#34;)
+        _checkpoint_path = checkpoint.resolve_checkpoint_path(checkpoint_path, use_fsdp=False)
+        assert _checkpoint_path is not None, f&#34;Could not resolve compression model checkpoint path: {checkpoint_path}&#34;
+        state = checkpoint.load_checkpoint(_checkpoint_path)
+        assert state is not None and &#39;xp.cfg&#39; in state, f&#34;Could not load compression model from ckpt: {checkpoint_path}&#34;
+        cfg = state[&#39;xp.cfg&#39;]
+        cfg.device = device
+        compression_model = models.builders.get_compression_model(cfg).to(device)
+        assert compression_model.sample_rate == cfg.sample_rate, &#34;Compression model sample rate should match&#34;
+
+        assert &#39;best_state&#39; in state and state[&#39;best_state&#39;] != {}
+        assert &#39;exported&#39; not in state, &#34;When loading an exported checkpoint, use the //pretrained/ prefix.&#34;
+        compression_model.load_state_dict(state[&#39;best_state&#39;][&#39;model&#39;])
+        compression_model.eval()
+        logger.info(&#34;Compression model loaded!&#34;)
+        return compression_model
+
+    @staticmethod
+    def wrapped_model_from_checkpoint(cfg: omegaconf.DictConfig,
+                                      checkpoint_path: tp.Union[Path, str],
+                                      device: tp.Union[torch.device, str] = &#39;cpu&#39;) -&gt; models.CompressionModel:
+        &#34;&#34;&#34;Instantiate a wrapped CompressionModel from a given checkpoint path or dora sig.
+
+        Args:
+            cfg (omegaconf.DictConfig): Configuration to read from for wrapped mode.
+            checkpoint_path (Path or str): Path to checkpoint or dora sig from where the checkpoint is resolved.
+            use_ema (bool): Use EMA variant of the model instead of the actual model.
+            device (torch.device or str): Device on which the model is loaded.
+        &#34;&#34;&#34;
+        compression_model = CompressionSolver.model_from_checkpoint(checkpoint_path, device)
+        compression_model = models.builders.get_wrapped_compression_model(compression_model, cfg)
+        return compression_model</code></pre>
+</details>
+<div class="desc"><p>Solver for compression task.</p>
+<p>The compression task combines a set of perceptual and objective losses
+to train an EncodecModel (composed of an encoder-decoder and a quantizer)
+to perform high fidelity audio reconstruction.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="audiocraft.solvers.base.StandardSolver" href="base.html#audiocraft.solvers.base.StandardSolver">StandardSolver</a></li>
+<li>abc.ABC</li>
+<li>flashy.solver.BaseSolver</li>
+</ul>
+<h3>Static methods</h3>
+<dl>
+<dt id="audiocraft.solvers.compression.CompressionSolver.model_from_checkpoint"><code class="name flex">
+<span>def <span class="ident">model_from_checkpoint</span></span>(<span>checkpoint_path: str | pathlib.Path, device: torch.device | str = 'cpu') ‑> <a title="audiocraft.models.encodec.CompressionModel" href="../models/encodec.html#audiocraft.models.encodec.CompressionModel">CompressionModel</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def model_from_checkpoint(checkpoint_path: tp.Union[Path, str],
+                          device: tp.Union[torch.device, str] = &#39;cpu&#39;) -&gt; models.CompressionModel:
+    &#34;&#34;&#34;Instantiate a CompressionModel from a given checkpoint path or dora sig.
+    This method is a convenient endpoint to load a CompressionModel to use in other solvers.
+
+    Args:
+        checkpoint_path (Path or str): Path to checkpoint or dora sig from where the checkpoint is resolved.
+            This also supports pre-trained models by using a path of the form //pretrained/NAME.
+            See `model_from_pretrained` for a list of supported pretrained models.
+        use_ema (bool): Use EMA variant of the model instead of the actual model.
+        device (torch.device or str): Device on which the model is loaded.
+    &#34;&#34;&#34;
+    checkpoint_path = str(checkpoint_path)
+    if checkpoint_path.startswith(&#39;//pretrained/&#39;):
+        name = checkpoint_path.split(&#39;/&#39;, 3)[-1]
+        return models.CompressionModel.get_pretrained(name, device)
+    logger = logging.getLogger(__name__)
+    logger.info(f&#34;Loading compression model from checkpoint: {checkpoint_path}&#34;)
+    _checkpoint_path = checkpoint.resolve_checkpoint_path(checkpoint_path, use_fsdp=False)
+    assert _checkpoint_path is not None, f&#34;Could not resolve compression model checkpoint path: {checkpoint_path}&#34;
+    state = checkpoint.load_checkpoint(_checkpoint_path)
+    assert state is not None and &#39;xp.cfg&#39; in state, f&#34;Could not load compression model from ckpt: {checkpoint_path}&#34;
+    cfg = state[&#39;xp.cfg&#39;]
+    cfg.device = device
+    compression_model = models.builders.get_compression_model(cfg).to(device)
+    assert compression_model.sample_rate == cfg.sample_rate, &#34;Compression model sample rate should match&#34;
+
+    assert &#39;best_state&#39; in state and state[&#39;best_state&#39;] != {}
+    assert &#39;exported&#39; not in state, &#34;When loading an exported checkpoint, use the //pretrained/ prefix.&#34;
+    compression_model.load_state_dict(state[&#39;best_state&#39;][&#39;model&#39;])
+    compression_model.eval()
+    logger.info(&#34;Compression model loaded!&#34;)
+    return compression_model</code></pre>
+</details>
+<div class="desc"><p>Instantiate a CompressionModel from a given checkpoint path or dora sig.
+This method is a convenient endpoint to load a CompressionModel to use in other solvers.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>checkpoint_path</code></strong> :&ensp;<code>Path</code> or <code>str</code></dt>
+<dd>Path to checkpoint or dora sig from where the checkpoint is resolved.
+This also supports pre-trained models by using a path of the form //pretrained/NAME.
+See <code>model_from_pretrained</code> for a list of supported pretrained models.</dd>
+<dt><strong><code>use_ema</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Use EMA variant of the model instead of the actual model.</dd>
+<dt><strong><code>device</code></strong> :&ensp;<code>torch.device</code> or <code>str</code></dt>
+<dd>Device on which the model is loaded.</dd>
+</dl></div>
+</dd>
+<dt id="audiocraft.solvers.compression.CompressionSolver.wrapped_model_from_checkpoint"><code class="name flex">
+<span>def <span class="ident">wrapped_model_from_checkpoint</span></span>(<span>cfg: omegaconf.dictconfig.DictConfig,<br>checkpoint_path: str | pathlib.Path,<br>device: torch.device | str = 'cpu') ‑> <a title="audiocraft.models.encodec.CompressionModel" href="../models/encodec.html#audiocraft.models.encodec.CompressionModel">CompressionModel</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def wrapped_model_from_checkpoint(cfg: omegaconf.DictConfig,
+                                  checkpoint_path: tp.Union[Path, str],
+                                  device: tp.Union[torch.device, str] = &#39;cpu&#39;) -&gt; models.CompressionModel:
+    &#34;&#34;&#34;Instantiate a wrapped CompressionModel from a given checkpoint path or dora sig.
+
+    Args:
+        cfg (omegaconf.DictConfig): Configuration to read from for wrapped mode.
+        checkpoint_path (Path or str): Path to checkpoint or dora sig from where the checkpoint is resolved.
+        use_ema (bool): Use EMA variant of the model instead of the actual model.
+        device (torch.device or str): Device on which the model is loaded.
+    &#34;&#34;&#34;
+    compression_model = CompressionSolver.model_from_checkpoint(checkpoint_path, device)
+    compression_model = models.builders.get_wrapped_compression_model(compression_model, cfg)
+    return compression_model</code></pre>
+</details>
+<div class="desc"><p>Instantiate a wrapped CompressionModel from a given checkpoint path or dora sig.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>cfg</code></strong> :&ensp;<code>omegaconf.DictConfig</code></dt>
+<dd>Configuration to read from for wrapped mode.</dd>
+<dt><strong><code>checkpoint_path</code></strong> :&ensp;<code>Path</code> or <code>str</code></dt>
+<dd>Path to checkpoint or dora sig from where the checkpoint is resolved.</dd>
+<dt><strong><code>use_ema</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Use EMA variant of the model instead of the actual model.</dd>
+<dt><strong><code>device</code></strong> :&ensp;<code>torch.device</code> or <code>str</code></dt>
+<dd>Device on which the model is loaded.</dd>
+</dl></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="audiocraft.solvers.compression.CompressionSolver.build_dataloaders"><code class="name flex">
+<span>def <span class="ident">build_dataloaders</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def build_dataloaders(self):
+    &#34;&#34;&#34;Instantiate audio dataloaders for each stage.&#34;&#34;&#34;
+    self.dataloaders = builders.get_audio_datasets(self.cfg)</code></pre>
+</details>
+<div class="desc"><p>Instantiate audio dataloaders for each stage.</p></div>
+</dd>
+<dt id="audiocraft.solvers.compression.CompressionSolver.build_model"><code class="name flex">
+<span>def <span class="ident">build_model</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def build_model(self):
+    &#34;&#34;&#34;Instantiate model and optimizer.&#34;&#34;&#34;
+    # Model and optimizer
+    self.model = models.builders.get_compression_model(self.cfg).to(self.device)
+    self.optimizer = builders.get_optimizer(self.model.parameters(), self.cfg.optim)
+    self.register_stateful(&#39;model&#39;, &#39;optimizer&#39;)
+    self.register_best_state(&#39;model&#39;)
+    self.register_ema(&#39;model&#39;)</code></pre>
+</details>
+<div class="desc"><p>Instantiate model and optimizer.</p></div>
+</dd>
+<dt id="audiocraft.solvers.compression.CompressionSolver.evaluate"><code class="name flex">
+<span>def <span class="ident">evaluate</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def evaluate(self):
+    &#34;&#34;&#34;Evaluate stage. Runs audio reconstruction evaluation.&#34;&#34;&#34;
+    self.model.eval()
+    evaluate_stage_name = str(self.current_stage)
+
+    loader = self.dataloaders[&#39;evaluate&#39;]
+    updates = len(loader)
+    lp = self.log_progress(f&#39;{evaluate_stage_name} inference&#39;, loader, total=updates, updates=self.log_updates)
+    average = flashy.averager()
+
+    pendings = []
+    ctx = multiprocessing.get_context(&#39;spawn&#39;)
+    with get_pool_executor(self.cfg.evaluate.num_workers, mp_context=ctx) as pool:
+        for idx, batch in enumerate(lp):
+            x = batch.to(self.device)
+            with torch.no_grad():
+                qres = self.model(x)
+
+            y_pred = qres.x.cpu()
+            y = batch.cpu()  # should already be on CPU but just in case
+            pendings.append(pool.submit(evaluate_audio_reconstruction, y_pred, y, self.cfg))
+
+        metrics_lp = self.log_progress(f&#39;{evaluate_stage_name} metrics&#39;, pendings, updates=self.log_updates)
+        for pending in metrics_lp:
+            metrics = pending.result()
+            metrics = average(metrics)
+
+    metrics = flashy.distrib.average_metrics(metrics, len(loader))
+    return metrics</code></pre>
+</details>
+<div class="desc"><p>Evaluate stage. Runs audio reconstruction evaluation.</p></div>
+</dd>
+<dt id="audiocraft.solvers.compression.CompressionSolver.load_from_pretrained"><code class="name flex">
+<span>def <span class="ident">load_from_pretrained</span></span>(<span>self, name: str) ‑> dict</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def load_from_pretrained(self, name: str) -&gt; dict:
+    model = models.CompressionModel.get_pretrained(name)
+    if isinstance(model, models.DAC):
+        raise RuntimeError(&#34;Cannot fine tune a DAC model.&#34;)
+    elif isinstance(model, models.HFEncodecCompressionModel):
+        self.logger.warning(&#39;Trying to automatically convert a HuggingFace model &#39;
+                            &#39;to AudioCraft, this might fail!&#39;)
+        state = model.model.state_dict()
+        new_state = {}
+        for k, v in state.items():
+            if k.startswith(&#39;decoder.layers&#39;) and &#39;.conv.&#39; in k and &#39;.block.&#39; not in k:
+                # We need to determine if this a convtr or a regular conv.
+                layer = int(k.split(&#39;.&#39;)[2])
+                if isinstance(model.model.decoder.layers[layer].conv, torch.nn.ConvTranspose1d):
+
+                    k = k.replace(&#39;.conv.&#39;, &#39;.convtr.&#39;)
+            k = k.replace(&#39;encoder.layers.&#39;, &#39;encoder.model.&#39;)
+            k = k.replace(&#39;decoder.layers.&#39;, &#39;decoder.model.&#39;)
+            k = k.replace(&#39;conv.&#39;, &#39;conv.conv.&#39;)
+            k = k.replace(&#39;convtr.&#39;, &#39;convtr.convtr.&#39;)
+            k = k.replace(&#39;quantizer.layers.&#39;, &#39;quantizer.vq.layers.&#39;)
+            k = k.replace(&#39;.codebook.&#39;, &#39;._codebook.&#39;)
+            new_state[k] = v
+        state = new_state
+    elif isinstance(model, models.EncodecModel):
+        state = model.state_dict()
+    else:
+        raise RuntimeError(f&#34;Cannot fine tune model type {type(model)}.&#34;)
+    return {
+        &#39;best_state&#39;: {&#39;model&#39;: state}
+    }</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.solvers.compression.CompressionSolver.show"><code class="name flex">
+<span>def <span class="ident">show</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def show(self):
+    &#34;&#34;&#34;Show the compression model and employed adversarial loss.&#34;&#34;&#34;
+    self.logger.info(f&#34;Compression model with {self.model.quantizer.total_codebooks} codebooks:&#34;)
+    self.log_model_summary(self.model)
+    self.logger.info(&#34;Adversarial loss:&#34;)
+    self.log_model_summary(self.adv_losses)
+    self.logger.info(&#34;Auxiliary losses:&#34;)
+    self.logger.info(self.aux_losses)
+    self.logger.info(&#34;Info losses:&#34;)
+    self.logger.info(self.info_losses)</code></pre>
+</details>
+<div class="desc"><p>Show the compression model and employed adversarial loss.</p></div>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="audiocraft.solvers.base.StandardSolver" href="base.html#audiocraft.solvers.base.StandardSolver">StandardSolver</a></b></code>:
+<ul class="hlist">
+<li><code><a title="audiocraft.solvers.base.StandardSolver.autocast" href="base.html#audiocraft.solvers.base.StandardSolver.autocast">autocast</a></code></li>
+<li><code><a title="audiocraft.solvers.base.StandardSolver.best_metric_name" href="base.html#audiocraft.solvers.base.StandardSolver.best_metric_name">best_metric_name</a></code></li>
+<li><code><a title="audiocraft.solvers.base.StandardSolver.commit" href="base.html#audiocraft.solvers.base.StandardSolver.commit">commit</a></code></li>
+<li><code><a title="audiocraft.solvers.base.StandardSolver.common_train_valid" href="base.html#audiocraft.solvers.base.StandardSolver.common_train_valid">common_train_valid</a></code></li>
+<li><code><a title="audiocraft.solvers.base.StandardSolver.generate" href="base.html#audiocraft.solvers.base.StandardSolver.generate">generate</a></code></li>
+<li><code><a title="audiocraft.solvers.base.StandardSolver.get_eval_solver_from_sig" href="base.html#audiocraft.solvers.base.StandardSolver.get_eval_solver_from_sig">get_eval_solver_from_sig</a></code></li>
+<li><code><a title="audiocraft.solvers.base.StandardSolver.initialize_ema" href="base.html#audiocraft.solvers.base.StandardSolver.initialize_ema">initialize_ema</a></code></li>
+<li><code><a title="audiocraft.solvers.base.StandardSolver.load_checkpoints" href="base.html#audiocraft.solvers.base.StandardSolver.load_checkpoints">load_checkpoints</a></code></li>
+<li><code><a title="audiocraft.solvers.base.StandardSolver.log_model_summary" href="base.html#audiocraft.solvers.base.StandardSolver.log_model_summary">log_model_summary</a></code></li>
+<li><code><a title="audiocraft.solvers.base.StandardSolver.register_best_state" href="base.html#audiocraft.solvers.base.StandardSolver.register_best_state">register_best_state</a></code></li>
+<li><code><a title="audiocraft.solvers.base.StandardSolver.register_ema" href="base.html#audiocraft.solvers.base.StandardSolver.register_ema">register_ema</a></code></li>
+<li><code><a title="audiocraft.solvers.base.StandardSolver.restore" href="base.html#audiocraft.solvers.base.StandardSolver.restore">restore</a></code></li>
+<li><code><a title="audiocraft.solvers.base.StandardSolver.run" href="base.html#audiocraft.solvers.base.StandardSolver.run">run</a></code></li>
+<li><code><a title="audiocraft.solvers.base.StandardSolver.run_epoch" href="base.html#audiocraft.solvers.base.StandardSolver.run_epoch">run_epoch</a></code></li>
+<li><code><a title="audiocraft.solvers.base.StandardSolver.run_one_stage" href="base.html#audiocraft.solvers.base.StandardSolver.run_one_stage">run_one_stage</a></code></li>
+<li><code><a title="audiocraft.solvers.base.StandardSolver.run_step" href="base.html#audiocraft.solvers.base.StandardSolver.run_step">run_step</a></code></li>
+<li><code><a title="audiocraft.solvers.base.StandardSolver.save_checkpoints" href="base.html#audiocraft.solvers.base.StandardSolver.save_checkpoints">save_checkpoints</a></code></li>
+<li><code><a title="audiocraft.solvers.base.StandardSolver.should_run_stage" href="base.html#audiocraft.solvers.base.StandardSolver.should_run_stage">should_run_stage</a></code></li>
+<li><code><a title="audiocraft.solvers.base.StandardSolver.should_stop_training" href="base.html#audiocraft.solvers.base.StandardSolver.should_stop_training">should_stop_training</a></code></li>
+<li><code><a title="audiocraft.solvers.base.StandardSolver.train" href="base.html#audiocraft.solvers.base.StandardSolver.train">train</a></code></li>
+<li><code><a title="audiocraft.solvers.base.StandardSolver.update_best_state_from_stage" href="base.html#audiocraft.solvers.base.StandardSolver.update_best_state_from_stage">update_best_state_from_stage</a></code></li>
+<li><code><a title="audiocraft.solvers.base.StandardSolver.valid" href="base.html#audiocraft.solvers.base.StandardSolver.valid">valid</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="audiocraft.solvers" href="index.html">audiocraft.solvers</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="audiocraft.solvers.compression.evaluate_audio_reconstruction" href="#audiocraft.solvers.compression.evaluate_audio_reconstruction">evaluate_audio_reconstruction</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="audiocraft.solvers.compression.CompressionSolver" href="#audiocraft.solvers.compression.CompressionSolver">CompressionSolver</a></code></h4>
+<ul class="">
+<li><code><a title="audiocraft.solvers.compression.CompressionSolver.build_dataloaders" href="#audiocraft.solvers.compression.CompressionSolver.build_dataloaders">build_dataloaders</a></code></li>
+<li><code><a title="audiocraft.solvers.compression.CompressionSolver.build_model" href="#audiocraft.solvers.compression.CompressionSolver.build_model">build_model</a></code></li>
+<li><code><a title="audiocraft.solvers.compression.CompressionSolver.evaluate" href="#audiocraft.solvers.compression.CompressionSolver.evaluate">evaluate</a></code></li>
+<li><code><a title="audiocraft.solvers.compression.CompressionSolver.load_from_pretrained" href="#audiocraft.solvers.compression.CompressionSolver.load_from_pretrained">load_from_pretrained</a></code></li>
+<li><code><a title="audiocraft.solvers.compression.CompressionSolver.model_from_checkpoint" href="#audiocraft.solvers.compression.CompressionSolver.model_from_checkpoint">model_from_checkpoint</a></code></li>
+<li><code><a title="audiocraft.solvers.compression.CompressionSolver.show" href="#audiocraft.solvers.compression.CompressionSolver.show">show</a></code></li>
+<li><code><a title="audiocraft.solvers.compression.CompressionSolver.wrapped_model_from_checkpoint" href="#audiocraft.solvers.compression.CompressionSolver.wrapped_model_from_checkpoint">wrapped_model_from_checkpoint</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.5</a>.</p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,483 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.5">
+<title>audiocraft.modules.rope API documentation</title>
+<meta name="description" content="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>audiocraft.modules.rope</code></h1>
+</header>
+<section id="section-intro">
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="audiocraft.modules.rope.RotaryEmbedding"><code class="flex name class">
+<span>class <span class="ident">RotaryEmbedding</span></span>
+<span>(</span><span>dim: int,<br>max_period: float = 10000.0,<br>xpos: bool = False,<br>scale: float = 1.0,<br>device=None,<br>dtype: torch.dtype = torch.float32)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class RotaryEmbedding(nn.Module):
+    &#34;&#34;&#34;Rotary positional embedding (RoPE) from [Su et al 2022](https://arxiv.org/abs/2104.09864).
+
+    Args:
+        dim (int): Embedding dimension (twice the number of frequencies).
+        max_period (float): Maximum period of the rotation frequencies.
+        xpos (bool): Use xPos, applies an exponential decay to rotation matrix.
+        scale (float): Scale of positional embedding, set to 0 to deactivate.
+        device (torch.device, optional): Device on which to initialize the module.
+        dtype (torch.dtype): dtype to use to generate the embedding.
+    &#34;&#34;&#34;
+    def __init__(self, dim: int, max_period: float = 10000.0, xpos: bool = False,
+                 scale: float = 1.0, device=None, dtype: torch.dtype = torch.float32):
+        super().__init__()
+        assert dim % 2 == 0
+        self.scale = scale
+        assert dtype in [torch.float64, torch.float32]
+        self.dtype = dtype
+
+        adim = torch.arange(0, dim, 2, device=device, dtype=dtype)[: (dim // 2)]
+        frequencies = 1.0 / (max_period ** (adim / dim))
+        self.register_buffer(&#34;frequencies&#34;, frequencies)
+        self.rotation: tp.Optional[torch.Tensor] = None
+
+        self.xpos = XPos(dim, device=device, dtype=dtype) if xpos else None
+
+    def get_rotation(self, start: int, end: int):
+        &#34;&#34;&#34;Create complex rotation tensor, cache values for fast computation.&#34;&#34;&#34;
+        if self.rotation is None or end &gt; self.rotation.shape[0]:
+            assert isinstance(self.frequencies, torch.Tensor)  # Satisfy type checker.
+            idx = torch.arange(end, device=self.frequencies.device, dtype=self.dtype)
+            angles = torch.outer(idx, self.frequencies)
+            self.rotation = torch.polar(torch.ones_like(angles), angles)
+        return self.rotation[start:end]
+
+    def rotate(self, x: torch.Tensor, start: int = 0, time_dim: int = 1, invert_decay: bool = False):
+        &#34;&#34;&#34;Apply rope rotation to query or key tensor.&#34;&#34;&#34;
+        T = x.shape[time_dim]
+        target_shape = [1] * x.dim()
+        target_shape[time_dim] = T
+        target_shape[-1] = -1
+        rotation = self.get_rotation(start, start + T).view(target_shape)
+
+        if self.xpos:
+            decay = self.xpos.get_decay(start, start + T).view(target_shape)
+        else:
+            decay = 1.0
+
+        if invert_decay:
+            decay = decay ** -1
+
+        x_complex = torch.view_as_complex(x.to(self.dtype).reshape(*x.shape[:-1], -1, 2))
+        scaled_rotation = (rotation * decay) * self.scale + (1.0 - self.scale)
+        x_out = torch.view_as_real(x_complex * scaled_rotation).view_as(x)
+
+        return x_out.type_as(x)
+
+    def rotate_qk(self, query: torch.Tensor, key: torch.Tensor, start: int = 0, time_dim: int = 1):
+        &#34;&#34;&#34; Apply rope rotation to both query and key tensors.
+        Supports streaming mode, in which query and key are not expected to have the same shape.
+        In streaming mode, key will be of length [P + C] with P the cached past timesteps, but
+        query will be [C] (typically C == 1).
+
+        Args:
+            query (torch.Tensor): Query to rotate.
+            key (torch.Tensor): Key to rotate.
+            start (int): Start index of the sequence for time offset.
+            time_dim (int): which dimension represent the time steps.
+        &#34;&#34;&#34;
+        query_timesteps = query.shape[time_dim]
+        key_timesteps = key.shape[time_dim]
+        streaming_offset = key_timesteps - query_timesteps
+
+        query_out = self.rotate(query, start + streaming_offset, time_dim)
+        key_out = self.rotate(key, start, time_dim, invert_decay=True)
+
+        return query_out, key_out</code></pre>
+</details>
+<div class="desc"><p>Rotary positional embedding (RoPE) from <a href="https://arxiv.org/abs/2104.09864">Su et al 2022</a>.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>dim</code></strong> :&ensp;<code>int</code></dt>
+<dd>Embedding dimension (twice the number of frequencies).</dd>
+<dt><strong><code>max_period</code></strong> :&ensp;<code>float</code></dt>
+<dd>Maximum period of the rotation frequencies.</dd>
+<dt><strong><code>xpos</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Use xPos, applies an exponential decay to rotation matrix.</dd>
+<dt><strong><code>scale</code></strong> :&ensp;<code>float</code></dt>
+<dd>Scale of positional embedding, set to 0 to deactivate.</dd>
+<dt><strong><code>device</code></strong> :&ensp;<code>torch.device</code>, optional</dt>
+<dd>Device on which to initialize the module.</dd>
+<dt><strong><code>dtype</code></strong> :&ensp;<code>torch.dtype</code></dt>
+<dd>dtype to use to generate the embedding.</dd>
+</dl>
+<p>Initializes internal Module state, shared by both nn.Module and ScriptModule.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>torch.nn.modules.module.Module</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="audiocraft.modules.rope.RotaryEmbedding.call_super_init"><code class="name">var <span class="ident">call_super_init</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.modules.rope.RotaryEmbedding.dump_patches"><code class="name">var <span class="ident">dump_patches</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.modules.rope.RotaryEmbedding.training"><code class="name">var <span class="ident">training</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="audiocraft.modules.rope.RotaryEmbedding.forward"><code class="name flex">
+<span>def <span class="ident">forward</span></span>(<span>self, *input: Any) ‑> None</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def _forward_unimplemented(self, *input: Any) -&gt; None:
+    r&#34;&#34;&#34;Defines the computation performed at every call.
+
+    Should be overridden by all subclasses.
+
+    .. note::
+        Although the recipe for forward pass needs to be defined within
+        this function, one should call the :class:`Module` instance afterwards
+        instead of this since the former takes care of running the
+        registered hooks while the latter silently ignores them.
+    &#34;&#34;&#34;
+    raise NotImplementedError(f&#34;Module [{type(self).__name__}] is missing the required \&#34;forward\&#34; function&#34;)</code></pre>
+</details>
+<div class="desc"><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the :class:<code>Module</code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div></div>
+</dd>
+<dt id="audiocraft.modules.rope.RotaryEmbedding.get_rotation"><code class="name flex">
+<span>def <span class="ident">get_rotation</span></span>(<span>self, start: int, end: int)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_rotation(self, start: int, end: int):
+    &#34;&#34;&#34;Create complex rotation tensor, cache values for fast computation.&#34;&#34;&#34;
+    if self.rotation is None or end &gt; self.rotation.shape[0]:
+        assert isinstance(self.frequencies, torch.Tensor)  # Satisfy type checker.
+        idx = torch.arange(end, device=self.frequencies.device, dtype=self.dtype)
+        angles = torch.outer(idx, self.frequencies)
+        self.rotation = torch.polar(torch.ones_like(angles), angles)
+    return self.rotation[start:end]</code></pre>
+</details>
+<div class="desc"><p>Create complex rotation tensor, cache values for fast computation.</p></div>
+</dd>
+<dt id="audiocraft.modules.rope.RotaryEmbedding.rotate"><code class="name flex">
+<span>def <span class="ident">rotate</span></span>(<span>self,<br>x: torch.Tensor,<br>start: int = 0,<br>time_dim: int = 1,<br>invert_decay: bool = False)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def rotate(self, x: torch.Tensor, start: int = 0, time_dim: int = 1, invert_decay: bool = False):
+    &#34;&#34;&#34;Apply rope rotation to query or key tensor.&#34;&#34;&#34;
+    T = x.shape[time_dim]
+    target_shape = [1] * x.dim()
+    target_shape[time_dim] = T
+    target_shape[-1] = -1
+    rotation = self.get_rotation(start, start + T).view(target_shape)
+
+    if self.xpos:
+        decay = self.xpos.get_decay(start, start + T).view(target_shape)
+    else:
+        decay = 1.0
+
+    if invert_decay:
+        decay = decay ** -1
+
+    x_complex = torch.view_as_complex(x.to(self.dtype).reshape(*x.shape[:-1], -1, 2))
+    scaled_rotation = (rotation * decay) * self.scale + (1.0 - self.scale)
+    x_out = torch.view_as_real(x_complex * scaled_rotation).view_as(x)
+
+    return x_out.type_as(x)</code></pre>
+</details>
+<div class="desc"><p>Apply rope rotation to query or key tensor.</p></div>
+</dd>
+<dt id="audiocraft.modules.rope.RotaryEmbedding.rotate_qk"><code class="name flex">
+<span>def <span class="ident">rotate_qk</span></span>(<span>self, query: torch.Tensor, key: torch.Tensor, start: int = 0, time_dim: int = 1)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def rotate_qk(self, query: torch.Tensor, key: torch.Tensor, start: int = 0, time_dim: int = 1):
+    &#34;&#34;&#34; Apply rope rotation to both query and key tensors.
+    Supports streaming mode, in which query and key are not expected to have the same shape.
+    In streaming mode, key will be of length [P + C] with P the cached past timesteps, but
+    query will be [C] (typically C == 1).
+
+    Args:
+        query (torch.Tensor): Query to rotate.
+        key (torch.Tensor): Key to rotate.
+        start (int): Start index of the sequence for time offset.
+        time_dim (int): which dimension represent the time steps.
+    &#34;&#34;&#34;
+    query_timesteps = query.shape[time_dim]
+    key_timesteps = key.shape[time_dim]
+    streaming_offset = key_timesteps - query_timesteps
+
+    query_out = self.rotate(query, start + streaming_offset, time_dim)
+    key_out = self.rotate(key, start, time_dim, invert_decay=True)
+
+    return query_out, key_out</code></pre>
+</details>
+<div class="desc"><p>Apply rope rotation to both query and key tensors.
+Supports streaming mode, in which query and key are not expected to have the same shape.
+In streaming mode, key will be of length [P + C] with P the cached past timesteps, but
+query will be [C] (typically C == 1).</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>query</code></strong> :&ensp;<code>torch.Tensor</code></dt>
+<dd>Query to rotate.</dd>
+<dt><strong><code>key</code></strong> :&ensp;<code>torch.Tensor</code></dt>
+<dd>Key to rotate.</dd>
+<dt><strong><code>start</code></strong> :&ensp;<code>int</code></dt>
+<dd>Start index of the sequence for time offset.</dd>
+<dt><strong><code>time_dim</code></strong> :&ensp;<code>int</code></dt>
+<dd>which dimension represent the time steps.</dd>
+</dl></div>
+</dd>
+</dl>
+</dd>
+<dt id="audiocraft.modules.rope.XPos"><code class="flex name class">
+<span>class <span class="ident">XPos</span></span>
+<span>(</span><span>dim: int,<br>smoothing: float = 0.4,<br>base_scale: int = 512,<br>device=None,<br>dtype: torch.dtype = torch.float32)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class XPos(nn.Module):
+    &#34;&#34;&#34;Length-extrapolatable positional embedding (xPos) from [Sun et al 2022](https://arxiv.org/abs/2212.10554v1).
+    This applies an exponential decay to the RoPE rotation matrix.
+
+    Args:
+        dim (int): Embedding dimension.
+        smoothing (float): Smoothing factor applied to the decay rates.
+        base_scale (int): Base decay rate, given in terms of scaling time.
+        device (torch.device, optional): Device on which to initialize the module.
+        dtype (torch.dtype): dtype to use to generate the embedding.
+    &#34;&#34;&#34;
+    def __init__(self, dim: int, smoothing: float = 0.4, base_scale: int = 512,
+                 device=None, dtype: torch.dtype = torch.float32):
+        super().__init__()
+        assert dim % 2 == 0
+        assert dtype in [torch.float64, torch.float32]
+        self.dtype = dtype
+        self.base_scale = base_scale
+
+        half_dim = dim // 2
+        adim = torch.arange(half_dim, device=device, dtype=dtype)
+        decay_rates = (adim / half_dim + smoothing) / (1.0 + smoothing)
+        self.register_buffer(&#34;decay_rates&#34;, decay_rates)
+        self.decay: tp.Optional[torch.Tensor] = None
+
+    def get_decay(self, start: int, end: int):
+        &#34;&#34;&#34;Create complex decay tensor, cache values for fast computation.&#34;&#34;&#34;
+        if self.decay is None or end &gt; self.decay.shape[0]:
+            assert isinstance(self.decay_rates, torch.Tensor)  # Satisfy type checker.
+            idx = torch.arange(end, device=self.decay_rates.device, dtype=self.dtype)
+            power = idx / self.base_scale
+            scale = self.decay_rates ** power.unsqueeze(-1)
+            self.decay = torch.polar(scale, torch.zeros_like(scale))
+        return self.decay[start:end]  # [T, C/2]</code></pre>
+</details>
+<div class="desc"><p>Length-extrapolatable positional embedding (xPos) from <a href="https://arxiv.org/abs/2212.10554v1">Sun et al 2022</a>.
+This applies an exponential decay to the RoPE rotation matrix.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>dim</code></strong> :&ensp;<code>int</code></dt>
+<dd>Embedding dimension.</dd>
+<dt><strong><code>smoothing</code></strong> :&ensp;<code>float</code></dt>
+<dd>Smoothing factor applied to the decay rates.</dd>
+<dt><strong><code>base_scale</code></strong> :&ensp;<code>int</code></dt>
+<dd>Base decay rate, given in terms of scaling time.</dd>
+<dt><strong><code>device</code></strong> :&ensp;<code>torch.device</code>, optional</dt>
+<dd>Device on which to initialize the module.</dd>
+<dt><strong><code>dtype</code></strong> :&ensp;<code>torch.dtype</code></dt>
+<dd>dtype to use to generate the embedding.</dd>
+</dl>
+<p>Initializes internal Module state, shared by both nn.Module and ScriptModule.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>torch.nn.modules.module.Module</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="audiocraft.modules.rope.XPos.call_super_init"><code class="name">var <span class="ident">call_super_init</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.modules.rope.XPos.dump_patches"><code class="name">var <span class="ident">dump_patches</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.modules.rope.XPos.training"><code class="name">var <span class="ident">training</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="audiocraft.modules.rope.XPos.forward"><code class="name flex">
+<span>def <span class="ident">forward</span></span>(<span>self, *input: Any) ‑> None</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def _forward_unimplemented(self, *input: Any) -&gt; None:
+    r&#34;&#34;&#34;Defines the computation performed at every call.
+
+    Should be overridden by all subclasses.
+
+    .. note::
+        Although the recipe for forward pass needs to be defined within
+        this function, one should call the :class:`Module` instance afterwards
+        instead of this since the former takes care of running the
+        registered hooks while the latter silently ignores them.
+    &#34;&#34;&#34;
+    raise NotImplementedError(f&#34;Module [{type(self).__name__}] is missing the required \&#34;forward\&#34; function&#34;)</code></pre>
+</details>
+<div class="desc"><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the :class:<code>Module</code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div></div>
+</dd>
+<dt id="audiocraft.modules.rope.XPos.get_decay"><code class="name flex">
+<span>def <span class="ident">get_decay</span></span>(<span>self, start: int, end: int)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_decay(self, start: int, end: int):
+    &#34;&#34;&#34;Create complex decay tensor, cache values for fast computation.&#34;&#34;&#34;
+    if self.decay is None or end &gt; self.decay.shape[0]:
+        assert isinstance(self.decay_rates, torch.Tensor)  # Satisfy type checker.
+        idx = torch.arange(end, device=self.decay_rates.device, dtype=self.dtype)
+        power = idx / self.base_scale
+        scale = self.decay_rates ** power.unsqueeze(-1)
+        self.decay = torch.polar(scale, torch.zeros_like(scale))
+    return self.decay[start:end]  # [T, C/2]</code></pre>
+</details>
+<div class="desc"><p>Create complex decay tensor, cache values for fast computation.</p></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="audiocraft.modules" href="index.html">audiocraft.modules</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="audiocraft.modules.rope.RotaryEmbedding" href="#audiocraft.modules.rope.RotaryEmbedding">RotaryEmbedding</a></code></h4>
+<ul class="two-column">
+<li><code><a title="audiocraft.modules.rope.RotaryEmbedding.call_super_init" href="#audiocraft.modules.rope.RotaryEmbedding.call_super_init">call_super_init</a></code></li>
+<li><code><a title="audiocraft.modules.rope.RotaryEmbedding.dump_patches" href="#audiocraft.modules.rope.RotaryEmbedding.dump_patches">dump_patches</a></code></li>
+<li><code><a title="audiocraft.modules.rope.RotaryEmbedding.forward" href="#audiocraft.modules.rope.RotaryEmbedding.forward">forward</a></code></li>
+<li><code><a title="audiocraft.modules.rope.RotaryEmbedding.get_rotation" href="#audiocraft.modules.rope.RotaryEmbedding.get_rotation">get_rotation</a></code></li>
+<li><code><a title="audiocraft.modules.rope.RotaryEmbedding.rotate" href="#audiocraft.modules.rope.RotaryEmbedding.rotate">rotate</a></code></li>
+<li><code><a title="audiocraft.modules.rope.RotaryEmbedding.rotate_qk" href="#audiocraft.modules.rope.RotaryEmbedding.rotate_qk">rotate_qk</a></code></li>
+<li><code><a title="audiocraft.modules.rope.RotaryEmbedding.training" href="#audiocraft.modules.rope.RotaryEmbedding.training">training</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="audiocraft.modules.rope.XPos" href="#audiocraft.modules.rope.XPos">XPos</a></code></h4>
+<ul class="">
+<li><code><a title="audiocraft.modules.rope.XPos.call_super_init" href="#audiocraft.modules.rope.XPos.call_super_init">call_super_init</a></code></li>
+<li><code><a title="audiocraft.modules.rope.XPos.dump_patches" href="#audiocraft.modules.rope.XPos.dump_patches">dump_patches</a></code></li>
+<li><code><a title="audiocraft.modules.rope.XPos.forward" href="#audiocraft.modules.rope.XPos.forward">forward</a></code></li>
+<li><code><a title="audiocraft.modules.rope.XPos.get_decay" href="#audiocraft.modules.rope.XPos.get_decay">get_decay</a></code></li>
+<li><code><a title="audiocraft.modules.rope.XPos.training" href="#audiocraft.modules.rope.XPos.training">training</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.5</a>.</p>
+</footer>
+</body>
+</html>

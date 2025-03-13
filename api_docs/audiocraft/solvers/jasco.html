@@ -1,0 +1,537 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.5">
+<title>audiocraft.solvers.jasco API documentation</title>
+<meta name="description" content="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>audiocraft.solvers.jasco</code></h1>
+</header>
+<section id="section-intro">
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="audiocraft.solvers.jasco.JascoSolver"><code class="flex name class">
+<span>class <span class="ident">JascoSolver</span></span>
+<span>(</span><span>cfg: omegaconf.dictconfig.DictConfig)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class JascoSolver(musicgen.MusicGenSolver):
+    &#34;&#34;&#34;Solver for JASCO - Joint Audio and Symbolic Conditioning for Temporally Controlled Text-to-Music Generation
+        https://arxiv.org/abs/2406.10970.
+    &#34;&#34;&#34;
+    DATASET_TYPE: builders.DatasetType = builders.DatasetType.JASCO
+
+    def __init__(self, cfg: DictConfig):
+        super().__init__(cfg)
+
+        # initialize generation parameters by config
+        self.generation_params = {
+            &#39;cfg_coef_all&#39;: self.cfg.generate.lm.cfg_coef_all,
+            &#39;cfg_coef_txt&#39;: self.cfg.generate.lm.cfg_coef_txt
+        }
+
+        self.latent_mean = cfg.compression_model_latent_mean
+        self.latent_std = cfg.compression_model_latent_std
+        self.mse = torch.nn.MSELoss(reduction=&#39;none&#39;)
+        self._best_metric_name = &#39;loss&#39;
+
+    def build_model(self) -&gt; None:
+        &#34;&#34;&#34;Instantiate model and optimization.&#34;&#34;&#34;
+        assert self.cfg.efficient_attention_backend == &#34;xformers&#34;, &#34;JASCO v1 models support only xformers backend.&#34;
+
+        self.compression_model = CompressionSolver.wrapped_model_from_checkpoint(
+            self.cfg, self.cfg.compression_model_checkpoint, device=self.device)
+        assert self.compression_model.sample_rate == self.cfg.sample_rate, (
+            f&#34;Compression model sample rate is {self.compression_model.sample_rate} but &#34;
+            f&#34;Solver sample rate is {self.cfg.sample_rate}.&#34;
+            )
+        # instantiate JASCO model
+        self.model: models.FlowMatchingModel = models.builders.get_jasco_model(self.cfg,
+                                                                               self.compression_model).to(self.device)
+        # initialize optimization
+        self.initialize_optimization()
+
+    def _get_latents(self, audio):
+        with torch.no_grad():
+            latents = self.compression_model.model.encoder(audio)
+        return latents.permute(0, 2, 1)  # [B, D, T] -&gt; [B, T, D]
+
+    def _prepare_latents_and_attributes(
+        self, batch: tp.Tuple[torch.Tensor, tp.List[SegmentWithAttributes]],
+    ) -&gt; tp.Tuple[dict, torch.Tensor, torch.Tensor]:
+        &#34;&#34;&#34;Prepare input batchs for language model training.
+
+        Args:
+            batch (tuple[torch.Tensor, list[SegmentWithAttributes]]): Input batch with audio tensor of shape [B, C, T]
+                and corresponding metadata as SegmentWithAttributes (with B items).
+        Returns:
+            Condition tensors (dict[str, any]): Preprocessed condition attributes.
+            Tokens (torch.Tensor): Audio tokens from compression model, of shape [B, K, T_s],
+                with B the batch size, K the number of codebooks, T_s the token timesteps.
+            Padding mask (torch.Tensor): Mask with valid positions in the tokens tensor, of shape [B, K, T_s].
+        &#34;&#34;&#34;
+        audio, infos = batch
+        audio = audio.to(self.device)
+        assert audio.size(0) == len(infos), (
+            f&#34;Mismatch between number of items in audio batch ({audio.size(0)})&#34;,
+            f&#34; and in metadata ({len(infos)})&#34;
+        )
+
+        latents = self._get_latents(audio)
+
+        # prepare attributes
+        if JascoCondConst.CRD.value in self.cfg.conditioners:
+            null_chord_idx = self.cfg.conditioners.chords.chords_emb.card
+        else:
+            null_chord_idx = -1
+        attributes = [info.to_condition_attributes() for info in infos]
+        if self.model.cfg_dropout is not None:
+            attributes = self.model.cfg_dropout(samples=attributes,
+                                                cond_types=[&#34;wav&#34;, &#34;text&#34;, &#34;symbolic&#34;],
+                                                null_chord_idx=null_chord_idx)
+        attributes = self.model.att_dropout(attributes)
+        tokenized = self.model.condition_provider.tokenize(attributes)
+
+        with self.autocast:
+            condition_tensors = self.model.condition_provider(tokenized)
+
+        # create a padding mask to hold valid vs invalid positions
+        padding_mask = torch.ones_like(latents, dtype=torch.bool, device=latents.device)
+
+        return condition_tensors, latents, padding_mask
+
+    def _normalized_latents(self, latents: torch.Tensor) -&gt; torch.Tensor:
+        &#34;&#34;&#34;Normalize latents.&#34;&#34;&#34;
+        return (latents - self.latent_mean) / self.latent_std
+
+    def _unnormalized_latents(self, latents: torch.Tensor) -&gt; torch.Tensor:
+        &#34;&#34;&#34;Unnormalize latents.&#34;&#34;&#34;
+        return (latents * self.latent_std) + self.latent_mean
+
+    def _z(self, z_0: torch.Tensor, z_1: torch.Tensor, t: torch.Tensor, sigma_min: float = 1e-5) -&gt; torch.Tensor:
+        &#34;&#34;&#34;Interpolate data and prior.&#34;&#34;&#34;
+        return (1 - (1 - sigma_min) * t) * z_0 + t * z_1
+
+    def _vector_field(self, z_0: torch.Tensor, z_1: torch.Tensor, sigma_min: float = 1e-5) -&gt; torch.Tensor:
+        &#34;&#34;&#34;Compute the GT vector field.
+           sigma_min is a small value to avoid numerical instabilities.&#34;&#34;&#34;
+        return z_1 - (1 - sigma_min) * z_0
+
+    def _compute_loss(self, t: torch.Tensor, v_theta: torch.Tensor, v: torch.Tensor) -&gt; torch.Tensor:
+        &#34;&#34;&#34;Compute the loss.&#34;&#34;&#34;
+        loss_func = self.cfg.get(&#39;loss_func&#39;, &#39;increasing&#39;)
+        if loss_func == &#39;uniform&#39;:
+            scales = 1
+        elif loss_func == &#39;increasing&#39;:
+            scales = 1 + t  # type: ignore
+        elif loss_func == &#39;decreasing&#39;:
+            scales = 2 - t  # type: ignore
+        else:
+            raise ValueError(&#39;unsupported loss_func was passed in config&#39;)
+        return (scales * self.mse(v_theta, v)).mean()
+
+    def run_step(self, idx: int, batch: tp.Tuple[torch.Tensor, tp.List[SegmentWithAttributes]], metrics: dict) -&gt; dict:
+        &#34;&#34;&#34;Perform one training or valid step on a given batch.&#34;&#34;&#34;
+
+        condition_tensors, latents, padding_mask = self._prepare_latents_and_attributes(batch)
+
+        self.deadlock_detect.update(&#39;tokens_and_conditions&#39;)
+
+        B, T, D = latents.shape
+        device = self.device
+
+        # normalize latents
+        z_1 = self._normalized_latents(latents)
+
+        # sample the N(0,1) prior
+        z_0 = torch.randn(B, T, D, device=device)
+
+        # random time parameter, between 0 to 1
+        t = torch.rand((B, 1, 1), device=device)
+
+        # interpolate data and prior
+        z = self._z(z_0, z_1, t)
+
+        # compute the GT vector field
+        v = self._vector_field(z_0, z_1)
+
+        with self.autocast:
+            v_theta = self.model(latents=z,
+                                 t=t,
+                                 conditions=[],
+                                 condition_tensors=condition_tensors)
+
+            loss = self._compute_loss(t, v_theta, v)
+            unscaled_loss = loss.clone()
+
+        self.deadlock_detect.update(&#39;loss&#39;)
+
+        if self.is_training:
+            metrics[&#39;lr&#39;] = self.optimizer.param_groups[0][&#39;lr&#39;]
+            if self.scaler is not None:
+                loss = self.scaler.scale(loss)
+            self.deadlock_detect.update(&#39;scale&#39;)
+            if self.cfg.fsdp.use:
+                loss.backward()
+                flashy.distrib.average_tensors(self.model.buffers())
+            elif self.cfg.optim.eager_sync:
+                with flashy.distrib.eager_sync_model(self.model):
+                    loss.backward()
+            else:
+                # this should always be slower but can be useful
+                # for weird use cases like multiple backwards.
+                loss.backward()
+                flashy.distrib.sync_model(self.model)
+            self.deadlock_detect.update(&#39;backward&#39;)
+
+            if self.scaler is not None:
+                self.scaler.unscale_(self.optimizer)
+            if self.cfg.optim.max_norm:
+                if self.cfg.fsdp.use:
+                    metrics[&#39;grad_norm&#39;] = self.model.clip_grad_norm_(self.cfg.optim.max_norm)  # type: ignore
+                else:
+                    metrics[&#39;grad_norm&#39;] = torch.nn.utils.clip_grad_norm_(
+                        self.model.parameters(), self.cfg.optim.max_norm
+                    )
+            if self.scaler is None:
+                self.optimizer.step()
+            else:
+                self.scaler.step(self.optimizer)
+                self.scaler.update()
+            if self.lr_scheduler:
+                self.lr_scheduler.step()
+            self.optimizer.zero_grad()
+            self.deadlock_detect.update(&#39;optim&#39;)
+            if self.scaler is not None:
+                scale = self.scaler.get_scale()
+                metrics[&#39;grad_scale&#39;] = scale
+            if not loss.isfinite().all():
+                raise RuntimeError(&#34;Model probably diverged.&#34;)
+
+        metrics[&#39;loss&#39;] = unscaled_loss
+
+        return metrics
+
+    def _decode_latents(self, latents):
+        return self.compression_model.model.decoder(latents.permute(0, 2, 1))
+
+    @torch.no_grad()
+    def run_generate_step(self, batch: tp.Tuple[torch.Tensor, tp.List[SegmentWithAttributes]],
+                          gen_duration: float, prompt_duration: tp.Optional[float] = None,
+                          remove_text_conditioning: bool = False,
+                          **generation_params) -&gt; dict:
+        &#34;&#34;&#34;Run generate step on a batch of optional audio tensor and corresponding attributes.
+
+        Args:
+            batch (tuple[torch.Tensor, list[SegmentWithAttributes]]):
+            use_prompt (bool): Whether to do audio continuation generation with prompt from audio batch.
+            gen_duration (float): Target audio duration for the generation.
+            prompt_duration (float, optional): Duration for the audio prompt to use for continuation.
+            remove_text_conditioning (bool, optional): Whether to remove the prompt from the generated audio.
+            generation_params: Additional generation parameters.
+        Returns:
+            gen_outputs (dict): Generation outputs, consisting in audio, audio tokens from both the generation
+                and the prompt along with additional information.
+        &#34;&#34;&#34;
+        bench_start = time.time()
+        audio, meta = batch
+        assert audio.size(0) == len(meta), (
+            f&#34;Mismatch between number of items in audio batch ({audio.size(0)})&#34;,
+            f&#34; and in metadata ({len(meta)})&#34;
+        )
+        # prepare attributes
+        attributes = [x.to_condition_attributes() for x in meta]
+
+        # prepare audio prompt
+        if prompt_duration is None:
+            prompt_audio = None
+        else:
+            assert prompt_duration &lt; gen_duration, &#34;Prompt duration must be lower than target generation duration&#34;
+            prompt_audio_frames = int(prompt_duration * self.compression_model.sample_rate)
+            prompt_audio = audio[..., :prompt_audio_frames]
+
+        # get audio tokens from compression model
+        if prompt_audio is None or prompt_audio.nelement() == 0:
+            num_samples = len(attributes)
+            prompt_tokens = None
+        else:
+            num_samples = None
+            prompt_audio = prompt_audio.to(self.device)
+            prompt_tokens, scale = self.compression_model.encode(prompt_audio)
+            assert scale is None, &#34;Compression model in MusicGen should not require rescaling.&#34;
+
+        # generate by sampling from the LM
+        with self.autocast:
+            total_gen_len = math.ceil(gen_duration * self.compression_model.frame_rate)
+            gen_latents = self.model.generate(
+                prompt_tokens, attributes, max_gen_len=total_gen_len,
+                num_samples=num_samples, **self.generation_params)
+
+        # generate audio from latents
+        assert gen_latents.dim() == 3  # [B, T, D]
+
+        # unnormalize latents
+        gen_latents = self._unnormalized_latents(gen_latents)
+        gen_audio = self._decode_latents(gen_latents)
+
+        bench_end = time.time()
+        gen_outputs = {
+            &#39;rtf&#39;: (bench_end - bench_start) / gen_duration,
+            &#39;ref_audio&#39;: audio,
+            &#39;gen_audio&#39;: gen_audio,
+            &#39;gen_tokens&#39;: gen_latents,
+            &#39;prompt_audio&#39;: prompt_audio,
+            &#39;prompt_tokens&#39;: prompt_tokens,
+        }
+        return gen_outputs</code></pre>
+</details>
+<div class="desc"><p>Solver for JASCO - Joint Audio and Symbolic Conditioning for Temporally Controlled Text-to-Music Generation
+<a href="https://arxiv.org/abs/2406.10970.">https://arxiv.org/abs/2406.10970.</a></p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="audiocraft.solvers.musicgen.MusicGenSolver" href="musicgen.html#audiocraft.solvers.musicgen.MusicGenSolver">MusicGenSolver</a></li>
+<li><a title="audiocraft.solvers.base.StandardSolver" href="base.html#audiocraft.solvers.base.StandardSolver">StandardSolver</a></li>
+<li>abc.ABC</li>
+<li>flashy.solver.BaseSolver</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="audiocraft.solvers.jasco.JascoSolver.DATASET_TYPE"><code class="name">var <span class="ident">DATASET_TYPE</span> : <a title="audiocraft.solvers.builders.DatasetType" href="builders.html#audiocraft.solvers.builders.DatasetType">DatasetType</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="audiocraft.solvers.jasco.JascoSolver.build_model"><code class="name flex">
+<span>def <span class="ident">build_model</span></span>(<span>self) ‑> None</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def build_model(self) -&gt; None:
+    &#34;&#34;&#34;Instantiate model and optimization.&#34;&#34;&#34;
+    assert self.cfg.efficient_attention_backend == &#34;xformers&#34;, &#34;JASCO v1 models support only xformers backend.&#34;
+
+    self.compression_model = CompressionSolver.wrapped_model_from_checkpoint(
+        self.cfg, self.cfg.compression_model_checkpoint, device=self.device)
+    assert self.compression_model.sample_rate == self.cfg.sample_rate, (
+        f&#34;Compression model sample rate is {self.compression_model.sample_rate} but &#34;
+        f&#34;Solver sample rate is {self.cfg.sample_rate}.&#34;
+        )
+    # instantiate JASCO model
+    self.model: models.FlowMatchingModel = models.builders.get_jasco_model(self.cfg,
+                                                                           self.compression_model).to(self.device)
+    # initialize optimization
+    self.initialize_optimization()</code></pre>
+</details>
+<div class="desc"><p>Instantiate model and optimization.</p></div>
+</dd>
+<dt id="audiocraft.solvers.jasco.JascoSolver.run_generate_step"><code class="name flex">
+<span>def <span class="ident">run_generate_step</span></span>(<span>self,<br>batch: Tuple[torch.Tensor, List[<a title="audiocraft.modules.conditioners.SegmentWithAttributes" href="../modules/conditioners.html#audiocraft.modules.conditioners.SegmentWithAttributes">SegmentWithAttributes</a>]],<br>gen_duration: float,<br>prompt_duration: float | None = None,<br>remove_text_conditioning: bool = False,<br>**generation_params) ‑> dict</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@torch.no_grad()
+def run_generate_step(self, batch: tp.Tuple[torch.Tensor, tp.List[SegmentWithAttributes]],
+                      gen_duration: float, prompt_duration: tp.Optional[float] = None,
+                      remove_text_conditioning: bool = False,
+                      **generation_params) -&gt; dict:
+    &#34;&#34;&#34;Run generate step on a batch of optional audio tensor and corresponding attributes.
+
+    Args:
+        batch (tuple[torch.Tensor, list[SegmentWithAttributes]]):
+        use_prompt (bool): Whether to do audio continuation generation with prompt from audio batch.
+        gen_duration (float): Target audio duration for the generation.
+        prompt_duration (float, optional): Duration for the audio prompt to use for continuation.
+        remove_text_conditioning (bool, optional): Whether to remove the prompt from the generated audio.
+        generation_params: Additional generation parameters.
+    Returns:
+        gen_outputs (dict): Generation outputs, consisting in audio, audio tokens from both the generation
+            and the prompt along with additional information.
+    &#34;&#34;&#34;
+    bench_start = time.time()
+    audio, meta = batch
+    assert audio.size(0) == len(meta), (
+        f&#34;Mismatch between number of items in audio batch ({audio.size(0)})&#34;,
+        f&#34; and in metadata ({len(meta)})&#34;
+    )
+    # prepare attributes
+    attributes = [x.to_condition_attributes() for x in meta]
+
+    # prepare audio prompt
+    if prompt_duration is None:
+        prompt_audio = None
+    else:
+        assert prompt_duration &lt; gen_duration, &#34;Prompt duration must be lower than target generation duration&#34;
+        prompt_audio_frames = int(prompt_duration * self.compression_model.sample_rate)
+        prompt_audio = audio[..., :prompt_audio_frames]
+
+    # get audio tokens from compression model
+    if prompt_audio is None or prompt_audio.nelement() == 0:
+        num_samples = len(attributes)
+        prompt_tokens = None
+    else:
+        num_samples = None
+        prompt_audio = prompt_audio.to(self.device)
+        prompt_tokens, scale = self.compression_model.encode(prompt_audio)
+        assert scale is None, &#34;Compression model in MusicGen should not require rescaling.&#34;
+
+    # generate by sampling from the LM
+    with self.autocast:
+        total_gen_len = math.ceil(gen_duration * self.compression_model.frame_rate)
+        gen_latents = self.model.generate(
+            prompt_tokens, attributes, max_gen_len=total_gen_len,
+            num_samples=num_samples, **self.generation_params)
+
+    # generate audio from latents
+    assert gen_latents.dim() == 3  # [B, T, D]
+
+    # unnormalize latents
+    gen_latents = self._unnormalized_latents(gen_latents)
+    gen_audio = self._decode_latents(gen_latents)
+
+    bench_end = time.time()
+    gen_outputs = {
+        &#39;rtf&#39;: (bench_end - bench_start) / gen_duration,
+        &#39;ref_audio&#39;: audio,
+        &#39;gen_audio&#39;: gen_audio,
+        &#39;gen_tokens&#39;: gen_latents,
+        &#39;prompt_audio&#39;: prompt_audio,
+        &#39;prompt_tokens&#39;: prompt_tokens,
+    }
+    return gen_outputs</code></pre>
+</details>
+<div class="desc"><p>Run generate step on a batch of optional audio tensor and corresponding attributes.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt>batch (tuple[torch.Tensor, list[SegmentWithAttributes]]):</dt>
+<dt><strong><code>use_prompt</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Whether to do audio continuation generation with prompt from audio batch.</dd>
+<dt><strong><code>gen_duration</code></strong> :&ensp;<code>float</code></dt>
+<dd>Target audio duration for the generation.</dd>
+<dt><strong><code>prompt_duration</code></strong> :&ensp;<code>float</code>, optional</dt>
+<dd>Duration for the audio prompt to use for continuation.</dd>
+<dt><strong><code>remove_text_conditioning</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Whether to remove the prompt from the generated audio.</dd>
+<dt><strong><code>generation_params</code></strong></dt>
+<dd>Additional generation parameters.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>gen_outputs (dict): Generation outputs, consisting in audio, audio tokens from both the generation
+and the prompt along with additional information.</p></div>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="audiocraft.solvers.musicgen.MusicGenSolver" href="musicgen.html#audiocraft.solvers.musicgen.MusicGenSolver">MusicGenSolver</a></b></code>:
+<ul class="hlist">
+<li><code><a title="audiocraft.solvers.musicgen.MusicGenSolver.autocast" href="base.html#audiocraft.solvers.base.StandardSolver.autocast">autocast</a></code></li>
+<li><code><a title="audiocraft.solvers.musicgen.MusicGenSolver.best_metric_name" href="base.html#audiocraft.solvers.base.StandardSolver.best_metric_name">best_metric_name</a></code></li>
+<li><code><a title="audiocraft.solvers.musicgen.MusicGenSolver.build_dataloaders" href="musicgen.html#audiocraft.solvers.musicgen.MusicGenSolver.build_dataloaders">build_dataloaders</a></code></li>
+<li><code><a title="audiocraft.solvers.musicgen.MusicGenSolver.commit" href="base.html#audiocraft.solvers.base.StandardSolver.commit">commit</a></code></li>
+<li><code><a title="audiocraft.solvers.musicgen.MusicGenSolver.common_train_valid" href="base.html#audiocraft.solvers.base.StandardSolver.common_train_valid">common_train_valid</a></code></li>
+<li><code><a title="audiocraft.solvers.musicgen.MusicGenSolver.evaluate" href="base.html#audiocraft.solvers.base.StandardSolver.evaluate">evaluate</a></code></li>
+<li><code><a title="audiocraft.solvers.musicgen.MusicGenSolver.evaluate_audio_generation" href="musicgen.html#audiocraft.solvers.musicgen.MusicGenSolver.evaluate_audio_generation">evaluate_audio_generation</a></code></li>
+<li><code><a title="audiocraft.solvers.musicgen.MusicGenSolver.generate" href="base.html#audiocraft.solvers.base.StandardSolver.generate">generate</a></code></li>
+<li><code><a title="audiocraft.solvers.musicgen.MusicGenSolver.generate_audio" href="musicgen.html#audiocraft.solvers.musicgen.MusicGenSolver.generate_audio">generate_audio</a></code></li>
+<li><code><a title="audiocraft.solvers.musicgen.MusicGenSolver.get_eval_solver_from_sig" href="musicgen.html#audiocraft.solvers.musicgen.MusicGenSolver.get_eval_solver_from_sig">get_eval_solver_from_sig</a></code></li>
+<li><code><a title="audiocraft.solvers.musicgen.MusicGenSolver.initialize_ema" href="base.html#audiocraft.solvers.base.StandardSolver.initialize_ema">initialize_ema</a></code></li>
+<li><code><a title="audiocraft.solvers.musicgen.MusicGenSolver.load_checkpoints" href="base.html#audiocraft.solvers.base.StandardSolver.load_checkpoints">load_checkpoints</a></code></li>
+<li><code><a title="audiocraft.solvers.musicgen.MusicGenSolver.log_model_summary" href="base.html#audiocraft.solvers.base.StandardSolver.log_model_summary">log_model_summary</a></code></li>
+<li><code><a title="audiocraft.solvers.musicgen.MusicGenSolver.register_best_state" href="base.html#audiocraft.solvers.base.StandardSolver.register_best_state">register_best_state</a></code></li>
+<li><code><a title="audiocraft.solvers.musicgen.MusicGenSolver.register_ema" href="base.html#audiocraft.solvers.base.StandardSolver.register_ema">register_ema</a></code></li>
+<li><code><a title="audiocraft.solvers.musicgen.MusicGenSolver.restore" href="base.html#audiocraft.solvers.base.StandardSolver.restore">restore</a></code></li>
+<li><code><a title="audiocraft.solvers.musicgen.MusicGenSolver.run" href="base.html#audiocraft.solvers.base.StandardSolver.run">run</a></code></li>
+<li><code><a title="audiocraft.solvers.musicgen.MusicGenSolver.run_epoch" href="base.html#audiocraft.solvers.base.StandardSolver.run_epoch">run_epoch</a></code></li>
+<li><code><a title="audiocraft.solvers.musicgen.MusicGenSolver.run_one_stage" href="base.html#audiocraft.solvers.base.StandardSolver.run_one_stage">run_one_stage</a></code></li>
+<li><code><a title="audiocraft.solvers.musicgen.MusicGenSolver.run_step" href="base.html#audiocraft.solvers.base.StandardSolver.run_step">run_step</a></code></li>
+<li><code><a title="audiocraft.solvers.musicgen.MusicGenSolver.save_checkpoints" href="base.html#audiocraft.solvers.base.StandardSolver.save_checkpoints">save_checkpoints</a></code></li>
+<li><code><a title="audiocraft.solvers.musicgen.MusicGenSolver.should_run_stage" href="base.html#audiocraft.solvers.base.StandardSolver.should_run_stage">should_run_stage</a></code></li>
+<li><code><a title="audiocraft.solvers.musicgen.MusicGenSolver.should_stop_training" href="base.html#audiocraft.solvers.base.StandardSolver.should_stop_training">should_stop_training</a></code></li>
+<li><code><a title="audiocraft.solvers.musicgen.MusicGenSolver.show" href="musicgen.html#audiocraft.solvers.musicgen.MusicGenSolver.show">show</a></code></li>
+<li><code><a title="audiocraft.solvers.musicgen.MusicGenSolver.train" href="base.html#audiocraft.solvers.base.StandardSolver.train">train</a></code></li>
+<li><code><a title="audiocraft.solvers.musicgen.MusicGenSolver.update_best_state_from_stage" href="base.html#audiocraft.solvers.base.StandardSolver.update_best_state_from_stage">update_best_state_from_stage</a></code></li>
+<li><code><a title="audiocraft.solvers.musicgen.MusicGenSolver.valid" href="base.html#audiocraft.solvers.base.StandardSolver.valid">valid</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="audiocraft.solvers" href="index.html">audiocraft.solvers</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="audiocraft.solvers.jasco.JascoSolver" href="#audiocraft.solvers.jasco.JascoSolver">JascoSolver</a></code></h4>
+<ul class="">
+<li><code><a title="audiocraft.solvers.jasco.JascoSolver.DATASET_TYPE" href="#audiocraft.solvers.jasco.JascoSolver.DATASET_TYPE">DATASET_TYPE</a></code></li>
+<li><code><a title="audiocraft.solvers.jasco.JascoSolver.build_model" href="#audiocraft.solvers.jasco.JascoSolver.build_model">build_model</a></code></li>
+<li><code><a title="audiocraft.solvers.jasco.JascoSolver.run_generate_step" href="#audiocraft.solvers.jasco.JascoSolver.run_generate_step">run_generate_step</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.5</a>.</p>
+</footer>
+</body>
+</html>

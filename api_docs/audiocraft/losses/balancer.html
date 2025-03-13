@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.5">
+<title>audiocraft.losses.balancer API documentation</title>
+<meta name="description" content="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>audiocraft.losses.balancer</code></h1>
+</header>
+<section id="section-intro">
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="audiocraft.losses.balancer.Balancer"><code class="flex name class">
+<span>class <span class="ident">Balancer</span></span>
+<span>(</span><span>weights: Dict[str, float],<br>balance_grads: bool = True,<br>total_norm: float = 1.0,<br>ema_decay: float = 0.999,<br>per_batch_item: bool = True,<br>epsilon: float = 1e-12,<br>monitor: bool = False)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Balancer:
+    &#34;&#34;&#34;Loss balancer.
+
+    The loss balancer combines losses together to compute gradients for the backward.
+    Given `y = f(...)`, and a number of losses `l1(y, ...)`, `l2(y, ...)`, with `...`
+    not having any dependence on `f`, the balancer can efficiently normalize the partial gradients
+    `d l1 / d y`, `d l2 / dy` before summing them in order to achieve a desired ratio between
+    the losses. For instance if `weights = {&#39;l1&#39;: 2, &#39;l2&#39;: 1}`, 66% of the gradient
+    going into `f(...)` will come from `l1` on average, and 33% from `l2`. This allows for an easy
+    interpration of the weights even if the intrisic scale of `l1`, `l2` ... is unknown.
+
+    Noting `g1 = d l1 / dy`, etc., the balanced gradient `G` will be
+    (with `avg` an exponential moving average over the updates),
+
+        G = sum_i total_norm * g_i / avg(||g_i||) * w_i / sum(w_i)
+
+    If `balance_grads` is False, this is deactivated, and instead the gradient will just be the
+    standard sum of the partial gradients with the given weights.
+
+    A call to the backward method of the balancer will compute the the partial gradients,
+    combining all the losses and potentially rescaling the gradients,
+    which can help stabilize the training and reason about multiple losses with varying scales.
+    The obtained gradient with respect to `y` is then back-propagated to `f(...)`.
+
+    Expected usage:
+
+        weights = {&#39;loss_a&#39;: 1, &#39;loss_b&#39;: 4}
+        balancer = Balancer(weights, ...)
+        losses: dict = {}
+        losses[&#39;loss_a&#39;] = compute_loss_a(x, y)
+        losses[&#39;loss_b&#39;] = compute_loss_b(x, y)
+        if model.training():
+            effective_loss = balancer.backward(losses, x)
+
+    Args:
+        weights (dict[str, float]): Weight coefficient for each loss. The balancer expect the losses keys
+            from the backward method to match the weights keys to assign weight to each of the provided loss.
+        balance_grads (bool): Whether to rescale gradients so that weights reflect the fraction of the
+            overall gradient, rather than a constant multiplier.
+        total_norm (float): Reference norm when rescaling gradients, ignored otherwise.
+        emay_decay (float): EMA decay for averaging the norms.
+        per_batch_item (bool): Whether to compute the averaged norm per batch item or not. This only holds
+            when rescaling the gradients.
+        epsilon (float): Epsilon value for numerical stability.
+        monitor (bool): If True, stores in `self.metrics` the relative ratio between the norm of the gradients
+            coming from each loss, when calling `backward()`.
+    &#34;&#34;&#34;
+    def __init__(self, weights: tp.Dict[str, float], balance_grads: bool = True, total_norm: float = 1.,
+                 ema_decay: float = 0.999, per_batch_item: bool = True, epsilon: float = 1e-12,
+                 monitor: bool = False):
+        self.weights = weights
+        self.per_batch_item = per_batch_item
+        self.total_norm = total_norm or 1.
+        self.averager = flashy.averager(ema_decay or 1.)
+        self.epsilon = epsilon
+        self.monitor = monitor
+        self.balance_grads = balance_grads
+        self._metrics: tp.Dict[str, tp.Any] = {}
+
+    @property
+    def metrics(self):
+        return self._metrics
+
+    def backward(self, losses: tp.Dict[str, torch.Tensor], input: torch.Tensor) -&gt; torch.Tensor:
+        &#34;&#34;&#34;Compute the backward and return the effective train loss, e.g. the loss obtained from
+        computing the effective weights. If `balance_grads` is True, the effective weights
+        are the one that needs to be applied to each gradient to respect the desired relative
+        scale of gradients coming from each loss.
+
+        Args:
+            losses (Dict[str, torch.Tensor]): dictionary with the same keys as `self.weights`.
+            input (torch.Tensor): the input of the losses, typically the output of the model.
+                This should be the single point of dependence between the losses
+                and the model being trained.
+        &#34;&#34;&#34;
+        norms = {}
+        grads = {}
+        for name, loss in losses.items():
+            # Compute partial derivative of the less with respect to the input.
+            grad, = autograd.grad(loss, [input], retain_graph=True)
+            if self.per_batch_item:
+                # We do not average the gradient over the batch dimension.
+                dims = tuple(range(1, grad.dim()))
+                norm = grad.norm(dim=dims, p=2).mean()
+            else:
+                norm = grad.norm(p=2)
+            norms[name] = norm
+            grads[name] = grad
+
+        count = 1
+        if self.per_batch_item:
+            count = len(grad)
+        # Average norms across workers. Theoretically we should average the
+        # squared norm, then take the sqrt, but it worked fine like that.
+        avg_norms = flashy.distrib.average_metrics(self.averager(norms), count)
+        # We approximate the total norm of the gradient as the sums of the norms.
+        # Obviously this can be very incorrect if all gradients are aligned, but it works fine.
+        total = sum(avg_norms.values())
+
+        self._metrics = {}
+        if self.monitor:
+            # Store the ratio of the total gradient represented by each loss.
+            for k, v in avg_norms.items():
+                self._metrics[f&#39;ratio_{k}&#39;] = v / total
+
+        total_weights = sum([self.weights[k] for k in avg_norms])
+        assert total_weights &gt; 0.
+        desired_ratios = {k: w / total_weights for k, w in self.weights.items()}
+
+        out_grad = torch.zeros_like(input)
+        effective_loss = torch.tensor(0., device=input.device, dtype=input.dtype)
+        for name, avg_norm in avg_norms.items():
+            if self.balance_grads:
+                # g_balanced = g / avg(||g||) * total_norm * desired_ratio
+                scale = desired_ratios[name] * self.total_norm / (self.epsilon + avg_norm)
+            else:
+                # We just do regular weighted sum of the gradients.
+                scale = self.weights[name]
+            out_grad.add_(grads[name], alpha=scale)
+            effective_loss += scale * losses[name].detach()
+        # Send the computed partial derivative with respect to the output of the model to the model.
+        input.backward(out_grad)
+        return effective_loss</code></pre>
+</details>
+<div class="desc"><p>Loss balancer.</p>
+<p>The loss balancer combines losses together to compute gradients for the backward.
+Given <code>y = f(...)</code>, and a number of losses <code>l1(y, &hellip;)</code>, <code>l2(y, &hellip;)</code>, with <code>&hellip;</code>
+not having any dependence on <code>f</code>, the balancer can efficiently normalize the partial gradients
+<code>d l1 / d y</code>, <code>d l2 / dy</code> before summing them in order to achieve a desired ratio between
+the losses. For instance if <code>weights = {'l1': 2, 'l2': 1}</code>, 66% of the gradient
+going into <code>f(&hellip;)</code> will come from <code>l1</code> on average, and 33% from <code>l2</code>. This allows for an easy
+interpration of the weights even if the intrisic scale of <code>l1</code>, <code>l2</code> &hellip; is unknown.</p>
+<p>Noting <code>g1 = d l1 / dy</code>, etc., the balanced gradient <code>G</code> will be
+(with <code>avg</code> an exponential moving average over the updates),</p>
+<pre><code>G = sum_i total_norm * g_i / avg(||g_i||) * w_i / sum(w_i)
+</code></pre>
+<p>If <code>balance_grads</code> is False, this is deactivated, and instead the gradient will just be the
+standard sum of the partial gradients with the given weights.</p>
+<p>A call to the backward method of the balancer will compute the the partial gradients,
+combining all the losses and potentially rescaling the gradients,
+which can help stabilize the training and reason about multiple losses with varying scales.
+The obtained gradient with respect to <code>y</code> is then back-propagated to <code>f(&hellip;)</code>.</p>
+<p>Expected usage:</p>
+<pre><code>weights = {'loss_a': 1, 'loss_b': 4}
+balancer = Balancer(weights, ...)
+losses: dict = {}
+losses['loss_a'] = compute_loss_a(x, y)
+losses['loss_b'] = compute_loss_b(x, y)
+if model.training():
+    effective_loss = balancer.backward(losses, x)
+</code></pre>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>weights</code></strong> :&ensp;<code>dict[str, float]</code></dt>
+<dd>Weight coefficient for each loss. The balancer expect the losses keys
+from the backward method to match the weights keys to assign weight to each of the provided loss.</dd>
+<dt><strong><code>balance_grads</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Whether to rescale gradients so that weights reflect the fraction of the
+overall gradient, rather than a constant multiplier.</dd>
+<dt><strong><code>total_norm</code></strong> :&ensp;<code>float</code></dt>
+<dd>Reference norm when rescaling gradients, ignored otherwise.</dd>
+<dt><strong><code>emay_decay</code></strong> :&ensp;<code>float</code></dt>
+<dd>EMA decay for averaging the norms.</dd>
+<dt><strong><code>per_batch_item</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Whether to compute the averaged norm per batch item or not. This only holds
+when rescaling the gradients.</dd>
+<dt><strong><code>epsilon</code></strong> :&ensp;<code>float</code></dt>
+<dd>Epsilon value for numerical stability.</dd>
+<dt><strong><code>monitor</code></strong> :&ensp;<code>bool</code></dt>
+<dd>If True, stores in <code>self.metrics</code> the relative ratio between the norm of the gradients
+coming from each loss, when calling <code>backward()</code>.</dd>
+</dl></div>
+<h3>Instance variables</h3>
+<dl>
+<dt id="audiocraft.losses.balancer.Balancer.metrics"><code class="name">prop <span class="ident">metrics</span></code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def metrics(self):
+    return self._metrics</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="audiocraft.losses.balancer.Balancer.backward"><code class="name flex">
+<span>def <span class="ident">backward</span></span>(<span>self, losses: Dict[str, torch.Tensor], input: torch.Tensor) ‑> torch.Tensor</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def backward(self, losses: tp.Dict[str, torch.Tensor], input: torch.Tensor) -&gt; torch.Tensor:
+    &#34;&#34;&#34;Compute the backward and return the effective train loss, e.g. the loss obtained from
+    computing the effective weights. If `balance_grads` is True, the effective weights
+    are the one that needs to be applied to each gradient to respect the desired relative
+    scale of gradients coming from each loss.
+
+    Args:
+        losses (Dict[str, torch.Tensor]): dictionary with the same keys as `self.weights`.
+        input (torch.Tensor): the input of the losses, typically the output of the model.
+            This should be the single point of dependence between the losses
+            and the model being trained.
+    &#34;&#34;&#34;
+    norms = {}
+    grads = {}
+    for name, loss in losses.items():
+        # Compute partial derivative of the less with respect to the input.
+        grad, = autograd.grad(loss, [input], retain_graph=True)
+        if self.per_batch_item:
+            # We do not average the gradient over the batch dimension.
+            dims = tuple(range(1, grad.dim()))
+            norm = grad.norm(dim=dims, p=2).mean()
+        else:
+            norm = grad.norm(p=2)
+        norms[name] = norm
+        grads[name] = grad
+
+    count = 1
+    if self.per_batch_item:
+        count = len(grad)
+    # Average norms across workers. Theoretically we should average the
+    # squared norm, then take the sqrt, but it worked fine like that.
+    avg_norms = flashy.distrib.average_metrics(self.averager(norms), count)
+    # We approximate the total norm of the gradient as the sums of the norms.
+    # Obviously this can be very incorrect if all gradients are aligned, but it works fine.
+    total = sum(avg_norms.values())
+
+    self._metrics = {}
+    if self.monitor:
+        # Store the ratio of the total gradient represented by each loss.
+        for k, v in avg_norms.items():
+            self._metrics[f&#39;ratio_{k}&#39;] = v / total
+
+    total_weights = sum([self.weights[k] for k in avg_norms])
+    assert total_weights &gt; 0.
+    desired_ratios = {k: w / total_weights for k, w in self.weights.items()}
+
+    out_grad = torch.zeros_like(input)
+    effective_loss = torch.tensor(0., device=input.device, dtype=input.dtype)
+    for name, avg_norm in avg_norms.items():
+        if self.balance_grads:
+            # g_balanced = g / avg(||g||) * total_norm * desired_ratio
+            scale = desired_ratios[name] * self.total_norm / (self.epsilon + avg_norm)
+        else:
+            # We just do regular weighted sum of the gradients.
+            scale = self.weights[name]
+        out_grad.add_(grads[name], alpha=scale)
+        effective_loss += scale * losses[name].detach()
+    # Send the computed partial derivative with respect to the output of the model to the model.
+    input.backward(out_grad)
+    return effective_loss</code></pre>
+</details>
+<div class="desc"><p>Compute the backward and return the effective train loss, e.g. the loss obtained from
+computing the effective weights. If <code>balance_grads</code> is True, the effective weights
+are the one that needs to be applied to each gradient to respect the desired relative
+scale of gradients coming from each loss.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>losses</code></strong> :&ensp;<code>Dict[str, torch.Tensor]</code></dt>
+<dd>dictionary with the same keys as <code>self.weights</code>.</dd>
+<dt><strong><code>input</code></strong> :&ensp;<code>torch.Tensor</code></dt>
+<dd>the input of the losses, typically the output of the model.
+This should be the single point of dependence between the losses
+and the model being trained.</dd>
+</dl></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="audiocraft.losses" href="index.html">audiocraft.losses</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="audiocraft.losses.balancer.Balancer" href="#audiocraft.losses.balancer.Balancer">Balancer</a></code></h4>
+<ul class="">
+<li><code><a title="audiocraft.losses.balancer.Balancer.backward" href="#audiocraft.losses.balancer.Balancer.backward">backward</a></code></li>
+<li><code><a title="audiocraft.losses.balancer.Balancer.metrics" href="#audiocraft.losses.balancer.Balancer.metrics">metrics</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.5</a>.</p>
+</footer>
+</body>
+</html>

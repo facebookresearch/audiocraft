@@ -1,0 +1,651 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.5">
+<title>audiocraft.modules.jasco_conditioners API documentation</title>
+<meta name="description" content="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>audiocraft.modules.jasco_conditioners</code></h1>
+</header>
+<section id="section-intro">
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="audiocraft.modules.jasco_conditioners.ChordsEmbConditioner"><code class="flex name class">
+<span>class <span class="ident">ChordsEmbConditioner</span></span>
+<span>(</span><span>card: int, out_dim: int, device: torch.device | str = 'cpu', **kwargs)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ChordsEmbConditioner(BaseConditioner):
+    &#34;&#34;&#34;
+    A conditioner that embeds chord symbols into a continuous vector space.
+    Attributes:
+        card (int): The cardinality of the chord vocabulary.
+        out_dim (int): The dimensionality of the output embeddings.
+        device (Union[torch.device, str]): The device on which the embeddings are stored.
+    &#34;&#34;&#34;
+    def __init__(self, card: int, out_dim: int, device: tp.Union[torch.device, str] = &#39;cpu&#39;, **kwargs):
+        vocab_size = card + 1  # card + 1 - for null chord used during dropout
+        super().__init__(dim=vocab_size, output_dim=-1)  # out_dim=-1 to avoid another projection
+        self.emb = nn.Embedding(vocab_size, out_dim, device=device)
+        self.device = device
+
+    def tokenize(self, x: SymbolicCondition) -&gt; SymbolicCondition:
+        return SymbolicCondition(frame_chords=x.frame_chords.to(self.device))   # type: ignore
+
+    def forward(self, x: SymbolicCondition) -&gt; ConditionType:
+        embeds = self.emb(x.frame_chords)
+        mask = torch.ones_like(embeds[..., 0])
+        return embeds, mask</code></pre>
+</details>
+<div class="desc"><p>A conditioner that embeds chord symbols into a continuous vector space.</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>card</code></strong> :&ensp;<code>int</code></dt>
+<dd>The cardinality of the chord vocabulary.</dd>
+<dt><strong><code>out_dim</code></strong> :&ensp;<code>int</code></dt>
+<dd>The dimensionality of the output embeddings.</dd>
+<dt><strong><code>device</code></strong> :&ensp;<code>Union[torch.device, str]</code></dt>
+<dd>The device on which the embeddings are stored.</dd>
+</dl>
+<p>Initializes internal Module state, shared by both nn.Module and ScriptModule.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="audiocraft.modules.conditioners.BaseConditioner" href="conditioners.html#audiocraft.modules.conditioners.BaseConditioner">BaseConditioner</a></li>
+<li>torch.nn.modules.module.Module</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="audiocraft.modules.jasco_conditioners.ChordsEmbConditioner.call_super_init"><code class="name">var <span class="ident">call_super_init</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.modules.jasco_conditioners.ChordsEmbConditioner.dump_patches"><code class="name">var <span class="ident">dump_patches</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.modules.jasco_conditioners.ChordsEmbConditioner.training"><code class="name">var <span class="ident">training</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="audiocraft.modules.conditioners.BaseConditioner" href="conditioners.html#audiocraft.modules.conditioners.BaseConditioner">BaseConditioner</a></b></code>:
+<ul class="hlist">
+<li><code><a title="audiocraft.modules.conditioners.BaseConditioner.forward" href="conditioners.html#audiocraft.modules.conditioners.BaseConditioner.forward">forward</a></code></li>
+<li><code><a title="audiocraft.modules.conditioners.BaseConditioner.tokenize" href="conditioners.html#audiocraft.modules.conditioners.BaseConditioner.tokenize">tokenize</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="audiocraft.modules.jasco_conditioners.DrumsConditioner"><code class="flex name class">
+<span>class <span class="ident">DrumsConditioner</span></span>
+<span>(</span><span>out_dim: int,<br>sample_rate: int,<br>blurring_factor: int = 3,<br>cache_path: pathlib.Path | str | None = None,<br>compression_model_latent_dim: int = 128,<br>compression_model_framerate: float = 50,<br>segment_duration: float = 10.0,<br>device: torch.device | str = 'cpu',<br>**kwargs)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class DrumsConditioner(WaveformConditioner):
+    def __init__(self, out_dim: int, sample_rate: int, blurring_factor: int = 3,
+                 cache_path: tp.Optional[tp.Union[str, Path]] = None,
+                 compression_model_latent_dim: int = 128,
+                 compression_model_framerate: float = 50,
+                 segment_duration: float = 10.0,
+                 device: tp.Union[torch.device, str] = &#39;cpu&#39;,
+                 **kwargs):
+        &#34;&#34;&#34;Drum condition conditioner
+
+        Args:
+            out_dim (int): _description_
+            sample_rate (int): _description_
+            blurring_factor (int, optional): _description_. Defaults to 3.
+            cache_path (tp.Optional[tp.Union[str, Path]], optional): path to precomputed cache. Defaults to None.
+            compression_model_latent_dim (int, optional): latent dimensino. Defaults to 128.
+            compression_model_framerate (float, optional): frame rate of the representation model. Defaults to 50.
+            segment_duration (float, optional): duration in sec for each audio segment. Defaults to 10.0.
+            device (tp.Union[torch.device, str], optional): device. Defaults to &#39;cpu&#39;.
+        &#34;&#34;&#34;
+        from demucs import pretrained
+        self.sample_rate = sample_rate
+        self.__dict__[&#39;demucs&#39;] = pretrained.get_model(&#39;htdemucs&#39;).to(device)
+        stem_sources: list = self.demucs.sources  # type: ignore
+        self.stem_idx = stem_sources.index(&#39;drums&#39;)
+        self.compression_model = None
+        self.latent_dim = compression_model_latent_dim
+        super().__init__(dim=self.latent_dim, output_dim=out_dim, device=device)
+        self.autocast = TorchAutocast(enabled=device != &#39;cpu&#39;, device_type=self.device, dtype=torch.float32)
+        self._use_masking = False
+        self.blurring_factor = blurring_factor
+        self.seq_len = int(segment_duration * compression_model_framerate)
+        self.cache = None  # If you wish to train with EmbeddingCache, call self.create_embedding_cache(cache_path)
+
+    def create_embedding_cache(self, cache_path):
+        if cache_path is not None:
+            self.cache = EmbeddingCache(Path(cache_path) / &#39;wav&#39;, self.device,
+                                        compute_embed_fn=self._calc_coarse_drum_codes_for_cache,
+                                        extract_embed_fn=self._load_drum_codes_chunk)
+
+    @torch.no_grad()
+    def _get_drums_stem(self, wav: torch.Tensor, sample_rate: int) -&gt; torch.Tensor:
+        &#34;&#34;&#34;Get parts of the wav that holds the drums, extracting the main stems from the wav.&#34;&#34;&#34;
+        from demucs.apply import apply_model
+        from demucs.audio import convert_audio
+        with self.autocast:
+            wav = convert_audio(
+                wav, sample_rate, self.demucs.samplerate, self.demucs.audio_channels)  # type: ignore
+            stems = apply_model(self.demucs, wav, device=self.device)
+            drum_stem = stems[:, self.stem_idx]  # extract relevant stems for drums conditioning
+            return convert_audio(drum_stem, self.demucs.samplerate, self.sample_rate, 1)  # type: ignore
+
+    def _temporal_blur(self, z: torch.Tensor):
+        # z: (B, T, C)
+        B, T, C = z.shape
+        if T % self.blurring_factor != 0:
+            # pad with reflect for T % self.temporal_blurring on the right in dim=1
+            pad_val = self.blurring_factor - T % self.blurring_factor
+            z = torch.nn.functional.pad(z, (0, 0, 0, pad_val), mode=&#39;reflect&#39;)
+        z = z.reshape(B, -1, self.blurring_factor, C).sum(dim=2) / self.blurring_factor
+        z = z.unsqueeze(2).repeat(1, 1, self.blurring_factor, 1).reshape(B, -1, C)
+        z = z[:, :T]
+        assert z.shape == (B, T, C)
+        return z
+
+    @torch.no_grad()
+    def _extract_coarse_drum_codes(self, wav: torch.Tensor, sample_rate: int) -&gt; torch.Tensor:
+        assert self.compression_model is not None
+
+        # stem separation of drums
+        drums = self._get_drums_stem(wav, sample_rate)
+
+        # continuous encoding with compression model
+        latents = self.compression_model.model.encoder(drums)
+
+        # quantization to coarsest codebook
+        coarsest_quantizer = self.compression_model.model.quantizer.layers[0]
+        drums = coarsest_quantizer.encode(latents).to(torch.int16)
+        return drums
+
+    @torch.no_grad()
+    def _calc_coarse_drum_codes_for_cache(self, path: tp.Union[str, Path],
+                                          x: WavCondition, idx: int,
+                                          max_duration_to_process: float = 600) -&gt; torch.Tensor:
+        &#34;&#34;&#34;Extract blurred drum latents from the whole audio waveform at the given path.&#34;&#34;&#34;
+        wav, sr = audio_read(path)
+        wav = wav[None].to(self.device)
+        wav = convert_audio(wav, sr, self.sample_rate, to_channels=1)
+
+        max_frames_to_process = int(max_duration_to_process * self.sample_rate)
+        if wav.shape[-1] &gt; max_frames_to_process:
+            # process very long tracks in chunks
+            start = 0
+            codes = []
+            while start &lt; wav.shape[-1] - 1:
+                wav_chunk = wav[..., start: start + max_frames_to_process]
+                codes.append(self._extract_coarse_drum_codes(wav_chunk, self.sample_rate)[0])
+                start += max_frames_to_process
+            return torch.cat(codes)
+
+        return self._extract_coarse_drum_codes(wav, self.sample_rate)[0]
+
+    def _load_drum_codes_chunk(self, full_coarse_drum_codes: torch.Tensor, x: WavCondition, idx: int) -&gt; torch.Tensor:
+        &#34;&#34;&#34;Extract a chunk of coarse drum codes from the full coarse drum codes derived from the full waveform.&#34;&#34;&#34;
+        wav_length = x.wav.shape[-1]
+        seek_time = x.seek_time[idx]
+        assert seek_time is not None, (
+            &#34;WavCondition seek_time is required &#34;
+            &#34;when extracting chunks from pre-computed drum codes.&#34;)
+        assert self.compression_model is not None
+        frame_rate = self.compression_model.frame_rate
+        target_length = int(frame_rate * wav_length / self.sample_rate)
+        target_length = max(target_length, self.seq_len)
+        index = int(frame_rate * seek_time)
+        out = full_coarse_drum_codes[index: index + target_length]
+        # pad
+        out = torch.cat((out, torch.zeros(target_length - out.shape[0], dtype=out.dtype, device=out.device)))
+        return out.to(self.device)
+
+    @torch.no_grad()
+    def _get_wav_embedding(self, x: WavCondition) -&gt; torch.Tensor:
+        bs = x.wav.shape[0]
+        if x.wav.shape[-1] &lt;= 1:
+            # null condition
+            return torch.zeros((bs, self.seq_len, self.latent_dim), device=x.wav.device, dtype=x.wav.dtype)
+
+        # extract coarse drum codes
+        no_undefined_paths = all(p is not None for p in x.path)
+        no_nullified_cond = x.wav.shape[-1] &gt; 1
+        if self.cache is not None and no_undefined_paths and no_nullified_cond:
+            paths = [Path(p) for p in x.path if p is not None]
+            codes = self.cache.get_embed_from_cache(paths, x)
+        else:
+            assert all(sr == x.sample_rate[0] for sr in x.sample_rate), &#34;All sample rates in batch should be equal.&#34;
+            codes = self._extract_coarse_drum_codes(x.wav, x.sample_rate[0])
+
+        assert self.compression_model is not None
+        # decode back to the continuous representation of compression model
+        codes = codes.unsqueeze(1).permute(1, 0, 2)  # (B, T) -&gt; (1, B, T)
+        codes = codes.to(torch.int64)
+        latents = self.compression_model.model.quantizer.decode(codes)
+
+        latents = latents.permute(0, 2, 1)  # [B, C, T] -&gt; [B, T, C]
+
+        # temporal blurring
+        return self._temporal_blur(latents)
+
+    def tokenize(self, x: WavCondition) -&gt; WavCondition:
+        &#34;&#34;&#34;Apply WavConditioner tokenization and populate cache if needed.&#34;&#34;&#34;
+        x = super().tokenize(x)
+        no_undefined_paths = all(p is not None for p in x.path)
+        if self.cache is not None and no_undefined_paths:
+            paths = [Path(p) for p in x.path if p is not None]
+            self.cache.populate_embed_cache(paths, x)
+        return x</code></pre>
+</details>
+<div class="desc"><p>Base class for all conditioners that take a waveform as input.
+Classes that inherit must implement <code>_get_wav_embedding</code> that outputs
+a continuous tensor, and <code>_downsampling_factor</code> that returns the down-sampling
+factor of the embedding model.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>dim</code></strong> :&ensp;<code>int</code></dt>
+<dd>The internal representation dimension.</dd>
+<dt><strong><code>output_dim</code></strong> :&ensp;<code>int</code></dt>
+<dd>Output dimension.</dd>
+<dt><strong><code>device</code></strong> :&ensp;<code>tp.Union[torch.device, str]</code></dt>
+<dd>Device.</dd>
+</dl>
+<p>Drum condition conditioner</p>
+<h2 id="args_1">Args</h2>
+<dl>
+<dt><strong><code>out_dim</code></strong> :&ensp;<code>int</code></dt>
+<dd><em>description</em></dd>
+<dt><strong><code>sample_rate</code></strong> :&ensp;<code>int</code></dt>
+<dd><em>description</em></dd>
+<dt><strong><code>blurring_factor</code></strong> :&ensp;<code>int</code>, optional</dt>
+<dd><em>description</em>. Defaults to 3.</dd>
+<dt><strong><code>cache_path</code></strong> :&ensp;<code>tp.Optional[tp.Union[str, Path]]</code>, optional</dt>
+<dd>path to precomputed cache. Defaults to None.</dd>
+<dt><strong><code>compression_model_latent_dim</code></strong> :&ensp;<code>int</code>, optional</dt>
+<dd>latent dimensino. Defaults to 128.</dd>
+<dt><strong><code>compression_model_framerate</code></strong> :&ensp;<code>float</code>, optional</dt>
+<dd>frame rate of the representation model. Defaults to 50.</dd>
+<dt><strong><code>segment_duration</code></strong> :&ensp;<code>float</code>, optional</dt>
+<dd>duration in sec for each audio segment. Defaults to 10.0.</dd>
+<dt><strong><code>device</code></strong> :&ensp;<code>tp.Union[torch.device, str]</code>, optional</dt>
+<dd>device. Defaults to 'cpu'.</dd>
+</dl></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="audiocraft.modules.conditioners.WaveformConditioner" href="conditioners.html#audiocraft.modules.conditioners.WaveformConditioner">WaveformConditioner</a></li>
+<li><a title="audiocraft.modules.conditioners.BaseConditioner" href="conditioners.html#audiocraft.modules.conditioners.BaseConditioner">BaseConditioner</a></li>
+<li>torch.nn.modules.module.Module</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="audiocraft.modules.jasco_conditioners.DrumsConditioner.call_super_init"><code class="name">var <span class="ident">call_super_init</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.modules.jasco_conditioners.DrumsConditioner.dump_patches"><code class="name">var <span class="ident">dump_patches</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.modules.jasco_conditioners.DrumsConditioner.training"><code class="name">var <span class="ident">training</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="audiocraft.modules.jasco_conditioners.DrumsConditioner.create_embedding_cache"><code class="name flex">
+<span>def <span class="ident">create_embedding_cache</span></span>(<span>self, cache_path)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def create_embedding_cache(self, cache_path):
+    if cache_path is not None:
+        self.cache = EmbeddingCache(Path(cache_path) / &#39;wav&#39;, self.device,
+                                    compute_embed_fn=self._calc_coarse_drum_codes_for_cache,
+                                    extract_embed_fn=self._load_drum_codes_chunk)</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.modules.jasco_conditioners.DrumsConditioner.tokenize"><code class="name flex">
+<span>def <span class="ident">tokenize</span></span>(<span>self,<br>x: <a title="audiocraft.modules.conditioners.WavCondition" href="conditioners.html#audiocraft.modules.conditioners.WavCondition">WavCondition</a>) ‑> <a title="audiocraft.modules.conditioners.WavCondition" href="conditioners.html#audiocraft.modules.conditioners.WavCondition">WavCondition</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def tokenize(self, x: WavCondition) -&gt; WavCondition:
+    &#34;&#34;&#34;Apply WavConditioner tokenization and populate cache if needed.&#34;&#34;&#34;
+    x = super().tokenize(x)
+    no_undefined_paths = all(p is not None for p in x.path)
+    if self.cache is not None and no_undefined_paths:
+        paths = [Path(p) for p in x.path if p is not None]
+        self.cache.populate_embed_cache(paths, x)
+    return x</code></pre>
+</details>
+<div class="desc"><p>Apply WavConditioner tokenization and populate cache if needed.</p></div>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="audiocraft.modules.conditioners.WaveformConditioner" href="conditioners.html#audiocraft.modules.conditioners.WaveformConditioner">WaveformConditioner</a></b></code>:
+<ul class="hlist">
+<li><code><a title="audiocraft.modules.conditioners.WaveformConditioner.forward" href="conditioners.html#audiocraft.modules.conditioners.WaveformConditioner.forward">forward</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="audiocraft.modules.jasco_conditioners.JascoConditioningProvider"><code class="flex name class">
+<span>class <span class="ident">JascoConditioningProvider</span></span>
+<span>(</span><span>*args,<br>chords_card: int = 194,<br>sequence_length: int = 500,<br>melody_dim: int = 53,<br>**kwargs)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class JascoConditioningProvider(ConditioningProvider):
+    &#34;&#34;&#34;
+    A cond-provider that manages and tokenizes various types of conditioning attributes for Jasco models.
+    Attributes:
+        chords_card (int): The cardinality of the chord vocabulary.
+        sequence_length (int): The length of the sequence for padding purposes.
+        melody_dim (int): The dimensionality of the melody matrix.
+    &#34;&#34;&#34;
+    def __init__(self, *args,
+                 chords_card: int = 194,
+                 sequence_length: int = 500,
+                 melody_dim: int = 53, **kwargs):
+        self.null_chord = chords_card
+        self.sequence_len = sequence_length
+        self.melody_dim = melody_dim
+        super().__init__(*args, **kwargs)
+
+    def tokenize(self, inputs: tp.List[ConditioningAttributes]) -&gt; tp.Dict[str, tp.Any]:
+        &#34;&#34;&#34;Match attributes/wavs with existing conditioners in self, and compute tokenize them accordingly.
+        This should be called before starting any real GPU work to avoid synchronization points.
+        This will return a dict matching conditioner names to their arbitrary tokenized representations.
+
+        Args:
+            inputs (list[ConditioningAttributes]): List of ConditioningAttributes objects containing
+                text and wav conditions.
+        &#34;&#34;&#34;
+        assert all([isinstance(x, ConditioningAttributes) for x in inputs]), (
+            &#34;Got unexpected types input for conditioner! should be tp.List[ConditioningAttributes]&#34;,
+            f&#34; but types were {set([type(x) for x in inputs])}&#34;
+        )
+
+        output = {}
+        text = self._collate_text(inputs)
+        wavs = self._collate_wavs(inputs)
+
+        symbolic = self._collate_symbolic(inputs, self.conditioners.keys())
+
+        assert set(text.keys() | wavs.keys() | symbolic.keys()).issubset(set(self.conditioners.keys())), (
+            f&#34;Got an unexpected attribute! Expected {self.conditioners.keys()}, &#34;,
+            f&#34;got {text.keys(), wavs.keys(), symbolic.keys()}&#34;
+        )
+
+        for attribute, batch in chain(text.items(), wavs.items(), symbolic.items()):
+            output[attribute] = self.conditioners[attribute].tokenize(batch)
+        return output
+
+    def _collate_symbolic(self, samples: tp.List[ConditioningAttributes],
+                          conditioner_keys: tp.Set) -&gt; tp.Dict[str, SymbolicCondition]:
+        output = {}
+
+        # collate if symbolic cond exists
+        if any(x in conditioner_keys for x in JascoCondConst.SYM.value):
+
+            for s in samples:
+                # hydrate with null chord if chords not exist - for inference support
+                if (s.symbolic == {} or
+                        s.symbolic[JascoCondConst.CRD.value].frame_chords is None or
+                        s.symbolic[JascoCondConst.CRD.value].frame_chords.shape[-1] &lt;= 1):  # type: ignore
+                    # no chords conditioning - fill with null chord token
+                    s.symbolic[JascoCondConst.CRD.value] = SymbolicCondition(
+                        frame_chords=torch.ones(self.sequence_len, dtype=torch.int32) * self.null_chord)
+
+                if (s.symbolic == {} or
+                        s.symbolic[JascoCondConst.MLD.value].melody is None or
+                        s.symbolic[JascoCondConst.MLD.value].melody.shape[-1] &lt;= 1):  # type: ignore
+                    # no chords conditioning - fill with null chord token
+                    s.symbolic[JascoCondConst.MLD.value] = SymbolicCondition(
+                        melody=torch.zeros((self.melody_dim, self.sequence_len)))
+
+            if JascoCondConst.CRD.value in conditioner_keys:
+                # pad to max
+                max_seq_len = max(
+                    [s.symbolic[JascoCondConst.CRD.value].frame_chords.shape[-1] for s in samples])  # type: ignore
+                padded_chords = [
+                    torch.cat((x.symbolic[JascoCondConst.CRD.value].frame_chords,   # type: ignore
+                               torch.ones(max_seq_len -
+                                          x.symbolic[JascoCondConst.CRD.value].frame_chords.shape[-1],  # type: ignore
+                                          dtype=torch.int32) * self.null_chord))
+                    for x in samples
+                ]
+                output[JascoCondConst.CRD.value] = SymbolicCondition(frame_chords=torch.stack(padded_chords))
+            if JascoCondConst.MLD.value in conditioner_keys:
+                melodies = torch.stack([x.symbolic[JascoCondConst.MLD.value].melody for x in samples])  # type: ignore
+                output[JascoCondConst.MLD.value] = SymbolicCondition(melody=melodies)
+        return output</code></pre>
+</details>
+<div class="desc"><p>A cond-provider that manages and tokenizes various types of conditioning attributes for Jasco models.</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>chords_card</code></strong> :&ensp;<code>int</code></dt>
+<dd>The cardinality of the chord vocabulary.</dd>
+<dt><strong><code>sequence_length</code></strong> :&ensp;<code>int</code></dt>
+<dd>The length of the sequence for padding purposes.</dd>
+<dt><strong><code>melody_dim</code></strong> :&ensp;<code>int</code></dt>
+<dd>The dimensionality of the melody matrix.</dd>
+</dl>
+<p>Initializes internal Module state, shared by both nn.Module and ScriptModule.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="audiocraft.modules.conditioners.ConditioningProvider" href="conditioners.html#audiocraft.modules.conditioners.ConditioningProvider">ConditioningProvider</a></li>
+<li>torch.nn.modules.module.Module</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="audiocraft.modules.jasco_conditioners.JascoConditioningProvider.call_super_init"><code class="name">var <span class="ident">call_super_init</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.modules.jasco_conditioners.JascoConditioningProvider.dump_patches"><code class="name">var <span class="ident">dump_patches</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.modules.jasco_conditioners.JascoConditioningProvider.training"><code class="name">var <span class="ident">training</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="audiocraft.modules.conditioners.ConditioningProvider" href="conditioners.html#audiocraft.modules.conditioners.ConditioningProvider">ConditioningProvider</a></b></code>:
+<ul class="hlist">
+<li><code><a title="audiocraft.modules.conditioners.ConditioningProvider.forward" href="conditioners.html#audiocraft.modules.conditioners.ConditioningProvider.forward">forward</a></code></li>
+<li><code><a title="audiocraft.modules.conditioners.ConditioningProvider.tokenize" href="conditioners.html#audiocraft.modules.conditioners.ConditioningProvider.tokenize">tokenize</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="audiocraft.modules.jasco_conditioners.MelodyConditioner"><code class="flex name class">
+<span>class <span class="ident">MelodyConditioner</span></span>
+<span>(</span><span>card: int, out_dim: int, device: torch.device | str = 'cpu', **kwargs)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class MelodyConditioner(BaseConditioner):
+    &#34;&#34;&#34;
+    A conditioner that handles melody conditioning from pre-computed salience matrix.
+    Attributes:
+        card (int): The cardinality of the melody matrix.
+        out_dim (int): The dimensionality of the output projection.
+        device (Union[torch.device, str]): The device on which the embeddings are stored.
+    &#34;&#34;&#34;
+    def __init__(self, card: int, out_dim: int, device: tp.Union[torch.device, str] = &#39;cpu&#39;, **kwargs):
+        super().__init__(dim=card, output_dim=out_dim)
+        self.device = device
+
+    def tokenize(self, x: SymbolicCondition) -&gt; SymbolicCondition:
+        return SymbolicCondition(melody=x.melody.to(self.device))  # type: ignore
+
+    def forward(self, x: SymbolicCondition) -&gt; ConditionType:
+        embeds = self.output_proj(x.melody.permute(0, 2, 1))  # type: ignore
+        mask = torch.ones_like(embeds[..., 0])
+        return embeds, mask</code></pre>
+</details>
+<div class="desc"><p>A conditioner that handles melody conditioning from pre-computed salience matrix.</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>card</code></strong> :&ensp;<code>int</code></dt>
+<dd>The cardinality of the melody matrix.</dd>
+<dt><strong><code>out_dim</code></strong> :&ensp;<code>int</code></dt>
+<dd>The dimensionality of the output projection.</dd>
+<dt><strong><code>device</code></strong> :&ensp;<code>Union[torch.device, str]</code></dt>
+<dd>The device on which the embeddings are stored.</dd>
+</dl>
+<p>Initializes internal Module state, shared by both nn.Module and ScriptModule.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="audiocraft.modules.conditioners.BaseConditioner" href="conditioners.html#audiocraft.modules.conditioners.BaseConditioner">BaseConditioner</a></li>
+<li>torch.nn.modules.module.Module</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="audiocraft.modules.jasco_conditioners.MelodyConditioner.call_super_init"><code class="name">var <span class="ident">call_super_init</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.modules.jasco_conditioners.MelodyConditioner.dump_patches"><code class="name">var <span class="ident">dump_patches</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.modules.jasco_conditioners.MelodyConditioner.training"><code class="name">var <span class="ident">training</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="audiocraft.modules.conditioners.BaseConditioner" href="conditioners.html#audiocraft.modules.conditioners.BaseConditioner">BaseConditioner</a></b></code>:
+<ul class="hlist">
+<li><code><a title="audiocraft.modules.conditioners.BaseConditioner.forward" href="conditioners.html#audiocraft.modules.conditioners.BaseConditioner.forward">forward</a></code></li>
+<li><code><a title="audiocraft.modules.conditioners.BaseConditioner.tokenize" href="conditioners.html#audiocraft.modules.conditioners.BaseConditioner.tokenize">tokenize</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="audiocraft.modules" href="index.html">audiocraft.modules</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="audiocraft.modules.jasco_conditioners.ChordsEmbConditioner" href="#audiocraft.modules.jasco_conditioners.ChordsEmbConditioner">ChordsEmbConditioner</a></code></h4>
+<ul class="">
+<li><code><a title="audiocraft.modules.jasco_conditioners.ChordsEmbConditioner.call_super_init" href="#audiocraft.modules.jasco_conditioners.ChordsEmbConditioner.call_super_init">call_super_init</a></code></li>
+<li><code><a title="audiocraft.modules.jasco_conditioners.ChordsEmbConditioner.dump_patches" href="#audiocraft.modules.jasco_conditioners.ChordsEmbConditioner.dump_patches">dump_patches</a></code></li>
+<li><code><a title="audiocraft.modules.jasco_conditioners.ChordsEmbConditioner.training" href="#audiocraft.modules.jasco_conditioners.ChordsEmbConditioner.training">training</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="audiocraft.modules.jasco_conditioners.DrumsConditioner" href="#audiocraft.modules.jasco_conditioners.DrumsConditioner">DrumsConditioner</a></code></h4>
+<ul class="">
+<li><code><a title="audiocraft.modules.jasco_conditioners.DrumsConditioner.call_super_init" href="#audiocraft.modules.jasco_conditioners.DrumsConditioner.call_super_init">call_super_init</a></code></li>
+<li><code><a title="audiocraft.modules.jasco_conditioners.DrumsConditioner.create_embedding_cache" href="#audiocraft.modules.jasco_conditioners.DrumsConditioner.create_embedding_cache">create_embedding_cache</a></code></li>
+<li><code><a title="audiocraft.modules.jasco_conditioners.DrumsConditioner.dump_patches" href="#audiocraft.modules.jasco_conditioners.DrumsConditioner.dump_patches">dump_patches</a></code></li>
+<li><code><a title="audiocraft.modules.jasco_conditioners.DrumsConditioner.tokenize" href="#audiocraft.modules.jasco_conditioners.DrumsConditioner.tokenize">tokenize</a></code></li>
+<li><code><a title="audiocraft.modules.jasco_conditioners.DrumsConditioner.training" href="#audiocraft.modules.jasco_conditioners.DrumsConditioner.training">training</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="audiocraft.modules.jasco_conditioners.JascoConditioningProvider" href="#audiocraft.modules.jasco_conditioners.JascoConditioningProvider">JascoConditioningProvider</a></code></h4>
+<ul class="">
+<li><code><a title="audiocraft.modules.jasco_conditioners.JascoConditioningProvider.call_super_init" href="#audiocraft.modules.jasco_conditioners.JascoConditioningProvider.call_super_init">call_super_init</a></code></li>
+<li><code><a title="audiocraft.modules.jasco_conditioners.JascoConditioningProvider.dump_patches" href="#audiocraft.modules.jasco_conditioners.JascoConditioningProvider.dump_patches">dump_patches</a></code></li>
+<li><code><a title="audiocraft.modules.jasco_conditioners.JascoConditioningProvider.training" href="#audiocraft.modules.jasco_conditioners.JascoConditioningProvider.training">training</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="audiocraft.modules.jasco_conditioners.MelodyConditioner" href="#audiocraft.modules.jasco_conditioners.MelodyConditioner">MelodyConditioner</a></code></h4>
+<ul class="">
+<li><code><a title="audiocraft.modules.jasco_conditioners.MelodyConditioner.call_super_init" href="#audiocraft.modules.jasco_conditioners.MelodyConditioner.call_super_init">call_super_init</a></code></li>
+<li><code><a title="audiocraft.modules.jasco_conditioners.MelodyConditioner.dump_patches" href="#audiocraft.modules.jasco_conditioners.MelodyConditioner.dump_patches">dump_patches</a></code></li>
+<li><code><a title="audiocraft.modules.jasco_conditioners.MelodyConditioner.training" href="#audiocraft.modules.jasco_conditioners.MelodyConditioner.training">training</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.5</a>.</p>
+</footer>
+</body>
+</html>

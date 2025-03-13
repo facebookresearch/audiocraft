@@ -1,0 +1,470 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.5">
+<title>audiocraft.solvers.magnet API documentation</title>
+<meta name="description" content="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>audiocraft.solvers.magnet</code></h1>
+</header>
+<section id="section-intro">
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="audiocraft.solvers.magnet.AudioMagnetSolver"><code class="flex name class">
+<span>class <span class="ident">AudioMagnetSolver</span></span>
+<span>(</span><span>cfg: omegaconf.dictconfig.DictConfig)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class AudioMagnetSolver(MagnetSolver):
+    &#34;&#34;&#34;Solver for audio-MAGNeT. A MAGNeT model for sound generation.
+
+    More information can be found in the MAGNeT model card.
+    &#34;&#34;&#34;
+    DATASET_TYPE: builders.DatasetType = builders.DatasetType.SOUND</code></pre>
+</details>
+<div class="desc"><p>Solver for audio-MAGNeT. A MAGNeT model for sound generation.</p>
+<p>More information can be found in the MAGNeT model card.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="audiocraft.solvers.magnet.MagnetSolver" href="#audiocraft.solvers.magnet.MagnetSolver">MagnetSolver</a></li>
+<li><a title="audiocraft.solvers.musicgen.MusicGenSolver" href="musicgen.html#audiocraft.solvers.musicgen.MusicGenSolver">MusicGenSolver</a></li>
+<li><a title="audiocraft.solvers.base.StandardSolver" href="base.html#audiocraft.solvers.base.StandardSolver">StandardSolver</a></li>
+<li>abc.ABC</li>
+<li>flashy.solver.BaseSolver</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="audiocraft.solvers.magnet.AudioMagnetSolver.DATASET_TYPE"><code class="name">var <span class="ident">DATASET_TYPE</span> : <a title="audiocraft.solvers.builders.DatasetType" href="builders.html#audiocraft.solvers.builders.DatasetType">DatasetType</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="audiocraft.solvers.magnet.MagnetSolver" href="#audiocraft.solvers.magnet.MagnetSolver">MagnetSolver</a></b></code>:
+<ul class="hlist">
+<li><code><a title="audiocraft.solvers.magnet.MagnetSolver.autocast" href="base.html#audiocraft.solvers.base.StandardSolver.autocast">autocast</a></code></li>
+<li><code><a title="audiocraft.solvers.magnet.MagnetSolver.best_metric_name" href="base.html#audiocraft.solvers.base.StandardSolver.best_metric_name">best_metric_name</a></code></li>
+<li><code><a title="audiocraft.solvers.magnet.MagnetSolver.build_dataloaders" href="musicgen.html#audiocraft.solvers.musicgen.MusicGenSolver.build_dataloaders">build_dataloaders</a></code></li>
+<li><code><a title="audiocraft.solvers.magnet.MagnetSolver.build_model" href="musicgen.html#audiocraft.solvers.musicgen.MusicGenSolver.build_model">build_model</a></code></li>
+<li><code><a title="audiocraft.solvers.magnet.MagnetSolver.commit" href="base.html#audiocraft.solvers.base.StandardSolver.commit">commit</a></code></li>
+<li><code><a title="audiocraft.solvers.magnet.MagnetSolver.common_train_valid" href="base.html#audiocraft.solvers.base.StandardSolver.common_train_valid">common_train_valid</a></code></li>
+<li><code><a title="audiocraft.solvers.magnet.MagnetSolver.evaluate" href="base.html#audiocraft.solvers.base.StandardSolver.evaluate">evaluate</a></code></li>
+<li><code><a title="audiocraft.solvers.magnet.MagnetSolver.evaluate_audio_generation" href="musicgen.html#audiocraft.solvers.musicgen.MusicGenSolver.evaluate_audio_generation">evaluate_audio_generation</a></code></li>
+<li><code><a title="audiocraft.solvers.magnet.MagnetSolver.generate" href="base.html#audiocraft.solvers.base.StandardSolver.generate">generate</a></code></li>
+<li><code><a title="audiocraft.solvers.magnet.MagnetSolver.generate_audio" href="musicgen.html#audiocraft.solvers.musicgen.MusicGenSolver.generate_audio">generate_audio</a></code></li>
+<li><code><a title="audiocraft.solvers.magnet.MagnetSolver.get_eval_solver_from_sig" href="musicgen.html#audiocraft.solvers.musicgen.MusicGenSolver.get_eval_solver_from_sig">get_eval_solver_from_sig</a></code></li>
+<li><code><a title="audiocraft.solvers.magnet.MagnetSolver.initialize_ema" href="base.html#audiocraft.solvers.base.StandardSolver.initialize_ema">initialize_ema</a></code></li>
+<li><code><a title="audiocraft.solvers.magnet.MagnetSolver.load_checkpoints" href="base.html#audiocraft.solvers.base.StandardSolver.load_checkpoints">load_checkpoints</a></code></li>
+<li><code><a title="audiocraft.solvers.magnet.MagnetSolver.log_model_summary" href="base.html#audiocraft.solvers.base.StandardSolver.log_model_summary">log_model_summary</a></code></li>
+<li><code><a title="audiocraft.solvers.magnet.MagnetSolver.register_best_state" href="base.html#audiocraft.solvers.base.StandardSolver.register_best_state">register_best_state</a></code></li>
+<li><code><a title="audiocraft.solvers.magnet.MagnetSolver.register_ema" href="base.html#audiocraft.solvers.base.StandardSolver.register_ema">register_ema</a></code></li>
+<li><code><a title="audiocraft.solvers.magnet.MagnetSolver.restore" href="base.html#audiocraft.solvers.base.StandardSolver.restore">restore</a></code></li>
+<li><code><a title="audiocraft.solvers.magnet.MagnetSolver.run" href="base.html#audiocraft.solvers.base.StandardSolver.run">run</a></code></li>
+<li><code><a title="audiocraft.solvers.magnet.MagnetSolver.run_epoch" href="base.html#audiocraft.solvers.base.StandardSolver.run_epoch">run_epoch</a></code></li>
+<li><code><a title="audiocraft.solvers.magnet.MagnetSolver.run_generate_step" href="musicgen.html#audiocraft.solvers.musicgen.MusicGenSolver.run_generate_step">run_generate_step</a></code></li>
+<li><code><a title="audiocraft.solvers.magnet.MagnetSolver.run_one_stage" href="base.html#audiocraft.solvers.base.StandardSolver.run_one_stage">run_one_stage</a></code></li>
+<li><code><a title="audiocraft.solvers.magnet.MagnetSolver.run_step" href="base.html#audiocraft.solvers.base.StandardSolver.run_step">run_step</a></code></li>
+<li><code><a title="audiocraft.solvers.magnet.MagnetSolver.save_checkpoints" href="base.html#audiocraft.solvers.base.StandardSolver.save_checkpoints">save_checkpoints</a></code></li>
+<li><code><a title="audiocraft.solvers.magnet.MagnetSolver.should_run_stage" href="base.html#audiocraft.solvers.base.StandardSolver.should_run_stage">should_run_stage</a></code></li>
+<li><code><a title="audiocraft.solvers.magnet.MagnetSolver.should_stop_training" href="base.html#audiocraft.solvers.base.StandardSolver.should_stop_training">should_stop_training</a></code></li>
+<li><code><a title="audiocraft.solvers.magnet.MagnetSolver.show" href="musicgen.html#audiocraft.solvers.musicgen.MusicGenSolver.show">show</a></code></li>
+<li><code><a title="audiocraft.solvers.magnet.MagnetSolver.train" href="base.html#audiocraft.solvers.base.StandardSolver.train">train</a></code></li>
+<li><code><a title="audiocraft.solvers.magnet.MagnetSolver.update_best_state_from_stage" href="base.html#audiocraft.solvers.base.StandardSolver.update_best_state_from_stage">update_best_state_from_stage</a></code></li>
+<li><code><a title="audiocraft.solvers.magnet.MagnetSolver.valid" href="base.html#audiocraft.solvers.base.StandardSolver.valid">valid</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="audiocraft.solvers.magnet.MagnetSolver"><code class="flex name class">
+<span>class <span class="ident">MagnetSolver</span></span>
+<span>(</span><span>cfg: omegaconf.dictconfig.DictConfig)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class MagnetSolver(musicgen.MusicGenSolver):
+    &#34;&#34;&#34;Solver for MAGNeT - Masked Audio Generation using
+        a single Non-autoregressive Transformer https://arxiv.org/abs/2401.04577.
+    &#34;&#34;&#34;
+    def __init__(self, cfg: DictConfig):
+        super().__init__(cfg)
+
+        # initialize generation parameters by config
+        self.generation_params = {
+            &#39;use_sampling&#39;: self.cfg.generate.lm.use_sampling,
+            &#39;temp&#39;: self.cfg.generate.lm.temp,
+            &#39;top_k&#39;: self.cfg.generate.lm.top_k,
+            &#39;top_p&#39;: self.cfg.generate.lm.top_p,
+            &#39;max_cfg_coef&#39;: self.cfg.generate.lm.max_cfg_coef,
+            &#39;min_cfg_coef&#39;: self.cfg.generate.lm.min_cfg_coef,
+            &#39;decoding_steps&#39;: list(self.cfg.generate.lm.decoding_steps),
+            &#39;anneal_temp&#39;: self.cfg.generate.lm.anneal_temp,
+            &#39;span_scoring&#39;: self.cfg.generate.lm.span_scoring,
+            &#39;span_arrangement&#39;: self.cfg.generate.lm.span_arrangement
+        }
+
+        sequence_len = int(cfg.dataset.segment_duration * self.compression_model.frame_rate)
+        self.mean_maskrate_to_u = torch.tensor(self._calc_mean_maskrate_to_u_LUT(sequence_len), device=self.device)
+        self.ce_per_codebook = [torch.log(torch.tensor(self.compression_model.cardinality, device=self.device))
+                                for _ in range(cfg.transformer_lm.n_q)]
+
+    def build_model(self) -&gt; None:
+        self.cfg.transformer_lm.segment_duration = self.cfg.dataset.segment_duration
+        self.cfg.transformer_lm.span_len = self.cfg.masking.span_len
+        assert self.cfg.efficient_attention_backend == &#34;xformers&#34;, &#34;MAGNeT v1 models support only xformers backend.&#34;
+        super().build_model()
+
+    def _calc_mean_maskrate_to_u_LUT(self, T: int):
+        &#34;&#34;&#34; Create a Look Up Table (LUT) transforming a discrete masking percentage m in 0,1,...,100 to u,
+            the number of overlapping spans of length L to place s.t. the masking rate is approximately m/float(100).
+            It first creates the inverse transformation, of the masking rate as function of u,
+            using the expression choose(T - L, u) / choose(T, u), where L is the atomic span length used
+            during masking. See https://arxiv.org/abs/2401.04577,
+            appendix C, for the mean mask rate derivation.
+
+            We leverage the fact that:
+                                choose(T - L, u) / choose(T, u) = Prod_{j = 0}^{u - 1}((T - L - j)/(T - j))
+            in the provided implementation, in order to avoid overflow.
+        Args:
+            T (float): Sequence length.
+        Returns:
+            (List) A LUT transforming m in 0,1,...,100 to u,
+            s.t. the masking rate of the span-L mask is approximately m/float(100).
+        &#34;&#34;&#34;
+
+        L = self.cfg.masking.span_len
+
+        u2mean = [0.0]  # mean mask rate is 0.0 for u = 0
+        v = (T - L) / float(T)
+        for u in range(1, T):
+            u2mean.append(1 - v)
+            v *= (T - L - u) / (T - u)  # Overflow-safe implementation of choose(T - L, u) / choose(T, u).
+
+        mean2u = []
+        for maskperc in range(101):
+            maskrate = maskperc / float(100)
+            u = int(np.searchsorted(u2mean, maskrate))
+            mean2u.append(u)
+
+        return mean2u
+
+    def _non_spans_mask(self, mask_probs: torch.Tensor, B: int, T: int, device: torch.device) -&gt; torch.Tensor:
+        &#34;&#34;&#34; Construct a boolean mask of shape [B, T, 1], with masking rates defined by mask_probs.
+            The masked tokens are singletons, placed uniformly at random.
+        Args:
+            mask_probs (torch.Tensor): The desired masking rate per sample, of shape [B,]
+            B (int): Batch size.
+            T (int): Sequence length.
+            device (torch.device): device of the output tensor
+        Returns:
+            (torch.Tensor): A mask of shape [B, T]
+        &#34;&#34;&#34;
+        num_token_masked = (T * mask_probs).round().clamp(min=1)
+        batch_randperm = torch.rand((B, T), device=device).argsort(dim=-1)
+        return batch_randperm &lt; rearrange(num_token_masked, &#39;b -&gt; b 1&#39;)
+
+    def _spans_mask(self, mask_probs: torch.Tensor, B: int, T: int, device: torch.device) -&gt; torch.Tensor:
+        &#34;&#34;&#34; Construct a spans mask with masking rates defined by mask_probs,
+            where the atomic span length ( &gt; 1 ) is defined by cfg.masking.span_len.
+        Args:
+            mask_probs (torch.Tensor): The desired masking rate per sample, of shape [B,]
+            B (int): Batch size.
+            T (int): Sequence length.
+            device (torch.device): device of the output tensor
+        Returns:
+            (torch.Tensor): A spans mask of shape [B, T]
+        &#34;&#34;&#34;
+        rounded_probs = torch.round(100 * mask_probs).long()
+        k = self.mean_maskrate_to_u[rounded_probs].clamp(min=1)  # k is the number of span starts
+
+        # sample random span starts
+        batch_randperm = torch.rand((B, T), device=device).argsort(dim=-1)
+        mask = batch_randperm &lt; rearrange(k, &#39;b -&gt; b 1&#39;)
+        B, T = mask.shape
+        shifted_mask = mask.clone()
+        for _ in range(self.cfg.masking.span_len - 1):
+            shifted_mask = torch.concat((torch.full((B, 1), False, device=device), shifted_mask[:, :-1]), dim=1)
+            mask = torch.logical_or(mask, shifted_mask)
+
+        return mask
+
+    def _get_mask(self, mask_probs: torch.Tensor, B: int, T: int, device: torch.device) -&gt; torch.Tensor:
+        &#34;&#34;&#34; Construct a boolean mask with masking rates defined by mask_probs, and atomic
+            span length defined by cfg.masking.span_len.
+        Args:
+            mask_probs (torch.Tensor): The desired masking rate per sample, of shape [B,]
+            B (int): Batch size.
+            T (int): Sequence length.
+            device (torch.device): device of the output tensor
+        Returns:
+            (torch.Tensor): A boolean tensor of shape [B, T]
+        &#34;&#34;&#34;
+        if self.cfg.masking.span_len &lt;= 1:
+            return self._non_spans_mask(mask_probs, B, T, device)
+
+        return self._spans_mask(mask_probs, B, T, device)
+
+    def _compute_cross_entropy_magnet(self, logits: torch.Tensor,
+                                      targets: torch.Tensor, mask: torch.Tensor, stage: torch.Tensor) -&gt; torch.Tensor:
+        &#34;&#34;&#34; Compute cross entropy between multi-codebook targets and model&#39;s logits.
+        The cross entropy is computed only on a specific codebook, defined by the stage argument.
+        Valid timesteps for each codebook are pulled from the mask, where invalid
+        timesteps are set to 0.
+
+        Args:
+            logits (torch.Tensor): Model&#39;s logits of shape [B, K, T, card].
+            targets (torch.Tensor): Target codes, of shape [B, K, T].
+            mask (torch.Tensor): Mask for valid target codes, of shape [B, K, T].
+            stage (torch.Tensor): The codebook (idx) that is being optimized, as a scalar tensor.
+        Returns:
+            ce (torch.Tensor): Cross entropy of the codebook that is being optimized.
+        &#34;&#34;&#34;
+        assert logits.shape[:-1] == targets.shape
+        assert mask.shape == targets.shape
+        ce = torch.zeros([], device=targets.device)
+        logits_k = logits[:, stage, ...].contiguous().view(-1, logits.size(-1))  # [B x T, card]
+        targets_k = targets[:, stage, ...].contiguous().view(-1)  # [B x T]
+        mask_k = mask[:, stage, ...].contiguous().view(-1)  # [B x T]
+
+        IGNORE_IDX = -1
+        targets_k[~mask_k] = IGNORE_IDX
+        q_ce = F.cross_entropy(logits_k, targets_k, ignore_index=IGNORE_IDX)
+
+        ce += q_ce
+        return ce
+
+    def run_step(self, idx: int, batch: tp.Tuple[torch.Tensor, tp.List[SegmentWithAttributes]], metrics: dict) -&gt; dict:
+        &#34;&#34;&#34;Perform one training or valid step on a given batch.&#34;&#34;&#34;
+        check_synchronization_points = idx == 1 and self.device == &#39;cuda&#39;
+
+        condition_tensors, audio_tokens, padding_mask = self._prepare_tokens_and_attributes(
+            batch, check_synchronization_points)
+
+        self.deadlock_detect.update(&#39;tokens_and_conditions&#39;)
+
+        if check_synchronization_points:
+            torch.cuda.set_sync_debug_mode(&#39;warn&#39;)
+
+        B, K, T = audio_tokens.shape
+        device = self.device
+
+        # Choose the stage (codebook idx) for update, uniformly at random.
+        stage_ = random.randint(0, K - 1)
+        stage = torch.full((1, ), stage_, device=device)
+
+        # masking
+        rand_time = torch.zeros((B,), device=device).float().uniform_(0, 1)
+        rand_mask_probs = torch.cos(rand_time * math.pi * 0.5)
+
+        # stage mask
+        stage_mask = self._get_mask(rand_mask_probs, B, T, device)  # [B, T]
+        stage_mask = stage_mask.unsqueeze(1)  # [B, 1, T]
+
+        # Keep all preceding codebooks.
+        mask = torch.full((B, K, T), False, device=device)
+        mask[:, stage, :] = stage_mask
+
+        # Mask all codebooks larger than stage_
+        mask_id = self.model.special_token_id
+        mask[:, (stage_+1):, :] = torch.full((B, K - stage_ - 1, T), True, device=device)
+        input_tokens = torch.where(mask, mask_id, audio_tokens)
+
+        # Take loss only on the chosen stage, and only on the masked tokens.
+        loss_mask = torch.full((B, K, T), False, device=device)
+        loss_mask[:, stage, :] = stage_mask
+
+        with self.autocast:
+            model_output = self.model.compute_predictions(input_tokens, [], condition_tensors, stage=stage_)
+            logits = model_output.logits
+            loss_mask &amp;= padding_mask
+            ce = self._compute_cross_entropy_magnet(logits, audio_tokens, loss_mask, stage)
+            loss = ce
+        self.deadlock_detect.update(&#39;loss&#39;)
+
+        if check_synchronization_points:
+            torch.cuda.set_sync_debug_mode(&#39;default&#39;)
+
+        if self.is_training:
+            metrics[&#39;lr&#39;] = self.optimizer.param_groups[0][&#39;lr&#39;]
+            if self.scaler is not None:
+                loss = self.scaler.scale(loss)
+            self.deadlock_detect.update(&#39;scale&#39;)
+            if self.cfg.fsdp.use:
+                loss.backward()
+                flashy.distrib.average_tensors(self.model.buffers())
+            elif self.cfg.optim.eager_sync:
+                with flashy.distrib.eager_sync_model(self.model):
+                    loss.backward()
+            else:
+                # this should always be slower but can be useful
+                # for weird use cases like multiple backwards.
+                loss.backward()
+                flashy.distrib.sync_model(self.model)
+            self.deadlock_detect.update(&#39;backward&#39;)
+
+            if self.scaler is not None:
+                self.scaler.unscale_(self.optimizer)
+            if self.cfg.optim.max_norm:
+                if self.cfg.fsdp.use:
+                    metrics[&#39;grad_norm&#39;] = self.model.clip_grad_norm_(self.cfg.optim.max_norm)  # type: ignore
+                else:
+                    metrics[&#39;grad_norm&#39;] = torch.nn.utils.clip_grad_norm_(
+                        self.model.parameters(), self.cfg.optim.max_norm
+                    )
+            if self.scaler is None:
+                self.optimizer.step()
+            else:
+                self.scaler.step(self.optimizer)
+                self.scaler.update()
+            if self.lr_scheduler:
+                self.lr_scheduler.step()
+            self.optimizer.zero_grad()
+            self.deadlock_detect.update(&#39;optim&#39;)
+            if self.scaler is not None:
+                scale = self.scaler.get_scale()
+                metrics[&#39;grad_scale&#39;] = scale
+            if not loss.isfinite().all():
+                raise RuntimeError(&#34;Model probably diverged.&#34;)
+
+        metrics[&#39;ce&#39;] = ce
+        metrics[&#39;ppl&#39;] = torch.exp(ce)
+
+        return metrics</code></pre>
+</details>
+<div class="desc"><p>Solver for MAGNeT - Masked Audio Generation using
+a single Non-autoregressive Transformer <a href="https://arxiv.org/abs/2401.04577.">https://arxiv.org/abs/2401.04577.</a></p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="audiocraft.solvers.musicgen.MusicGenSolver" href="musicgen.html#audiocraft.solvers.musicgen.MusicGenSolver">MusicGenSolver</a></li>
+<li><a title="audiocraft.solvers.base.StandardSolver" href="base.html#audiocraft.solvers.base.StandardSolver">StandardSolver</a></li>
+<li>abc.ABC</li>
+<li>flashy.solver.BaseSolver</li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="audiocraft.solvers.magnet.AudioMagnetSolver" href="#audiocraft.solvers.magnet.AudioMagnetSolver">AudioMagnetSolver</a></li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="audiocraft.solvers.magnet.MagnetSolver.DATASET_TYPE"><code class="name">var <span class="ident">DATASET_TYPE</span> : <a title="audiocraft.solvers.builders.DatasetType" href="builders.html#audiocraft.solvers.builders.DatasetType">DatasetType</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="audiocraft.solvers.musicgen.MusicGenSolver" href="musicgen.html#audiocraft.solvers.musicgen.MusicGenSolver">MusicGenSolver</a></b></code>:
+<ul class="hlist">
+<li><code><a title="audiocraft.solvers.musicgen.MusicGenSolver.autocast" href="base.html#audiocraft.solvers.base.StandardSolver.autocast">autocast</a></code></li>
+<li><code><a title="audiocraft.solvers.musicgen.MusicGenSolver.best_metric_name" href="base.html#audiocraft.solvers.base.StandardSolver.best_metric_name">best_metric_name</a></code></li>
+<li><code><a title="audiocraft.solvers.musicgen.MusicGenSolver.build_dataloaders" href="musicgen.html#audiocraft.solvers.musicgen.MusicGenSolver.build_dataloaders">build_dataloaders</a></code></li>
+<li><code><a title="audiocraft.solvers.musicgen.MusicGenSolver.build_model" href="musicgen.html#audiocraft.solvers.musicgen.MusicGenSolver.build_model">build_model</a></code></li>
+<li><code><a title="audiocraft.solvers.musicgen.MusicGenSolver.commit" href="base.html#audiocraft.solvers.base.StandardSolver.commit">commit</a></code></li>
+<li><code><a title="audiocraft.solvers.musicgen.MusicGenSolver.common_train_valid" href="base.html#audiocraft.solvers.base.StandardSolver.common_train_valid">common_train_valid</a></code></li>
+<li><code><a title="audiocraft.solvers.musicgen.MusicGenSolver.evaluate" href="base.html#audiocraft.solvers.base.StandardSolver.evaluate">evaluate</a></code></li>
+<li><code><a title="audiocraft.solvers.musicgen.MusicGenSolver.evaluate_audio_generation" href="musicgen.html#audiocraft.solvers.musicgen.MusicGenSolver.evaluate_audio_generation">evaluate_audio_generation</a></code></li>
+<li><code><a title="audiocraft.solvers.musicgen.MusicGenSolver.generate" href="base.html#audiocraft.solvers.base.StandardSolver.generate">generate</a></code></li>
+<li><code><a title="audiocraft.solvers.musicgen.MusicGenSolver.generate_audio" href="musicgen.html#audiocraft.solvers.musicgen.MusicGenSolver.generate_audio">generate_audio</a></code></li>
+<li><code><a title="audiocraft.solvers.musicgen.MusicGenSolver.get_eval_solver_from_sig" href="musicgen.html#audiocraft.solvers.musicgen.MusicGenSolver.get_eval_solver_from_sig">get_eval_solver_from_sig</a></code></li>
+<li><code><a title="audiocraft.solvers.musicgen.MusicGenSolver.initialize_ema" href="base.html#audiocraft.solvers.base.StandardSolver.initialize_ema">initialize_ema</a></code></li>
+<li><code><a title="audiocraft.solvers.musicgen.MusicGenSolver.load_checkpoints" href="base.html#audiocraft.solvers.base.StandardSolver.load_checkpoints">load_checkpoints</a></code></li>
+<li><code><a title="audiocraft.solvers.musicgen.MusicGenSolver.log_model_summary" href="base.html#audiocraft.solvers.base.StandardSolver.log_model_summary">log_model_summary</a></code></li>
+<li><code><a title="audiocraft.solvers.musicgen.MusicGenSolver.register_best_state" href="base.html#audiocraft.solvers.base.StandardSolver.register_best_state">register_best_state</a></code></li>
+<li><code><a title="audiocraft.solvers.musicgen.MusicGenSolver.register_ema" href="base.html#audiocraft.solvers.base.StandardSolver.register_ema">register_ema</a></code></li>
+<li><code><a title="audiocraft.solvers.musicgen.MusicGenSolver.restore" href="base.html#audiocraft.solvers.base.StandardSolver.restore">restore</a></code></li>
+<li><code><a title="audiocraft.solvers.musicgen.MusicGenSolver.run" href="base.html#audiocraft.solvers.base.StandardSolver.run">run</a></code></li>
+<li><code><a title="audiocraft.solvers.musicgen.MusicGenSolver.run_epoch" href="base.html#audiocraft.solvers.base.StandardSolver.run_epoch">run_epoch</a></code></li>
+<li><code><a title="audiocraft.solvers.musicgen.MusicGenSolver.run_generate_step" href="musicgen.html#audiocraft.solvers.musicgen.MusicGenSolver.run_generate_step">run_generate_step</a></code></li>
+<li><code><a title="audiocraft.solvers.musicgen.MusicGenSolver.run_one_stage" href="base.html#audiocraft.solvers.base.StandardSolver.run_one_stage">run_one_stage</a></code></li>
+<li><code><a title="audiocraft.solvers.musicgen.MusicGenSolver.run_step" href="base.html#audiocraft.solvers.base.StandardSolver.run_step">run_step</a></code></li>
+<li><code><a title="audiocraft.solvers.musicgen.MusicGenSolver.save_checkpoints" href="base.html#audiocraft.solvers.base.StandardSolver.save_checkpoints">save_checkpoints</a></code></li>
+<li><code><a title="audiocraft.solvers.musicgen.MusicGenSolver.should_run_stage" href="base.html#audiocraft.solvers.base.StandardSolver.should_run_stage">should_run_stage</a></code></li>
+<li><code><a title="audiocraft.solvers.musicgen.MusicGenSolver.should_stop_training" href="base.html#audiocraft.solvers.base.StandardSolver.should_stop_training">should_stop_training</a></code></li>
+<li><code><a title="audiocraft.solvers.musicgen.MusicGenSolver.show" href="musicgen.html#audiocraft.solvers.musicgen.MusicGenSolver.show">show</a></code></li>
+<li><code><a title="audiocraft.solvers.musicgen.MusicGenSolver.train" href="base.html#audiocraft.solvers.base.StandardSolver.train">train</a></code></li>
+<li><code><a title="audiocraft.solvers.musicgen.MusicGenSolver.update_best_state_from_stage" href="base.html#audiocraft.solvers.base.StandardSolver.update_best_state_from_stage">update_best_state_from_stage</a></code></li>
+<li><code><a title="audiocraft.solvers.musicgen.MusicGenSolver.valid" href="base.html#audiocraft.solvers.base.StandardSolver.valid">valid</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="audiocraft.solvers" href="index.html">audiocraft.solvers</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="audiocraft.solvers.magnet.AudioMagnetSolver" href="#audiocraft.solvers.magnet.AudioMagnetSolver">AudioMagnetSolver</a></code></h4>
+<ul class="">
+<li><code><a title="audiocraft.solvers.magnet.AudioMagnetSolver.DATASET_TYPE" href="#audiocraft.solvers.magnet.AudioMagnetSolver.DATASET_TYPE">DATASET_TYPE</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="audiocraft.solvers.magnet.MagnetSolver" href="#audiocraft.solvers.magnet.MagnetSolver">MagnetSolver</a></code></h4>
+<ul class="">
+<li><code><a title="audiocraft.solvers.magnet.MagnetSolver.DATASET_TYPE" href="#audiocraft.solvers.magnet.MagnetSolver.DATASET_TYPE">DATASET_TYPE</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.5</a>.</p>
+</footer>
+</body>
+</html>

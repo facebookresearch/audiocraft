@@ -1,0 +1,633 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.5">
+<title>audiocraft.data.music_dataset API documentation</title>
+<meta name="description" content="Dataset of music tracks with rich metadata.">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>audiocraft.data.music_dataset</code></h1>
+</header>
+<section id="section-intro">
+<p>Dataset of music tracks with rich metadata.</p>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="audiocraft.data.music_dataset.augment_music_info_description"><code class="name flex">
+<span>def <span class="ident">augment_music_info_description</span></span>(<span>music_info: <a title="audiocraft.data.music_dataset.MusicInfo" href="#audiocraft.data.music_dataset.MusicInfo">MusicInfo</a>,<br>merge_text_p: float = 0.0,<br>drop_desc_p: float = 0.0,<br>drop_other_p: float = 0.0) ‑> <a title="audiocraft.data.music_dataset.MusicInfo" href="#audiocraft.data.music_dataset.MusicInfo">MusicInfo</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def augment_music_info_description(music_info: MusicInfo, merge_text_p: float = 0.,
+                                   drop_desc_p: float = 0., drop_other_p: float = 0.) -&gt; MusicInfo:
+    &#34;&#34;&#34;Augment MusicInfo description with additional metadata fields and potential dropout.
+    Additional textual attributes are added given probability &#39;merge_text_conditions_p&#39; and
+    the original textual description is dropped from the augmented description given probability drop_desc_p.
+
+    Args:
+        music_info (MusicInfo): The music metadata to augment.
+        merge_text_p (float): Probability of merging additional metadata to the description.
+            If provided value is 0, then no merging is performed.
+        drop_desc_p (float): Probability of dropping the original description on text merge.
+            if provided value is 0, then no drop out is performed.
+        drop_other_p (float): Probability of dropping the other fields used for text augmentation.
+    Returns:
+        MusicInfo: The MusicInfo with augmented textual description.
+    &#34;&#34;&#34;
+    def is_valid_field(field_name: str, field_value: tp.Any) -&gt; bool:
+        valid_field_name = field_name in [&#39;key&#39;, &#39;bpm&#39;, &#39;genre&#39;, &#39;moods&#39;, &#39;instrument&#39;, &#39;keywords&#39;]
+        valid_field_value = field_value is not None and isinstance(field_value, (int, float, str, list))
+        keep_field = random.uniform(0, 1) &lt; drop_other_p
+        return valid_field_name and valid_field_value and keep_field
+
+    def process_value(v: tp.Any) -&gt; str:
+        if isinstance(v, (int, float, str)):
+            return str(v)
+        if isinstance(v, list):
+            return &#34;, &#34;.join(v)
+        else:
+            raise ValueError(f&#34;Unknown type for text value! ({type(v), v})&#34;)
+
+    description = music_info.description
+
+    metadata_text = &#34;&#34;
+    if random.uniform(0, 1) &lt; merge_text_p:
+        meta_pairs = [f&#39;{_field.name}: {process_value(getattr(music_info, _field.name))}&#39;
+                      for _field in fields(music_info) if is_valid_field(_field.name, getattr(music_info, _field.name))]
+        random.shuffle(meta_pairs)
+        metadata_text = &#34;. &#34;.join(meta_pairs)
+        description = description if not random.uniform(0, 1) &lt; drop_desc_p else None
+        logger.debug(f&#34;Applying text augmentation on MMI info. description: {description}, metadata: {metadata_text}&#34;)
+
+    if description is None:
+        description = metadata_text if len(metadata_text) &gt; 1 else None
+    else:
+        description = &#34;. &#34;.join([description.rstrip(&#39;.&#39;), metadata_text])
+    description = description.strip() if description else None
+
+    music_info = replace(music_info)
+    music_info.description = description
+    return music_info</code></pre>
+</details>
+<div class="desc"><p>Augment MusicInfo description with additional metadata fields and potential dropout.
+Additional textual attributes are added given probability 'merge_text_conditions_p' and
+the original textual description is dropped from the augmented description given probability drop_desc_p.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>music_info</code></strong> :&ensp;<code><a title="audiocraft.data.music_dataset.MusicInfo" href="#audiocraft.data.music_dataset.MusicInfo">MusicInfo</a></code></dt>
+<dd>The music metadata to augment.</dd>
+<dt><strong><code>merge_text_p</code></strong> :&ensp;<code>float</code></dt>
+<dd>Probability of merging additional metadata to the description.
+If provided value is 0, then no merging is performed.</dd>
+<dt><strong><code>drop_desc_p</code></strong> :&ensp;<code>float</code></dt>
+<dd>Probability of dropping the original description on text merge.
+if provided value is 0, then no drop out is performed.</dd>
+<dt><strong><code>drop_other_p</code></strong> :&ensp;<code>float</code></dt>
+<dd>Probability of dropping the other fields used for text augmentation.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code><a title="audiocraft.data.music_dataset.MusicInfo" href="#audiocraft.data.music_dataset.MusicInfo">MusicInfo</a></code></dt>
+<dd>The MusicInfo with augmented textual description.</dd>
+</dl></div>
+</dd>
+<dt id="audiocraft.data.music_dataset.get_bpm"><code class="name flex">
+<span>def <span class="ident">get_bpm</span></span>(<span>value: str | None) ‑> float | None</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_bpm(value: tp.Optional[str]) -&gt; tp.Optional[float]:
+    &#34;&#34;&#34;Preprocess to a float.&#34;&#34;&#34;
+    if value is None:
+        return None
+    try:
+        return float(value)
+    except ValueError:
+        return None</code></pre>
+</details>
+<div class="desc"><p>Preprocess to a float.</p></div>
+</dd>
+<dt id="audiocraft.data.music_dataset.get_musical_key"><code class="name flex">
+<span>def <span class="ident">get_musical_key</span></span>(<span>value: str | None) ‑> str | None</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_musical_key(value: tp.Optional[str]) -&gt; tp.Optional[str]:
+    &#34;&#34;&#34;Preprocess key keywords, discarding them if there are multiple key defined.&#34;&#34;&#34;
+    if value is None or (not isinstance(value, str)) or len(value) == 0 or value == &#39;None&#39;:
+        return None
+    elif &#39;,&#39; in value:
+        # For now, we discard when multiple keys are defined separated with comas
+        return None
+    else:
+        return value.strip().lower()</code></pre>
+</details>
+<div class="desc"><p>Preprocess key keywords, discarding them if there are multiple key defined.</p></div>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="audiocraft.data.music_dataset.MusicDataset"><code class="flex name class">
+<span>class <span class="ident">MusicDataset</span></span>
+<span>(</span><span>*args,<br>info_fields_required: bool = True,<br>merge_text_p: float = 0.0,<br>drop_desc_p: float = 0.0,<br>drop_other_p: float = 0.0,<br>joint_embed_attributes: List[str] = [],<br>paraphrase_source: str | None = None,<br>paraphrase_p: float = 0,<br>**kwargs)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class MusicDataset(InfoAudioDataset):
+    &#34;&#34;&#34;Music dataset is an AudioDataset with music-related metadata.
+
+    Args:
+        info_fields_required (bool): Whether to enforce having required fields.
+        merge_text_p (float): Probability of merging additional metadata to the description.
+        drop_desc_p (float): Probability of dropping the original description on text merge.
+        drop_other_p (float): Probability of dropping the other fields used for text augmentation.
+        joint_embed_attributes (list[str]): A list of attributes for which joint embedding metadata is returned.
+        paraphrase_source (str, optional): Path to the .json or .json.gz file containing the
+            paraphrases for the description. The json should be a dict with keys are the
+            original info path (e.g. track_path.json) and each value is a list of possible
+            paraphrased.
+        paraphrase_p (float): probability of taking a paraphrase.
+
+    See `audiocraft.data.info_audio_dataset.InfoAudioDataset` for full initialization arguments.
+    &#34;&#34;&#34;
+    def __init__(self, *args, info_fields_required: bool = True,
+                 merge_text_p: float = 0., drop_desc_p: float = 0., drop_other_p: float = 0.,
+                 joint_embed_attributes: tp.List[str] = [],
+                 paraphrase_source: tp.Optional[str] = None, paraphrase_p: float = 0,
+                 **kwargs):
+        kwargs[&#39;return_info&#39;] = True  # We require the info for each song of the dataset.
+        super().__init__(*args, **kwargs)
+        self.info_fields_required = info_fields_required
+        self.merge_text_p = merge_text_p
+        self.drop_desc_p = drop_desc_p
+        self.drop_other_p = drop_other_p
+        self.joint_embed_attributes = joint_embed_attributes
+        self.paraphraser = None
+        if paraphrase_source is not None:
+            self.paraphraser = Paraphraser(paraphrase_source, paraphrase_p)
+
+    def __getitem__(self, index):
+        wav, info = super().__getitem__(index)
+        info_data = info.to_dict()
+        music_info_path = Path(info.meta.path).with_suffix(&#39;.json&#39;)
+
+        if Path(music_info_path).exists():
+            with open(music_info_path, &#39;r&#39;) as json_file:
+                music_data = json.load(json_file)
+                music_data.update(info_data)
+                music_info = MusicInfo.from_dict(music_data, fields_required=self.info_fields_required)
+            if self.paraphraser is not None:
+                music_info.description = self.paraphraser.sample(music_info.meta.path, music_info.description)
+            if self.merge_text_p:
+                music_info = augment_music_info_description(
+                    music_info, self.merge_text_p, self.drop_desc_p, self.drop_other_p)
+        else:
+            music_info = MusicInfo.from_dict(info_data, fields_required=False)
+
+        music_info.self_wav = WavCondition(
+            wav=wav[None], length=torch.tensor([info.n_frames]),
+            sample_rate=[info.sample_rate], path=[info.meta.path], seek_time=[info.seek_time])
+
+        for att in self.joint_embed_attributes:
+            att_value = getattr(music_info, att)
+            joint_embed_cond = JointEmbedCondition(
+                wav[None], [att_value], torch.tensor([info.n_frames]),
+                sample_rate=[info.sample_rate], path=[info.meta.path], seek_time=[info.seek_time])
+            music_info.joint_embed[att] = joint_embed_cond
+
+        return wav, music_info</code></pre>
+</details>
+<div class="desc"><p>Music dataset is an AudioDataset with music-related metadata.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>info_fields_required</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Whether to enforce having required fields.</dd>
+<dt><strong><code>merge_text_p</code></strong> :&ensp;<code>float</code></dt>
+<dd>Probability of merging additional metadata to the description.</dd>
+<dt><strong><code>drop_desc_p</code></strong> :&ensp;<code>float</code></dt>
+<dd>Probability of dropping the original description on text merge.</dd>
+<dt><strong><code>drop_other_p</code></strong> :&ensp;<code>float</code></dt>
+<dd>Probability of dropping the other fields used for text augmentation.</dd>
+<dt><strong><code>joint_embed_attributes</code></strong> :&ensp;<code>list[str]</code></dt>
+<dd>A list of attributes for which joint embedding metadata is returned.</dd>
+<dt><strong><code>paraphrase_source</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>Path to the .json or .json.gz file containing the
+paraphrases for the description. The json should be a dict with keys are the
+original info path (e.g. track_path.json) and each value is a list of possible
+paraphrased.</dd>
+<dt><strong><code>paraphrase_p</code></strong> :&ensp;<code>float</code></dt>
+<dd>probability of taking a paraphrase.</dd>
+</dl>
+<p>See <code><a title="audiocraft.data.info_audio_dataset.InfoAudioDataset" href="info_audio_dataset.html#audiocraft.data.info_audio_dataset.InfoAudioDataset">InfoAudioDataset</a></code> for full initialization arguments.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="audiocraft.data.info_audio_dataset.InfoAudioDataset" href="info_audio_dataset.html#audiocraft.data.info_audio_dataset.InfoAudioDataset">InfoAudioDataset</a></li>
+<li><a title="audiocraft.data.audio_dataset.AudioDataset" href="audio_dataset.html#audiocraft.data.audio_dataset.AudioDataset">AudioDataset</a></li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="audiocraft.data.jasco_dataset.JascoDataset" href="jasco_dataset.html#audiocraft.data.jasco_dataset.JascoDataset">JascoDataset</a></li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="audiocraft.data.info_audio_dataset.InfoAudioDataset" href="info_audio_dataset.html#audiocraft.data.info_audio_dataset.InfoAudioDataset">InfoAudioDataset</a></b></code>:
+<ul class="hlist">
+<li><code><a title="audiocraft.data.info_audio_dataset.InfoAudioDataset.collater" href="audio_dataset.html#audiocraft.data.audio_dataset.AudioDataset.collater">collater</a></code></li>
+<li><code><a title="audiocraft.data.info_audio_dataset.InfoAudioDataset.from_meta" href="audio_dataset.html#audiocraft.data.audio_dataset.AudioDataset.from_meta">from_meta</a></code></li>
+<li><code><a title="audiocraft.data.info_audio_dataset.InfoAudioDataset.from_path" href="audio_dataset.html#audiocraft.data.audio_dataset.AudioDataset.from_path">from_path</a></code></li>
+<li><code><a title="audiocraft.data.info_audio_dataset.InfoAudioDataset.sample_file" href="audio_dataset.html#audiocraft.data.audio_dataset.AudioDataset.sample_file">sample_file</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="audiocraft.data.music_dataset.MusicInfo"><code class="flex name class">
+<span>class <span class="ident">MusicInfo</span></span>
+<span>(</span><span>meta: <a title="audiocraft.data.audio_dataset.AudioMeta" href="audio_dataset.html#audiocraft.data.audio_dataset.AudioMeta">AudioMeta</a>,<br>seek_time: float,<br>n_frames: int,<br>total_frames: int,<br>sample_rate: int,<br>channels: int,<br>audio_tokens: torch.Tensor | None = None,<br>title: str | None = None,<br>artist: str | None = None,<br>key: str | None = None,<br>bpm: float | None = None,<br>genre: str | None = None,<br>moods: list | None = None,<br>keywords: list | None = None,<br>description: str | None = None,<br>name: str | None = None,<br>instrument: str | None = None,<br>self_wav: <a title="audiocraft.modules.conditioners.WavCondition" href="../modules/conditioners.html#audiocraft.modules.conditioners.WavCondition">WavCondition</a> | None = None,<br>joint_embed: Dict[str, <a title="audiocraft.modules.conditioners.JointEmbedCondition" href="../modules/conditioners.html#audiocraft.modules.conditioners.JointEmbedCondition">JointEmbedCondition</a>] = &lt;factory&gt;)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass
+class MusicInfo(AudioInfo):
+    &#34;&#34;&#34;Segment info augmented with music metadata.
+    &#34;&#34;&#34;
+    # music-specific metadata
+    title: tp.Optional[str] = None
+    artist: tp.Optional[str] = None  # anonymized artist id, used to ensure no overlap between splits
+    key: tp.Optional[str] = None
+    bpm: tp.Optional[float] = None
+    genre: tp.Optional[str] = None
+    moods: tp.Optional[list] = None
+    keywords: tp.Optional[list] = None
+    description: tp.Optional[str] = None
+    name: tp.Optional[str] = None
+    instrument: tp.Optional[str] = None
+    # original wav accompanying the metadata
+    self_wav: tp.Optional[WavCondition] = None
+    # dict mapping attributes names to tuple of wav, text and metadata
+    joint_embed: tp.Dict[str, JointEmbedCondition] = field(default_factory=dict)
+
+    @property
+    def has_music_meta(self) -&gt; bool:
+        return self.name is not None
+
+    def to_condition_attributes(self) -&gt; ConditioningAttributes:
+        out = ConditioningAttributes()
+        for _field in fields(self):
+            key, value = _field.name, getattr(self, _field.name)
+            if key == &#39;self_wav&#39;:
+                out.wav[key] = value
+            elif key == &#39;joint_embed&#39;:
+                for embed_attribute, embed_cond in value.items():
+                    out.joint_embed[embed_attribute] = embed_cond
+            else:
+                if isinstance(value, list):
+                    value = &#39; &#39;.join(value)
+                out.text[key] = value
+        return out
+
+    @staticmethod
+    def attribute_getter(attribute):
+        if attribute == &#39;bpm&#39;:
+            preprocess_func = get_bpm
+        elif attribute == &#39;key&#39;:
+            preprocess_func = get_musical_key
+        elif attribute in [&#39;moods&#39;, &#39;keywords&#39;]:
+            preprocess_func = get_keyword_list
+        elif attribute in [&#39;genre&#39;, &#39;name&#39;, &#39;instrument&#39;]:
+            preprocess_func = get_keyword
+        elif attribute in [&#39;title&#39;, &#39;artist&#39;, &#39;description&#39;]:
+            preprocess_func = get_string
+        else:
+            preprocess_func = None
+        return preprocess_func
+
+    @classmethod
+    def from_dict(cls, dictionary: dict, fields_required: bool = False):
+        _dictionary: tp.Dict[str, tp.Any] = {}
+
+        # allow a subset of attributes to not be loaded from the dictionary
+        # these attributes may be populated later
+        post_init_attributes = [&#39;self_wav&#39;, &#39;joint_embed&#39;]
+        optional_fields = [&#39;keywords&#39;]
+
+        for _field in fields(cls):
+            if _field.name in post_init_attributes:
+                continue
+            elif _field.name not in dictionary:
+                if fields_required and _field.name not in optional_fields:
+                    raise KeyError(f&#34;Unexpected missing key: {_field.name}&#34;)
+            else:
+                preprocess_func: tp.Optional[tp.Callable] = cls.attribute_getter(_field.name)
+                value = dictionary[_field.name]
+                if preprocess_func:
+                    value = preprocess_func(value)
+                _dictionary[_field.name] = value
+        return cls(**_dictionary)</code></pre>
+</details>
+<div class="desc"><p>Segment info augmented with music metadata.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="audiocraft.data.info_audio_dataset.AudioInfo" href="info_audio_dataset.html#audiocraft.data.info_audio_dataset.AudioInfo">AudioInfo</a></li>
+<li><a title="audiocraft.modules.conditioners.SegmentWithAttributes" href="../modules/conditioners.html#audiocraft.modules.conditioners.SegmentWithAttributes">SegmentWithAttributes</a></li>
+<li><a title="audiocraft.data.audio_dataset.SegmentInfo" href="audio_dataset.html#audiocraft.data.audio_dataset.SegmentInfo">SegmentInfo</a></li>
+<li><a title="audiocraft.data.audio_dataset.BaseInfo" href="audio_dataset.html#audiocraft.data.audio_dataset.BaseInfo">BaseInfo</a></li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="audiocraft.data.jasco_dataset.JascoInfo" href="jasco_dataset.html#audiocraft.data.jasco_dataset.JascoInfo">JascoInfo</a></li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="audiocraft.data.music_dataset.MusicInfo.artist"><code class="name">var <span class="ident">artist</span> : str | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.data.music_dataset.MusicInfo.bpm"><code class="name">var <span class="ident">bpm</span> : float | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.data.music_dataset.MusicInfo.description"><code class="name">var <span class="ident">description</span> : str | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.data.music_dataset.MusicInfo.genre"><code class="name">var <span class="ident">genre</span> : str | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.data.music_dataset.MusicInfo.instrument"><code class="name">var <span class="ident">instrument</span> : str | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.data.music_dataset.MusicInfo.joint_embed"><code class="name">var <span class="ident">joint_embed</span> : Dict[str, <a title="audiocraft.modules.conditioners.JointEmbedCondition" href="../modules/conditioners.html#audiocraft.modules.conditioners.JointEmbedCondition">JointEmbedCondition</a>]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.data.music_dataset.MusicInfo.key"><code class="name">var <span class="ident">key</span> : str | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.data.music_dataset.MusicInfo.keywords"><code class="name">var <span class="ident">keywords</span> : list | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.data.music_dataset.MusicInfo.moods"><code class="name">var <span class="ident">moods</span> : list | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.data.music_dataset.MusicInfo.name"><code class="name">var <span class="ident">name</span> : str | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.data.music_dataset.MusicInfo.self_wav"><code class="name">var <span class="ident">self_wav</span> : <a title="audiocraft.modules.conditioners.WavCondition" href="../modules/conditioners.html#audiocraft.modules.conditioners.WavCondition">WavCondition</a> | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.data.music_dataset.MusicInfo.title"><code class="name">var <span class="ident">title</span> : str | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Static methods</h3>
+<dl>
+<dt id="audiocraft.data.music_dataset.MusicInfo.attribute_getter"><code class="name flex">
+<span>def <span class="ident">attribute_getter</span></span>(<span>attribute)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def attribute_getter(attribute):
+    if attribute == &#39;bpm&#39;:
+        preprocess_func = get_bpm
+    elif attribute == &#39;key&#39;:
+        preprocess_func = get_musical_key
+    elif attribute in [&#39;moods&#39;, &#39;keywords&#39;]:
+        preprocess_func = get_keyword_list
+    elif attribute in [&#39;genre&#39;, &#39;name&#39;, &#39;instrument&#39;]:
+        preprocess_func = get_keyword
+    elif attribute in [&#39;title&#39;, &#39;artist&#39;, &#39;description&#39;]:
+        preprocess_func = get_string
+    else:
+        preprocess_func = None
+    return preprocess_func</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.data.music_dataset.MusicInfo.from_dict"><code class="name flex">
+<span>def <span class="ident">from_dict</span></span>(<span>dictionary: dict, fields_required: bool = False)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Instance variables</h3>
+<dl>
+<dt id="audiocraft.data.music_dataset.MusicInfo.has_music_meta"><code class="name">prop <span class="ident">has_music_meta</span> : bool</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def has_music_meta(self) -&gt; bool:
+    return self.name is not None</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="audiocraft.data.music_dataset.MusicInfo.to_condition_attributes"><code class="name flex">
+<span>def <span class="ident">to_condition_attributes</span></span>(<span>self) ‑> <a title="audiocraft.modules.conditioners.ConditioningAttributes" href="../modules/conditioners.html#audiocraft.modules.conditioners.ConditioningAttributes">ConditioningAttributes</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def to_condition_attributes(self) -&gt; ConditioningAttributes:
+    out = ConditioningAttributes()
+    for _field in fields(self):
+        key, value = _field.name, getattr(self, _field.name)
+        if key == &#39;self_wav&#39;:
+            out.wav[key] = value
+        elif key == &#39;joint_embed&#39;:
+            for embed_attribute, embed_cond in value.items():
+                out.joint_embed[embed_attribute] = embed_cond
+        else:
+            if isinstance(value, list):
+                value = &#39; &#39;.join(value)
+            out.text[key] = value
+    return out</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="audiocraft.data.music_dataset.Paraphraser"><code class="flex name class">
+<span>class <span class="ident">Paraphraser</span></span>
+<span>(</span><span>paraphrase_source: str | pathlib.Path, paraphrase_p: float = 0.0)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Paraphraser:
+    def __init__(self, paraphrase_source: tp.Union[str, Path], paraphrase_p: float = 0.):
+        self.paraphrase_p = paraphrase_p
+        open_fn = gzip.open if str(paraphrase_source).lower().endswith(&#39;.gz&#39;) else open
+        with open_fn(paraphrase_source, &#39;rb&#39;) as f:  # type: ignore
+            self.paraphrase_source = json.loads(f.read())
+        logger.info(f&#34;loaded paraphrasing source from: {paraphrase_source}&#34;)
+
+    def sample_paraphrase(self, audio_path: str, description: str):
+        if random.random() &gt;= self.paraphrase_p:
+            return description
+        info_path = Path(audio_path).with_suffix(&#39;.json&#39;)
+        if info_path not in self.paraphrase_source:
+            warn_once(logger, f&#34;{info_path} not in paraphrase source!&#34;)
+            return description
+        new_desc = random.choice(self.paraphrase_source[info_path])
+        logger.debug(f&#34;{description} -&gt; {new_desc}&#34;)
+        return new_desc</code></pre>
+</details>
+<div class="desc"></div>
+<h3>Methods</h3>
+<dl>
+<dt id="audiocraft.data.music_dataset.Paraphraser.sample_paraphrase"><code class="name flex">
+<span>def <span class="ident">sample_paraphrase</span></span>(<span>self, audio_path: str, description: str)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sample_paraphrase(self, audio_path: str, description: str):
+    if random.random() &gt;= self.paraphrase_p:
+        return description
+    info_path = Path(audio_path).with_suffix(&#39;.json&#39;)
+    if info_path not in self.paraphrase_source:
+        warn_once(logger, f&#34;{info_path} not in paraphrase source!&#34;)
+        return description
+    new_desc = random.choice(self.paraphrase_source[info_path])
+    logger.debug(f&#34;{description} -&gt; {new_desc}&#34;)
+    return new_desc</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="audiocraft.data" href="index.html">audiocraft.data</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="audiocraft.data.music_dataset.augment_music_info_description" href="#audiocraft.data.music_dataset.augment_music_info_description">augment_music_info_description</a></code></li>
+<li><code><a title="audiocraft.data.music_dataset.get_bpm" href="#audiocraft.data.music_dataset.get_bpm">get_bpm</a></code></li>
+<li><code><a title="audiocraft.data.music_dataset.get_musical_key" href="#audiocraft.data.music_dataset.get_musical_key">get_musical_key</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="audiocraft.data.music_dataset.MusicDataset" href="#audiocraft.data.music_dataset.MusicDataset">MusicDataset</a></code></h4>
+</li>
+<li>
+<h4><code><a title="audiocraft.data.music_dataset.MusicInfo" href="#audiocraft.data.music_dataset.MusicInfo">MusicInfo</a></code></h4>
+<ul class="">
+<li><code><a title="audiocraft.data.music_dataset.MusicInfo.artist" href="#audiocraft.data.music_dataset.MusicInfo.artist">artist</a></code></li>
+<li><code><a title="audiocraft.data.music_dataset.MusicInfo.attribute_getter" href="#audiocraft.data.music_dataset.MusicInfo.attribute_getter">attribute_getter</a></code></li>
+<li><code><a title="audiocraft.data.music_dataset.MusicInfo.bpm" href="#audiocraft.data.music_dataset.MusicInfo.bpm">bpm</a></code></li>
+<li><code><a title="audiocraft.data.music_dataset.MusicInfo.description" href="#audiocraft.data.music_dataset.MusicInfo.description">description</a></code></li>
+<li><code><a title="audiocraft.data.music_dataset.MusicInfo.from_dict" href="#audiocraft.data.music_dataset.MusicInfo.from_dict">from_dict</a></code></li>
+<li><code><a title="audiocraft.data.music_dataset.MusicInfo.genre" href="#audiocraft.data.music_dataset.MusicInfo.genre">genre</a></code></li>
+<li><code><a title="audiocraft.data.music_dataset.MusicInfo.has_music_meta" href="#audiocraft.data.music_dataset.MusicInfo.has_music_meta">has_music_meta</a></code></li>
+<li><code><a title="audiocraft.data.music_dataset.MusicInfo.instrument" href="#audiocraft.data.music_dataset.MusicInfo.instrument">instrument</a></code></li>
+<li><code><a title="audiocraft.data.music_dataset.MusicInfo.joint_embed" href="#audiocraft.data.music_dataset.MusicInfo.joint_embed">joint_embed</a></code></li>
+<li><code><a title="audiocraft.data.music_dataset.MusicInfo.key" href="#audiocraft.data.music_dataset.MusicInfo.key">key</a></code></li>
+<li><code><a title="audiocraft.data.music_dataset.MusicInfo.keywords" href="#audiocraft.data.music_dataset.MusicInfo.keywords">keywords</a></code></li>
+<li><code><a title="audiocraft.data.music_dataset.MusicInfo.moods" href="#audiocraft.data.music_dataset.MusicInfo.moods">moods</a></code></li>
+<li><code><a title="audiocraft.data.music_dataset.MusicInfo.name" href="#audiocraft.data.music_dataset.MusicInfo.name">name</a></code></li>
+<li><code><a title="audiocraft.data.music_dataset.MusicInfo.self_wav" href="#audiocraft.data.music_dataset.MusicInfo.self_wav">self_wav</a></code></li>
+<li><code><a title="audiocraft.data.music_dataset.MusicInfo.title" href="#audiocraft.data.music_dataset.MusicInfo.title">title</a></code></li>
+<li><code><a title="audiocraft.data.music_dataset.MusicInfo.to_condition_attributes" href="#audiocraft.data.music_dataset.MusicInfo.to_condition_attributes">to_condition_attributes</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="audiocraft.data.music_dataset.Paraphraser" href="#audiocraft.data.music_dataset.Paraphraser">Paraphraser</a></code></h4>
+<ul class="">
+<li><code><a title="audiocraft.data.music_dataset.Paraphraser.sample_paraphrase" href="#audiocraft.data.music_dataset.Paraphraser.sample_paraphrase">sample_paraphrase</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.5</a>.</p>
+</footer>
+</body>
+</html>

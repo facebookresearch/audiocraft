@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.5">
+<title>audiocraft.metrics.visqol API documentation</title>
+<meta name="description" content="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>audiocraft.metrics.visqol</code></h1>
+</header>
+<section id="section-intro">
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="audiocraft.metrics.visqol.ViSQOL"><code class="flex name class">
+<span>class <span class="ident">ViSQOL</span></span>
+<span>(</span><span>bin: str | pathlib.Path,<br>mode: str = 'audio',<br>model: str = 'libsvm_nu_svr_model.txt',<br>debug: bool = False)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ViSQOL:
+    &#34;&#34;&#34;ViSQOL wrapper to run ViSQOL from Python using a pre-installed binary.
+
+    To learn more about ViSQOL and how to build ViSQOL binary using bazel, please refer to the
+    instructions available in the open source repository: https://github.com/google/visqol
+
+    ViSQOL is capable of running in two modes:
+
+    Audio Mode:
+        When running in audio mode, input signals must have a 48kHz sample rate. Input should be resampled to 48kHz.
+        Input signals can be multi-channel, but they will be down-mixed to mono for performing the comparison.
+        Audio mode uses support vector regression, with the maximum range at ~4.75.
+
+    Speech Mode:
+        When running in speech mode, ViSQOL uses a wideband model. It therefore expects input sample rates of 16kHz.
+            Input should be resampled to 16kHz.
+        As part of the speech mode processing, a root mean square implementation for voice activity detection
+            is performed on the reference signal to determine what parts of the signal have voice activity and
+            should therefore be included in the comparison. The signal is normalized before performing the voice
+            activity detection.
+        Input signals can be multi-channel, but they will be down-mixed to mono for performing the comparison.
+        Speech mode is scaled to have a maximum MOS of 5.0 to match previous version behavior.
+
+    For more details, check the guidelines: https://github.com/google/visqol#general-guidelines-for-input
+
+    Args:
+        visqol_bin (str): Path to the ViSQOL binary.
+        mode (str): ViSQOL computation mode, expecting &#34;audio&#34; or &#34;speech&#34;.
+        model (str): Name of the model to use for similarity to quality model.
+        debug (bool): Whether to also get debug metrics from ViSQOL or not.
+    &#34;&#34;&#34;
+    SAMPLE_RATES_MODES = {&#34;audio&#34;: 48_000, &#34;speech&#34;: 16_000}
+    ALLOWED_SAMPLE_RATES = frozenset(SAMPLE_RATES_MODES.values())
+
+    def __init__(self, bin: tp.Union[Path, str], mode: str = &#34;audio&#34;,
+                 model: str = &#34;libsvm_nu_svr_model.txt&#34;, debug: bool = False):
+        assert bin is not None and Path(bin).exists(), f&#34;Could not find ViSQOL binary in specified path: {bin}&#34;
+        self.visqol_bin = str(bin)
+        self.visqol_mode = mode
+        self.target_sr = self._get_target_sr(self.visqol_mode)
+        self.model = model
+        self.debug = debug
+        assert Path(self.visqol_model).exists(), \
+            f&#34;Could not find the specified model in ViSQOL install: {self.visqol_model}&#34;
+
+    def _get_target_sr(self, mode: str) -&gt; int:
+        # returns target sampling rate for the corresponding ViSQOL mode.
+        if mode not in ViSQOL.SAMPLE_RATES_MODES:
+            raise ValueError(
+                f&#34;Unsupported mode! Allowed are: {&#39;, &#39;.join(ViSQOL.SAMPLE_RATES_MODES.keys())}&#34;
+            )
+        return ViSQOL.SAMPLE_RATES_MODES[mode]
+
+    def _prepare_files(
+        self, ref_sig: torch.Tensor, deg_sig: torch.Tensor, sr: int, target_sr: int, pad_with_silence: bool = False
+    ):
+        # prepare files for ViSQOL evaluation.
+        assert target_sr in ViSQOL.ALLOWED_SAMPLE_RATES
+        assert len(ref_sig) == len(deg_sig), (
+            &#34;Expects same number of ref and degraded inputs&#34;,
+            f&#34; but ref len {len(ref_sig)} != deg len {len(deg_sig)}&#34;
+        )
+        # resample audio if needed
+        if sr != target_sr:
+            transform = torchaudio.transforms.Resample(sr, target_sr)
+            pad = int(0.5 * target_sr)
+            rs_ref = []
+            rs_deg = []
+            for i in range(len(ref_sig)):
+                rs_ref_i = transform(ref_sig[i])
+                rs_deg_i = transform(deg_sig[i])
+                if pad_with_silence:
+                    rs_ref_i = torch.nn.functional.pad(rs_ref_i, (pad, pad), mode=&#39;constant&#39;, value=0)
+                    rs_deg_i = torch.nn.functional.pad(rs_deg_i, (pad, pad), mode=&#39;constant&#39;, value=0)
+                rs_ref.append(rs_ref_i)
+                rs_deg.append(rs_deg_i)
+            ref_sig = torch.stack(rs_ref)
+            deg_sig = torch.stack(rs_deg)
+        # save audio chunks to tmp dir and create csv
+        tmp_dir = Path(tempfile.mkdtemp())
+        try:
+            tmp_input_csv_path = tmp_dir / &#34;input.csv&#34;
+            tmp_results_csv_path = tmp_dir / &#34;results.csv&#34;
+            tmp_debug_json_path = tmp_dir / &#34;debug.json&#34;
+            with open(tmp_input_csv_path, &#34;w&#34;) as csv_file:
+                csv_writer = csv.writer(csv_file)
+                csv_writer.writerow([&#34;reference&#34;, &#34;degraded&#34;])
+                for i in range(len(ref_sig)):
+                    tmp_ref_filename = tmp_dir / f&#34;ref_{i}.wav&#34;
+                    tmp_deg_filename = tmp_dir / f&#34;deg_{i}.wav&#34;
+                    torchaudio.save(
+                        tmp_ref_filename,
+                        torch.clamp(ref_sig[i], min=-0.99, max=0.99),
+                        sample_rate=target_sr,
+                        bits_per_sample=16,
+                        encoding=&#34;PCM_S&#34;
+                    )
+                    torchaudio.save(
+                        tmp_deg_filename,
+                        torch.clamp(deg_sig[i], min=-0.99, max=0.99),
+                        sample_rate=target_sr,
+                        bits_per_sample=16,
+                        encoding=&#34;PCM_S&#34;
+                    )
+                    csv_writer.writerow([str(tmp_ref_filename), str(tmp_deg_filename)])
+            return tmp_dir, tmp_input_csv_path, tmp_results_csv_path, tmp_debug_json_path
+        except Exception as e:
+            logger.error(&#34;Exception occurred when preparing files for ViSQOL: %s&#34;, e)
+            return tmp_dir, None, None, None
+
+    def _flush_files(self, tmp_dir: tp.Union[Path, str]):
+        # flush tmp files used to compute ViSQOL.
+        shutil.rmtree(str(tmp_dir))
+
+    def _collect_moslqo_score(self, results_csv_path: tp.Union[Path, str]) -&gt; float:
+        # collect results for each evaluated pair and return averaged moslqo score.
+        with open(results_csv_path, &#34;r&#34;) as csv_file:
+            reader = csv.DictReader(csv_file)
+            moslqo_scores = [float(row[&#34;moslqo&#34;]) for row in reader]
+            if len(moslqo_scores) &gt; 0:
+                return sum(moslqo_scores) / len(moslqo_scores)
+            else:
+                return 0.0
+
+    def _collect_debug_data(self, debug_json_path: tp.Union[Path, str]) -&gt; dict:
+        # collect debug data for the visqol inference.
+        with open(debug_json_path, &#34;r&#34;) as f:
+            data = json.load(f)
+            return data
+
+    @property
+    def visqol_model(self):
+        return f&#39;{self.visqol_bin}/model/{self.model}&#39;
+
+    def _run_visqol(
+        self,
+        input_csv_path: tp.Union[Path, str],
+        results_csv_path: tp.Union[Path, str],
+        debug_csv_path: tp.Optional[tp.Union[Path, str]],
+    ):
+        input_csv_path = str(input_csv_path)
+        results_csv_path = str(results_csv_path)
+        debug_csv_path = str(debug_csv_path)
+        cmd = [
+            f&#39;{self.visqol_bin}/bazel-bin/visqol&#39;,
+            &#39;--batch_input_csv&#39;, f&#39;{input_csv_path}&#39;,
+            &#39;--results_csv&#39;, f&#39;{results_csv_path}&#39;
+        ]
+        if debug_csv_path is not None:
+            cmd += [&#39;--output_debug&#39;, f&#39;{debug_csv_path}&#39;]
+        if self.visqol_mode == &#34;speech&#34;:
+            cmd += [&#39;--use_speech_mode&#39;]
+        cmd += [&#39;--similarity_to_quality_model&#39;, f&#39;{self.visqol_model}&#39;]
+        result = subprocess.run(cmd, capture_output=True)
+        if result.returncode:
+            logger.error(&#34;Error with visqol: \n %s \n %s&#34;, result.stdout.decode(), result.stderr.decode())
+            raise RuntimeError(&#34;Error while executing visqol&#34;)
+        result.check_returncode()
+
+    def __call__(
+        self,
+        ref_sig: torch.Tensor,
+        deg_sig: torch.Tensor,
+        sr: int,
+        pad_with_silence: bool = False,
+    ):
+        &#34;&#34;&#34;Calculate the ViSQOL metric for a pair of audio signals at a given sample rate.
+        Args:
+            ref_sig (torch.Tensor): Reference signals as [B, C, T].
+            deg_sig (torch.Tensor): Degraded signals as [B, C, T].
+            sr (int): Sample rate of the two audio signals.
+            pad_with_silence (bool): Whether to pad the file with silences as recommended
+                in visqol guidelines (see: https://github.com/google/visqol#general-guidelines-for-input).
+        Returns:
+            float: The ViSQOL score or mean score for the batch.
+        &#34;&#34;&#34;
+        logger.debug(f&#34;Calculating visqol with mode={self.visqol_mode} on {len(ref_sig)} samples&#34;)
+        tmp_dir, input_csv, results_csv, debug_json = self._prepare_files(
+            ref_sig, deg_sig, sr, self.target_sr, pad_with_silence
+        )
+        try:
+            if input_csv and results_csv:
+                self._run_visqol(
+                    input_csv,
+                    results_csv,
+                    debug_json if self.debug else None,
+                )
+                mosqol = self._collect_moslqo_score(results_csv)
+                return mosqol
+            else:
+                raise RuntimeError(&#34;Something unexpected happened when running VISQOL!&#34;)
+        except Exception as e:
+            logger.error(&#34;Exception occurred when running ViSQOL: %s&#34;, e)
+        finally:
+            self._flush_files(tmp_dir)</code></pre>
+</details>
+<div class="desc"><p>ViSQOL wrapper to run ViSQOL from Python using a pre-installed binary.</p>
+<p>To learn more about ViSQOL and how to build ViSQOL binary using bazel, please refer to the
+instructions available in the open source repository: <a href="https://github.com/google/visqol">https://github.com/google/visqol</a></p>
+<p>ViSQOL is capable of running in two modes:</p>
+<p>Audio Mode:
+When running in audio mode, input signals must have a 48kHz sample rate. Input should be resampled to 48kHz.
+Input signals can be multi-channel, but they will be down-mixed to mono for performing the comparison.
+Audio mode uses support vector regression, with the maximum range at ~4.75.</p>
+<p>Speech Mode:
+When running in speech mode, ViSQOL uses a wideband model. It therefore expects input sample rates of 16kHz.
+Input should be resampled to 16kHz.
+As part of the speech mode processing, a root mean square implementation for voice activity detection
+is performed on the reference signal to determine what parts of the signal have voice activity and
+should therefore be included in the comparison. The signal is normalized before performing the voice
+activity detection.
+Input signals can be multi-channel, but they will be down-mixed to mono for performing the comparison.
+Speech mode is scaled to have a maximum MOS of 5.0 to match previous version behavior.</p>
+<p>For more details, check the guidelines: <a href="https://github.com/google/visqol#general-guidelines-for-input">https://github.com/google/visqol#general-guidelines-for-input</a></p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>visqol_bin</code></strong> :&ensp;<code>str</code></dt>
+<dd>Path to the ViSQOL binary.</dd>
+<dt><strong><code>mode</code></strong> :&ensp;<code>str</code></dt>
+<dd>ViSQOL computation mode, expecting "audio" or "speech".</dd>
+<dt><strong><code>model</code></strong> :&ensp;<code>str</code></dt>
+<dd>Name of the model to use for similarity to quality model.</dd>
+<dt><strong><code>debug</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Whether to also get debug metrics from ViSQOL or not.</dd>
+</dl></div>
+<h3>Class variables</h3>
+<dl>
+<dt id="audiocraft.metrics.visqol.ViSQOL.ALLOWED_SAMPLE_RATES"><code class="name">var <span class="ident">ALLOWED_SAMPLE_RATES</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.metrics.visqol.ViSQOL.SAMPLE_RATES_MODES"><code class="name">var <span class="ident">SAMPLE_RATES_MODES</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Instance variables</h3>
+<dl>
+<dt id="audiocraft.metrics.visqol.ViSQOL.visqol_model"><code class="name">prop <span class="ident">visqol_model</span></code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def visqol_model(self):
+    return f&#39;{self.visqol_bin}/model/{self.model}&#39;</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="audiocraft.metrics" href="index.html">audiocraft.metrics</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="audiocraft.metrics.visqol.ViSQOL" href="#audiocraft.metrics.visqol.ViSQOL">ViSQOL</a></code></h4>
+<ul class="">
+<li><code><a title="audiocraft.metrics.visqol.ViSQOL.ALLOWED_SAMPLE_RATES" href="#audiocraft.metrics.visqol.ViSQOL.ALLOWED_SAMPLE_RATES">ALLOWED_SAMPLE_RATES</a></code></li>
+<li><code><a title="audiocraft.metrics.visqol.ViSQOL.SAMPLE_RATES_MODES" href="#audiocraft.metrics.visqol.ViSQOL.SAMPLE_RATES_MODES">SAMPLE_RATES_MODES</a></code></li>
+<li><code><a title="audiocraft.metrics.visqol.ViSQOL.visqol_model" href="#audiocraft.metrics.visqol.ViSQOL.visqol_model">visqol_model</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.5</a>.</p>
+</footer>
+</body>
+</html>

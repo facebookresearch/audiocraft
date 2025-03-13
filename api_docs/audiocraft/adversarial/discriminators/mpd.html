@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.5">
+<title>audiocraft.adversarial.discriminators.mpd API documentation</title>
+<meta name="description" content="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>audiocraft.adversarial.discriminators.mpd</code></h1>
+</header>
+<section id="section-intro">
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="audiocraft.adversarial.discriminators.mpd.get_padding"><code class="name flex">
+<span>def <span class="ident">get_padding</span></span>(<span>kernel_size: int, dilation: int = 1) ‑> int</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_padding(kernel_size: int, dilation: int = 1) -&gt; int:
+    return int((kernel_size * dilation - dilation) / 2)</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="audiocraft.adversarial.discriminators.mpd.MultiPeriodDiscriminator"><code class="flex name class">
+<span>class <span class="ident">MultiPeriodDiscriminator</span></span>
+<span>(</span><span>in_channels: int = 1,<br>out_channels: int = 1,<br>periods: Sequence[int] = [2, 3, 5, 7, 11],<br>**kwargs)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class MultiPeriodDiscriminator(MultiDiscriminator):
+    &#34;&#34;&#34;Multi-Period (MPD) Discriminator.
+
+    Args:
+        in_channels (int): Number of input channels.
+        out_channels (int): Number of output channels.
+        periods (Sequence[int]): Periods between samples of audio for the sub-discriminators.
+        **kwargs: Additional args for `PeriodDiscriminator`
+    &#34;&#34;&#34;
+    def __init__(self, in_channels: int = 1, out_channels: int = 1,
+                 periods: tp.Sequence[int] = [2, 3, 5, 7, 11], **kwargs):
+        super().__init__()
+        self.discriminators = nn.ModuleList([
+            PeriodDiscriminator(p, in_channels, out_channels, **kwargs) for p in periods
+        ])
+
+    @property
+    def num_discriminators(self):
+        return len(self.discriminators)
+
+    def forward(self, x: torch.Tensor) -&gt; MultiDiscriminatorOutputType:
+        logits = []
+        fmaps = []
+        for disc in self.discriminators:
+            logit, fmap = disc(x)
+            logits.append(logit)
+            fmaps.append(fmap)
+        return logits, fmaps</code></pre>
+</details>
+<div class="desc"><p>Multi-Period (MPD) Discriminator.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>in_channels</code></strong> :&ensp;<code>int</code></dt>
+<dd>Number of input channels.</dd>
+<dt><strong><code>out_channels</code></strong> :&ensp;<code>int</code></dt>
+<dd>Number of output channels.</dd>
+<dt><strong><code>periods</code></strong> :&ensp;<code>Sequence[int]</code></dt>
+<dd>Periods between samples of audio for the sub-discriminators.</dd>
+<dt><strong><code>**kwargs</code></strong></dt>
+<dd>Additional args for <code><a title="audiocraft.adversarial.discriminators.mpd.PeriodDiscriminator" href="#audiocraft.adversarial.discriminators.mpd.PeriodDiscriminator">PeriodDiscriminator</a></code></dd>
+</dl></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="audiocraft.adversarial.discriminators.base.MultiDiscriminator" href="base.html#audiocraft.adversarial.discriminators.base.MultiDiscriminator">MultiDiscriminator</a></li>
+<li>abc.ABC</li>
+<li>torch.nn.modules.module.Module</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="audiocraft.adversarial.discriminators.mpd.MultiPeriodDiscriminator.call_super_init"><code class="name">var <span class="ident">call_super_init</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.adversarial.discriminators.mpd.MultiPeriodDiscriminator.dump_patches"><code class="name">var <span class="ident">dump_patches</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.adversarial.discriminators.mpd.MultiPeriodDiscriminator.training"><code class="name">var <span class="ident">training</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="audiocraft.adversarial.discriminators.base.MultiDiscriminator" href="base.html#audiocraft.adversarial.discriminators.base.MultiDiscriminator">MultiDiscriminator</a></b></code>:
+<ul class="hlist">
+<li><code><a title="audiocraft.adversarial.discriminators.base.MultiDiscriminator.forward" href="base.html#audiocraft.adversarial.discriminators.base.MultiDiscriminator.forward">forward</a></code></li>
+<li><code><a title="audiocraft.adversarial.discriminators.base.MultiDiscriminator.num_discriminators" href="base.html#audiocraft.adversarial.discriminators.base.MultiDiscriminator.num_discriminators">num_discriminators</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="audiocraft.adversarial.discriminators.mpd.PeriodDiscriminator"><code class="flex name class">
+<span>class <span class="ident">PeriodDiscriminator</span></span>
+<span>(</span><span>period: int,<br>in_channels: int = 1,<br>out_channels: int = 1,<br>n_layers: int = 5,<br>kernel_sizes: List[int] = [5, 3],<br>stride: int = 3,<br>filters: int = 8,<br>filters_scale: int = 4,<br>max_filters: int = 1024,<br>norm: str = 'weight_norm',<br>activation: str = 'LeakyReLU',<br>activation_params: dict = {'negative_slope': 0.2})</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class PeriodDiscriminator(nn.Module):
+    &#34;&#34;&#34;Period sub-discriminator.
+
+    Args:
+        period (int): Period between samples of audio.
+        in_channels (int): Number of input channels.
+        out_channels (int): Number of output channels.
+        n_layers (int): Number of convolutional layers.
+        kernel_sizes (list of int): Kernel sizes for convolutions.
+        stride (int): Stride for convolutions.
+        filters (int): Initial number of filters in convolutions.
+        filters_scale (int): Multiplier of number of filters as we increase depth.
+        max_filters (int): Maximum number of filters.
+        norm (str): Normalization method.
+        activation (str): Activation function.
+        activation_params (dict): Parameters to provide to the activation function.
+    &#34;&#34;&#34;
+    def __init__(self, period: int, in_channels: int = 1, out_channels: int = 1,
+                 n_layers: int = 5, kernel_sizes: tp.List[int] = [5, 3], stride: int = 3,
+                 filters: int = 8, filters_scale: int = 4, max_filters: int = 1024,
+                 norm: str = &#39;weight_norm&#39;, activation: str = &#39;LeakyReLU&#39;,
+                 activation_params: dict = {&#39;negative_slope&#39;: 0.2}):
+        super().__init__()
+        self.period = period
+        self.n_layers = n_layers
+        self.activation = getattr(torch.nn, activation)(**activation_params)
+        self.convs = nn.ModuleList()
+        in_chs = in_channels
+        for i in range(self.n_layers):
+            out_chs = min(filters * (filters_scale ** (i + 1)), max_filters)
+            eff_stride = 1 if i == self.n_layers - 1 else stride
+            self.convs.append(NormConv2d(in_chs, out_chs, kernel_size=(kernel_sizes[0], 1), stride=(eff_stride, 1),
+                                         padding=((kernel_sizes[0] - 1) // 2, 0), norm=norm))
+            in_chs = out_chs
+        self.conv_post = NormConv2d(in_chs, out_channels, kernel_size=(kernel_sizes[1], 1), stride=1,
+                                    padding=((kernel_sizes[1] - 1) // 2, 0), norm=norm)
+
+    def forward(self, x: torch.Tensor):
+        fmap = []
+        # 1d to 2d
+        b, c, t = x.shape
+        if t % self.period != 0:  # pad first
+            n_pad = self.period - (t % self.period)
+            x = F.pad(x, (0, n_pad), &#39;reflect&#39;)
+            t = t + n_pad
+        x = x.view(b, c, t // self.period, self.period)
+
+        for conv in self.convs:
+            x = conv(x)
+            x = self.activation(x)
+            fmap.append(x)
+        x = self.conv_post(x)
+        fmap.append(x)
+        # x = torch.flatten(x, 1, -1)
+
+        return x, fmap</code></pre>
+</details>
+<div class="desc"><p>Period sub-discriminator.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>period</code></strong> :&ensp;<code>int</code></dt>
+<dd>Period between samples of audio.</dd>
+<dt><strong><code>in_channels</code></strong> :&ensp;<code>int</code></dt>
+<dd>Number of input channels.</dd>
+<dt><strong><code>out_channels</code></strong> :&ensp;<code>int</code></dt>
+<dd>Number of output channels.</dd>
+<dt><strong><code>n_layers</code></strong> :&ensp;<code>int</code></dt>
+<dd>Number of convolutional layers.</dd>
+<dt><strong><code>kernel_sizes</code></strong> :&ensp;<code>list</code> of <code>int</code></dt>
+<dd>Kernel sizes for convolutions.</dd>
+<dt><strong><code>stride</code></strong> :&ensp;<code>int</code></dt>
+<dd>Stride for convolutions.</dd>
+<dt><strong><code>filters</code></strong> :&ensp;<code>int</code></dt>
+<dd>Initial number of filters in convolutions.</dd>
+<dt><strong><code>filters_scale</code></strong> :&ensp;<code>int</code></dt>
+<dd>Multiplier of number of filters as we increase depth.</dd>
+<dt><strong><code>max_filters</code></strong> :&ensp;<code>int</code></dt>
+<dd>Maximum number of filters.</dd>
+<dt><strong><code>norm</code></strong> :&ensp;<code>str</code></dt>
+<dd>Normalization method.</dd>
+<dt><strong><code>activation</code></strong> :&ensp;<code>str</code></dt>
+<dd>Activation function.</dd>
+<dt><strong><code>activation_params</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Parameters to provide to the activation function.</dd>
+</dl>
+<p>Initializes internal Module state, shared by both nn.Module and ScriptModule.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>torch.nn.modules.module.Module</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="audiocraft.adversarial.discriminators.mpd.PeriodDiscriminator.call_super_init"><code class="name">var <span class="ident">call_super_init</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.adversarial.discriminators.mpd.PeriodDiscriminator.dump_patches"><code class="name">var <span class="ident">dump_patches</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="audiocraft.adversarial.discriminators.mpd.PeriodDiscriminator.training"><code class="name">var <span class="ident">training</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="audiocraft.adversarial.discriminators.mpd.PeriodDiscriminator.forward"><code class="name flex">
+<span>def <span class="ident">forward</span></span>(<span>self, x: torch.Tensor) ‑> Callable[..., Any]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def forward(self, x: torch.Tensor):
+    fmap = []
+    # 1d to 2d
+    b, c, t = x.shape
+    if t % self.period != 0:  # pad first
+        n_pad = self.period - (t % self.period)
+        x = F.pad(x, (0, n_pad), &#39;reflect&#39;)
+        t = t + n_pad
+    x = x.view(b, c, t // self.period, self.period)
+
+    for conv in self.convs:
+        x = conv(x)
+        x = self.activation(x)
+        fmap.append(x)
+    x = self.conv_post(x)
+    fmap.append(x)
+    # x = torch.flatten(x, 1, -1)
+
+    return x, fmap</code></pre>
+</details>
+<div class="desc"><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the :class:<code>Module</code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="audiocraft.adversarial.discriminators" href="index.html">audiocraft.adversarial.discriminators</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="audiocraft.adversarial.discriminators.mpd.get_padding" href="#audiocraft.adversarial.discriminators.mpd.get_padding">get_padding</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="audiocraft.adversarial.discriminators.mpd.MultiPeriodDiscriminator" href="#audiocraft.adversarial.discriminators.mpd.MultiPeriodDiscriminator">MultiPeriodDiscriminator</a></code></h4>
+<ul class="">
+<li><code><a title="audiocraft.adversarial.discriminators.mpd.MultiPeriodDiscriminator.call_super_init" href="#audiocraft.adversarial.discriminators.mpd.MultiPeriodDiscriminator.call_super_init">call_super_init</a></code></li>
+<li><code><a title="audiocraft.adversarial.discriminators.mpd.MultiPeriodDiscriminator.dump_patches" href="#audiocraft.adversarial.discriminators.mpd.MultiPeriodDiscriminator.dump_patches">dump_patches</a></code></li>
+<li><code><a title="audiocraft.adversarial.discriminators.mpd.MultiPeriodDiscriminator.training" href="#audiocraft.adversarial.discriminators.mpd.MultiPeriodDiscriminator.training">training</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="audiocraft.adversarial.discriminators.mpd.PeriodDiscriminator" href="#audiocraft.adversarial.discriminators.mpd.PeriodDiscriminator">PeriodDiscriminator</a></code></h4>
+<ul class="">
+<li><code><a title="audiocraft.adversarial.discriminators.mpd.PeriodDiscriminator.call_super_init" href="#audiocraft.adversarial.discriminators.mpd.PeriodDiscriminator.call_super_init">call_super_init</a></code></li>
+<li><code><a title="audiocraft.adversarial.discriminators.mpd.PeriodDiscriminator.dump_patches" href="#audiocraft.adversarial.discriminators.mpd.PeriodDiscriminator.dump_patches">dump_patches</a></code></li>
+<li><code><a title="audiocraft.adversarial.discriminators.mpd.PeriodDiscriminator.forward" href="#audiocraft.adversarial.discriminators.mpd.PeriodDiscriminator.forward">forward</a></code></li>
+<li><code><a title="audiocraft.adversarial.discriminators.mpd.PeriodDiscriminator.training" href="#audiocraft.adversarial.discriminators.mpd.PeriodDiscriminator.training">training</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.5</a>.</p>
+</footer>
+</body>
+</html>
