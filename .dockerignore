@@ -1,0 +1,148 @@
+# Copyright (c) Meta Platforms, Inc. and affiliates.
+# All rights reserved.
+#
+# This source code is licensed under the license found in the
+# LICENSE file in the root directory of this source tree.
+
+
+# ============================
+# 1. Version Control
+# ============================
+
+# Ignore Git repository files
+.git
+.gitignore
+
+# Ignore GitHub specific files and directories
+.github/
+
+# ============================
+# 2. Python Artifacts
+# ============================
+
+# Ignore Python cache directories and compiled files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore C extensions
+*.so
+
+# ============================
+# 3. Build and Distribution
+# ============================
+
+# Ignore build directories
+build/
+dist/
+*.egg-info/
+*.eggs/
+
+# Ignore PyInstaller artifacts
+*.manifest
+*.spec
+
+# ============================
+# 4. Virtual Environments
+# ============================
+
+# Ignore virtual environment directories
+venv/
+env/
+ENV/
+.venv/
+.env/
+
+# ============================
+# 5. Docker Files
+# ============================
+
+# Optionally ignore Dockerfile and .dockerignore if not needed inside the image
+Dockerfile
+.dockerignore
+
+# ============================
+# 6. Logs and Temporary Files
+# ============================
+
+# Ignore log files
+*.log
+
+# Ignore temporary files and backups
+tmp/
+*.tmp
+*.bak
+
+# ============================
+# 7. Data and Models
+# ============================
+
+# Exclude datasets and models if they are large and intended to be mounted as volumes
+dataset/
+data/
+models/
+
+# ============================
+# 8. Documentation and Examples
+# ============================
+
+# Ignore documentation and example directories
+docs/
+demos/
+egs/
+model_cards/
+
+# ============================
+# 9. Tests
+# ============================
+
+# Ignore test directories
+tests/
+tests_integ/
+
+# ============================
+# 10. IDE and Editor Configurations
+# ============================
+
+# Ignore Visual Studio Code configurations
+.vscode/
+
+# Ignore PyCharm configurations
+.idea/
+
+# Ignore Sublime Text projects
+*.sublime-project
+*.sublime-workspace
+
+# Ignore Atom configurations
+.atom/
+
+# Ignore Emacs temporary files
+*~
+\#*\#
+
+# Ignore Vim swap files
+*.swp
+*.swo
+*.swn
+
+# ============================
+# 11. Operating System Files
+# ============================
+
+# Ignore macOS Finder metadata
+.DS_Store
+
+# Ignore Windows thumbnail caches
+Thumbs.db
+ehthumbs.db
+
+# ============================
+# 12. CI/CD Configurations
+# ============================
+
+# Ignore Continuous Integration directories and files
+.circleci/
+.travis.yml
+.github/workflows/
