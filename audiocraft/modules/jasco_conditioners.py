@@ -88,7 +88,7 @@ class DrumsConditioner(WaveformConditioner):
         self._use_masking = False
         self.blurring_factor = blurring_factor
         self.seq_len = int(segment_duration * compression_model_framerate)
-        self.cache = None # If you wish to train with EmbeddingCache, call self.create_embedding_cache(cache_path)
+        self.cache = None  # If you wish to train with EmbeddingCache, call self.create_embedding_cache(cache_path)
 
     def create_embedding_cache(self, cache_path):
         if cache_path is not None:
