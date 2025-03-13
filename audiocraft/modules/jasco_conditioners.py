@@ -89,10 +89,11 @@ class DrumsConditioner(WaveformConditioner):
         self.blurring_factor = blurring_factor
         self.seq_len = int(segment_duration * compression_model_framerate)
         self.cache = None
-        if cache_path is not None:
-            self.cache = EmbeddingCache(Path(cache_path) / 'wav', self.device,
-                                        compute_embed_fn=self._calc_coarse_drum_codes_for_cache,
-                                        extract_embed_fn=self._load_drum_codes_chunk)
+        # uncomment if you wish to train with EmbeddingCache.
+        # if cache_path is not None:
+        #     self.cache = EmbeddingCache(Path(cache_path) / 'wav', self.device,
+        #                                 compute_embed_fn=self._calc_coarse_drum_codes_for_cache,
+        #                                 extract_embed_fn=self._load_drum_codes_chunk)
 
     @torch.no_grad()
     def _get_drums_stem(self, wav: torch.Tensor, sample_rate: int) -> torch.Tensor:
