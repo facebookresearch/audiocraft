@@ -39,7 +39,7 @@ def _clean_lm_cfg(cfg: DictConfig):
 
 
 def export_encodec(checkpoint_path: tp.Union[Path, str], out_file: tp.Union[Path, str]):
-    pkg = torch.load(checkpoint_path, 'cpu')
+    pkg = torch.load(checkpoint_path, 'cpu', weights_only=False)
     new_pkg = {
         'best_state': pkg['ema']['state']['model'],
         'xp.cfg': OmegaConf.to_yaml(pkg['xp.cfg']),
@@ -53,7 +53,7 @@ def export_encodec(checkpoint_path: tp.Union[Path, str], out_file: tp.Union[Path
 
 
 def export_lm(checkpoint_path: tp.Union[Path, str], out_file: tp.Union[Path, str]):
-    pkg = torch.load(checkpoint_path, 'cpu')
+    pkg = torch.load(checkpoint_path, 'cpu', weights_only=False)
     if pkg['fsdp_best_state']:
         best_state = pkg['fsdp_best_state']['model']
     else:

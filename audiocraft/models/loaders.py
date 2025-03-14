@@ -50,11 +50,11 @@ def _get_state_dict(
     assert isinstance(file_or_url_or_id, str)
 
     if os.path.isfile(file_or_url_or_id):
-        return torch.load(file_or_url_or_id, map_location=device)
+        return torch.load(file_or_url_or_id, map_location=device, weights_only=False)
 
     if os.path.isdir(file_or_url_or_id):
         file = f"{file_or_url_or_id}/{filename}"
-        return torch.load(file, map_location=device)
+        return torch.load(file, map_location=device, weights_only=False)
 
     elif file_or_url_or_id.startswith('https://'):
         return torch.hub.load_state_dict_from_url(file_or_url_or_id, map_location=device, check_hash=True)
@@ -68,7 +68,7 @@ def _get_state_dict(
             library_name="audiocraft",
             library_version=audiocraft.__version__,
         )
-        return torch.load(file, map_location=device)
+        return torch.load(file, map_location=device, weights_only=False)
 
 
 def load_compression_model_ckpt(file_or_url_or_id: tp.Union[Path, str], cache_dir: tp.Optional[str] = None):
