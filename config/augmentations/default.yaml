@@ -41,6 +41,31 @@ audio_effects:
   encodec:
     ckpt: "//pretrained/facebook/encodec_24khz"
     n_qs: [4, 8, 16]
+  pitch_shift:
+    sample_rate: ${sample_rate}
+    n_steps: 2.0
+  clipping:
+    clip_value: 0.5
+  time_stretch:
+    sample_rate: ${sample_rate}
+    stretch_factor: 1.2
+  tremolo:
+    frequency: 5.0
+    depth: 0.5
+    sample_rate: ${sample_rate}
+  flanger:
+    delay: 0.002
+    depth: 0.002
+    rate: 0.25
+    sample_rate: ${sample_rate}
+  bit_crusher:
+    bit_depth: 8
+  ring_modulation:
+    modulation_frequency: 30.0
+    sample_rate: ${sample_rate}
+  granulate:
+    grain_size: 512
+    overlap: 0.5
 
 select_aug_mode:
   "use_eval" # other are 'all' and 'use_eval_acc', used to sample augmentations, `fixed` uses the prob from aug_weights, `all` uses all agmentations every step
@@ -61,5 +86,14 @@ aug_weights:
   aac_compression: 0.1 # eval only never use in training even if eval_acc low
   encodec: 0.1
   identity: 1 # no augmentation
+  pitch_shift: 0.1
+  reverse: 0.1
+  clipping: 0.1
+  time_stretch: 0.1
+  tremolo: 0.1
+  flanger: 0.1
+  bit_crusher: 0.1
+  ring_modulation: 0.1
+  granulate: 0.1
 
 n_max_aug: null
