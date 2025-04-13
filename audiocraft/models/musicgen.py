@@ -336,3 +336,28 @@ class MusicGen(BaseGenModel):
 
             gen_tokens = torch.cat(all_tokens, dim=-1)
         return gen_tokens
+
+    def fine_tune(self, dataset, epochs: int = 10, batch_size: int = 16, learning_rate: float = 1e-4):
+        """Fine-tune MusicGen model with custom music.
+
+        Args:
+            dataset: The dataset to use for fine-tuning.
+            epochs (int): Number of epochs to fine-tune the model.
+            batch_size (int): Batch size for fine-tuning.
+            learning_rate (float): Learning rate for fine-tuning.
+        """
+        dataloader = torch.utils.data.DataLoader(dataset, batch_size=batch_size, shuffle=True)
+        optimizer = torch.optim.Adam(self.parameters(), lr=learning_rate)
+        criterion = torch.nn.CrossEntropyLoss()
+
+        for epoch in range(epochs):
+            self.train()
+            for batch in dataloader:
+                optimizer.zero_grad()
+                inputs, targets = batch
+                outputs = self(inputs)
+                loss = criterion(outputs, targets)
+                loss.backward()
+                optimizer.step()
+            print(f"Epoch {epoch + 1}/{epochs}, Loss: {loss.item()}")
+        print("Fine-tuning completed.")

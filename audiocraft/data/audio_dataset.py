@@ -21,6 +21,7 @@ from pathlib import Path
 import random
 import sys
 import typing as tp
+import zipfile
 
 import torch
 import torch.nn.functional as F
@@ -557,6 +558,53 @@ class AudioDataset:
         else:
             meta = find_audio_files(root, exts, minimal=minimal_meta, resolve=True)
         return cls(meta, **kwargs)
+
+    @staticmethod
+    def prepare_audio_files(zip_path: str, output_dir: str, target_sample_rate: int = 32000, target_channels: int = 2):
+        """Prepare audio files from a zip of full songs.
+
+        Args:
+            zip_path (str): Path to the zip file containing full songs.
+            output_dir (str): Directory to save the prepared audio files.
+            target_sample_rate (int): Target sample rate for the audio files.
+            target_channels (int): Target number of channels for the audio files.
+        """
+        with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+            zip_ref.extractall(output_dir)
+
+        audio_files = find_audio_files(output_dir)
+        for audio_meta in audio_files:
+            wav, sr = audio_read(audio_meta.path)
+            wav = convert_audio(wav, sr, target_sample_rate, target_channels)
+            output_path = Path(output_dir) / Path(audio_meta.path).name
+            torch.save(wav, output_path)
+
+    @staticmethod
+    def fine_tune_musicgen(model, dataset, epochs: int = 10, batch_size: int = 16, learning_rate: float = 1e-4):
+        """Fine-tune MusicGen model with custom music.
+
+        Args:
+            model: The MusicGen model to fine-tune.
+            dataset: The dataset to use for fine-tuning.
+            epochs (int): Number of epochs to fine-tune the model.
+            batch_size (int): Batch size for fine-tuning.
+            learning_rate (float): Learning rate for fine-tuning.
+        """
+        dataloader = torch.utils.data.DataLoader(dataset, batch_size=batch_size, shuffle=True)
+        optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
+        criterion = torch.nn.CrossEntropyLoss()
+
+        for epoch in range(epochs):
+            model.train()
+            for batch in dataloader:
+                optimizer.zero_grad()
+                inputs, targets = batch
+                outputs = model(inputs)
+                loss = criterion(outputs, targets)
+                loss.backward()
+                optimizer.step()
+            print(f"Epoch {epoch + 1}/{epochs}, Loss: {loss.item()}")
+        print("Fine-tuning completed.")
 
 
 def main():
