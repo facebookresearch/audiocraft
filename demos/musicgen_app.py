@@ -12,12 +12,13 @@ from concurrent.futures import ProcessPoolExecutor
 import logging
 import os
 from pathlib import Path
-import subprocess as sp
+import subprocess
 import sys
 from tempfile import NamedTemporaryFile
 import time
 import typing as tp
 import warnings
+from unittest import mock
 
 from einops import rearrange
 import torch
@@ -37,18 +38,7 @@ MAX_BATCH_SIZE = 12
 BATCHED_DURATION = 15
 INTERRUPTING = False
 MBD = None
-# We have to wrap subprocess call to clean a bit the log when using gr.make_waveform
-_old_call = sp.call
 
-
-def _call_nostderr(*args, **kwargs):
-    # Avoid ffmpeg vomiting on the logs.
-    kwargs['stderr'] = sp.DEVNULL
-    kwargs['stdout'] = sp.DEVNULL
-    _old_call(*args, **kwargs)
-
-
-sp.call = _call_nostderr
 # Preallocating the pool of processes.
 pool = ProcessPoolExecutor(4)
 pool.__enter__()
@@ -81,12 +71,20 @@ class FileCleaner:
 file_cleaner = FileCleaner()
 
 
+def _call_nostderr(*args, **kwargs):
+    # Avoid ffmpeg vomiting on the logs.
+    kwargs['stderr'] = subprocess.DEVNULL
+    kwargs['stdout'] = subprocess.DEVNULL
+    return subprocess.call(*args, **kwargs)
+
+
 def make_waveform(*args, **kwargs):
     # Further remove some warnings.
     be = time.time()
     with warnings.catch_warnings():
         warnings.simplefilter('ignore')
-        out = gr.make_waveform(*args, **kwargs)
+        with mock.patch('subprocess.call', _call_nostderr):
+            out = gr.make_waveform(*args, **kwargs)
         print("Make a video took", time.time() - be)
         return out
 
