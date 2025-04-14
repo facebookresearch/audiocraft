@@ -131,7 +131,7 @@ model.set_style_conditioner_params(
 melody, sr = torchaudio.load('./assets/electronic.mp3')
 
 descriptions = ["8-bit old video game music", "Chill lofi remix", "80s New wave with synthesizer"]
-wav = model.generate_with_chroma(descriptions=["8-bit old video game music"], 
+wav = model.generate_with_chroma(descriptions=descriptions, 
                 melody[None].expand(3, -1, -1), sr)  # generates 3 samples.
 
 for idx, one_wav in enumerate(wav):
