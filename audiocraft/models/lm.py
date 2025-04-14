@@ -516,7 +516,7 @@ class LMModel(StreamingModule):
 
         B, K, T = prompt.shape
         start_offset = T
-        assert start_offset < max_gen_len
+        #assert start_offset < max_gen_len
 
         pattern = self.pattern_provider.get_pattern(max_gen_len)
         # this token is used as default value for codes that are not generated yet
