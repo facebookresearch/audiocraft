@@ -263,7 +263,7 @@ def get_mp3(wav_tensor: torch.Tensor, sr: int, bitrate: str = "128k") -> torch.T
         wav_tensor = wav_tensor[:, :, :original_length]  # Trim excess frames
     elif compressed_length < original_length:
         padding = torch.zeros(
-            batch_size, channels, original_length - compressed_length, device=device
+            batch_size, channels, original_length - compressed_length, device=wav_tensor.device
         )
         wav_tensor = torch.cat((wav_tensor, padding), dim=-1)  # Pad with zeros
 
