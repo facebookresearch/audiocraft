@@ -8,7 +8,41 @@ for two state-of-the-art AI generative models producing high-quality audio: Audi
 
 
 ## Installation
-AudioCraft requires Python 3.9, PyTorch 2.1.0. To install AudioCraft, you can run the following:
+
+### Using UV (Recommended)
+
+AudioCraft now uses [UV](https://github.com/astral-sh/uv) for fast and reliable dependency management. UV is 10-100x faster than pip and provides better dependency resolution.
+
+First, install UV:
+```bash
+# On macOS and Linux
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# On Windows
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+```
+
+Then install AudioCraft:
+```bash
+# Clone the repository
+git clone https://github.com/facebookresearch/audiocraft.git
+cd audiocraft
+
+# Install with UV (recommended)
+uv sync                    # Install dependencies and package in development mode
+uv sync --extra dev        # Include development dependencies
+uv sync --extra wm         # Include watermarking dependencies
+uv sync --extra all        # Include all optional dependencies
+
+# Run commands with UV
+uv run python your_script.py
+uv run pytest
+uv run audiocraft/train.py ...
+```
+
+### Traditional pip Installation
+
+AudioCraft requires Python 3.8+, PyTorch 2.1.0. To install AudioCraft with pip:
 
 ```shell
 # Best to make sure you have torch installed first, in particular before installing xformers.
@@ -28,6 +62,66 @@ We also recommend having `ffmpeg` installed, either through your system or Anaco
 sudo apt-get install ffmpeg
 # Or if you are using Anaconda or Miniconda
 conda install "ffmpeg<5" -c conda-forge
+```
+
+## Development with UV
+
+AudioCraft includes a comprehensive UV-based development setup. Use the provided Makefile for common tasks:
+
+```bash
+# Development setup
+make -f Makefile.uv dev-setup    # Set up development environment
+make -f Makefile.uv install      # Install dependencies
+make -f Makefile.uv dev-install  # Install with dev dependencies
+
+# Code quality
+make -f Makefile.uv format       # Format code with black and isort
+make -f Makefile.uv lint         # Run linting (flake8, mypy)
+make -f Makefile.uv test         # Run tests
+make -f Makefile.uv check        # Run all checks (format, lint, test)
+
+# Dependencies
+make -f Makefile.uv lock         # Update lock file
+make -f Makefile.uv upgrade      # Upgrade all dependencies
+make -f Makefile.uv clean        # Clean build artifacts
+
+# Demos
+make -f Makefile.uv demo-musicgen # Run MusicGen demo
+make -f Makefile.uv demo-audiogen # Run AudioGen demo
+make -f Makefile.uv demo-magnet   # Run MAGNeT demo
+```
+
+### Adding Dependencies
+
+With UV, adding new dependencies is simple:
+
+```bash
+# Add runtime dependency
+uv add requests
+
+# Add development dependency
+uv add --dev pytest-cov
+
+# Add optional dependency
+uv add --optional watermarking audioseal
+
+# Remove dependency
+uv remove requests
+```
+
+### Running Scripts
+
+UV provides a fast way to run scripts in isolated environments:
+
+```bash
+# Run Python scripts
+uv run python scripts/your_script.py
+
+# Run training
+uv run audiocraft/train.py solvers/musicgen/musicgen_base_32khz
+
+# Run Jupyter notebooks
+uv run jupyter notebook demos/musicgen_demo.ipynb
 ```
 
 ## Models

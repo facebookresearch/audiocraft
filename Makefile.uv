@@ -1,0 +1,80 @@
+# UV-based Makefile for AudioCraft
+# This replaces the original Makefile with UV commands
+
+.PHONY: help install dev-install sync lock build clean test lint format check
+
+help: ## Show this help message
+	@echo "Available commands:"
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
+
+install: ## Install the package and dependencies
+	uv sync
+
+dev-install: ## Install with development dependencies
+	uv sync --extra dev
+
+sync: ## Sync dependencies from lock file
+	uv sync
+
+lock: ## Generate/update lock file
+	uv lock
+
+build: ## Build the package
+	uv build
+
+clean: ## Clean build artifacts and cache
+	uv cache clean
+	rm -rf build/
+	rm -rf dist/
+	rm -rf *.egg-info/
+	find . -type d -name __pycache__ -delete
+	find . -type f -name "*.pyc" -delete
+
+test: ## Run tests
+	uv run pytest
+
+test-cov: ## Run tests with coverage
+	uv run pytest --cov=audiocraft --cov-report=html --cov-report=term
+
+lint: ## Run linting
+	uv run flake8 audiocraft tests
+	uv run mypy audiocraft
+
+format: ## Format code
+	uv run black audiocraft tests
+	uv run isort audiocraft tests
+
+format-check: ## Check code formatting
+	uv run black --check audiocraft tests
+	uv run isort --check-only audiocraft tests
+
+check: format-check lint test ## Run all checks (format, lint, test)
+
+# Development workflow commands
+dev-setup: ## Set up development environment
+	uv sync --extra dev
+	uv run pre-commit install || echo "pre-commit not installed, skipping"
+
+upgrade: ## Upgrade all dependencies
+	uv lock --upgrade
+
+# Demo and example commands
+demo-musicgen: ## Run MusicGen demo
+	uv run jupyter notebook demos/musicgen_demo.ipynb
+
+demo-audiogen: ## Run AudioGen demo
+	uv run jupyter notebook demos/audiogen_demo.ipynb
+
+demo-magnet: ## Run MAGNeT demo
+	uv run jupyter notebook demos/magnet_demo.ipynb
+
+# Training commands (examples)
+train-musicgen: ## Train MusicGen model (example)
+	@echo "Example training command - modify as needed:"
+	@echo "uv run audiocraft/train.py solvers/musicgen/musicgen_base_32khz --dset=music_compression"
+
+# Utility commands
+update-deps: ## Update dependencies from requirements.txt
+	@echo "Dependencies are now managed in pyproject.toml"
+	@echo "Use 'uv add <package>' to add new dependencies"
+	@echo "Use 'uv remove <package>' to remove dependencies"
