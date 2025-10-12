@@ -46,6 +46,10 @@ wheels/
 venv/
 ENV/
 
+# UV
+uv.lock
+.python-version
+
 # egs with manifest files
 egs/*
 !egs/example
