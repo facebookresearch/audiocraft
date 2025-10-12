@@ -26,7 +26,6 @@ classifiers = [
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12",
 ]
 requires-python = ">=3.9.0"
 dependencies = [
@@ -267,6 +266,8 @@ dev = [
     "black>=23.0.0",
     "isort>=5.12.0",
     "ruff>=0.1.0",
+    "jupyter>=1.0.0",
+    "ipykernel>=6.0.0",
 ]
 
 [tool.uv.sources]

@@ -60,13 +60,13 @@ upgrade: ## Upgrade all dependencies
 
 # Demo and example commands
 demo-musicgen: ## Run MusicGen demo
-	uv run python demos/musicgen_demo.ipynb
+	uv run jupyter notebook demos/musicgen_demo.ipynb
 
 demo-audiogen: ## Run AudioGen demo
-	uv run python demos/audiogen_demo.ipynb
+	uv run jupyter notebook demos/audiogen_demo.ipynb
 
 demo-magnet: ## Run MAGNeT demo
-	uv run python demos/magnet_demo.ipynb
+	uv run jupyter notebook demos/magnet_demo.ipynb
 
 # Training commands (examples)
 train-musicgen: ## Train MusicGen model (example)

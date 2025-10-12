@@ -70,25 +70,25 @@ AudioCraft includes a comprehensive UV-based development setup. Use the provided
 
 ```bash
 # Development setup
-make dev-setup          # Set up development environment
-make install            # Install dependencies
-make dev-install        # Install with dev dependencies
+make -f Makefile.uv dev-setup    # Set up development environment
+make -f Makefile.uv install      # Install dependencies
+make -f Makefile.uv dev-install  # Install with dev dependencies
 
 # Code quality
-make format             # Format code with black and isort
-make lint               # Run linting (flake8, mypy)
-make test               # Run tests
-make check              # Run all checks (format, lint, test)
+make -f Makefile.uv format       # Format code with black and isort
+make -f Makefile.uv lint         # Run linting (flake8, mypy)
+make -f Makefile.uv test         # Run tests
+make -f Makefile.uv check        # Run all checks (format, lint, test)
 
 # Dependencies
-make lock               # Update lock file
-make upgrade            # Upgrade all dependencies
-make clean              # Clean build artifacts
+make -f Makefile.uv lock         # Update lock file
+make -f Makefile.uv upgrade      # Upgrade all dependencies
+make -f Makefile.uv clean        # Clean build artifacts
 
 # Demos
-make demo-musicgen      # Run MusicGen demo
-make demo-audiogen      # Run AudioGen demo
-make demo-magnet        # Run MAGNeT demo
+make -f Makefile.uv demo-musicgen # Run MusicGen demo
+make -f Makefile.uv demo-audiogen # Run AudioGen demo
+make -f Makefile.uv demo-magnet   # Run MAGNeT demo
 ```
 
 ### Adding Dependencies
