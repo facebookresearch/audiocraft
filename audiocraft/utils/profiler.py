@@ -20,10 +20,13 @@ class Profiler:
     def __init__(self, module: torch.nn.Module, enabled: bool = False):
         self.profiler: tp.Optional[tp.Any] = None
         if enabled:
-            from xformers.profiler import profile
-            output_dir = dora.get_xp().folder / 'profiler_data'
-            logger.info("Profiling activated, results with be saved to %s", output_dir)
-            self.profiler = profile(output_dir=output_dir, module=module)
+            try:
+                from xformers.profiler import profile
+                output_dir = dora.get_xp().folder / 'profiler_data'
+                logger.info("Profiling activated, results with be saved to %s", output_dir)
+                self.profiler = profile(output_dir=output_dir, module=module)
+            except ImportError:
+                logger.warning("xformers not available, profiling disabled")
 
     def step(self):
         if self.profiler is not None:

@@ -19,6 +19,9 @@ class TorchAutocast:
         kwargs: Additional kwargs for torch.autocast
     """
     def __init__(self, enabled: bool, *args, **kwargs):
+        # MPS doesn't support autocast, disable it
+        if enabled and kwargs.get('device_type') == 'mps':
+            enabled = False
         self.autocast = torch.autocast(*args, **kwargs) if enabled else None
 
     def __enter__(self):

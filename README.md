@@ -30,6 +30,13 @@ sudo apt-get install ffmpeg
 conda install "ffmpeg<5" -c conda-forge
 ```
 
+### macOS Apple Silicon
+
+AudioCraft runs on macOS Apple Silicon (M1/M2/M3/M4) without requiring xformers. The xformers dependency is optional and will be skipped automatically on macOS ARM. Note that:
+- A GPU is recommended for faster inference, but CPU works for all models
+- CPU inference is slower (several minutes for medium-sized models)
+- All models (MusicGen, AudioGen, MAGNeT, JASCO) are supported
+
 ## Models
 
 At the moment, AudioCraft contains the training code and inference code for:

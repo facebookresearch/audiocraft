@@ -24,7 +24,8 @@ See [the model card](../model_cards/AUDIOGEN_MODEL_CARD.md).
 
 Please follow the AudioCraft installation instructions from the [README](../README.md).
 
-AudioCraft requires a GPU with at least 16 GB of memory for running inference with the medium-sized models (~1.5B parameters).
+A GPU with at least 16 GB of memory is recommended for running inference with the medium-sized models (~1.5B parameters).
+AudioGen also runs on CPU, including macOS Apple Silicon (see [README](../README.md#macos-apple-silicon)).
 
 ## API and usage
 

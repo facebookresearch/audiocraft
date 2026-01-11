@@ -61,8 +61,9 @@ We provide a simple API and 10 pre-trained models. The pre trained models are:
     [melody large](https://huggingface.co/facebook/musicgen-stereo-melody-large).
 
 We observe the best trade-off between quality and compute with the `facebook/musicgen-medium` or `facebook/musicgen-melody` model.
-In order to use MusicGen locally **you must have a GPU**. We recommend 16GB of memory, but smaller
+A GPU with at least 16GB of memory is recommended for running MusicGen locally, but smaller
 GPUs will be able to generate short sequences, or longer sequences with the `facebook/musicgen-small` model.
+MusicGen also runs on CPU, including macOS Apple Silicon (see [README](../README.md#macos-apple-silicon)).
 
 See after a quick example for using the API.
 

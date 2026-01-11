@@ -40,8 +40,8 @@ We provide a simple API and 6 pre-trained models. The pre trained models are:
 - `facebook/audio-magnet-small`: 300M model, text to sound-effect - [🤗 Hub](https://huggingface.co/facebook/audio-magnet-small)
 - `facebook/audio-magnet-medium`: 1.5B model, text to sound-effect - [🤗 Hub](https://huggingface.co/facebook/audio-magnet-medium)
 
-In order to use MAGNeT locally **you must have a GPU**. We recommend 16GB of memory, especially for 
-the medium size models. 
+A GPU with at least 16GB of memory is recommended for running MAGNeT locally, especially for the medium size models.
+MAGNeT also runs on CPU, including macOS Apple Silicon (see [README](../README.md#macos-apple-silicon)). 
 
 See after a quick example for using the API.
 
