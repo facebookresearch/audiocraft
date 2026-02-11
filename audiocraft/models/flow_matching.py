@@ -338,7 +338,7 @@ class FlowMatchingModel(StreamingModule):
 
         # remove the prefix from the model outputs
         if len(self.fuser.fuse2cond['prepend']) > 0:
-            v_theta = v_theta[:, :, -T:]
+            v_theta = v_theta[:, -T:, :]
 
         return v_theta  # [B, T, D]
 
