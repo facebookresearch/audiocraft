@@ -1,0 +1,13 @@
+# @package __global__
+
+defaults:
+  - audio/default
+  - _self_
+
+# Use MusicDataset for music metadata
+dataset:
+  _target_: audiocraft.data.music_dataset.MusicDataset
+  merge_text_p: 0.5  # Merge additional metadata into description
+  drop_desc_p: 0.0   # Don't drop original description
+  drop_other_p: 0.0  # Don't drop other fields
+  info_fields_required: false

@@ -1,0 +1,14 @@
+# @package __global__
+
+defaults:
+  - musiccaps_audio_finetune
+  - _self_
+
+datasource:
+  max_sample_rate: 32000
+  max_channels: 2
+
+  train: dataset/musiccaps_audio/train.jsonl.gz
+  valid: dataset/musiccaps_audio/valid.jsonl.gz
+  evaluate: dataset/musiccaps_audio/valid.jsonl.gz
+  generate: dataset/musiccaps_audio/valid.jsonl.gz

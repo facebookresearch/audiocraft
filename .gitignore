@@ -45,6 +45,7 @@ wheels/
 .venv
 venv/
 ENV/
+project_env/
 
 # egs with manifest files
 egs/*

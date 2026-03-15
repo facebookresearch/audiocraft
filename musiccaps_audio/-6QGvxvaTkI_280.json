@@ -1,0 +1,13 @@
+{
+  "description": "A live performance of a traditional song with a male vocal, acoustic strings, plucked strings, and wooden percussion, featuring crowd chatter and low production quality.",
+  "general_mood": "passionate",
+  "genre_tags": [
+    "traditional",
+    "folk"
+  ],
+  "lead_instrument": "male vocal",
+  "accompaniment": "acoustic strings, plucked strings, wooden percussion",
+  "tempo_and_rhythm": "not specified",
+  "vocal_presence": "yes",
+  "production_quality": "low"
+}

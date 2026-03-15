@@ -1,0 +1,13 @@
+{
+  "description": "A Hindustani classical music piece featuring a harmonium as the lead instrument, accompanied by a bansuri that plays supportive melodies. The rhythm is provided by traditional tabla and modern electronic drums, creating a joyful atmosphere.",
+  "general_mood": "joyful",
+  "genre_tags": [
+    "Hindustani classical",
+    "Indian classical"
+  ],
+  "lead_instrument": "harmonium",
+  "accompaniment": "bansuri, tabla, electronic drums",
+  "tempo_and_rhythm": "traditional tabla and modern electronic drums",
+  "vocal_presence": "none",
+  "production_quality": "high"
+}

@@ -1,0 +1,40 @@
+[
+  {
+    "description": "Electric guitar lead harmony with a groovy bass line",
+    "general_mood": "Upbeat and groovy",
+    "genre_tags": [
+      "Rock",
+      "Funk"
+    ],
+    "lead_instrument": "Electric Guitar",
+    "accompaniment": "Bass",
+    "tempo_and_rhythm": "Groovy and rhythmic",
+    "vocal_presence": "None",
+    "production_quality": "Professional"
+  },
+  {
+    "description": "White noise",
+    "general_mood": "Static and ambient",
+    "genre_tags": [
+      "Ambient"
+    ],
+    "lead_instrument": "None",
+    "accompaniment": "None",
+    "tempo_and_rhythm": "No discernible tempo",
+    "vocal_presence": "None",
+    "production_quality": "Basic"
+  },
+  {
+    "description": "Female vocalisation to a vivacious melody with a keyboard harmony, slick drumming, funky bass lines and male backup",
+    "general_mood": "Energetic and lively",
+    "genre_tags": [
+      "Pop",
+      "Funk"
+    ],
+    "lead_instrument": "Vocals",
+    "accompaniment": "Keyboard, Drums, Bass",
+    "tempo_and_rhythm": "Fast and slick",
+    "vocal_presence": "Lead Female, Male Backup",
+    "production_quality": "High"
+  }
+]

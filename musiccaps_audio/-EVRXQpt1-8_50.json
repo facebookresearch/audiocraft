@@ -1,0 +1,14 @@
+{
+  "description": "A guitar-like instrument plays in a tremolo fashion, accompanying a harp melody and a bass playing the root note. A male voice sings with a sad and sensitive tone, along with a female voice providing harmonies.",
+  "general_mood": "sad and sensitive",
+  "genre_tags": [
+    "acoustic",
+    "folk",
+    "melancholic"
+  ],
+  "lead_instrument": "harp",
+  "accompaniment": "guitar-like instrument (tremolo), bass",
+  "tempo_and_rhythm": "slow and steady",
+  "vocal_presence": "male lead with female harmonies",
+  "production_quality": "high"
+}

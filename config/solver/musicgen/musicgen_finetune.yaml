@@ -1,0 +1,33 @@
+# @package __global__
+
+defaults:
+  - musicgen/default
+  - /model: lm/musicgen_lm
+  - override /dset: audio/musiccaps_audio
+  - _self_
+
+autocast: true
+autocast_dtype: float16
+
+compression_model_checkpoint: //pretrained/facebook/encodec_32khz
+
+channels: 1
+sample_rate: 32000
+
+continue_from: //pretrained/facebook/musicgen-small
+
+dataset:
+  batch_size: 8  # Smaller batch for fine-tuning
+  num_workers: 4
+
+optim:
+  epochs: 10  # Fine-tuning epochs
+  optimizer: adam
+  lr: 1e-5  # Lower LR for fine-tuning
+  ema:
+    use: true
+    updates: 10
+    device: cuda
+
+logging:
+  log_tensorboard: true
