@@ -433,6 +433,8 @@ class LMModel(StreamingModule):
                  remove_prompts: bool = False,
                  check: bool = False,
                  callback: tp.Optional[tp.Callable[[int, int], None]] = None,
+                 forced_streams_prompt: tp.Optional[torch.Tensor] = None,
+                 which_forced_streams: tp.Optional[tp.List[int]] = None,
                  ) -> torch.Tensor:
         """Generate tokens sampling from the model given a prompt or unconditionally. Generation can
         be performed in a greedy fashion or using sampling with top K and top P strategies.
@@ -554,6 +556,14 @@ class LMModel(StreamingModule):
                 # as the model never output special_token_id
                 valid_mask = mask[..., offset:offset+1].expand(B, -1, -1)
                 next_token[~valid_mask] = self.special_token_id
+                # for kept streams in stem regeneration, override sampled token with ground truth
+                if forced_streams_prompt is not None and which_forced_streams:
+                    for k in which_forced_streams:
+                        if mask[k, offset]:
+                            t = indexes[k, offset].item() % max_gen_len
+                            forced_t = t - start_offset
+                            if 0 <= forced_t < forced_streams_prompt.shape[-1]:
+                                next_token[:, k, 0] = forced_streams_prompt[:, k, forced_t]
                 # ensure we don't overwrite prompt tokens, we only write over unknown tokens
                 # (then mask tokens should be left as is as well, which is correct)
                 gen_sequence[..., offset:offset+1] = torch.where(
