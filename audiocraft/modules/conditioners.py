@@ -456,7 +456,7 @@ class T5Conditioner(TextConditioner):
         self.name = name
         self.finetune = finetune
         self.word_dropout = word_dropout
-        if autocast_dtype is None or self.device == 'cpu':
+        if autocast_dtype is None or self.device == 'cpu' or self.device == 'mps':
             self.autocast = TorchAutocast(enabled=False)
             if self.device != 'cpu':
                 logger.warning("T5 has no autocast, this might lead to NaN")
