@@ -73,6 +73,8 @@ class BaseGenModel(ABC):
         self._progress_callback: tp.Optional[tp.Callable[[int, int], None]] = None
         if self.device.type == 'cpu':
             self.autocast = TorchAutocast(enabled=False)
+        elif self.device.type == 'mps':
+            self.autocast = TorchAutocast(enabled=False)
         else:
             self.autocast = TorchAutocast(
                 enabled=True, device_type=self.device.type, dtype=torch.float16)

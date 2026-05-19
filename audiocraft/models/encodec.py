@@ -232,10 +232,12 @@ class EncodecModel(CompressionModel):
                 scale: a float tensor containing the scale for audio renormalization.
         """
         assert x.dim() == 3
+        original_device = x.device
+        model_device = next(self.encoder.parameters()).device
         x, scale = self.preprocess(x)
-        emb = self.encoder(x)
+        emb = self.encoder(x.to(model_device))
         codes = self.quantizer.encode(emb)
-        return codes, scale
+        return codes.to(original_device), scale
 
     def decode(self, codes: torch.Tensor, scale: tp.Optional[torch.Tensor] = None):
         """Decode the given codes to a reconstructed representation, using the scale to perform
@@ -248,11 +250,13 @@ class EncodecModel(CompressionModel):
         Returns:
             out (torch.Tensor): Float tensor of shape [B, C, T], the reconstructed audio.
         """
-        emb = self.decode_latent(codes)
+        original_device = codes.device
+        model_device = next(self.decoder.parameters()).device
+        emb = self.decode_latent(codes.to(model_device))
         out = self.decoder(emb)
         out = self.postprocess(out, scale)
         # out contains extra padding added by the encoder and decoder
-        return out
+        return out.to(original_device)
 
     def decode_latent(self, codes: torch.Tensor):
         """Decode from the discrete codes to continuous latent space."""
