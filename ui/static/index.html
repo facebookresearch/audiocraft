@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AudioCraft Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Syne:wght@400;600;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div class="bg" aria-hidden="true">
+    <div class="orb orb-a"></div>
+    <div class="orb orb-b"></div>
+  </div>
+  <div class="noise"></div>
+
+  <header class="header">
+    <div class="logo-mark" aria-hidden="true">
+      <span class="ring"></span>
+      <span class="dot"></span>
+    </div>
+    <div class="header-text">
+      <h1>AudioCraft Studio</h1>
+      <p>Text-to-music and text-to-sound generation</p>
+    </div>
+    <div class="device-badge" id="deviceBadge">checking…</div>
+  </header>
+
+  <main class="layout">
+    <section class="panel controls">
+      <nav class="mode-tabs" role="tablist">
+        <button class="tab active" data-mode="music" role="tab" aria-selected="true">MusicGen</button>
+        <button class="tab" data-mode="sound" role="tab" aria-selected="false">AudioGen</button>
+      </nav>
+
+      <form id="generateForm" class="form">
+        <label class="field">
+          <span class="label">Prompt</span>
+          <textarea
+            id="prompt"
+            name="prompt"
+            rows="4"
+            placeholder="An upbeat synthwave track with pulsing bass and neon atmosphere…"
+            required
+          ></textarea>
+        </label>
+
+        <div class="field-row">
+          <label class="field flex">
+            <span class="label">Model</span>
+            <select id="model" name="model"></select>
+          </label>
+          <label class="field flex narrow">
+            <span class="label">Duration <em id="durationVal">10s</em></span>
+            <input type="range" id="duration" name="duration" min="1" max="30" value="10" step="1" />
+          </label>
+        </div>
+
+        <div id="melodySection" class="melody-section">
+          <label class="field">
+            <span class="label">Melody reference <em>(optional)</em></span>
+            <div class="file-drop" id="melodyDrop">
+              <input type="file" id="melody" name="melody" accept="audio/*" />
+              <span class="file-hint">Drop audio or click to upload</span>
+              <span class="file-name" id="melodyName"></span>
+            </div>
+          </label>
+          <label class="checkbox">
+            <input type="checkbox" id="useDiffusion" name="use_diffusion" />
+            <span>MultiBand Diffusion decoder (higher quality, slower)</span>
+          </label>
+        </div>
+
+        <details class="advanced">
+          <summary>Advanced parameters</summary>
+          <div class="advanced-grid">
+            <label class="field">
+              <span class="label">Temperature</span>
+              <input type="number" id="temperature" value="1.0" min="0" step="0.1" />
+            </label>
+            <label class="field">
+              <span class="label">Top-k</span>
+              <input type="number" id="topK" value="250" min="0" step="1" />
+            </label>
+            <label class="field">
+              <span class="label">Top-p</span>
+              <input type="number" id="topP" value="0" min="0" max="1" step="0.05" />
+            </label>
+            <label class="field">
+              <span class="label">CFG coefficient</span>
+              <input type="number" id="cfgCoef" value="3.0" min="0" step="0.5" />
+            </label>
+          </div>
+        </details>
+
+        <button type="submit" class="generate-btn" id="generateBtn">
+          <span class="btn-label">Generate</span>
+          <span class="btn-shimmer"></span>
+        </button>
+      </form>
+
+      <div class="examples">
+        <span class="label">Try an example</span>
+        <div class="example-chips" id="exampleChips"></div>
+      </div>
+    </section>
+
+    <section class="panel output">
+      <div class="output-header">
+        <h2>Output</h2>
+        <span class="status-pill idle" id="statusPill">Ready</span>
+      </div>
+
+      <div class="waveform-shell" id="waveformShell">
+        <canvas id="waveform" width="800" height="120"></canvas>
+        <div class="waveform-placeholder" id="waveformPlaceholder">
+          <div class="vinyl">
+            <span class="groove"></span>
+            <span class="groove"></span>
+            <span class="groove"></span>
+          </div>
+          <p>Your generated audio will appear here</p>
+        </div>
+      </div>
+
+      <div class="progress-wrap hidden" id="progressWrap">
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <p class="progress-msg" id="progressMsg">Queued…</p>
+      </div>
+
+      <audio id="player" controls class="player hidden"></audio>
+
+      <div class="output-actions hidden" id="outputActions">
+        <a id="downloadLink" class="action-btn" download>Download WAV</a>
+      </div>
+
+      <div class="error-box hidden" id="errorBox"></div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    Powered by
+    <a href="https://github.com/facebookresearch/audiocraft" target="_blank" rel="noopener">AudioCraft</a>
+    · Models from Meta AI Research
+  </footer>
+
+  <script src="/app.js"></script>
+</body>
+</html>
