@@ -20,7 +20,6 @@ import torch
 import torch.nn as nn
 from torch.nn import functional as F
 from torch.utils.checkpoint import checkpoint as torch_checkpoint
-from xformers import ops
 
 from .rope import RotaryEmbedding
 from .streaming import StreamingModule
@@ -175,7 +174,7 @@ class StreamingMultiheadAttention(StreamingModule):
         self.embed_dim = embed_dim
         self.causal = causal
         self.past_context = past_context
-        self.memory_efficient = memory_efficient
+        self.memory_efficient = False
         self.attention_as_float32 = attention_as_float32
         self.rope = rope
         self.cross_attention = cross_attention
@@ -187,7 +186,7 @@ class StreamingMultiheadAttention(StreamingModule):
             assert not causal, "Causal cannot work with cross attention."
             assert rope is None, "Rope cannot work with cross attention."
 
-        if memory_efficient:
+        if False:
             _verify_xformers_memory_efficient_compat()
 
         self.custom = _is_custom(custom, memory_efficient)
@@ -371,7 +370,7 @@ class StreamingMultiheadAttention(StreamingModule):
                     else:
                         bound_layout = "b t p h d"
                     packed = rearrange(projected, f"b t (p h d) -> {bound_layout}", p=3, h=self.num_heads)
-                    q, k, v = ops.unbind(packed, dim=2)
+                    q, k, v = torch.unbind(packed, dim=2)
                 else:
                     embed_dim = self.embed_dim
                     per_head_dim = (embed_dim // self.num_heads)
