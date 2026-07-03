@@ -118,3 +118,51 @@ class TestNormalizeAudio:
         audio = 10.0 * get_batch_white_noise(b, c, int(sr * dur))
         norm_audio = normalize_audio(audio, strategy='peak')
         assert norm_audio.abs().max() <= 1
+
+    def test_normalize_audio_loudness(self):
+        # Loudness normalization requires a single sample (not a batch) because
+        # torchaudio.transforms.Loudness returns a per-sample scalar.
+        c, dur = 1, 4.
+        sr = 16000
+        audio = get_batch_white_noise(1, c, int(sr * dur)).squeeze(0)  # [C, T]
+        norm_audio = normalize_audio(audio, strategy='loudness', sample_rate=sr)
+        assert norm_audio.isfinite().all()
+
+    def test_normalize_audio_none_strategy(self):
+        b, c, dur = 2, 1, 4.
+        sr = 3
+        # audio already within [-1, 1], 'none' strategy should return it unchanged
+        audio = 0.5 * get_batch_white_noise(b, c, int(sr * dur))
+        norm_audio = normalize_audio(audio, strategy='none')
+        assert torch.allclose(norm_audio, audio)
+
+    def test_normalize_audio_no_normalize_when_below_threshold(self):
+        # When normalize=False, audio that is already below peak threshold
+        # should be returned without rescaling.
+        b, c, dur = 2, 1, 4.
+        sr = 3
+        audio = 0.1 * get_batch_white_noise(b, c, int(sr * dur))
+        norm_audio = normalize_audio(audio, normalize=False, strategy='peak')
+        assert torch.allclose(norm_audio, audio)
+
+
+class TestPcmConversion:
+
+    def test_f32_pcm_int32(self):
+        # int32 input should be scaled into float32 [-1, 1]
+        audio_i32 = torch.randint(-(2 ** 31), 2 ** 31 - 1, (2, 1, 100), dtype=torch.int32)
+        audio_f32 = f32_pcm(audio_i32)
+        assert audio_f32.dtype == torch.float32
+        assert audio_f32.abs().max() <= 1.0
+
+    def test_f32_pcm_float_passthrough(self):
+        audio = torch.rand(2, 1, 100)
+        out = f32_pcm(audio)
+        assert out is audio  # no copy for float input
+
+    def test_i16_pcm_clipping_prevention(self):
+        # values very close to 1.0 should not overflow int16
+        audio = torch.ones(1, 1, 10)
+        out = i16_pcm(audio)
+        assert out.dtype == torch.int16
+        assert out.abs().max() <= 2 ** 15 - 1
