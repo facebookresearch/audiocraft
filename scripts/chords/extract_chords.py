@@ -11,7 +11,7 @@ from tqdm import tqdm
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--src_jsonl_file', type=str, required=True,
-                        help='abs path to .jsonl file containing list of absolute file paths seperated by new line')
+                        help='abs path to .jsonl file containing list of absolute file paths separated by new line')
     parser.add_argument('--target_output_dir', type=str, required=True,
                         help='target directory to save parsed chord files to, individual files will be saved inside')
     parser.add_argument("--override", action="store_true")
