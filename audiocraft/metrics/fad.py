@@ -206,7 +206,7 @@ class FrechetAudioDistanceMetric(torchmetrics.Metric):
                     self.samples_tests_dir / stem_name, pred_wav, sample_rate=self.model_sample_rate,
                     format=self.format, strategy="peak")
             except Exception as e:
-                logger.error(f"Exception occured when saving tests files for FAD computation: {repr(e)} - {e}")
+                logger.error(f"Exception occurred when saving tests files for FAD computation: {repr(e)} - {e}")
             try:
                 # for the ground truth audio, we enforce the 'peak' strategy to avoid modifying
                 # the original audio when writing it
@@ -217,7 +217,7 @@ class FrechetAudioDistanceMetric(torchmetrics.Metric):
                     self.samples_background_dir / stem_name, target_wav, sample_rate=self.model_sample_rate,
                     format=self.format, strategy="peak")
             except Exception as e:
-                logger.error(f"Exception occured when saving background files for FAD computation: {repr(e)} - {e}")
+                logger.error(f"Exception occurred when saving background files for FAD computation: {repr(e)} - {e}")
 
     def _get_samples_name(self, is_background: bool):
         return 'background' if is_background else 'tests'

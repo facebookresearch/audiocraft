@@ -76,13 +76,13 @@ In order to to use the JascoDataset with chords / melody conditioning, please fo
 ### Chords conditioning
 To extract chords from your desired data follow the following steps:
 
-1. Prepare a `*.jsonl` containing list of absolute file paths in your dataset, should simply be absolute paths seperated by newlines.
+1. Prepare a `*.jsonl` containing list of absolute file paths in your dataset, should simply be absolute paths separated by newlines.
 2. Download and install chord_extractor from [source](http://www.isophonics.net/nnls-chroma)
-3. For training purposes run: `python scripts/chords/extract_chords.py --src_jsonl_file=<abs path to .jsonl file containing list of absolute file paths seperated by new line> --target_output_dir=<target directory to save parsed chord files to, individual files will be saved inside>`
+3. For training purposes run: `python scripts/chords/extract_chords.py --src_jsonl_file=<abs path to .jsonl file containing list of absolute file paths separated by new line> --target_output_dir=<target directory to save parsed chord files to, individual files will be saved inside>`
 <br>
 and then run: `python scripts/chords/build_chord_map.py --chords_folder=<abs path to directory containing parsed chords files> --output_directory=<path to output directory to generate code maps to, if not given - chords_folder would be used>`
 
-4. For evaluation of our released models run: `python scripts/chords/extract_chords.py --src_jsonl_file=<abs path to .jsonl file containing list of absolute file paths seperated by new line> --target_output_dir=<target directory to save parsed chord files to, individual files will be saved inside> --path_to_pre_defined_map=<abs path to pre-defined mapping file>`
+4. For evaluation of our released models run: `python scripts/chords/extract_chords.py --src_jsonl_file=<abs path to .jsonl file containing list of absolute file paths separated by new line> --target_output_dir=<target directory to save parsed chord files to, individual files will be saved inside> --path_to_pre_defined_map=<abs path to pre-defined mapping file>`
 <br>
 and then run: `python scripts/chords/build_chord_map.py --chords_folder=<abs path to directory containing parsed chords files> --output_directory=<path to output directory to generate code maps to, if not given - chords_folder would be used> --path_to_pre_defined_map=<for evaluation purpose, use pre-defined chord-to-index map absolute path>`
 
@@ -115,7 +115,7 @@ This section relies on [Deepsalience repo](https://github.com/rabitt/ismir2017-d
 1. create job array: `python predict/create_predict_saliency_cmds.py --tracks_list=tracks_train.txt --out_dir=<path to desired dir to dump files to> --n_shards=2 --multithread --sbatch_script_name=predict_saliency_train.sh --saliency_threshold=<threshold, ours is 0.5>`
 2. run job array: `sbatch predict_saliency_train.sh`
 
-tracks_train.txt: a list of track paths to process seperated by new lines
+tracks_train.txt: a list of track paths to process separated by new lines
 
 
 ## Training

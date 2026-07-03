@@ -239,7 +239,7 @@ def get_spec(y, sr=16000, n_fft=4096, hop_length=128, dur=8) -> np.ndarray:
         sr (int): Sampling rate
         n_fft (int): Number of samples per FFT. Default is 2048.
         hop_length (int): Number of samples between successive frames. Default is 512.
-        dur (float): Maxium duration to get the spectrograms
+        dur (float): Maximum duration to get the spectrograms
     Returns:
         spectro histogram as a numpy array
     """
@@ -271,7 +271,7 @@ def save_spectrograms(
         names: name of each spectrogram plot
         n_fft (int): Number of samples per FFT. Default is 2048.
         hop_length (int): Number of samples between successive frames. Default is 512.
-        dur (float): Maxium duration to plot the spectrograms
+        dur (float): Maximum duration to plot the spectrograms
 
     Returns:
         None (plots the spectrogram using matplotlib)
