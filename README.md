@@ -3,6 +3,10 @@
 ![linter badge](https://github.com/facebookresearch/audiocraft/workflows/audiocraft_linter/badge.svg)
 ![tests badge](https://github.com/facebookresearch/audiocraft/workflows/audiocraft_tests/badge.svg)
 
+<p align="center">
+  <b>English</b> · <a href="README.zh.md">简体中文</a>
+</p>
+
 AudioCraft is a PyTorch library for deep learning research on audio generation. AudioCraft contains inference and training code
 for two state-of-the-art AI generative models producing high-quality audio: AudioGen and MusicGen.
 
