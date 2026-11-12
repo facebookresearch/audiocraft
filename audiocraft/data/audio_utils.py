@@ -131,17 +131,23 @@ def normalize_audio(wav: torch.Tensor, normalize: bool = True,
     scale_peak = 10 ** (-peak_clip_headroom_db / 20)
     scale_rms = 10 ** (-rms_headroom_db / 20)
     if strategy == 'peak':
-        rescaling = (scale_peak / wav.abs().max())
-        if normalize or rescaling < 1:
-            wav = wav * rescaling
+        # All-zero audio has no peak; dividing by max() would produce inf/NaN.
+        max_scale = wav.abs().max()
+        if max_scale > 0:
+            rescaling = (scale_peak / max_scale)
+            if normalize or rescaling < 1:
+                wav = wav * rescaling
     elif strategy == 'clip':
         wav = wav.clamp(-scale_peak, scale_peak)
     elif strategy == 'rms':
         mono = wav.mean(dim=0)
-        rescaling = scale_rms / mono.pow(2).mean().sqrt()
-        if normalize or rescaling < 1:
-            wav = wav * rescaling
-        _clip_wav(wav, log_clipping=log_clipping, stem_name=stem_name)
+        rms = mono.pow(2).mean().sqrt()
+        # All-zero (or cancelling) audio has no RMS; dividing would produce inf/NaN.
+        if rms > 0:
+            rescaling = scale_rms / rms
+            if normalize or rescaling < 1:
+                wav = wav * rescaling
+            _clip_wav(wav, log_clipping=log_clipping, stem_name=stem_name)
     elif strategy == 'loudness':
         assert sample_rate is not None, "Loudness normalization requires sample rate."
         wav = normalize_loudness(wav, sample_rate, loudness_headroom_db, loudness_compressor)

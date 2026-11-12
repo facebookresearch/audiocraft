@@ -118,3 +118,17 @@ class TestNormalizeAudio:
         audio = 10.0 * get_batch_white_noise(b, c, int(sr * dur))
         norm_audio = normalize_audio(audio, strategy='peak')
         assert norm_audio.abs().max() <= 1
+
+    def test_normalize_audio_peak_silence(self):
+        # Peak rescaling used to divide by max() == 0 and return NaNs.
+        audio = torch.zeros(2, 1, 12)
+        norm_audio = normalize_audio(audio, strategy='peak')
+        assert torch.equal(norm_audio, audio)
+        assert torch.isfinite(norm_audio).all()
+
+    def test_normalize_audio_rms_silence(self):
+        # RMS rescaling used to divide by a zero RMS and return NaNs.
+        audio = torch.zeros(2, 1, 12)
+        norm_audio = normalize_audio(audio, strategy='rms')
+        assert torch.equal(norm_audio, audio)
+        assert torch.isfinite(norm_audio).all()
