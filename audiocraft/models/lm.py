@@ -224,7 +224,7 @@ class LMModel(StreamingModule):
                 stage: int = -1) -> torch.Tensor:
         """Apply language model on sequence and conditions.
         Given a tensor of sequence of shape [B, K, S] with K the number of codebooks and
-        S the sequence steps, return the logits with shape [B, card, K, S].
+        S the sequence steps, return the logits with shape [B, K, S, card].
 
         Args:
             indices (torch.Tensor): Indices of the codes to model.
